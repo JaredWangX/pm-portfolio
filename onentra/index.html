@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN" data-type="software"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#faf6ef"><meta name="description" content="业务人员要交付的是一份能核对、能修改的经营周报。我从写需求、取数到交付表格，逐步检查每个环节。"><meta name="page-type" content="software"><meta name="site-kind" content="software"><meta property="og:type" content="website"><meta property="og:title" content="ONENTRA 工作平台 · 王稼瑞的产品案例"><meta property="og:description" content="业务人员要交付的是一份能核对、能修改的经营周报。我从写需求、取数到交付表格，逐步检查每个环节。"><meta property="og:url" content="https://jaredwangx.github.io/pm-portfolio/onentra/"><meta property="og:image" content="https://jaredwangx.github.io/pm-portfolio/assets/share.jpg"><link rel="icon" href="../assets/icon.png"><title>ONENTRA 工作平台 · 王稼瑞的产品案例</title><link rel="stylesheet" href="../style.css"><script defer src="../app.js"></script></head>
+<body data-base="../"><a class="skip" href="#main">跳至正文</a><header><div class="navwrap"><a class="identity" href="../" aria-label="王稼瑞作品集首页"><span class="monogram">W</span><span><strong>王稼瑞</strong><small>AI 产品经理</small></span></a><nav aria-label="主导航"><a href="../#strengths">个人优势</a><a href="../#work">项目作品</a><a href="../#materials">作品资料</a></nav>
+<a class="navpdf" href="../downloads/portfolio.pdf" target="_blank" rel="noopener">查看 PDF <span aria-hidden="true">↗</span></a><button class="menu" type="button" aria-label="打开导航" aria-expanded="false" aria-controls="mobile-nav">导航</button></div>
+<nav id="mobile-nav" aria-label="手机导航" hidden><a href="../#strengths">个人优势</a><a href="../#work">项目作品</a><a href="../#materials">作品资料</a></nav>
+</header>
+<main id="main"><div class="case-intro"><div class="wrap"><a href="../#work" class="back">← 返回项目作品</a><div class="tags"><span>2026.09 — 11</span><span>企业 AI 工作流与文件交付</span></div>
+<h1>ONENTRA 工作平台</h1>
+<p>业务人员要交付的是一份能核对、能修改的经营周报。我从写需求、取数到交付表格，逐步检查每个环节。</p>
+</div>
+</div>
+<div class="wrap case-layout"><aside class="sidecard"><dl><dt>我的角色</dt><dd>我设计 AI 员工与资源使用流程，并承担工作台、对话、任务及文件管理的跨端页面开发与交互优化。</dd><dt>验证结果</dt><dd><strong>32,946 元</strong><small>经营周报实测 · 净销售额核对一致</small></dd></dl>
+<nav aria-label="案例目录"><a href="#problem">项目背景</a><a href="#decisions">产品判断与需求</a><a href="#prototype">网页演示</a><a href="#results">验证结果</a><a href="#roadmap">产品路线图</a></nav>
+</aside>
+<div class="case-content"><section id="problem" class="case-section"><p class="eyebrow">项目背景</p>
+<h2>运营同事要交付一份能核对的周报</h2>
+<p>用户能打开知识库，却曾经在对话输入区找不到相应入口。写周报时，他们要往返查统计口径，还要确认输出的数字来自哪份数据。只收到一个表格，仍很难判断任务是否完成。</p>
+</section>
+<section id="decisions" class="case-section"><p class="eyebrow">我的判断</p>
+<h2>让资料回到任务里，让结果可以追查</h2>
+<ol class="decision-list"><li><strong>先选可验证的业务场景</strong><p>我按使用频率、可取得的资料和结果是否可验收，选择了经营周报、行业研究和方案起草。周报先做，因为关键数字可以独立核对。</p>
+</li>
+<li><strong>明确资源跟随哪次输入</strong><p>我将模型、技能、知识库和数据库放进输入区。从笔记返回时保留原草稿，引用单独显示为标签，用户可以撤销。</p>
+</li>
+<li><strong>拆开“答复”和“附件”的验收</strong><p>我将文件关联到会话，用可编辑工作簿承载明细。即使文件正确，如果用户明确要求的正文合计缺失，也要计为部分通过。</p>
+</li>
+</ol>
+<div class="reqs"><details><summary><b>跨页引用与草稿保留</b><span>验收规则</span></summary><p>输入问题后打开知识库，引用指定笔记，再逐字比对返回后的草稿。</p>
+<div class="check"><strong>用例</strong> 移除笔记引用后，输入的原句与标点仍完整保留。</div>
+</details><details><summary><b>经营工作簿的双重核对</b><span>验收规则</span></summary><p>用下载后的 Excel 复核数值类型与公式，并对照数据库的独立查询结果。</p>
+<div class="check"><strong>用例</strong> 订单、销售、退款与净销售额的四列合计均可复算。</div>
+</details></div>
+</section>
+<section id="prototype" class="case-section"><p class="eyebrow">桌面网页演示</p>
+<h2>在真实工作台里查口径、回到对话</h2>
+<p>下面的画面取自现有公开网页版。切换步骤或点开原图可以检查控件和文字。资料引用和 Excel 生成是两组独立验收用例。</p>
+<div class="demo" data-player><div class="demo-heading"><span class="live-dot"></span><span>交互演示</span></div>
+<div class="demo-panel onentra" data-demo="onentra" ><div class="stage"><div class="browser-window"><div class="browser-bar"><i></i><i></i><i></i><span>ONENTRA · AI 工作平台</span></div>
+<div class="web-state " data-scene="0" ><button class="shotzoom" data-image="../assets/workspace.webp" data-title="经营周报从工作台发起" type="button" aria-label="放大工作台截图"><img src="../assets/workspace.webp" alt="经营周报从工作台发起" decoding="async"><span>查看大图 ⤢</span></button></div>
+<div class="web-state " data-scene="1" hidden><button class="shotzoom" data-image="../assets/web-note.webp" data-title="在笔记详情查看渠道订单与退款的统计口径" type="button" aria-label="放大知识库截图"><img src="../assets/web-note.webp" alt="在笔记详情查看渠道订单与退款的统计口径" decoding="async"><span>查看大图 ⤢</span></button></div>
+<div class="web-state " data-scene="2" hidden><button class="shotzoom" data-image="../assets/web-chat.webp" data-title="引用后回到原草稿，笔记标签仍在输入框中" type="button" aria-label="放大对话截图"><img src="../assets/web-chat.webp" alt="引用后回到原草稿，笔记标签仍在输入框中" decoding="async"><span>查看大图 ⤢</span></button></div>
+<div class="web-state file-screen" data-scene="3" hidden><button class="shotzoom" data-image="../assets/workbook.webp" data-title="生成的 Excel 包含三个渠道的经营明细和合计公式" type="button" aria-label="放大文件预览截图"><img src="../assets/workbook.webp" alt="生成的 Excel 包含三个渠道的经营明细和合计公式" decoding="async"><span>查看大图 ⤢</span></button></div>
+</div>
+</div>
+<div class="playrow"><div class="steps" role="group" aria-label="演示步骤"><button type="button" data-step="0" aria-pressed="true">工作台</button><button type="button" data-step="1" aria-pressed="false">知识库</button><button type="button" data-step="2" aria-pressed="false">对话</button><button type="button" data-step="3" aria-pressed="false">文件</button></div>
+<button type="button" class="play" aria-label="暂停演示" data-play><span aria-hidden="true">Ⅱ</span></button></div>
+</div>
+</div>
+<div class="actions"><button class="button primary" data-launch>在本页试用工作台</button><a class="button" href="https://jaredwangx.github.io/ai-work-platform/#home" target="_blank" rel="noopener">独立打开网页版 ↗</a><a class="textbtn" href="https://jaredwangx.github.io/ai-work-platform/#knowledge" target="_blank" rel="noopener">进入知识库 ↗</a></div>
+<div class="proofs"><button type="button" class="proof" data-title="放大笔记与引用入口" data-image="../assets/note.webp"><span>放大笔记与引用入口</span><span aria-hidden="true">⤢</span></button><button type="button" class="proof" data-title="放大引用后的输入框" data-image="../assets/draft.webp"><span>放大引用后的输入框</span><span aria-hidden="true">⤢</span></button></div>
+</section>
+<section id="results" class="case-section"><p class="eyebrow">结果验证</p>
+<h2>Excel 对得上账，答复正文漏了一项</h2>
+<p>我在演示库按渠道生成经营明细，再单独运行 SQL。63 笔订单的销售额是 33,261 元，扣除 315 元退款，净销售额为 32,946 元。</p>
+<div class="metricgrid"><div><b>10,982 元</b><span>电商净销售额</span></div>
+<div><b>11,055 元</b><span>直营净销售额</span></div>
+<div><b>10,909 元</b><span>经销净销售额</span></div>
+</div>
+<p>下载的工作簿保留了四列 SUM 合计公式。回复正文当时只提示文件已生成，漏掉了用户要求的合计。我据此把“正文和附件的金额一致”加进下一轮验收标准。</p>
+<div class="actions"><a class="button primary" href="../downloads/channel-report.xlsx" download="渠道经营数据明细.xlsx">下载实测 Excel ↓</a><button type="button" class="proof" data-title="核对独立 SQL 结果" data-image="../assets/query.webp"><span>核对独立 SQL 结果</span><span aria-hidden="true">⤢</span></button></div>
+</section>
+<section id="roadmap" class="case-section"><p class="eyebrow">产品路线图</p>
+<h2>补齐交付，再评估效率</h2>
+<ol class="roadmap"><li><span>已完成</span><div><h3>三个场景的跨端演示</h3>
+<p>完成工作台、对话、任务与文件等核心页面；公开版可复核资料引用及 Excel 文件交付。</p>
+</div>
+</li>
+<li><span>待改进</span><div><h3>回复正文也给出合计</h3>
+<p>从生成明细所用的汇总结果填入正文，再比较正文、工作簿和数据库的金额。</p>
+</div>
+</li>
+<li><span>计划中</span><div><h3>30 项人工与平台对照任务</h3>
+<p>每类场景各 10 项，将准备、核查与返工计入总耗时。目标为中位耗时下降至少 30%、首次通过率至少 85%、关键数据可追溯率 100%。</p>
+</div>
+</li>
+</ol>
+</section>
+<div class="nextcase"><a class="button" href="../#work">返回项目列表</a><a class="button primary" href="../wanso/">阅读 Wanso 案例 →</a></div>
+</div>
+</div>
+</main>
+<footer class="wrap"><a class="footname" href="../">王稼瑞 <span>产品经理作品集</span></a><div><a href="https://github.com/JaredWangX">GitHub ↗</a><a href="#main">回到顶部 ↑</a></div>
+</footer>
+<dialog class="modal" id="overlay" aria-labelledby="dialog-title"><div class="dialog-top"><h2 id="dialog-title"></h2>
+<button class="close" type="button" aria-label="关闭弹窗">×</button></div>
+<div class="modal-content"></div>
+</dialog></body></html>

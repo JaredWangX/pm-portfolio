@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN" data-type="software"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#faf6ef"><meta name="description" content="怎样让一个有预算、有忌口的人，在午休时决定吃什么、去哪点？我将选餐与平台比价拆成两个连续决策。"><meta name="page-type" content="software"><meta name="site-kind" content="software"><meta property="og:type" content="website"><meta property="og:title" content="Wanso 万象外卖 · 王稼瑞的产品案例"><meta property="og:description" content="怎样让一个有预算、有忌口的人，在午休时决定吃什么、去哪点？我将选餐与平台比价拆成两个连续决策。"><meta property="og:url" content="https://jaredwangx.github.io/pm-portfolio/wanso/"><meta property="og:image" content="https://jaredwangx.github.io/pm-portfolio/assets/share.jpg"><link rel="icon" href="../assets/icon.png"><title>Wanso 万象外卖 · 王稼瑞的产品案例</title><link rel="stylesheet" href="../style.css"><script defer src="../app.js"></script></head>
+<body data-base="../"><a class="skip" href="#main">跳至正文</a><header><div class="navwrap"><a class="identity" href="../" aria-label="王稼瑞作品集首页"><span class="monogram">W</span><span><strong>王稼瑞</strong><small>AI 产品经理</small></span></a><nav aria-label="主导航"><a href="../#strengths">个人优势</a><a href="../#work">项目作品</a><a href="../#materials">作品资料</a></nav>
+<a class="navpdf" href="../downloads/portfolio.pdf" target="_blank" rel="noopener">查看 PDF <span aria-hidden="true">↗</span></a><button class="menu" type="button" aria-label="打开导航" aria-expanded="false" aria-controls="mobile-nav">导航</button></div>
+<nav id="mobile-nav" aria-label="手机导航" hidden><a href="../#strengths">个人优势</a><a href="../#work">项目作品</a><a href="../#materials">作品资料</a></nav>
+</header>
+<main id="main"><div class="case-intro"><div class="wrap"><a href="../#work" class="back">← 返回项目作品</a><div class="tags"><span>2026.01 — 04</span><span>越南外卖选餐与同店比价</span></div>
+<h1>Wanso 万象外卖</h1>
+<p>怎样让一个有预算、有忌口的人，在午休时决定吃什么、去哪点？我将选餐与平台比价拆成两个连续决策。</p>
+</div>
+</div>
+<div class="wrap case-layout"><aside class="sidecard"><dl><dt>我的角色</dt><dd>我负责竞品拆解、PRD、原型和三轮内测，协助 Android 开发与双端联调。</dd><dt>验证结果</dt><dd><strong>75% → 93.8%</strong><small>核心任务完成率 · 内测首末轮</small></dd></dl>
+<nav aria-label="案例目录"><a href="#problem">项目背景</a><a href="#decisions">产品判断与需求</a><a href="#prototype">交互演示</a><a href="#results">验证结果</a><a href="#roadmap">产品路线图</a></nav>
+</aside>
+<div class="case-content"><section id="problem" class="case-section"><p class="eyebrow">项目背景</p>
+<h2>午休时，用户其实要做两次选择</h2>
+<p>越南的上班族和学生要在口味、预算和配送之间权衡。拆解 GrabFood、ShopeeFood 的流程时，我发现直接比较店铺标价会掩盖份量、运费和优惠差异。连菜品都没选定时，低价很难帮助用户下决定。</p>
+</section>
+<section id="decisions" class="case-section"><p class="eyebrow">我的判断</p>
+<h2>先缩小选餐范围，再对齐比较条件</h2>
+<ol class="decision-list"><li><strong>让本次意愿优先</strong><p>当用户说“不吃鸡”，即时忌口优先于历史偏好。我用候选餐厅、餐厅 ID 校验和菜单价格回填来约束输出。</p>
+</li>
+<li><strong>拆开餐费与到手价</strong><p>追问换饮品时先重算餐费。只有进入同店同份量的比价场景，才把运费、折扣上限和送达时间一起展示。</p>
+</li>
+<li><strong>限定首期交付边界</strong><p>首期由 Wanso 承接推荐、比价与平台跳转。支付留在第三方。订单回传和归因是验证商家抽佣的前提。</p>
+</li>
+</ol>
+<div class="reqs"><details><summary><b>推荐候选与缺失价格</b><span>验收规则</span></summary><p>缺少菜单时优先展示有菜单的候选，并说明可去平台查看。</p>
+<div class="check"><strong>用例</strong> 没有价格依据时，不能将菜品标记为符合预算。</div>
+</details><details><summary><b>预算与连续追问</b><span>验收规则</span></summary><p>保留已经选好的菜品和预算，在替换饮品后重新计算。</p>
+<div class="check"><strong>用例</strong> 49,000 的汉堡加 10,000 的水，小计 59,000，明确配送费另计。</div>
+</details></div>
+</section>
+<section id="prototype" class="case-section"><p class="eyebrow">交互原型</p>
+<h2>从选餐、换饮品，到同店比价</h2>
+<p>点手机内的按钮可以推进操作。前两步是同一份汉堡订单，第三步换用 Cô Ba 粉店演示平台选择。中文演示根据越南语原型整理。</p>
+<div class="demo" data-player><div class="demo-heading"><span class="live-dot"></span><span>交互演示</span></div>
+<div class="demo-panel wanso" data-demo="wanso" ><div class="stage"><div class="phone" aria-label="Wanso 可交互手机原型"><div class="handset"><div class="phonehead"><span class="phone-brand">Wanso</span><i aria-hidden="true"></i><span lang="vi">Ăn gì?</span></div>
+ <div class="phone-state" data-scene="0"><div class="mob-meta">午餐推荐</div>
+<h3>今天，吃点什么？</h3>
+<div class="querypill">牛肉芝士 · 不吃鸡 · 6 万以内</div>
+<div class="meal"><img src="../assets/burger.webp" alt="双层牛肉芝士汉堡" decoding="async"><div><small>Hamburger Bamysu</small><b>双层牛肉芝士汉堡</b><strong>49,000 ₫</strong></div>
+</div>
+<button class="device-action" data-next>加一瓶矿泉水 <span>＋</span></button></div>
+ <div class="phone-state" data-scene="1" hidden><div class="mob-meta">餐费确认</div>
+<h3>这份搭配，够预算。</h3>
+<div class="receipt"><div><span>双层牛肉汉堡</span><b>49,000</b></div>
+<div><span>矿泉水</span><b>10,000</b></div>
+<div class="sum"><span>餐费小计</span><b>59,000 ₫</b></div>
+</div>
+<p class="device-help">还剩 1,000 越南盾。配送费在平台下单时核实。</p>
+<button class="device-action" data-next>看同店比价示例 <span>›</span></button></div>
+ <div class="phone-state" data-scene="2" hidden><div class="mob-meta">另一家店 · 平台选择</div>
+<h3>在哪家平台点？</h3>
+<p class="phone-sub">Cô Ba 粉店 · 餐费 60,000 ₫</p>
+<div class="platform"><b>GrabFood</b><strong>60,000 ₫</strong><small>免配送费</small></div>
+<div class="platform alt"><b>ShopeeFood</b><strong>63,000 ₫</strong><small>加运费，扣除折扣</small></div>
+<button class="device-action" data-next>重新选餐 <span>↺</span></button></div>
+ <div class="gesture" aria-hidden="true"></div>
+</div>
+</div>
+</div>
+<div class="playrow"><div class="steps" role="group" aria-label="演示步骤"><button type="button" data-step="0" aria-pressed="true">推荐</button><button type="button" data-step="1" aria-pressed="false">搭配</button><button type="button" data-step="2" aria-pressed="false">比价</button></div>
+<button type="button" class="play" aria-label="暂停演示" data-play><span aria-hidden="true">Ⅱ</span></button></div>
+</div>
+</div>
+<div class="proofs"><button type="button" class="proof" data-title="推荐卡原图" data-image="../assets/wanso-recommend.webp"><span>推荐卡原图</span><span aria-hidden="true">⤢</span></button><button type="button" class="proof" data-title="餐费确认原图" data-image="../assets/wanso-confirm.webp"><span>餐费确认原图</span><span aria-hidden="true">⤢</span></button><button type="button" class="proof" data-title="平台报价原图" data-image="../assets/wanso-platforms.webp"><span>平台报价原图</span><span aria-hidden="true">⤢</span></button></div>
+<div class="calculator"><h3>试算两家平台的到手价</h3>
+<p>按原型的活动条件，Grab 免配送费；Shopee 运费 12,000，餐费打八五折，最多减 15,000。</p>
+<label for="cost">同一份餐品的餐费 <output id="price" for="cost">60,000 ₫</output></label><input id="cost" type="range" min="30000" max="150000" step="5000" value="60000"><div class="calc-results"><div>GrabFood <b id="grab">60,000 ₫</b></div>
+<div>ShopeeFood <b id="shopee">63,000 ₫</b></div>
+</div>
+<p id="verdict" aria-live="polite">GrabFood 便宜 3,000 ₫。</p>
+<small>演示测算，最终金额以平台结算为准。</small></div>
+</section>
+<section id="results" class="case-section"><p class="eyebrow">效果验证</p>
+<h2>三轮内测中，选店任务完成率从 75% 升至 93.8%</h2>
+<p>我围绕选店、预算约束、多语言和连续追问记录失败原因，改动后再回归。三轮各收集 50 份五分制问卷，将 4–5 分答卷计入满意。</p>
+<div class="metricgrid"><div><b>80% → 94.7%</b><span>推荐约束满足率</span></div>
+<div><b>99.1%</b><span>比价与内部数据一致率</span></div>
+<div><b>72 / 82 / 88%</b><span>三轮满意度</span></div>
+</div>
+<p class="note">这些数据支持继续打磨选餐决策流程。真实成交转化和商家收益仍需订单回传验证。</p>
+</section>
+<section id="roadmap" class="case-section"><p class="eyebrow">产品路线图</p>
+<h2>从验证选餐到验证成交</h2>
+<ol class="roadmap"><li><span>已交付</span><div><h3>选餐与平台跳转</h3>
+<p>完成需求文档、Figma 原型、验收标准，协助 Android 与双端联调。</p>
+</div>
+</li>
+<li><span>已验证</span><div><h3>推荐规则回归</h3>
+<p>用三轮内部任务复核预算、忌口和连续追问，把失败用例纳入回归。</p>
+</div>
+</li>
+<li><span>待验证</span><div><h3>订单归因与商家结算</h3>
+<p>先确认平台能回传有效订单，再区分退款及重复回传，验证按成交收费的可行性。</p>
+</div>
+</li>
+</ol>
+</section>
+<div class="nextcase"><a class="button" href="../#work">返回项目列表</a><a class="button primary" href="../onentra/">阅读 ONENTRA 案例 →</a></div>
+</div>
+</div>
+</main>
+<footer class="wrap"><a class="footname" href="../">王稼瑞 <span>产品经理作品集</span></a><div><a href="https://github.com/JaredWangX">GitHub ↗</a><a href="#main">回到顶部 ↑</a></div>
+</footer>
+<dialog class="modal" id="overlay" aria-labelledby="dialog-title"><div class="dialog-top"><h2 id="dialog-title"></h2>
+<button class="close" type="button" aria-label="关闭弹窗">×</button></div>
+<div class="modal-content"></div>
+</dialog></body></html>
