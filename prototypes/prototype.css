@@ -82,3 +82,23 @@ body[data-product=wanso].phone-player .flow-dialog .viewer-tools{display:flex;pa
 .flow-dialog .viewer-tools .page-title{font-size:12px;min-width:0}
 .flow-dialog .viewer-tools>div{flex:none}
 .flow-dialog .viewer-tools button{min-height:36px;padding:4px 9px;font-size:12px}
+
+/* Product-only embeds belong inside the homepage's device hardware. */
+body.device-embed .review{height:100dvh;width:100%;max-width:none;margin:0}
+body.device-embed .viewer,body[data-product=wanso].phone-player.device-embed .viewer{display:block;height:100%;padding:0;overflow:hidden;background:transparent}
+body.device-embed .viewport,body[data-product=wanso].phone-player.device-embed .viewport{height:100%;width:100%;padding:0;overflow:hidden}
+body.device-embed .viewer-tools,body.device-embed .viewer-footer,body.device-embed .step-guide,body.device-embed .play-progress{display:none!important}
+body.device-embed .screen{border:0;box-shadow:none}
+body.device-embed .interaction-hint{bottom:14px;left:14px;right:14px;font-size:12px;line-height:1.8}
+body[data-product=wanso] .native-page{border:3px solid #d1d9df;border-radius:inherit;background:#eef5ff}
+body[data-product=wanso] .native-page .original-screen,body[data-product=wanso] .native-page .screen-bottom{border-radius:inherit}
+body[data-product=wanso].phone-player:not(.embed) .review{width:min(430px,calc(100% - 24px));max-width:none;height:auto}
+body[data-product=wanso].phone-player:not(.embed) .viewer{height:auto;aspect-ratio:1224/3190;grid-template-rows:48px minmax(0,1fr) 48px 3px;padding-inline:0}
+body[data-product=wanso].phone-player:not(.device-embed) .viewport{grid-row:2}
+body[data-product=wanso].phone-player:not(.device-embed) .viewer-footer{grid-row:3}
+body[data-product=wanso].phone-player:not(.device-embed) .play-progress{grid-row:4}
+body[data-product=wanso].phone-player.embed:not(.device-embed) .viewer{grid-template-rows:48px minmax(0,1fr) 48px 3px}
+.phone-shortcuts{grid-row:1;display:flex;gap:4px;align-items:center;border:1px solid #dce0d5;border-radius:12px;padding:3px;background:#fff9}
+.phone-shortcuts button{flex:1;min-height:40px;border:0;border-radius:8px;padding:5px 4px;font-size:12px;color:#67725e;background:transparent}
+.phone-shortcuts button[aria-current=step]{background:#e7eddf;color:#3c5734;font-weight:650}
+.phone-shortcuts button:hover{background:#edf0e5}

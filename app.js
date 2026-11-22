@@ -43,7 +43,7 @@ document.querySelector('[data-launch]')?.addEventListener('click', event => {
 });
 function openPhone(trigger, frameId = '') {
   const frame = document.createElement('iframe');
-  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=personal5', document.querySelector('.identity').href).href;
+  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=glass6', document.querySelector('.identity').href).href;
   if (/^[a-z0-9-]{1,40}$/.test(frameId)) frame.src += '#' + frameId;
   frame.title = 'Wanso 手机交互原型';
   frame.referrerPolicy = 'no-referrer';
@@ -176,3 +176,47 @@ addEventListener('message', event => {
   if (event.data?.type === 'portfolio-open-phone') openPhone(frame, event.data.frame);
   if (event.data?.type === 'portfolio-close-phone' && overlay.contains(frame)) overlay.close();
 });
+
+// Controls choose actual prototype frames; no second, invented product UI.
+const deviceFrames = [...document.querySelectorAll('[data-device-frame]')];
+const deviceDescriptions = {
+  onentra: {'23':'把模型、资料和工具放进同一个任务，直到得到可复核的文件。','24':'先明确本次任务，再引用模型、技能和业务资料。','37':'查看任务安排、执行状态和计划，让重复工作有序发生。','49':'在会话空间集中查看、筛选和预览本次任务的文件。'},
+  wanso: {home:'从想吃什么开始，核对餐厅、菜单和费用，再作出选择。',recommend:'汉堡选餐示例：牛肉芝士、不吃鸡肉，餐费不超过 60,000 ₫。',compare:'独立烤鸡示例：核对同一菜单在两家平台的标价，配送费另计。',profile:'按安卓应用核对的个人中心：口味档案、订单偏好与应用设置。'}
+};
+document.querySelectorAll('[data-device-target]').forEach(button => button.addEventListener('click', () => {
+  const frame = deviceFrames.find(frame => frame.dataset.deviceFrame === button.dataset.deviceTarget);
+  frame?.contentWindow?.postMessage({type:'portfolio-show-frame',frame:button.dataset.frame},location.origin);
+}));
+document.querySelectorAll('[data-device-action]').forEach(button => button.addEventListener('click',()=>{
+  button.closest('[data-device-project]').querySelector('iframe').contentWindow.postMessage({type:'portfolio-device-action',action:button.dataset.deviceAction},location.origin);
+}));
+addEventListener('message', event => {
+  if (event.origin !== location.origin || event.data?.type !== 'portfolio-frame-changed') return;
+  const frame = deviceFrames.find(frame => frame.contentWindow === event.source);
+  if (!frame) return;
+  const product = frame.dataset.deviceFrame, id = event.data.frame;
+  const section = frame.closest('[data-device-project]');
+  section.querySelectorAll('button').forEach(button=>button.disabled=false);
+  section.querySelector('[data-device-action="previous"]').disabled = !event.data.canPrevious;
+  section.querySelector('.device-pagination span').textContent = event.data.counter+' · 点击界面逐步体验';
+  section.querySelectorAll('[data-frame]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.frame === id)));
+  section.querySelector('[data-frame-label]').textContent = event.data.title;
+  const description = section.querySelector('[data-device-description]');
+  description.textContent = deviceDescriptions[product]?.[id] || event.data.description;
+  description.title = description.textContent;
+  const expand = section.querySelector('[data-phone-preview]');
+  if (expand) expand.hash = id;
+});
+const ambientToggle = document.querySelector('[data-ambient-toggle]');
+if (ambientToggle) {
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  function setAmbient(playing) {
+    document.body.classList.toggle('ambient-paused',!playing);
+    ambientToggle.setAttribute('aria-pressed',String(playing));
+    ambientToggle.setAttribute('aria-label',playing?'暂停背景光影':'播放背景光影');
+    ambientToggle.textContent = playing?'Ⅱ 背景光影':'▷ 背景光影';
+  }
+  setAmbient(!reducedMotion.matches);
+  ambientToggle.addEventListener('click',()=>setAmbient(ambientToggle.getAttribute('aria-pressed')!=='true'));
+  reducedMotion.addEventListener('change',event=>setAmbient(!event.matches));
+}

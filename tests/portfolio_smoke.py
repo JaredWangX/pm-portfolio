@@ -5,6 +5,7 @@ Screenshots are optional evidence, not committed test fixtures.
 """
 import json
 import os
+import sys
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
@@ -27,144 +28,139 @@ with sync_playwright() as p:
         if page.locator('.flow-toggle').count() and not page.locator('.flow-dialog').evaluate('(d)=>d.open'):
             page.locator('.flow-toggle').click()
 
-    for product in ['wanso', 'onentra']:
-        data = json.loads((ROOT / 'prototypes' / product / 'screens.json').read_text())
-        page.goto(BASE + 'prototypes/' + product + '/')
-        loaded(data['default'])
-        assert page.locator('.autoplay').get_attribute('aria-pressed') == 'true'
-        first = page.url
-        page.wait_for_function('url => location.href !== url', arg=first, timeout=12000)
-        assert page.locator('.page-counter').inner_text() == '2 / 6'
-        page.locator('.next' if product == 'wanso' else '.continue').click()
-        loaded(data['flows'][0]['steps'][2]['id'])
-        assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
-        manual = page.url
-        page.wait_for_timeout(10300)
-        assert page.url == manual, 'manual inspection must remain paused'
-        page.locator('.autoplay').click()
-        page.wait_for_function('url => location.href !== url', arg=manual, timeout=12000)
-        page.locator('.autoplay').click()
+    if '--layout-only' not in sys.argv:
+        for product in ['wanso', 'onentra']:
+            data = json.loads((ROOT / 'prototypes' / product / 'screens.json').read_text())
+            page.goto(BASE + 'prototypes/' + product + '/')
+            loaded(data['default'])
+            assert page.locator('.autoplay').get_attribute('aria-pressed') == 'true'
+            first = page.url
+            page.wait_for_function('url => location.href !== url', arg=first, timeout=12000)
+            assert page.locator('.page-counter').inner_text() == '2 / 6'
+            page.locator('.next' if product == 'wanso' else '.continue').click()
+            loaded(data['flows'][0]['steps'][2]['id'])
+            assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
+            manual = page.url
+            page.wait_for_timeout(10300)
+            assert page.url == manual, 'manual inspection must remain paused'
+            page.locator('.autoplay').click()
+            page.wait_for_function('url => location.href !== url', arg=manual, timeout=12000)
+            page.locator('.autoplay').click()
 
-        for i, flow in enumerate(data['flows']):
-            guide()
-            page.locator('.flow-selector button').nth(i).click()
-            for step in flow['steps']:
-                guide()
-                page.locator('[data-step="' + step['id'] + '"]').click()
-                loaded(step['id'])
-                assert page.locator('.step-caption').inner_text() == step['caption']
-                assert page.locator('.page-description').inner_text() == step['reason']
-            if product == 'wanso':
+            for i, flow in enumerate(data['flows']):
                 guide()
                 page.locator('.flow-selector button').nth(i).click()
+                for step in flow['steps']:
+                    guide()
+                    page.locator('[data-step="' + step['id'] + '"]').click()
+                    loaded(step['id'])
+                    assert page.locator('.step-caption').inner_text() == step['caption']
+                    assert page.locator('.page-description').inner_text() == step['reason']
+                if product == 'wanso':
+                    guide()
+                    page.locator('.flow-selector button').nth(i).click()
+                else:
+                    page.locator('.continue').click()
+                loaded(flow['steps'][0]['id'])
+            guide()
+            page.locator('.catalog summary').click()
+            for frame in data['frames']:
+                guide()
+                page.locator('[data-screen="' + frame['id'] + '"]').click()
+                loaded(frame['id'])
+                assert page.locator('.page-layer:not(.leaving) .original-screen').evaluate('(img)=>img.complete && img.naturalWidth>0')
+                ratio = page.locator('.page-layer:not(.leaving) .original-screen').evaluate('(img)=>img.clientWidth/img.clientHeight')
+                assert abs(ratio - frame['width'] / frame['height']) < .015
+            # A catalog selection is free browsing; Continue explicitly returns to the guided flow.
+            assert page.locator('.continue').inner_text() == '回到流程 →'
+            if product == 'wanso':
+                guide()
+                page.locator('.flow-selector button').last.click()
             else:
                 page.locator('.continue').click()
-            loaded(flow['steps'][0]['id'])
-        guide()
-        page.locator('.catalog summary').click()
-        for frame in data['frames']:
+            loaded(data['flows'][-1]['steps'][0]['id'])
             guide()
-            page.locator('[data-screen="' + frame['id'] + '"]').click()
-            loaded(frame['id'])
-            assert page.locator('.page-layer:not(.leaving) .original-screen').evaluate('(img)=>img.complete && img.naturalWidth>0')
-            ratio = page.locator('.page-layer:not(.leaving) .original-screen').evaluate('(img)=>img.clientWidth/img.clientHeight')
-            assert abs(ratio - frame['width'] / frame['height']) < .015
-        # A catalog selection is free browsing; Continue explicitly returns to the guided flow.
-        assert page.locator('.continue').inner_text() == '回到流程 →'
-        if product == 'wanso':
-            guide()
-            page.locator('.flow-selector button').last.click()
-        else:
-            page.locator('.continue').click()
-        loaded(data['flows'][-1]['steps'][0]['id'])
-        guide()
-        page.locator('.zoom-toggle').click()
-        assert 'zoomed' in page.locator('body').get_attribute('class')
-        page.keyboard.press('Escape')
-        assert 'zoomed' not in page.locator('body').get_attribute('class')
-        checks.append(product + ': autoplay, pause/resume, ' + str(len(data['flows'])) + ' flows, catalog, image proportions, zoom')
+            page.locator('.zoom-toggle').click()
+            assert 'zoomed' in page.locator('body').get_attribute('class')
+            page.keyboard.press('Escape')
+            assert 'zoomed' not in page.locator('body').get_attribute('class')
+            checks.append(product + ': autoplay, pause/resume, ' + str(len(data['flows'])) + ' flows, catalog, image proportions, zoom')
 
-    page.goto(BASE + 'prototypes/wanso/#home')
-    loaded('home')
-    page.locator('.autoplay').click()
-    geometry = page.locator('.screen').bounding_box()
-    page.locator('.next').click()
-    loaded('explore')
-    page.locator('.next').click()
-    loaded('taste')
-    assert page.locator('.screen').bounding_box() == geometry, 'phone shell must not resize between source aspect ratios'
-    page.locator('.next').click(click_count=3, delay=50)
-    page.wait_for_timeout(400)
-    assert page.locator('.page-layer').count() == 1, 'rapid navigation must not leave stale layers'
-    page.locator('.screen').dispatch_event('pointerdown', {'pointerType':'touch','pointerId':1,'clientX':200,'clientY':300})
-    before = page.url
-    page.locator('.screen').dispatch_event('pointerup', {'pointerType':'touch','pointerId':1,'clientX':100,'clientY':305})
-    page.wait_for_function('url => location.href !== url', arg=before)
-    assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
-    checks.append('phone: stable shell, rapid-navigation cleanup, horizontal swipe and pause')
-    for slug in ['wanso-prd','onentra-prd','recommendation-review','delivery-review']:
-        page.goto(BASE)
-        page.locator('a[href="documents/'+slug+'/"]').click()
-        assert '/documents/'+slug+'/' in page.url
-        assert len(page.locator('.reading-content').inner_text()) > 1500
-        link = page.locator('.reader-contents nav a').nth(2)
-        target = link.get_attribute('href')
-        link.click()
-        page.wait_for_timeout(600)
-        assert page.locator(target).bounding_box()['y'] >= 70
-        assert page.locator(target).bounding_box()['y'] < 160
-        page.evaluate('window.__printed=false;window.print=()=>window.__printed=true')
-        page.locator('.print-document').click()
-        assert page.evaluate('window.__printed')
-    checks.append('4 complete documents: reachable links, section anchors, print action')
+        page.goto(BASE + 'prototypes/wanso/#home')
+        loaded('home')
+        page.locator('.autoplay').click()
+        geometry = page.locator('.screen').bounding_box()
+        page.locator('.next').click()
+        loaded('explore')
+        page.locator('.next').click()
+        loaded('taste')
+        assert page.locator('.screen').bounding_box() == geometry, 'phone shell must not resize between source aspect ratios'
+        page.locator('.next').click(click_count=3, delay=50)
+        page.wait_for_timeout(400)
+        assert page.locator('.page-layer').count() == 1, 'rapid navigation must not leave stale layers'
+        page.locator('.screen').dispatch_event('pointerdown', {'pointerType':'touch','pointerId':1,'clientX':200,'clientY':300})
+        before = page.url
+        page.locator('.screen').dispatch_event('pointerup', {'pointerType':'touch','pointerId':1,'clientX':100,'clientY':305})
+        page.wait_for_function('url => location.href !== url', arg=before)
+        assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
+        checks.append('phone: stable shell, rapid-navigation cleanup, horizontal swipe and pause')
+        for slug in ['wanso-prd','onentra-prd','recommendation-review','delivery-review']:
+            page.goto(BASE)
+            page.locator('a[href="documents/'+slug+'/"]').click()
+            assert '/documents/'+slug+'/' in page.url
+            assert len(page.locator('.reading-content').inner_text()) > 1500
+            link = page.locator('.reader-contents nav a').nth(2)
+            target = link.get_attribute('href')
+            link.click()
+            page.wait_for_timeout(600)
+            assert page.locator(target).bounding_box()['y'] >= 70
+            assert page.locator(target).bounding_box()['y'] < 160
+            page.evaluate('window.__printed=false;window.print=()=>window.__printed=true')
+            page.locator('.print-document').click()
+            assert page.evaluate('window.__printed')
+        checks.append('4 complete documents: reachable links, section anchors, print action')
 
-    page.goto(BASE + 'documents/recommendation-review/#decision-lab')
-    for amount, expected in [(30000,37500),(80000,80000),(100000,97000),(150000,147000)]:
-        page.locator('#meal-cost').fill(str(amount))
-        assert page.locator('[data-grab]').inner_text() == f'{amount:,} ₫'
-        assert page.locator('[data-shopee]').inner_text() == f'{expected:,} ₫'
-    page.goto(BASE + 'documents/delivery-review/#decision-lab')
-    for minutes, total in [(0,30),(20,50),(30,60),(60,90)]:
-        page.locator('#rework-time').fill(str(minutes))
-        assert page.locator('[data-total-time]').inner_text() == f'{total} 分钟'
-    checks.append('interactive decision models: discount cap, break-even and rework boundaries')
+        page.goto(BASE + 'documents/recommendation-review/#decision-lab')
+        for amount, expected in [(30000,37500),(80000,80000),(100000,97000),(150000,147000)]:
+            page.locator('#meal-cost').fill(str(amount))
+            assert page.locator('[data-grab]').inner_text() == f'{amount:,} ₫'
+            assert page.locator('[data-shopee]').inner_text() == f'{expected:,} ₫'
+        page.goto(BASE + 'documents/delivery-review/#decision-lab')
+        for minutes, total in [(0,30),(20,50),(30,60),(60,90)]:
+            page.locator('#rework-time').fill(str(minutes))
+            assert page.locator('[data-total-time]').inner_text() == f'{total} 分钟'
+        checks.append('interactive decision models: discount cap, break-even and rework boundaries')
 
-    # Independent examples must never become one fabricated order.
-    wanso = json.loads((ROOT / 'prototypes/wanso/screens.json').read_text())
-    meal_ids = [step['id'] for step in wanso['flows'][0]['steps']]
-    assert meal_ids[-1] == 'confirm' and 'compare' not in meal_ids and 'reviews' not in meal_ids
-    home = next(f for f in wanso['frames'] if f['id'] == 'home')
-    notice = next(h for h in home['hotspots'] if h.get('notice'))
-    page.goto(BASE + 'prototypes/wanso/#home')
-    loaded('home')
-    page.locator('.page-layer:not(.leaving) .hotspot[aria-label="'+notice['label']+'"]').click()
-    assert page.url.endswith('#home')
-    assert page.locator('.interaction-hint').inner_text() == notice['notice']
-    assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
-    checks.append('source fidelity: independent meal flows; unavailable branch explains without invented page')
+        # Independent examples must never become one fabricated order.
+        wanso = json.loads((ROOT / 'prototypes/wanso/screens.json').read_text())
+        meal_ids = [step['id'] for step in wanso['flows'][0]['steps']]
+        assert meal_ids[-1] == 'confirm' and 'compare' not in meal_ids and 'reviews' not in meal_ids
+        home = next(f for f in wanso['frames'] if f['id'] == 'home')
+        notice = next(h for h in home['hotspots'] if h.get('notice'))
+        page.goto(BASE + 'prototypes/wanso/#home')
+        loaded('home')
+        page.locator('.page-layer:not(.leaving) .hotspot[aria-label="'+notice['label']+'"]').click()
+        assert page.url.endswith('#home')
+        assert page.locator('.interaction-hint').inner_text() == notice['notice']
+        assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
+        checks.append('source fidelity: independent meal flows; unavailable branch explains without invented page')
 
-    # An unavailable image must give a working retry, not an indefinitely frozen player.
-    page.route('**/wanso-recommend.webp', lambda route: route.abort())
-    page.goto(BASE + 'prototypes/wanso/')
-    page.locator('.load-error:not([hidden])').wait_for()
-    page.unroute('**/wanso-recommend.webp')
-    page.locator('.retry').click()
-    loaded('recommend')
-    assert page.locator('.load-error').is_hidden()
-    checks.append('image failure: clear error + retry recovers')
+        # An unavailable image must give a working retry, not an indefinitely frozen player.
+        page.route('**/wanso-recommend.webp', lambda route: route.abort())
+        page.goto(BASE + 'prototypes/wanso/')
+        page.locator('.load-error:not([hidden])').wait_for()
+        page.unroute('**/wanso-recommend.webp')
+        page.locator('.retry').click()
+        loaded('recommend')
+        assert page.locator('.load-error').is_hidden()
+        checks.append('image failure: clear error + retry recovers')
 
     page.goto(BASE)
-    for selector in ['[data-quick="wanso"]','[data-quick="onentra"]']:
-        page.locator(selector).click()
-        assert page.locator('#overlay').evaluate('(d)=>d.open')
-        page.keyboard.press('Escape')
-        assert not page.locator('#overlay').evaluate('(d)=>d.open')
-        assert page.locator(selector).evaluate('(b)=>document.activeElement===b')
     page.locator('[data-copy-email]').click()
     page.wait_for_function('document.querySelector(".copy-feedback").textContent.includes("已复制")')
     assert page.evaluate('navigator.clipboard.readText()') == '13971032326@163.com'
     assert page.locator('a[href^="mailto:"]').first.get_attribute('href') == 'mailto:13971032326@163.com'
-    checks.append('2 quick dialogs: Escape + focus restored; real mailto and clipboard')
+    checks.append('contact: real mailto and clipboard')
 
     for width in [1440,1024,768,390,320]:
         page.set_viewport_size({'width':width,'height':900 if width>640 else 844})
@@ -208,55 +204,81 @@ with sync_playwright() as p:
         assert page.locator('.viewer').bounding_box()['y'] < (50 if product == 'wanso' else 10)
     checks.append('mobile catalog: returns to preview; guide never overlaps playback')
 
-    page.set_viewport_size({'width':390,'height':844})
-    page.goto(BASE + 'prototypes/wanso/')
-    loaded('recommend')
-    phone_box = page.locator('.screen').bounding_box()
-    assert phone_box['width'] >= 300, phone_box
-    assert phone_box['y'] >= 48 and phone_box['y'] + phone_box['height'] <= 796
+    page.set_viewport_size({'width':1440,'height':900})
     page.goto(BASE)
-    page.locator('[data-project="wanso"]').click()
-    iframe = page.frame_locator('iframe[title="WANSO 原版交互原型"]')
+    assert page.locator('[data-device-project]').count() == 2
+    assert page.locator('[data-device-project="wanso"]').is_visible()
+    assert page.locator('[data-device-project="onentra"]').is_visible()
+    iframe = page.frame_locator('[data-device-frame="wanso"]')
+    laptop = page.frame_locator('[data-device-frame="onentra"]')
     iframe.locator('.page-layer:not(.leaving) .original-screen').wait_for(state='visible')
-    box = iframe.locator('.screen').bounding_box()
-    assert box['width'] >= 270, box
-    iframe.locator('.next').click()
-    iframe.locator('.page-counter').filter(has_text='2 / 6').wait_for()
-    checks.append('phone fit: full device within viewport, compact controls, embedded touch navigation')
+    assert iframe.locator('.screen').bounding_box()['width'] >= 340
+    assert iframe.locator('.autoplay').get_attribute('aria-pressed') == 'false'
+    for frame_id in ['recommend','compare','profile','home']:
+        page.locator('[data-device-target="wanso"][data-frame="'+frame_id+'"]').click()
+        iframe.locator('.page-layer:not(.leaving) img.original-screen').get_attribute('alt')
+        iframe.locator('.page-title').filter(has_text={'recommend':'首次推荐','compare':'同店比价','profile':'个人中心','home':'首页'}[frame_id]).wait_for(state='attached')
+    iframe.locator('.page-layer:not(.leaving) [data-target="profile"]').click()
+    iframe.locator('.native-page').wait_for()
+    iframe.locator('.page-layer:not(.leaving) [data-target="settings"]').click()
+    iframe.locator('.page-title').filter(has_text='应用设置').wait_for(state='attached')
+    page.locator('[data-device-target="onentra"][data-frame="49"]').click()
+    laptop.locator('.page-title').filter(has_text='会话文件').wait_for(state='attached')
+    page.locator('[data-device-target="wanso"][data-frame="compare"]').click()
+    iframe.locator('.page-title').filter(has_text='同店比价').wait_for(state='attached')
+    page.locator('.phone-project [data-device-action="next"]').click()
+    iframe.locator('.page-title').filter(has_text='优惠价格对照').wait_for(state='attached')
+    checks.append('device stage: both devices visible, direct scene controls, correct profile hub, comparison continuation and laptop navigation')
 
-    iframe.locator('.expand').click()
+    page.locator('.phone-project [data-phone-preview]').click()
     phone = page.frame_locator('.phone-modal iframe')
-    phone.locator('.page-counter').filter(has_text='2 / 6').wait_for()
-    assert page.locator('.phone-modal').bounding_box()['width'] < 350
+    phone.locator('.page-title').filter(has_text='优惠价格对照').wait_for(state='attached')
+    assert page.locator('.phone-modal').bounding_box()['width'] >= 420
     phone.locator('.flow-toggle').click()
     assert phone.locator('.flow-dialog').evaluate('(d)=>d.open')
     page.keyboard.press('Escape')
     assert page.locator('#overlay').evaluate('(d)=>d.open')
     assert not phone.locator('.flow-dialog').evaluate('(d)=>d.open')
-    phone.locator('.next').click()
-    phone.locator('.page-counter').filter(has_text='3 / 6').wait_for()
+    phone.locator('[data-shortcut="profile"]').click()
+    phone.locator('.native-page').wait_for()
     page.keyboard.press('Escape')
-    assert not page.locator('#overlay').evaluate('(d)=>d.open')
-    checks.append('phone dialog: opens at current frame, nested Escape, closes without losing the page')
+    page.wait_for_function('!document.querySelector("#overlay").open')
+    checks.append('wide phone dialog: current frame preserved, direct scenes, nested Escape and close restore')
 
     page.goto(BASE)
     assert page.locator('#materials').count() == 0
     assert page.locator('.strengths .advantage-proof').count() == 0
     assert page.locator('.strengths article').count() == 4
-    assert page.locator('.experience-card').count() == 3
+    assert page.locator('.experience-detail').count() == 3
+    page.locator('.experience-detail').nth(1).locator('summary').click()
+    assert page.locator('.experience-detail').nth(1).locator('.experience-evidence').is_visible()
     for width, height in [(1440,900),(1024,768),(768,1024),(390,844),(320,640)]:
         page.set_viewport_size({'width':width,'height':height})
         if width > 760:
-            for selector in ['.strengths article','.experience-card','.research-card']:
+            for selector in ['.strengths article','.research-card']:
                 heights = page.locator(selector).evaluate_all('(items)=>items.map(i=>i.getBoundingClientRect().height)')
                 assert max(heights)-min(heights) <= 1, (width,selector,heights)
         page.locator('[data-phone-preview]').first.click()
         phone.locator('.page-layer:not(.leaving) .original-screen').wait_for(state='visible')
         modal = page.locator('.phone-modal').bounding_box()
         assert modal['x']>=0 and modal['y']>=0 and modal['x']+modal['width']<=width and modal['y']+modal['height']<=height
-        assert modal['width'] < 380
+        assert modal['width'] >= min(420,width-22)
+        screen = phone.locator('.screen').bounding_box()
+        assert screen['width'] >= min(390,width-48)
         page.locator('.phone-modal .close').click()
-    checks.append('profile: four ability cards, three experiences, no download section; consistent card heights and fitted phone dialogs')
+    checks.append('profile and responsive layout: retained content, expandable practices, consistent cards, readable phone width, reachable close')
+
+    page.goto(BASE+'demos/wanso/')
+    page.locator('[data-nav="profile"]').click()
+    page.locator('#language').click()
+    assert page.locator('.title h1').inner_text() == '个人中心'
+    page.locator('[data-pref="0"]').click()
+    assert page.locator('[data-pref="0"]').get_attribute('aria-pressed') == 'true'
+    page.reload()
+    page.locator('[data-nav="profile"]').click()
+    assert page.locator('[data-pref="0"]').get_attribute('aria-pressed') == 'true'
+    assert page.locator('.profile-menu a').count() == 2
+    checks.append('live demo: profile hub retains saved preferences and links to original settings')
 
     context2 = browser.new_context(reduced_motion='reduce')
     reduced = context2.new_page()
