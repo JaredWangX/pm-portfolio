@@ -91,7 +91,7 @@ function attachPlayer(root) {
       video.currentTime = 0;
       video.classList.remove('ready');
     }
-    if (!canPlay()) return;
+    if (!canPlay() || scenes().length <= 1) return;
     if (onVideo && !failedVideo) {
       if (!video.getAttribute('src')) video.src = video.dataset.reel;
       video.play().catch(error => {
@@ -112,9 +112,11 @@ function attachPlayer(root) {
     panel.querySelectorAll('[data-step]').forEach((el, i) => el.setAttribute('aria-pressed', String(i === frame)));
     if (phone) phone.classList.toggle('can-swipe', panel.dataset.demo === 'wanso' && frame < 2);
     const play = panel.querySelector('[data-play]');
-    play.setAttribute('aria-label', paused ? '播放演示' : '暂停演示');
-    play.title = play.getAttribute('aria-label');
-    play.firstElementChild.textContent = paused ? '▶' : 'Ⅱ';
+    if (play) {
+      play.setAttribute('aria-label', paused ? '播放演示' : '暂停演示');
+      play.title = play.getAttribute('aria-label');
+      play.firstElementChild.textContent = paused ? '▶' : 'Ⅱ';
+    }
     schedule();
   }
   function choose(i) {
@@ -216,3 +218,8 @@ if (contents.length) {
   }, {passive: true});
   highlight();
 }
+
+document.querySelectorAll('[data-doc]').forEach(button=>button.addEventListener('click',()=>{
+  const key=button.dataset.doc;
+  openDialog(button,key==='wanso'?'Wanso · 选餐推荐与费用确认':'ONENTRA · 任务上下文与文件交付',document.getElementById('doc-'+key).content.cloneNode(true));
+}));

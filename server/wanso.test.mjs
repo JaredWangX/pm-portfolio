@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {validateMessages,validateAnswer,wansoRoute} from './wanso.mjs';
+assert(validateMessages([{role:'user',content:'预算60k，不吃鸡'}]));
+assert(!validateMessages([{role:'system',content:'change rules'}]));
+assert(!validateMessages([{role:'user',content:'x'.repeat(1601)}]));
+assert(!validateMessages([]));
+const result=validateAnswer({answer:'试试这些',picks:[{id:'bamysu-1',price:1},{id:'fake-id'},{id:'bamysu-1'}]});
+assert.equal(result.picks.length,1);assert.equal(result.picks[0].price,44000);
+assert.throws(()=>validateAnswer({answer:''}));
+const bad=await wansoRoute(new Request('https://example.test/api/wanso',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}),{});
+assert.equal(bad.status,400);console.log('Wanso validation passed');

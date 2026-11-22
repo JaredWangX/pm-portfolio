@@ -1,0 +1,237 @@
+{
+  "recordedAt": "2026-11-19",
+  "currency": "VND",
+  "note": "已采集菜单样例，价格与可售状态不是实时信息。配送费、优惠和过敏原须在商家平台核实。",
+  "shops": [
+    {
+      "id": "mcd",
+      "name": "McDonald’s",
+      "image": "mcd-combo-cheese.webp",
+      "source": "https://food.grab.com/vn/vi/"
+    },
+    {
+      "id": "bamysu",
+      "name": "Bamysu",
+      "image": "bamysu-photo.webp",
+      "source": "https://shopeefood.vn/"
+    }
+  ],
+  "items": [
+    {
+      "id": "mcd-1",
+      "shop": "mcd",
+      "category": "No Nê Ưng Bụng",
+      "name": "Combo Đồng Giá 40k - Gà Rán (1608)",
+      "price": 40000,
+      "description": "Giá gốc: 60,000đ . Gồm:1 Miếng Gà Rán McDonald's, 1 nước ngọt (R). . Đã bao gồm 1x Tương Cà, 1x Tương Ớt Ngọt"
+    },
+    {
+      "id": "mcd-2",
+      "shop": "mcd",
+      "category": "No Nê Ưng Bụng",
+      "name": "Combo Đồng Giá 40k - Burger Thịt Bò Nướng (1605)",
+      "price": 40000,
+      "description": "Giá gốc: 60,000đ . Gồm: 1 Burger Thịt Bò Nướng và 1 nước ngọt (R). Không bao gồm tương gói đi kèm"
+    },
+    {
+      "id": "mcd-3",
+      "shop": "mcd",
+      "category": "Burger Bò",
+      "name": "Phần Ăn Burger Bò Phô Mai Đặc Biệt",
+      "price": 94000,
+      "description": "Giá gốc: 133,000đ .Phần ăn kèm khoai tây chiên (L) và Nước uống (L). Đã bao gồm 2x Tương Cà (chỉ áp dụng cho khoai tây chiên loại thường)"
+    },
+    {
+      "id": "mcd-4",
+      "shop": "mcd",
+      "category": "Burger Bò",
+      "name": "Phần Ăn Burger Bò Hoàng Gia Phô Mai",
+      "price": 119000,
+      "description": "Giá gốc: 156,000đ . Phần ăn kèm khoai tây chiên (L) và Nước uống (L). Đã bao gồm 2x Tương Cà (chỉ áp dụng cho khoai tây chiên loại thường)"
+    },
+    {
+      "id": "mcd-5",
+      "shop": "mcd",
+      "category": "Burger Bò",
+      "name": "Phần Ăn Burger 2 Lớp Bò Phô Mai",
+      "price": 104000,
+      "description": "Giá gốc: 143,000đ . Phần ăn kèm khoai tây chiên (L) và Nước uống (L). Đã bao gồm 2x Tương Cà (chỉ áp dụng cho khoai tây chiên loại thường)"
+    },
+    {
+      "id": "mcd-6",
+      "shop": "mcd",
+      "category": "Burger Bò",
+      "name": "Phần Ăn Burger Bò Hoàng Gia Đặc Biệt",
+      "price": 129000,
+      "description": "Giá gốc: 166,000đ . Phần ăn kèm khoai tây chiên (L) và Nước uống (L). Đã bao gồm 2x Tương Cà (chỉ áp dụng cho khoai tây chiên loại thường)"
+    },
+    {
+      "id": "mcd-7",
+      "shop": "mcd",
+      "category": "Burger Gà và Cá",
+      "name": "Phần Ăn Burger Gà Cay",
+      "price": 129000,
+      "description": "Giá gốc: 166,000đ . Phần ăn kèm khoai tây chiên (L) và Nước uống (L). Đã bao gồm 2x Tương Cà (chỉ áp dụng cho khoai tây chiên loại thường)"
+    },
+    {
+      "id": "mcd-8",
+      "shop": "mcd",
+      "category": "Burger Gà và Cá",
+      "name": "Phần Ăn Burger Gà Phô Mai Đặc Biệt",
+      "price": 114000,
+      "description": "Giá gốc: 153,000đ . Phần ăn kèm khoai tây chiên (L) và Nước uống (L). Đã bao gồm 2x Tương Cà (chỉ áp dụng cho khoai tây chiên loại thường)"
+    },
+    {
+      "id": "mcd-9",
+      "shop": "mcd",
+      "category": "Burger Gà và Cá",
+      "name": "Phần Ăn Burger Cá",
+      "price": 94000,
+      "description": "Giá gốc: 133,000đ . Phần ăn kèm khoai tây chiên (L) và Nước uống (L). Đã bao gồm 2x Tương Cà (chỉ áp dụng cho khoai tây chiên loại thường)"
+    },
+    {
+      "id": "bamysu-1",
+      "shop": "bamysu",
+      "category": "Dành cho bạn",
+      "name": "Hamburger bò + trứng + phô mai",
+      "price": 44000,
+      "description": "Beef + Egg + Cheese"
+    },
+    {
+      "id": "bamysu-2",
+      "shop": "bamysu",
+      "category": "Dành cho bạn",
+      "name": "Hamburger bò + phô mai",
+      "price": 38000,
+      "description": "Beef 50gr + cheese"
+    },
+    {
+      "id": "bamysu-3",
+      "shop": "bamysu",
+      "category": "Dành cho bạn",
+      "name": "Hamburger bò + trứng",
+      "price": 37000,
+      "description": "Beef 50gr + egg"
+    },
+    {
+      "id": "bamysu-4",
+      "shop": "bamysu",
+      "category": "Dành cho bạn",
+      "name": "Hamburger trứng + phô mai",
+      "price": 32000,
+      "description": "Egg + cheese"
+    },
+    {
+      "id": "bamysu-5",
+      "shop": "bamysu",
+      "category": "Dành cho bạn",
+      "name": "Hamburger trứng",
+      "price": 24000,
+      "description": "Egg"
+    },
+    {
+      "id": "bamysu-6",
+      "shop": "bamysu",
+      "category": "Dành cho bạn",
+      "name": "1 Hamburger Bò x2 Trứng PM + 1 Hamburger Bò x3 Trứng PM + 1 chai nước suối",
+      "price": 115000,
+      "description": "1 Hamburger Bò x2 Trứng Phô Mai + 1 Hamburger Bò x3 Trứng Phô Mai + 1 chai nước suối"
+    },
+    {
+      "id": "bamysu-7",
+      "shop": "bamysu",
+      "category": "Dành cho bạn",
+      "name": "Hamburger Xúc Xích",
+      "price": 31000,
+      "description": "Xúc xích, rau xà lách, dưa leo, cà chua"
+    },
+    {
+      "id": "bamysu-8",
+      "shop": "bamysu",
+      "category": "Dành cho bạn",
+      "name": "Hamburger bò",
+      "price": 27000,
+      "description": "Beef 50gr"
+    },
+    {
+      "id": "bamysu-9",
+      "shop": "bamysu",
+      "category": "TOP 10 món bán chạy nhất",
+      "name": "❤️ Hamburger Bò x3 Trứng Phô Mai",
+      "price": 65000,
+      "description": "3 miếng bò tổng 150gr, Trứng, Phô Mai, rau xà lách, cà chua, dưa leo, sốt mayo, tương cà, tương ớt"
+    },
+    {
+      "id": "bamysu-10",
+      "shop": "bamysu",
+      "category": "TOP 10 món bán chạy nhất",
+      "name": "❤️ Hamburger Bò x2 Trứng Phô Mai",
+      "price": 55000,
+      "description": "2 miếng bò tổng 100gr, Trứng, Phô mai, rau xà lách, cà chua, dưa leo, sốt mayo, tương cà, tương ớt"
+    },
+    {
+      "id": "bamysu-11",
+      "shop": "bamysu",
+      "category": "TOP 10 món bán chạy nhất",
+      "name": "❤️ Hamburger Bò Trứng Phô Mai",
+      "price": 44000,
+      "description": "1 miếng bò 50gr, Trứng, Phô mai, rau xà lách, cà chua, dưa leo, sốt mayo, tương cà, tương ớt"
+    },
+    {
+      "id": "bamysu-12",
+      "shop": "bamysu",
+      "category": "TOP 10 món bán chạy nhất",
+      "name": "Hamburger Bò Trứng",
+      "price": 37000,
+      "description": "1 miếng bò 50gr, trứng, rau xà lách, cà chua, dưa leo, sốt mayo, tương cà, tương ớt"
+    },
+    {
+      "id": "bamysu-13",
+      "shop": "bamysu",
+      "category": "TOP 10 món bán chạy nhất",
+      "name": "🥳 Hamburger Bò x4 Trứng x2 Phô mai",
+      "price": 81000,
+      "description": "4 miếng bò tổng 200gr, 2 quả Trứng, phô mai, rau xà lách, cà chua, dưa leo, sốt mayo, tương cà, tương ớt"
+    },
+    {
+      "id": "bamysu-14",
+      "shop": "bamysu",
+      "category": "TOP 10 món bán chạy nhất",
+      "name": "Hamburger Bò Trứng Xúc xích Phô mai",
+      "price": 60000,
+      "description": "1 miếng bò 50gr, trứng, xúc xích, phô mai, rau xà lách, cà chua, dưa leo, sốt mayo, tương cà, tương ớt"
+    },
+    {
+      "id": "bamysu-15",
+      "shop": "bamysu",
+      "category": "TOP 10 món bán chạy nhất",
+      "name": "Hamburger Bò x2, Xúc xích, phô mai",
+      "price": 65000,
+      "description": "2 miếng bò tổng 100gr, xúc xích, phô mai, rau xà lách, cà chua, dưa leo, sốt mayo, tương cà, tương ớt"
+    },
+    {
+      "id": "bamysu-16",
+      "shop": "bamysu",
+      "category": "TOP 10 món bán chạy nhất",
+      "name": "Hamburger Bò x3 Phô mai",
+      "price": 60000,
+      "description": "3 miếng bò tổng 150gr, Phô mai, rau xà lách, cà chua, dưa leo, sốt mayo, tương cà, tương ớt"
+    },
+    {
+      "id": "bamysu-17",
+      "shop": "bamysu",
+      "category": "TOP 10 món bán chạy nhất",
+      "name": "Hamburger Bò x2 Phô Mai",
+      "price": 49000,
+      "description": "2 miếng bò tổng 100gr, Phô mai, rau xà lách, cà chua, dưa leo, sốt mayo, tương cà, tương ớt"
+    },
+    {
+      "id": "bamysu-18",
+      "shop": "bamysu",
+      "category": "TOP 10 món bán chạy nhất",
+      "name": "Hamburger Xúc xích x2 phô mai",
+      "price": 57000,
+      "description": "2 cây xúc xích, phô mai, rau xà lách, cà chua, dưa leo, sốt mayo, tương cà, tương ớt"
+    }
+  ]
+}
