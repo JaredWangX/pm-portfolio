@@ -101,7 +101,7 @@ with sync_playwright() as p:
 
     page.goto(BASE)
     page.locator('.menu').click()
-    page.locator('#mobile-nav a[href="./#contact"]').click()
+    page.locator('#mobile-nav a[href="#contact"]').click()
     assert page.locator('#mobile-nav').is_hidden()
     assert page.locator('.menu').get_attribute('aria-expanded') == 'false'
     checks.append('mobile navigation closes after selecting Contact')
