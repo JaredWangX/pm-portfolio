@@ -1,5 +1,12 @@
 'use strict';
 
+// Deep links land immediately; smooth scrolling only starts after initial layout.
+addEventListener('load', () => {
+  const target = document.querySelector(':target');
+  if (target) target.scrollIntoView({behavior:'instant', block:'start'});
+  requestAnimationFrame(() => document.documentElement.classList.add('smooth-scroll'));
+}, {once:true});
+
 const menu = document.querySelector('.menu');
 const mobileNav = document.querySelector('#mobile-nav');
 function setMenu(open) {
@@ -63,129 +70,13 @@ overlay.addEventListener('close', () => {
   opener?.focus({preventScroll: true});
 });
 
-const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-function attachPlayer(root) {
-  const panels = [...root.querySelectorAll('[data-demo]')];
-  const switches = [...root.querySelectorAll('[data-project]')];
-  const phone = root.querySelector('.native-phone');
-  const video = root.querySelector('video[data-reel]');
-  let panel = panels[0], frame = 0, paused = reduced.matches, visible = false, timer;
-  let failedVideo = false;
-  if (phone) phone.tabIndex = 0;
-  const scenes = () => panel.querySelectorAll('[data-scene]');
-  function canPlay() {
-    const focused = document.activeElement;
-    return !paused && visible && !document.hidden && !overlay.open &&
-      (!root.contains(focused) || focused.hasAttribute('data-play'));
-  }
-  function advance() {
-    if (!canPlay()) return;
-    frame = (frame + 1) % scenes().length;
-    render();
-  }
-  function schedule() {
-    clearTimeout(timer);
-    const onVideo = video && panel.dataset.demo === 'wanso' && frame === 0;
-    if (video && (!onVideo || !canPlay())) video.pause();
-    if (!onVideo && video && video.currentTime) {
-      video.currentTime = 0;
-      video.classList.remove('ready');
-    }
-    if (!canPlay() || scenes().length <= 1) return;
-    if (onVideo && !failedVideo) {
-      if (!video.getAttribute('src')) video.src = video.dataset.reel;
-      video.play().catch(error => {
-        if (error.name !== 'AbortError') {
-          failedVideo = true;
-          schedule();
-        }
-      });
-      return;
-    }
-    timer = setTimeout(advance, 8500);
-  }
-  function render() {
-    panels.forEach(el => { el.hidden = el !== panel; });
-    switches.forEach(el => el.setAttribute('aria-pressed', String(el.dataset.project === panel.dataset.demo)));
-    scenes().forEach((el, i) => { el.hidden = i !== frame; });
-    panel.querySelectorAll('[data-caption]').forEach((el,i) => {el.hidden = i !== frame;});
-    panel.querySelectorAll('[data-step]').forEach((el, i) => el.setAttribute('aria-pressed', String(i === frame)));
-    if (phone) phone.classList.toggle('can-swipe', panel.dataset.demo === 'wanso' && frame < 2);
-    const play = panel.querySelector('[data-play]');
-    if (play) {
-      play.setAttribute('aria-label', paused ? '播放演示' : '暂停演示');
-      play.title = play.getAttribute('aria-label');
-      play.firstElementChild.textContent = paused ? '▶' : 'Ⅱ';
-    }
-    schedule();
-  }
-  function choose(i) {
-    frame = i;
-    paused = true;
-    render();
-  }
-  if (video) {
-    video.addEventListener('playing', () => video.classList.add('ready'));
-    video.addEventListener('ended', advance);
-    video.addEventListener('error', () => {failedVideo = true;video.classList.remove('ready');schedule();});
-  }
-  root.addEventListener('click', event => {
-    const button = event.target.closest('button');
-    if (!button) return;
-    if (button.hasAttribute('data-project')) {
-      panel = panels.find(el => el.dataset.demo === button.dataset.project);
-      frame = 0;
-      render();
-    } else if (button.hasAttribute('data-step')) {
-      choose(Number(button.dataset.step));
-    } else if (button.hasAttribute('data-goto')) {
-      choose(Number(button.dataset.goto));
-      panel.querySelector('[data-step="' + frame + '"]').focus({preventScroll:true});
-    } else if (button.hasAttribute('data-play')) {
-      paused = !paused;
-      render();
-    } else if (button.hasAttribute('data-image') || button.hasAttribute('data-launch')) {
-      paused = true;
-      render();
-    }
-  });
-  if (phone) {
-    let startY, lastWheel = 0;
-    function scrollToScene(delta) {
-      if ((frame === 0 && delta > 28) || (frame === 1 && delta < -28)) {
-        choose(delta > 0 ? 1 : 0);
-        return true;
-      }
-      return false;
-    }
-    phone.addEventListener('pointerdown', e => {startY = e.clientY;});
-    phone.addEventListener('pointercancel', () => {startY = undefined;});
-    phone.addEventListener('pointerup', e => {
-      if (startY !== undefined) scrollToScene(startY-e.clientY);
-      startY = undefined;
-    });
-    phone.addEventListener('wheel', e => {
-      if (performance.now()-lastWheel < 550) return;
-      if (scrollToScene(e.deltaY)) {e.preventDefault();lastWheel=performance.now();}
-    },{passive:false});
-    phone.addEventListener('keydown',e=>{
-      if ((e.key==='ArrowDown' || e.key==='ArrowUp') && scrollToScene(e.key==='ArrowDown' ? 60 : -60)) e.preventDefault();
-    });
-  }
-  root.addEventListener('focusin', schedule);
-  root.addEventListener('focusout', () => requestAnimationFrame(schedule));
-  document.addEventListener('visibilitychange', schedule);
-  new MutationObserver(schedule).observe(overlay, {attributes:true,attributeFilter:['open']});
-  reduced.addEventListener('change', e => { if (e.matches) {paused = true;render();} });
-  new IntersectionObserver(([entry]) => {visible = entry.isIntersecting;schedule();}, {threshold:.35}).observe(root);
-  if (panels.length > 1 && matchMedia('(min-width: 761px)').matches) panel = panels.find(el => el.dataset.demo === 'onentra');
-  render();
-}
-document.querySelectorAll('[data-player]').forEach(attachPlayer);
-
 document.querySelectorAll('.faithful-switcher').forEach(root => {
   const choose = project => {
-    root.querySelectorAll('[data-demo]').forEach(panel => {panel.hidden = panel.dataset.demo !== project;});
+    root.querySelectorAll('[data-demo]').forEach(panel => {
+      const active = panel.dataset.demo === project;
+      panel.hidden = !active;
+      panel.querySelector('iframe')?.contentWindow?.postMessage({type:'portfolio-visibility', visible:active}, location.origin);
+    });
     root.querySelectorAll('[data-project]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.project === project)));
   };
   root.querySelectorAll('[data-project]').forEach(button => button.addEventListener('click', () => choose(button.dataset.project)));
@@ -232,3 +123,39 @@ document.querySelectorAll('[data-doc]').forEach(button=>button.addEventListener(
   const key=button.dataset.doc;
   openDialog(button,key==='wanso'?'Wanso · 选餐推荐与费用确认':'ONENTRA · 任务上下文与文件交付',document.getElementById('doc-'+key).content.cloneNode(true));
 }));
+
+document.querySelectorAll('[data-note]').forEach(button => button.addEventListener('click', () => {
+  const title = button.querySelector('strong').textContent;
+  openDialog(button, title, document.getElementById('note-' + button.dataset.note).content.cloneNode(true));
+}));
+
+document.querySelectorAll('[data-copy-email]').forEach(button => button.addEventListener('click', async () => {
+  const feedback = button.closest('.contact-card').querySelector('.copy-feedback');
+  try {
+    await navigator.clipboard.writeText('13971032326@163.com');
+    feedback.textContent = '邮箱已复制，可以粘贴到你的邮件应用。';
+    button.textContent = '已复制 ✓';
+    setTimeout(() => {button.textContent = '复制邮箱';}, 2500);
+  } catch {
+    feedback.textContent = '复制未成功，请长按或选中上方邮箱复制。';
+  }
+}));
+
+const homeLinks = [...document.querySelectorAll('.home-page .navwrap nav a')];
+if (homeLinks.length) {
+  let queued = false;
+  function updateSection() {
+    let current;
+    for (const link of homeLinks) {
+      if (document.querySelector(link.hash)?.getBoundingClientRect().top <= 160) current = link;
+    }
+    if (scrollY + innerHeight >= document.documentElement.scrollHeight - 5) current = homeLinks.at(-1);
+    homeLinks.forEach(link => link === current ? link.setAttribute('aria-current','location') : link.removeAttribute('aria-current'));
+  }
+  addEventListener('scroll', () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {updateSection(); queued = false;});
+  }, {passive:true});
+  updateSection();
+}
