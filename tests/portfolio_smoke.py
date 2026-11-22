@@ -65,14 +65,16 @@ with sync_playwright() as p:
         assert 'zoomed' in page.locator('body').get_attribute('class')
         page.keyboard.press('Escape')
         assert 'zoomed' not in page.locator('body').get_attribute('class')
-        checks.append(product + ': autoplay, pause/resume, 3 flows, catalog, image proportions, zoom')
+        checks.append(product + ': autoplay, pause/resume, ' + str(len(data['flows'])) + ' flows, catalog, image proportions, zoom')
 
-    page.goto(BASE + 'prototypes/wanso/')
+    page.goto(BASE + 'prototypes/wanso/#home')
     loaded('home')
     page.locator('.autoplay').click()
     geometry = page.locator('.screen').bounding_box()
     page.locator('.next').click()
-    loaded('recommend')
+    loaded('explore')
+    page.locator('.next').click()
+    loaded('taste')
     assert page.locator('.screen').bounding_box() == geometry, 'phone shell must not resize between source aspect ratios'
     page.locator('.next').click(click_count=3, delay=50)
     page.wait_for_timeout(400)
@@ -99,13 +101,38 @@ with sync_playwright() as p:
         assert page.evaluate('window.__printed')
     checks.append('4 complete documents: reachable links, section anchors, print action')
 
+    page.goto(BASE + 'documents/recommendation-review/#decision-lab')
+    for amount, expected in [(30000,37500),(80000,80000),(100000,97000),(150000,147000)]:
+        page.locator('#meal-cost').fill(str(amount))
+        assert page.locator('[data-grab]').inner_text() == f'{amount:,} ₫'
+        assert page.locator('[data-shopee]').inner_text() == f'{expected:,} ₫'
+    page.goto(BASE + 'documents/delivery-review/#decision-lab')
+    for minutes, total in [(0,30),(20,50),(30,60),(60,90)]:
+        page.locator('#rework-time').fill(str(minutes))
+        assert page.locator('[data-total-time]').inner_text() == f'{total} 分钟'
+    checks.append('interactive decision models: discount cap, break-even and rework boundaries')
+
+    # Independent examples must never become one fabricated order.
+    wanso = json.loads((ROOT / 'prototypes/wanso/screens.json').read_text())
+    meal_ids = [step['id'] for step in wanso['flows'][0]['steps']]
+    assert meal_ids[-1] == 'confirm' and 'compare' not in meal_ids and 'reviews' not in meal_ids
+    home = next(f for f in wanso['frames'] if f['id'] == 'home')
+    notice = next(h for h in home['hotspots'] if h.get('notice'))
+    page.goto(BASE + 'prototypes/wanso/#home')
+    loaded('home')
+    page.locator('.page-layer:not(.leaving) .hotspot[aria-label="'+notice['label']+'"]').click()
+    assert page.url.endswith('#home')
+    assert page.locator('.interaction-hint').inner_text() == notice['notice']
+    assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
+    checks.append('source fidelity: independent meal flows; unavailable branch explains without invented page')
+
     # An unavailable image must give a working retry, not an indefinitely frozen player.
-    page.route('**/wanso-home.webp', lambda route: route.abort())
+    page.route('**/wanso-recommend.webp', lambda route: route.abort())
     page.goto(BASE + 'prototypes/wanso/')
     page.locator('.load-error:not([hidden])').wait_for()
-    page.unroute('**/wanso-home.webp')
+    page.unroute('**/wanso-recommend.webp')
     page.locator('.retry').click()
-    loaded('home')
+    loaded('recommend')
     assert page.locator('.load-error').is_hidden()
     checks.append('image failure: clear error + retry recovers')
 
@@ -160,10 +187,26 @@ with sync_playwright() as p:
         assert page.locator('.viewer').bounding_box()['y'] < 10
     checks.append('mobile catalog: returns to preview; guide never overlaps playback')
 
+    page.set_viewport_size({'width':390,'height':844})
+    page.goto(BASE + 'prototypes/wanso/')
+    loaded('recommend')
+    phone_box = page.locator('.screen').bounding_box()
+    assert phone_box['width'] >= 300, phone_box
+    assert phone_box['y'] >= 48 and phone_box['y'] + phone_box['height'] <= 796
+    page.goto(BASE)
+    page.locator('[data-project="wanso"]').click()
+    iframe = page.frame_locator('iframe[title="WANSO 原版交互原型"]')
+    iframe.locator('.page-layer:not(.leaving) .original-screen').wait_for(state='visible')
+    box = iframe.locator('.screen').bounding_box()
+    assert box['width'] >= 270, box
+    iframe.locator('.next').click()
+    iframe.locator('.page-counter').filter(has_text='2 / 6').wait_for()
+    checks.append('phone fit: full device within viewport, compact controls, embedded touch navigation')
+
     context2 = browser.new_context(reduced_motion='reduce')
     reduced = context2.new_page()
     reduced.goto(BASE+'prototypes/wanso/')
-    reduced.wait_for_function('document.querySelector(".original-screen").naturalWidth > 0')
+    reduced.wait_for_function('document.querySelector(".page-layer:not(.leaving) .original-screen").naturalWidth > 0')
     assert reduced.locator('.autoplay').get_attribute('aria-pressed') == 'false'
     checks.append('reduced motion: no automatic playback')
     assert not errors, errors

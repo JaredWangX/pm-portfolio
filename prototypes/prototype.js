@@ -26,7 +26,8 @@ function fit() {
   if (!f) return;
   const nativeWidth = phone ? 402 : 1440;
   const height = phone ? 2808 : f.height;
-  const scale = zoomed ? nativeWidth / f.width : Math.min((viewport.clientWidth - 20) / f.width, (viewport.clientHeight - 20) / height, nativeWidth / f.width);
+  const inset = phone ? 4 : 20;
+  const scale = zoomed ? nativeWidth / f.width : Math.min((viewport.clientWidth - inset) / f.width, (viewport.clientHeight - inset) / height, nativeWidth / f.width);
   screen.style.width = Math.max(1, f.width * scale) + 'px';
   screen.style.height = Math.max(1, height * scale) + 'px';
 }
@@ -100,6 +101,7 @@ function renderFrame() {
   $('.step-eyebrow').textContent = position >= 0 ? `${flows[flow].title} · ${String(position+1).padStart(2,'0')}` : '自由浏览 · ' + f.group;
   $('.step-caption').textContent = step?.caption || `查看${f.title}，点击箭头翻页。`;
   $('.page-description').textContent = step?.reason || f.note;
+  $('.source-page')?.replaceChildren(document.createTextNode(f.sourcePage ? '原作品集 · 第 '+f.sourcePage+' 页' : '原版页面'));
   $('.continue').textContent = position < 0 ? '回到流程 →' : position === steps().length-1 ? '重新体验 ↺' : '继续 →';
   $('.previous').disabled = position < 0 ? current === 0 : position === 0;
   $('.next').disabled = false;
@@ -108,13 +110,14 @@ function renderFrame() {
     else b.removeAttribute('aria-current');
   }
   const nextId = steps()[(position+1) % steps().length]?.id;
-  const preferred = position >= 0 ? f.hotspots.find(h => h.target === nextId) : f.hotspots.find(h=>h.target!==f.id);
+  const preferred = position >= 0 ? f.hotspots.find(h => h.target === nextId) : f.hotspots.find(h=>h.target && h.target!==f.id);
   activeLayer.querySelector('.hotspots').replaceChildren(...f.hotspots.map(h => {
     const b = makeButton('', () => {
+      if (h.notice) {setPlaying(false);hint(h.notice);return;}
       if (h.target === f.id) {setPlaying(false);hint('你已经在这个页面。可点击其他发光点，或继续体验下一步。');}
       else {guided=steps().some(s=>s.id===h.target);show(h.target);}
     }, 'hotspot');
-    b.setAttribute('aria-label',h.label); b.dataset.target = h.target;
+    b.setAttribute('aria-label',h.label); if(h.target) b.dataset.target = h.target;
     const height = phone ? 2808 : f.height;
     const shift = phone && h.y >= 88 ? height - f.height : 0;
     Object.assign(b.style,{left:h.x+'%',top:(h.y * f.height / 100 + shift) / height * 100+'%',width:h.w+'%',height:h.h * f.height / height+'%'});
@@ -169,6 +172,7 @@ async function show(id, manual = true, returnToViewer = false) {
     const hotspots = document.createElement('div'); hotspots.className = 'hotspots';
     activeLayer.append(hotspots);
     screen.append(activeLayer);
+    document.querySelectorAll('.viewer button').forEach(b=>b.disabled=false);
     renderFrame();
     if (hadPage && !reduced.matches) {
       transition = activeLayer.animate([
@@ -278,7 +282,7 @@ new ResizeObserver(fit).observe(viewport);
 new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;schedule();},{threshold:.1}).observe($('.viewer'));
 reduced.addEventListener('change',event=>{if(event.matches)setPlaying(false);});
 window.addEventListener('hashchange',()=>{if(ready && location.hash.slice(1)!==frames[current]?.id)show(location.hash.slice(1));});
-fetch('screens.json?v=reading3',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('screens');return r.json();}).then(async data=>{
+fetch('screens.json?v=glass4',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('screens');return r.json();}).then(async data=>{
   frames=data.frames; flows=data.flows;
   if(!frames.length || !flows.length)throw Error('empty');
   $('.flow-selector').replaceChildren(...flows.map((f,i)=>makeButton(f.title,()=>{
@@ -296,7 +300,7 @@ fetch('screens.json?v=reading3',{signal:AbortSignal.timeout(15000)}).then(r=>{if
   const matching=flows.findIndex(f=>f.steps.some(s=>s.id===start));
   if(matching>=0)flow=matching;
   renderFlow(); ready=true;
-  document.querySelectorAll('.viewer button').forEach(b=>b.disabled=false);
+
   const initialLoad=loadId+1;
   await show(start,false);
   if(loadId===initialLoad && !failed && !reduced.matches)setPlaying(true);

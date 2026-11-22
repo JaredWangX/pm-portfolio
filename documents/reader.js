@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 const contents = document.querySelector('.reader-contents');
-if (matchMedia('(max-width:760px)').matches) contents.open = false;
+if (matchMedia('(max-width:900px)').matches) contents.open = false;
 document.querySelector('.print-document').addEventListener('click', () => window.print());
 const links = [...contents.querySelectorAll('nav a')];
 const sections = links.map(link => document.querySelector(link.hash));
