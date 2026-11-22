@@ -211,39 +211,29 @@ with sync_playwright() as p:
     assert page.locator('[data-device-project="onentra"]').is_visible()
     iframe = page.frame_locator('[data-device-frame="wanso"]')
     laptop = page.frame_locator('[data-device-frame="onentra"]')
-    iframe.locator('.page-layer:not(.leaving) .original-screen').wait_for(state='visible')
-    assert iframe.locator('.screen').bounding_box()['width'] >= 340
-    assert iframe.locator('.autoplay').get_attribute('aria-pressed') == 'false'
-    for frame_id in ['recommend','compare','profile','home']:
+    iframe.locator('.welcome h1').wait_for()
+    assert iframe.locator('#screen').bounding_box()['width'] >= 340
+    for frame_id, selector in [('recommend','#menu-search'),('compare','#compare-form'),('profile','.profile-identity'),('home','.welcome')]:
         page.locator('[data-device-target="wanso"][data-frame="'+frame_id+'"]').click()
-        iframe.locator('.page-layer:not(.leaving) img.original-screen').get_attribute('alt')
-        iframe.locator('.page-title').filter(has_text={'recommend':'首次推荐','compare':'同店比价','profile':'个人中心','home':'首页'}[frame_id]).wait_for(state='attached')
-    iframe.locator('.page-layer:not(.leaving) [data-target="profile"]').click()
-    iframe.locator('.native-page').wait_for()
-    iframe.locator('.page-layer:not(.leaving) [data-target="settings"]').click()
-    iframe.locator('.page-title').filter(has_text='应用设置').wait_for(state='attached')
-    page.locator('[data-device-target="onentra"][data-frame="49"]').click()
+        iframe.locator(selector).wait_for()
+    page.locator('.device-controls [data-device-target="onentra"][data-frame="49"]').click()
     laptop.locator('.page-title').filter(has_text='会话文件').wait_for(state='attached')
-    page.locator('[data-device-target="wanso"][data-frame="compare"]').click()
-    iframe.locator('.page-title').filter(has_text='同店比价').wait_for(state='attached')
-    page.locator('.phone-project [data-device-action="next"]').click()
-    iframe.locator('.page-title').filter(has_text='优惠价格对照').wait_for(state='attached')
-    checks.append('device stage: both devices visible, direct scene controls, correct profile hub, comparison continuation and laptop navigation')
+    checks.append('device stage: playable phone scenes and original laptop navigation')
 
     page.locator('.phone-project [data-phone-preview]').click()
     phone = page.frame_locator('.phone-modal iframe')
-    phone.locator('.page-title').filter(has_text='优惠价格对照').wait_for(state='attached')
+    phone.locator('.welcome h1').wait_for()
     assert page.locator('.phone-modal').bounding_box()['width'] >= 420
-    phone.locator('.flow-toggle').click()
-    assert phone.locator('.flow-dialog').evaluate('(d)=>d.open')
+    phone.locator('[data-nav="profile"]').click()
+    phone.locator('[data-app-settings]').click()
+    phone.locator('#close').focus()
     page.keyboard.press('Escape')
     assert page.locator('#overlay').evaluate('(d)=>d.open')
-    assert not phone.locator('.flow-dialog').evaluate('(d)=>d.open')
-    phone.locator('[data-shortcut="profile"]').click()
-    phone.locator('.native-page').wait_for()
+    assert not phone.locator('#sheet').evaluate('(d)=>d.open')
+    phone.locator('[data-nav="home"]').click()
     page.keyboard.press('Escape')
     page.wait_for_function('!document.querySelector("#overlay").open')
-    checks.append('wide phone dialog: current frame preserved, direct scenes, nested Escape and close restore')
+    checks.append('wide phone dialog: working app, nested Escape and close restore')
 
     page.goto(BASE)
     assert page.locator('#materials').count() == 0
@@ -259,26 +249,29 @@ with sync_playwright() as p:
                 heights = page.locator(selector).evaluate_all('(items)=>items.map(i=>i.getBoundingClientRect().height)')
                 assert max(heights)-min(heights) <= 1, (width,selector,heights)
         page.locator('[data-phone-preview]').first.click()
-        phone.locator('.page-layer:not(.leaving) .original-screen').wait_for(state='visible')
+        phone.locator('#screen h1').wait_for(state='visible')
         modal = page.locator('.phone-modal').bounding_box()
         assert modal['x']>=0 and modal['y']>=0 and modal['x']+modal['width']<=width and modal['y']+modal['height']<=height
         assert modal['width'] >= min(420,width-22)
-        screen = phone.locator('.screen').bounding_box()
+        screen = phone.locator('#screen').bounding_box()
         assert screen['width'] >= min(390,width-48)
         page.locator('.phone-modal .close').click()
     checks.append('profile and responsive layout: retained content, expandable practices, consistent cards, readable phone width, reachable close')
 
     page.goto(BASE+'demos/wanso/')
     page.locator('[data-nav="profile"]').click()
-    page.locator('#language').click()
+    if page.locator('html').get_attribute('lang') != 'zh-CN':
+        page.locator('#language').click()
     assert page.locator('.title h1').inner_text() == '个人中心'
     page.locator('[data-pref="0"]').click()
     assert page.locator('[data-pref="0"]').get_attribute('aria-pressed') == 'true'
     page.reload()
     page.locator('[data-nav="profile"]').click()
     assert page.locator('[data-pref="0"]').get_attribute('aria-pressed') == 'true'
-    assert page.locator('.profile-menu a').count() == 2
-    checks.append('live demo: profile hub retains saved preferences and links to original settings')
+    page.locator('[data-order-settings]').click()
+    assert page.locator('#order-settings').is_visible()
+    page.locator('#close').click()
+    checks.append('live demo: profile retains saved preferences and opens functional settings')
 
     context2 = browser.new_context(reduced_motion='reduce')
     reduced = context2.new_page()

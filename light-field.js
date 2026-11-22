@@ -43,9 +43,9 @@
       float glint=pow(max(dot(N,normalize(l+vec3(0.,0.,1.))),0.),12.);
       float grain=.5+.5*cos(st.y*99.);
       float gleam=smoothstep(.15,.9,light)*.66 + glint*.23 + grain*.06;
-      vec3 shadow=mix(vec3(.67,.305,.115),vec3(.75,.435,.21),edge);
-      vec3 gold=mix(vec3(.98,.70,.44),vec3(1.,.815,.58),edge);
-      vec3 col=mix(shadow,gold,gleam);col=mix(col,vec3(1.,.91,.78),glint*.53);
+      vec3 shadow=mix(vec3(.18,.39,.72),vec3(.25,.50,.86),edge);
+      vec3 gold=mix(vec3(.53,.76,1.),vec3(.70,.86,1.),edge);
+      vec3 col=mix(shadow,gold,gleam);col=mix(col,vec3(.91,.97,1.),glint*.53);
       gl_FragColor=vec4(col,1.);
     }`;
   let draw;
