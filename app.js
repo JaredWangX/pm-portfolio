@@ -43,7 +43,7 @@ document.querySelector('[data-launch]')?.addEventListener('click', event => {
 });
 function openPhone(trigger, frameId = '') {
   const frame = document.createElement('iframe');
-  frame.src = new URL('demos/wanso/?embed=1&expanded=1&v=blue7', document.querySelector('.identity').href).href;
+  frame.src = new URL('demos/wanso/?embed=1&expanded=1&v=native8', document.querySelector('.identity').href).href;
   if (/^[a-z0-9-]{1,40}$/.test(frameId)) frame.src += '#' + frameId;
   frame.title = 'Wanso 可操作的手机应用';
   frame.referrerPolicy = 'no-referrer';
@@ -203,12 +203,11 @@ addEventListener('message', event => {
   const section = frame.closest('[data-device-project]');
   section.querySelectorAll('button').forEach(button=>button.disabled=false);
   section.querySelector('[data-device-action="previous"]').disabled = !event.data.canPrevious;
-  section.querySelector('.device-pagination span').textContent = product === 'wanso' ? '可输入 · 可点击 · 可调整' : event.data.counter+' · 点击界面逐步体验';
+
   section.querySelectorAll('[data-frame]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.frame === id)));
-  section.querySelector('[data-frame-label]').textContent = event.data.title;
+
   const description = section.querySelector('[data-device-description]');
-  description.textContent = deviceDescriptions[product]?.[id] || event.data.description;
-  description.title = description.textContent;
+  if (description) { description.textContent = deviceDescriptions[product]?.[id] || event.data.description; }
   const expand = section.querySelector('[data-phone-preview]');
   if (expand) expand.hash = id;
 });
@@ -219,7 +218,8 @@ if (ambientToggle) {
     document.body.classList.toggle('ambient-paused',!playing);
     ambientToggle.setAttribute('aria-pressed',String(playing));
     ambientToggle.setAttribute('aria-label',playing?'暂停背景光影':'播放背景光影');
-    ambientToggle.textContent = playing?'Ⅱ 背景光影':'▷ 背景光影';
+    ambientToggle.textContent = playing?'Ⅱ':'▷';
+    window.dispatchEvent(new CustomEvent('portfolio-ambient',{detail:{playing}}));
   }
   setAmbient(!reducedMotion.matches);
   ambientToggle.addEventListener('click',()=>setAmbient(ambientToggle.getAttribute('aria-pressed')!=='true'));

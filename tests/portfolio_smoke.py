@@ -213,7 +213,7 @@ with sync_playwright() as p:
     laptop = page.frame_locator('[data-device-frame="onentra"]')
     iframe.locator('.welcome h1').wait_for()
     assert iframe.locator('#screen').bounding_box()['width'] >= 340
-    for frame_id, selector in [('recommend','#menu-search'),('compare','#compare-form'),('profile','.profile-identity'),('home','.welcome')]:
+    for frame_id, selector in [('explore','.platform-overview'),('compare','.native-price-table'),('profile','.profile-identity'),('home','.welcome')]:
         page.locator('[data-device-target="wanso"][data-frame="'+frame_id+'"]').click()
         iframe.locator(selector).wait_for()
     page.locator('.device-controls [data-device-target="onentra"][data-frame="49"]').click()
@@ -224,7 +224,7 @@ with sync_playwright() as p:
     phone = page.frame_locator('.phone-modal iframe')
     phone.locator('.welcome h1').wait_for()
     assert page.locator('.phone-modal').bounding_box()['width'] >= 420
-    phone.locator('[data-nav="profile"]').click()
+    phone.locator('.tabbar [data-nav="profile"]').click()
     phone.locator('[data-app-settings]').click()
     phone.locator('#close').focus()
     page.keyboard.press('Escape')
@@ -256,17 +256,28 @@ with sync_playwright() as p:
         screen = phone.locator('#screen').bounding_box()
         assert screen['width'] >= min(390,width-48)
         page.locator('.phone-modal .close').click()
+    for width,height in [(1440,900),(1024,768),(768,1024),(390,844),(320,640)]:
+        page.set_viewport_size({'width':width,'height':height})
+        assert page.locator('.case-overview').evaluate_all('''cards=>cards.every(card=>{
+          const facts=card.querySelector('.card-facts').getBoundingClientRect();
+          const action=card.querySelector('.actions').getBoundingClientRect();
+          return facts.bottom+8<=action.top && [...card.querySelectorAll('.card-facts dd')].every(d=>d.getBoundingClientRect().bottom<=facts.bottom-12);
+        })'''), f'case fact/action overlap at {width}px'
     checks.append('profile and responsive layout: retained content, expandable practices, consistent cards, readable phone width, reachable close')
 
     page.goto(BASE+'demos/wanso/')
-    page.locator('[data-nav="profile"]').click()
+    page.locator('.tabbar [data-nav="profile"]').click()
     if page.locator('html').get_attribute('lang') != 'zh-CN':
-        page.locator('#language').click()
+        page.locator('[data-app-settings]').click()
+        page.locator('[name="language"]').select_option('zh')
+        page.locator('#app-settings .send').click()
     assert page.locator('.title h1').inner_text() == '个人中心'
+    page.locator('[data-add-taste]').click()
     page.locator('[data-pref="0"]').click()
+    page.locator('#close').click()
     assert page.locator('[data-pref="0"]').get_attribute('aria-pressed') == 'true'
     page.reload()
-    page.locator('[data-nav="profile"]').click()
+    page.locator('.tabbar [data-nav="profile"]').click()
     assert page.locator('[data-pref="0"]').get_attribute('aria-pressed') == 'true'
     page.locator('[data-order-settings]').click()
     assert page.locator('#order-settings').is_visible()

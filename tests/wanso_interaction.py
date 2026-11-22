@@ -25,7 +25,7 @@ with sync_playwright() as p:
     standalone.goto(BASE+'demos/wanso/')
     expect(standalone.locator('.welcome h1')).to_contain_text('今天')
     standalone.close()
-    for selector in ['.device-project','.device-title','.device-controls','.device-frame']:
+    for selector in ['.device-project','.device-title','.device-controls','.device-surface','.device-footer']:
         y = page.locator(selector).evaluate_all('(els)=>els.map(e=>e.getBoundingClientRect().top)')
         assert abs(y[0]-y[1]) < 1, (selector,y)
     assert page.locator('.computer-project').evaluate('e=>getComputedStyle(e).position') != 'sticky'
@@ -49,6 +49,8 @@ with sync_playwright() as p:
 
     # Same meal and quantity, editable final fees, with discount clamped at zero.
     page.locator('[data-device-target="wanso"][data-frame="compare"]').click()
+    expect(phone.locator('.native-price-table tbody tr')).to_have_count(8)
+    phone.locator('[data-edit-reference]').first.click()
     phone.locator('[name="grabPrice"]').fill('50000')
     phone.locator('[name="shopeePrice"]').fill('50000')
     phone.locator('[name="grabFee"]').fill('12000')
@@ -68,12 +70,15 @@ with sync_playwright() as p:
     checks.append('comparison uses both editable prices, common quantity, fees and discounts; no negative totals')
 
     page.locator('[data-device-target="wanso"][data-frame="profile"]').click()
+    phone.locator('[data-add-taste]').click()
     phone.locator('[data-pref="0"]').click()
+    phone.locator('#close').click()
     phone.locator('[data-order-settings]').click()
     phone.locator('[name="budget"][value="50000"]').check()
     phone.locator('[name="sort"][value="price"]').check()
     phone.locator('#order-settings .send').click()
-    page.locator('[data-device-target="wanso"][data-frame="recommend"]').click()
+    page.locator('[data-device-target="wanso"][data-frame="explore"]').click()
+    phone.locator('[data-nav="recommend"]').first.click()
     expect(phone.locator('#menu-budget')).to_have_value('50000')
     prices = phone.locator('.choice-foot strong').all_text_contents()
     values = [int(v.replace('.','').split()[0]) for v in prices]
@@ -99,6 +104,18 @@ with sync_playwright() as p:
     expect(phone.locator('[data-pref="0"]')).to_have_attribute('aria-pressed','true')
     expect(phone.locator('html')).to_have_attribute('data-theme','paper')
     checks.append('profile, taste and theme survive reload')
+    phone.locator('[data-add-taste]').click()
+    phone.locator('[name="taste"]').fill('不吃洋葱')
+    phone.locator('#taste-custom .send').click()
+    expect(phone.locator('#screen .preferences')).to_contain_text('不吃洋葱')
+    phone.locator('[data-notifications]').click()
+    phone.locator('[name="ready"]').uncheck()
+    phone.locator('#notification-settings .send').click()
+    phone.locator('[data-notifications]').click()
+    expect(phone.locator('[name="ready"]')).not_to_be_checked()
+    phone.locator('#close').click()
+    checks.append('custom taste and original-profile notification settings save correctly')
+
 
     # Test form submission within the sandbox, preserving preferences and the actual API contract.
     requests = []
