@@ -42,3 +42,43 @@ body[data-product=wanso] .screen-bottom{bottom:0;clip-path:inset(88% 0 0 0)}
   body[data-product=wanso].embed .viewer-footer button{min-height:40px}
   body[data-product=wanso].embed .interaction-hint{bottom:60px}
 }
+
+/* The phone is the stage; its guide opens only when requested. */
+body[data-product=wanso].phone-player .review{display:block;height:calc(100svh - 48px);max-width:calc((100svh - 112px)*.436 + 28px);margin-inline:auto}
+body[data-product=wanso].phone-player .review-header{height:48px}
+body[data-product=wanso].phone-player .viewer{width:100%;height:100%;padding:4px 6px 8px;background:transparent;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) 48px 3px;gap:0}
+body[data-product=wanso].phone-player .viewer-tools,body[data-product=wanso].phone-player .step-guide{display:none}
+body[data-product=wanso].phone-player .viewport{grid-column:1;grid-row:1;padding:0}
+body[data-product=wanso].phone-player .viewer-footer{grid-column:1;grid-row:2;display:flex;flex-wrap:nowrap;gap:6px;width:100%;align-items:center}
+body[data-product=wanso].phone-player .viewer-footer button{border-radius:9px;min-height:38px;font-size:12px;padding:4px 10px}
+body[data-product=wanso].phone-player .viewer-footer .previous,body[data-product=wanso].phone-player .viewer-footer .next{width:32px;flex:none;font-size:17px;padding:0}
+body[data-product=wanso].phone-player .viewer-footer .autoplay{margin-left:auto;min-width:66px;white-space:nowrap}
+body[data-product=wanso].phone-player .page-counter{min-width:29px;font-size:11px}
+body[data-product=wanso].phone-player .flow-toggle{font-weight:600}
+body[data-product=wanso].phone-player .play-status{display:none}
+body[data-product=wanso].phone-player .play-progress{grid-column:1;grid-row:3}
+body[data-product=wanso].phone-player .interaction-hint{bottom:62px;left:10px;right:10px;font-size:12px}
+body[data-product=wanso].phone-player.embed .review{height:100dvh;max-width:none}
+body[data-product=wanso].phone-player.embed .viewer{padding:0}
+body[data-product=wanso].phone-player .viewer-footer .expand{font-size:11px;flex:0 0 auto;white-space:nowrap;min-height:38px;align-items:center;justify-content:center}
+body[data-product=wanso].phone-player.expanded .expand{display:none}
+.flow-dialog{width:min(440px,calc(100% - 16px));max-width:none;max-height:calc(100dvh - 24px);margin:auto;padding:0;overflow:auto;overscroll-behavior:contain;border:1px solid #d6c3ab;border-radius:18px;background:#fffaf2;color:var(--ink);box-shadow:0 20px 70px #38271738}
+.flow-dialog::backdrop{background:#30261c66;backdrop-filter:blur(8px)}
+.flow-dialog-heading{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 18px;background:#fffaf2ed;backdrop-filter:blur(14px);border-bottom:1px solid #dfd1bd}
+.flow-dialog-heading h2{font-size:16px;margin:0}
+.flow-close{width:36px;height:36px;border:1px solid #d8c7af;border-radius:50%;background:#fffdf8;font-size:22px;line-height:1}
+.flow-dialog .review-side{display:block;border:0;background:none;padding:20px;overflow:visible}
+.flow-dialog .review-intro h1{font-size:20px;line-height:1.6;margin-bottom:12px}
+.flow-dialog .eyebrow{display:none}
+.flow-dialog .review-intro>p:last-child{margin-bottom:20px;font-size:13px}
+.flow-dialog .flow-selector{grid-template-columns:1fr}
+.flow-dialog .flow-selector button{min-height:46px}
+.flow-dialog .flow-steps{grid-template-columns:1fr}
+.flow-dialog .flow-step{min-height:44px}
+.flow-dialog .page-notes p{font-size:14px}
+@media(max-width:360px){body[data-product=wanso].phone-player .viewer-footer{gap:4px}body[data-product=wanso].phone-player .viewer-footer button{padding-inline:7px;font-size:11px}body[data-product=wanso].phone-player .viewer-footer .previous,body[data-product=wanso].phone-player .viewer-footer .next{width:28px}body[data-product=wanso].phone-player .viewer-footer .autoplay{min-width:59px}body[data-product=wanso].phone-player .page-counter{min-width:25px}}
+
+body[data-product=wanso].phone-player .flow-dialog .viewer-tools{display:flex;padding:16px 18px 0;gap:10px}
+.flow-dialog .viewer-tools .page-title{font-size:12px;min-width:0}
+.flow-dialog .viewer-tools>div{flex:none}
+.flow-dialog .viewer-tools button{min-height:36px;padding:4px 9px;font-size:12px}

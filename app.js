@@ -30,7 +30,7 @@ function openDialog(trigger, title, child) {
   opener = trigger;
   overlay.querySelector('#dialog-title').textContent = title;
   content.replaceChildren(child);
-  overlay.showModal();
+  if (!overlay.open) overlay.showModal();
   overlay.querySelector('.close').focus();
 }
 document.querySelector('[data-launch]')?.addEventListener('click', event => {
@@ -41,7 +41,23 @@ document.querySelector('[data-launch]')?.addEventListener('click', event => {
   overlay.classList.add('workspace-modal');
   openDialog(event.currentTarget, 'ONENTRA 在线工作台', frame);
 });
+function openPhone(trigger, frameId = '') {
+  const frame = document.createElement('iframe');
+  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=personal5', document.querySelector('.identity').href).href;
+  if (/^[a-z0-9-]{1,40}$/.test(frameId)) frame.src += '#' + frameId;
+  frame.title = 'Wanso 手机交互原型';
+  frame.referrerPolicy = 'no-referrer';
+  frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
+  const focusTarget = overlay.contains(trigger) ? opener : trigger;
+  overlay.classList.remove('workspace-modal');
+  overlay.classList.add('phone-modal');
+  openDialog(focusTarget, 'Wanso · 手机体验', frame);
+}
 document.addEventListener('click', event => {
+  const phoneLink = event.target.closest('[data-phone-preview]');
+  if (phoneLink && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+    event.preventDefault();openPhone(phoneLink, new URL(phoneLink.href).hash.slice(1));return;
+  }
   const trigger = event.target.closest('[data-image],[data-quick]');
   if (!trigger) return;
   if (trigger.dataset.image) {
@@ -66,12 +82,13 @@ overlay.addEventListener('click', event => {
 });
 overlay.addEventListener('close', () => {
   content.replaceChildren();
-  overlay.classList.remove('workspace-modal');
+  overlay.classList.remove('workspace-modal', 'phone-modal');
   opener?.focus({preventScroll: true});
 });
 
 document.querySelectorAll('.faithful-switcher').forEach(root => {
   const choose = project => {
+    root.dataset.activeProject = project;
     root.querySelectorAll('[data-demo]').forEach(panel => {
       const active = panel.dataset.demo === project;
       panel.hidden = !active;
@@ -149,3 +166,13 @@ if (homeLinks.length) {
   }, {passive:true});
   updateSection();
 }
+
+// Only the site's own preview frames can open or dismiss the phone dialog.
+addEventListener('message', event => {
+  if (event.origin !== location.origin) return;
+  const frame = [...document.querySelectorAll('.wanso-preview iframe, .phone-modal iframe')]
+    .find(item => item.contentWindow === event.source);
+  if (!frame) return;
+  if (event.data?.type === 'portfolio-open-phone') openPhone(frame, event.data.frame);
+  if (event.data?.type === 'portfolio-close-phone' && overlay.contains(frame)) overlay.close();
+});

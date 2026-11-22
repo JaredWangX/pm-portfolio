@@ -23,6 +23,10 @@ with sync_playwright() as p:
     def loaded(frame_id):
         page.wait_for_function('id => location.hash === "#"+id && !document.querySelector(".viewer").hasAttribute("aria-busy")', arg=frame_id)
 
+    def guide():
+        if page.locator('.flow-toggle').count() and not page.locator('.flow-dialog').evaluate('(d)=>d.open'):
+            page.locator('.flow-toggle').click()
+
     for product in ['wanso', 'onentra']:
         data = json.loads((ROOT / 'prototypes' / product / 'screens.json').read_text())
         page.goto(BASE + 'prototypes/' + product + '/')
@@ -31,7 +35,7 @@ with sync_playwright() as p:
         first = page.url
         page.wait_for_function('url => location.href !== url', arg=first, timeout=12000)
         assert page.locator('.page-counter').inner_text() == '2 / 6'
-        page.locator('.continue').click()
+        page.locator('.next' if product == 'wanso' else '.continue').click()
         loaded(data['flows'][0]['steps'][2]['id'])
         assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
         manual = page.url
@@ -42,16 +46,24 @@ with sync_playwright() as p:
         page.locator('.autoplay').click()
 
         for i, flow in enumerate(data['flows']):
+            guide()
             page.locator('.flow-selector button').nth(i).click()
             for step in flow['steps']:
+                guide()
                 page.locator('[data-step="' + step['id'] + '"]').click()
                 loaded(step['id'])
                 assert page.locator('.step-caption').inner_text() == step['caption']
                 assert page.locator('.page-description').inner_text() == step['reason']
-            page.locator('.continue').click()
+            if product == 'wanso':
+                guide()
+                page.locator('.flow-selector button').nth(i).click()
+            else:
+                page.locator('.continue').click()
             loaded(flow['steps'][0]['id'])
+        guide()
         page.locator('.catalog summary').click()
         for frame in data['frames']:
+            guide()
             page.locator('[data-screen="' + frame['id'] + '"]').click()
             loaded(frame['id'])
             assert page.locator('.page-layer:not(.leaving) .original-screen').evaluate('(img)=>img.complete && img.naturalWidth>0')
@@ -59,8 +71,13 @@ with sync_playwright() as p:
             assert abs(ratio - frame['width'] / frame['height']) < .015
         # A catalog selection is free browsing; Continue explicitly returns to the guided flow.
         assert page.locator('.continue').inner_text() == '回到流程 →'
-        page.locator('.continue').click()
+        if product == 'wanso':
+            guide()
+            page.locator('.flow-selector button').last.click()
+        else:
+            page.locator('.continue').click()
         loaded(data['flows'][-1]['steps'][0]['id'])
+        guide()
         page.locator('.zoom-toggle').click()
         assert 'zoomed' in page.locator('body').get_attribute('class')
         page.keyboard.press('Escape')
@@ -174,6 +191,10 @@ with sync_playwright() as p:
 
     for product, target in [('wanso','recommend'),('onentra','38')]:
         page.goto(BASE + 'prototypes/' + product + '/')
+        page.locator('.viewer').wait_for()
+        if product == 'wanso':
+            loaded('recommend')
+        guide()
         page.locator('.catalog summary').click()
         page.locator('[data-screen="'+target+'"]').click()
         loaded(target)
@@ -184,7 +205,7 @@ with sync_playwright() as p:
             return {bottom:guide.bottom,top:footer.top};
         }''')
         assert boxes['bottom'] <= boxes['top'] + 1
-        assert page.locator('.viewer').bounding_box()['y'] < 10
+        assert page.locator('.viewer').bounding_box()['y'] < (50 if product == 'wanso' else 10)
     checks.append('mobile catalog: returns to preview; guide never overlaps playback')
 
     page.set_viewport_size({'width':390,'height':844})
@@ -202,6 +223,40 @@ with sync_playwright() as p:
     iframe.locator('.next').click()
     iframe.locator('.page-counter').filter(has_text='2 / 6').wait_for()
     checks.append('phone fit: full device within viewport, compact controls, embedded touch navigation')
+
+    iframe.locator('.expand').click()
+    phone = page.frame_locator('.phone-modal iframe')
+    phone.locator('.page-counter').filter(has_text='2 / 6').wait_for()
+    assert page.locator('.phone-modal').bounding_box()['width'] < 350
+    phone.locator('.flow-toggle').click()
+    assert phone.locator('.flow-dialog').evaluate('(d)=>d.open')
+    page.keyboard.press('Escape')
+    assert page.locator('#overlay').evaluate('(d)=>d.open')
+    assert not phone.locator('.flow-dialog').evaluate('(d)=>d.open')
+    phone.locator('.next').click()
+    phone.locator('.page-counter').filter(has_text='3 / 6').wait_for()
+    page.keyboard.press('Escape')
+    assert not page.locator('#overlay').evaluate('(d)=>d.open')
+    checks.append('phone dialog: opens at current frame, nested Escape, closes without losing the page')
+
+    page.goto(BASE)
+    assert page.locator('#materials').count() == 0
+    assert page.locator('.strengths .advantage-proof').count() == 0
+    assert page.locator('.strengths article').count() == 4
+    assert page.locator('.experience-card').count() == 3
+    for width, height in [(1440,900),(1024,768),(768,1024),(390,844),(320,640)]:
+        page.set_viewport_size({'width':width,'height':height})
+        if width > 760:
+            for selector in ['.strengths article','.experience-card','.research-card']:
+                heights = page.locator(selector).evaluate_all('(items)=>items.map(i=>i.getBoundingClientRect().height)')
+                assert max(heights)-min(heights) <= 1, (width,selector,heights)
+        page.locator('[data-phone-preview]').first.click()
+        phone.locator('.page-layer:not(.leaving) .original-screen').wait_for(state='visible')
+        modal = page.locator('.phone-modal').bounding_box()
+        assert modal['x']>=0 and modal['y']>=0 and modal['x']+modal['width']<=width and modal['y']+modal['height']<=height
+        assert modal['width'] < 380
+        page.locator('.phone-modal .close').click()
+    checks.append('profile: four ability cards, three experiences, no download section; consistent card heights and fitted phone dialogs')
 
     context2 = browser.new_context(reduced_motion='reduce')
     reduced = context2.new_page()

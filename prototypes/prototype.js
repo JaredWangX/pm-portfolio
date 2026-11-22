@@ -6,6 +6,8 @@ document.body.classList.add('show-hotspots');
 document.body.classList.toggle('embed', embed);
 const screen = $('.screen'), viewport = $('.viewport');
 const phone = document.body.dataset.product === 'wanso';
+const expanded = new URLSearchParams(location.search).has('expanded');
+let flowDialog;
 let picture = $('.original-screen');
 let transition;
 const layer = document.createElement('div');
@@ -52,6 +54,7 @@ function updatePlayback() {
   const play = $('.autoplay');
   play.setAttribute('aria-pressed', String(playing));
   play.textContent = playing ? 'Ⅱ 暂停' : '▶ 继续播放';
+  if (phone) play.textContent = playing ? 'Ⅱ 暂停' : '▶ 播放';
   $('.play-status').textContent = playing ? '自动演示' : '已暂停，可自由查看';
   $('.play-progress').classList.toggle('paused', !canPlay());
 }
@@ -135,6 +138,7 @@ function renderFrame() {
 async function show(id, manual = true, returnToViewer = false) {
   const index = frames.findIndex(f => f.id === id);
   if (index < 0) return;
+  if (returnToViewer && flowDialog?.open) flowDialog.close();
   const request = ++loadId;
   if (manual) setPlaying(false);
   loading = true; failed = false; schedule();
@@ -172,7 +176,7 @@ async function show(id, manual = true, returnToViewer = false) {
     const hotspots = document.createElement('div'); hotspots.className = 'hotspots';
     activeLayer.append(hotspots);
     screen.append(activeLayer);
-    document.querySelectorAll('.viewer button').forEach(b=>b.disabled=false);
+    document.querySelectorAll('.viewer button, .flow-dialog .viewer-tools button').forEach(b=>b.disabled=false);
     renderFrame();
     if (hadPage && !reduced.matches) {
       transition = activeLayer.animate([
@@ -236,6 +240,7 @@ $('.zoom-toggle').addEventListener('click',event=>{
   event.currentTarget.textContent=zoomed?'适应':'放大';
   event.currentTarget.setAttribute('aria-pressed',String(zoomed));
   setPlaying(false);fit();
+  if (flowDialog?.open) flowDialog.close();
 });
 let swipeStart, ignoreClick = false;
 screen.addEventListener('pointerdown', event => {
@@ -268,6 +273,8 @@ $('.retry').addEventListener('click',()=>{
   else show($('.load-error').dataset.retry || frames[current]?.id || steps()[0].id);
 });
 document.addEventListener('keydown',event=>{
+  if (flowDialog?.open) return;
+  if (event.key === 'Escape' && phone && expanded && !zoomed) parent.postMessage({type:'portfolio-close-phone'}, location.origin);
   if (event.altKey || event.ctrlKey || event.metaKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
   if (event.key==='ArrowRight') {event.preventDefault();next();}
   if (event.key==='ArrowLeft') {event.preventDefault();previous();}
@@ -282,7 +289,42 @@ new ResizeObserver(fit).observe(viewport);
 new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;schedule();},{threshold:.1}).observe($('.viewer'));
 reduced.addEventListener('change',event=>{if(event.matches)setPlaying(false);});
 window.addEventListener('hashchange',()=>{if(ready && location.hash.slice(1)!==frames[current]?.id)show(location.hash.slice(1));});
-fetch('screens.json?v=glass4',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('screens');return r.json();}).then(async data=>{
+if (phone) {
+  document.body.classList.add('phone-player');
+  document.body.classList.toggle('expanded', expanded);
+  flowDialog = document.createElement('dialog');
+  flowDialog.className = 'flow-dialog';
+  flowDialog.id = 'flow-dialog';
+  flowDialog.setAttribute('aria-labelledby', 'flow-title');
+  const heading = document.createElement('div');
+  heading.className = 'flow-dialog-heading';
+  const title = document.createElement('h2');
+  title.id = 'flow-title'; title.textContent = '场景与页面';
+  const close = makeButton('×', () => flowDialog.close(), 'flow-close');
+  close.setAttribute('aria-label', '关闭场景选择');
+  heading.append(title, close);
+  flowDialog.append(heading, $('.viewer-tools'), $('.review-side'));
+  document.body.append(flowDialog);
+  const choose = makeButton('场景', () => {setPlaying(false);flowDialog.showModal();choose.setAttribute('aria-expanded','true');}, 'flow-toggle');
+  choose.setAttribute('aria-haspopup', 'dialog');
+  choose.setAttribute('aria-controls', 'flow-dialog');
+  choose.setAttribute('aria-expanded', 'false');
+  choose.disabled = true;
+  $('.viewer-footer').insertBefore(choose, $('.autoplay'));
+  flowDialog.addEventListener('close', () => choose.setAttribute('aria-expanded','false'));
+  flowDialog.addEventListener('click', event => {
+    if (event.target !== flowDialog) return;
+    const box = flowDialog.getBoundingClientRect();
+    if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) flowDialog.close();
+  });
+  $('.expand').textContent = '展开 ↗';
+  $('.expand').addEventListener('click', event => {
+    if (embed && parent !== window) {
+      event.preventDefault();setPlaying(false);parent.postMessage({type:'portfolio-open-phone',frame:frames[current]?.id || ''}, location.origin);
+    }
+  });
+}
+fetch('screens.json?v=personal5',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('screens');return r.json();}).then(async data=>{
   frames=data.frames; flows=data.flows;
   if(!frames.length || !flows.length)throw Error('empty');
   $('.flow-selector').replaceChildren(...flows.map((f,i)=>makeButton(f.title,()=>{
