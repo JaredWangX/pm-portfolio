@@ -2,3 +2,4 @@
 .dish-mark{display:grid;place-items:center;width:47px;height:47px;flex-shrink:0;background:#eaf3ff;color:#37679b;border:1px solid #d9e7f7;border-radius:13px;font-size:16px;font-weight:800;letter-spacing:-1px}.merchant-body{min-height:96px}.merchant h3{min-height:19px}
 :root{--sub:#526a82}.eyebrow,.send{background:#2568d6}.helper{color:#536b83;font-size:13px;line-height:1.7}.merchant p{color:#526a82}.composer-footer span,.section-title small{color:#526a82}.send{min-height:38px}.demo-label{color:#536b83;font-size:10px}.welcome>p{color:#526a82}
 .merchant img{aspect-ratio:1.45;object-position:center top}
+.composer-footer .send{white-space:nowrap;flex-shrink:0}.followups button{text-align:left;line-height:1.6}
