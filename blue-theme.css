@@ -23,3 +23,44 @@ body.case-page,body.reading-page{background:radial-gradient(ellipse at 100% 0,#b
 .case-page .case-intro{background:#e9f3ff;border-color:#fff}.case-page .case-intro:after{background:linear-gradient(100deg,#eaf4ff 5%,#eaf4ffda 34%,#e8f3ff66 65%,#e8f3ff15)}.case-page .light-field{background:linear-gradient(120deg,#eaf5ff,#b7d7ff)}.case-page .case-intro .light-field{opacity:.45}.case-page .light-field:before{filter:hue-rotate(170deg) saturate(.65)}
 .case-page .case-summary{padding:24px 28px}.case-page .case-summary p{font-size:15px;color:#405d7e}.case-page .case-summary span{font-size:13px;color:#205baf}.case-page .check{background:#e1efffe0;color:#3b5c83;border-color:#c1d8f5}.case-page .check strong{color:#1b58ab}
 @media(max-width:640px){.case-page .case-summary{padding:22px 20px;gap:24px 20px}.case-page .case-summary p{font-size:14px}}
+
+/* The blue identity includes reading, hover, numbered steps and verification states. */
+.case-page :is(h1,h2,h3),.reading-page :is(h1,h2,h3){text-wrap:balance}
+.source-disclosure{padding:0 20px!important}.source-disclosure summary{cursor:pointer;min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:16px;list-style:none;font-size:16px;font-weight:600}
+.source-disclosure summary::-webkit-details-marker{display:none}.source-disclosure summary:after{content:'＋';font-size:20px}.source-disclosure[open] summary:after{content:'−'}
+.source-disclosure p{padding-block:0 20px;font-size:16px!important;line-height:1.85!important}
+.case-page :is(.eyebrow,.decision-list li:before,.metricgrid b,.roadmap li>span,.sidecard dd strong),
+.reading-page :is(.eyebrow,.reader-flow li:before,.lab-conclusion strong){color:#2466bd}
+.case-page :is(.back,.tags span,.sidecard dt,.sidecard small,.case-summary span,.metricgrid span,.roadmap li>span){font-size:15px}
+.case-page :is(.case-summary p,.sidecard dd,.sidecard a,.button,.product-flow p,.reqs summary span),
+.reading-page :is(.reader-meta,.reader-contents nav a,.reader-case-link,.data-footnote,.button){font-size:16px;line-height:1.75}
+.case-page :is(.case-section>p:not(.eyebrow),.decision-list p,.reqs p,.roadmap p,.user-path p),
+.reading-page :is(.reading-content p,.reading-content li){font-size:18px;line-height:1.95}
+.case-page :is(.readout table,.check),.reading-page .reading-content table{font-size:16px}
+.reading-page .reading-content :is(p,li,td){color:#3d5470}
+.reading-page .reader-cover .eyebrow,.case-page .eyebrow{font-size:16px;font-weight:650;letter-spacing:0}
+.reading-page :is(.reader-flow,.reader-callout,.research-reference){background:#e8f2ff;border-color:#a9c8ed}
+.reading-page :is(.print-document:hover,.reader-contents nav a:hover){background:#dcecff}
+.case-page .metricgrid b{font-size:27px}
+.case-page .reqs details{background:#f5f9ff;border-color:#c8ddf4}
+.case-page .roadmap li>span{background:#e0edff;border-color:#bdd4f1;border-radius:12px}
+.case-page .roadmap li{grid-template-columns:90px minmax(0,1fr)}
+.case-page .case-summary{gap:28px}.case-page .case-summary span{margin-bottom:10px}
+.case-page .product-flow>div{border-top:2px solid #81b2f0}
+.case-page .original-phone-preview{width:min(460px,100%);height:min(900px,calc(100svh - 110px));min-height:600px;margin:28px auto;background:transparent;border:0;padding:0;box-shadow:none}
+.case-page .original-phone-preview iframe{width:100%;height:100%;border:0;background:transparent}
+.case-page .prototype-actions{margin-block:22px 28px}
+.case-page .product-live-link{font-size:17px;min-height:54px;padding-inline:24px}
+.phone-modal .dialog-top{background:#f5faff}.phone-modal{background:#f1f7ff}
+.case-page footer a,.reading-page footer a{font-size:15px}
+@media(max-width:640px){
+ .case-page :is(.case-section>p:not(.eyebrow),.decision-list p,.reqs p,.roadmap p,.user-path p),.reading-page :is(.reading-content p,.reading-content li){font-size:17px}
+ .case-page :is(.case-summary p,.sidecard dd,.sidecard a,.product-flow p),.reading-page :is(.reader-meta,.reader-contents nav a,.data-footnote){font-size:15px}
+ .case-page .case-summary{grid-template-columns:1fr;gap:20px}
+ .case-page .case-summary>div{display:grid;grid-template-columns:40px 1fr;gap:15px}
+ .case-page .case-summary span{margin:0;line-height:1.8}
+ .case-page .roadmap li{grid-template-columns:1fr;gap:14px}.case-page .roadmap li>span{justify-self:start;padding:5px 12px}
+ .case-page .original-phone-preview{height:850px;min-height:0}
+ .case-page .readout{overflow-x:auto}.case-page .readout table{min-width:530px;font-size:15px}
+ .case-page .prototype-actions{flex-direction:column;align-items:stretch}
+}

@@ -89,12 +89,12 @@ with sync_playwright() as p:
         page.goto(BASE + 'prototypes/wanso/#home')
         loaded('home')
         page.locator('.autoplay').click()
-        geometry = page.locator('.screen').bounding_box()
+        geometry = page.locator('.viewport').bounding_box()
         page.locator('.next').click()
         loaded('explore')
         page.locator('.next').click()
         loaded('taste')
-        assert page.locator('.screen').bounding_box() == geometry, 'phone shell must not resize between source aspect ratios'
+        assert page.locator('.viewport').bounding_box() == geometry, 'outer viewport stays stable while each original image keeps its aspect ratio'
         page.locator('.next').click(click_count=3, delay=50)
         page.wait_for_timeout(400)
         assert page.locator('.page-layer').count() == 1, 'rapid navigation must not leave stale layers'
@@ -211,29 +211,28 @@ with sync_playwright() as p:
     assert page.locator('[data-device-project="onentra"]').is_visible()
     iframe = page.frame_locator('[data-device-frame="wanso"]')
     laptop = page.frame_locator('[data-device-frame="onentra"]')
-    iframe.locator('.welcome h1').wait_for()
-    assert iframe.locator('#screen').bounding_box()['width'] >= 340
-    for frame_id, selector in [('explore','.platform-overview'),('compare','.native-price-table'),('profile','.profile-identity'),('home','.welcome')]:
+    iframe.locator('.page-layer:not(.leaving) .original-screen').wait_for()
+    for frame_id in ['recommend','compare','profile','home']:
         page.locator('[data-device-target="wanso"][data-frame="'+frame_id+'"]').click()
-        iframe.locator(selector).wait_for()
+        iframe.locator('.original-screen[alt*="WANSO"]').first.wait_for()
+        page.wait_for_function('''id=>document.querySelector('[data-device-frame=wanso]').contentWindow.location.hash==='#'+id''',arg=frame_id)
     page.locator('.device-controls [data-device-target="onentra"][data-frame="49"]').click()
     laptop.locator('.page-title').filter(has_text='会话文件').wait_for(state='attached')
-    checks.append('device stage: playable phone scenes and original laptop navigation')
+    checks.append('device stage: original Wanso pages and original laptop navigation')
 
     page.locator('.phone-project [data-phone-preview]').click()
     phone = page.frame_locator('.phone-modal iframe')
-    phone.locator('.welcome h1').wait_for()
+    phone.locator('.page-layer:not(.leaving) .original-screen').wait_for()
     assert page.locator('.phone-modal').bounding_box()['width'] >= 420
-    phone.locator('.tabbar [data-nav="profile"]').click()
-    phone.locator('[data-app-settings]').click()
-    phone.locator('#close').focus()
+    phone.locator('.flow-toggle').click()
+    phone.locator('.flow-close').focus()
     page.keyboard.press('Escape')
     assert page.locator('#overlay').evaluate('(d)=>d.open')
-    assert not phone.locator('#sheet').evaluate('(d)=>d.open')
-    phone.locator('[data-nav="home"]').click()
+    assert not phone.locator('.flow-dialog').evaluate('(d)=>d.open')
+    phone.locator('.phone-shortcuts button').first.focus()
     page.keyboard.press('Escape')
     page.wait_for_function('!document.querySelector("#overlay").open')
-    checks.append('wide phone dialog: working app, nested Escape and close restore')
+    checks.append('wide phone dialog: original pages, nested Escape, close restore')
 
     page.goto(BASE)
     assert page.locator('#materials').count() == 0
@@ -246,15 +245,20 @@ with sync_playwright() as p:
         page.set_viewport_size({'width':width,'height':height})
         if width > 760:
             for selector in ['.strengths article','.research-card']:
-                heights = page.locator(selector).evaluate_all('(items)=>items.map(i=>i.getBoundingClientRect().height)')
-                assert max(heights)-min(heights) <= 1, (width,selector,heights)
+                boxes = page.locator(selector).evaluate_all('(items)=>items.map(i=>({top:i.getBoundingClientRect().top,height:i.getBoundingClientRect().height}))')
+                for left,right in zip(boxes[::2],boxes[1::2]):
+                    if abs(left['top']-right['top'])<1:
+                        assert abs(left['height']-right['height']) <= 1, (width,selector,boxes)
         page.locator('[data-phone-preview]').first.click()
-        phone.locator('#screen h1').wait_for(state='visible')
+        phone.locator('.page-layer:not(.leaving) .original-screen').wait_for(state='visible')
         modal = page.locator('.phone-modal').bounding_box()
         assert modal['x']>=0 and modal['y']>=0 and modal['x']+modal['width']<=width and modal['y']+modal['height']<=height
         assert modal['width'] >= min(420,width-22)
-        screen = phone.locator('#screen').bounding_box()
-        assert screen['width'] >= min(390,width-48)
+        screen = phone.locator('.screen').bounding_box()
+        view = phone.locator('.viewport').bounding_box()
+        assert screen['width'] <= view['width']+1 and screen['height'] <= view['height']+1
+        image = phone.locator('.page-layer:not(.leaving) .original-screen')
+        assert image.evaluate('(i)=>Math.abs(i.clientWidth/i.clientHeight-i.naturalWidth/i.naturalHeight)<.01')
         page.locator('.phone-modal .close').click()
     for width,height in [(1440,900),(1024,768),(768,1024),(390,844),(320,640)]:
         page.set_viewport_size({'width':width,'height':height})

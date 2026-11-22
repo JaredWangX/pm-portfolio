@@ -43,15 +43,15 @@ document.querySelector('[data-launch]')?.addEventListener('click', event => {
 });
 function openPhone(trigger, frameId = '') {
   const frame = document.createElement('iframe');
-  frame.src = new URL('demos/wanso/?embed=1&expanded=1&v=native8', document.querySelector('.identity').href).href;
+  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=original9', document.querySelector('.identity').href).href;
   if (/^[a-z0-9-]{1,40}$/.test(frameId)) frame.src += '#' + frameId;
-  frame.title = 'Wanso 可操作的手机应用';
+  frame.title = 'Wanso 原版页面与操作流程';
   frame.referrerPolicy = 'no-referrer';
   frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
   const focusTarget = overlay.contains(trigger) ? opener : trigger;
   overlay.classList.remove('workspace-modal');
   overlay.classList.add('phone-modal');
-  openDialog(focusTarget, 'Wanso · 手机体验', frame);
+  openDialog(focusTarget, 'Wanso · 原版交互原型', frame);
 }
 document.addEventListener('click', event => {
   const phoneLink = event.target.closest('[data-phone-preview]');

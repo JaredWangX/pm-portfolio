@@ -9,7 +9,7 @@ const phone = document.body.dataset.product === 'wanso';
 const expanded = new URLSearchParams(location.search).has('expanded');
 const device = new URLSearchParams(location.search).has('device');
 document.body.classList.toggle('device-embed', device);
-const stageHeight = f => phone ? f.width * 2808 / 1224 : f.height;
+const stageHeight = f => f.height;
 let flowDialog;
 let picture = $('.original-screen');
 let transition;
@@ -124,9 +124,7 @@ function renderFrame() {
       else {guided=steps().some(s=>s.id===h.target);show(h.target);}
     }, 'hotspot');
     b.setAttribute('aria-label',h.label); if(h.target) b.dataset.target = h.target;
-    const height = stageHeight(f);
-    const shift = phone && h.y >= 88 ? height - f.height : 0;
-    Object.assign(b.style,{left:h.x+'%',top:(h.y * f.height / 100 + shift) / height * 100+'%',width:h.w+'%',height:h.h * f.height / height+'%'});
+    Object.assign(b.style,{left:h.x+'%',top:h.y+'%',width:h.w+'%',height:h.h+'%'});
     if (h === preferred) {b.classList.add('suggested');const dot=document.createElement('span');dot.className='hotspot-dot';dot.setAttribute('aria-hidden','true');b.append(dot);}
     return b;
   }));
@@ -169,15 +167,8 @@ async function show(id, manual = true, returnToViewer = false) {
     picture.draggable = false;
     picture.alt = `${document.body.dataset.product.toUpperCase()} · ${frames[index].title} · 原版页面`;
     activeLayer.append(picture);
-    if (phone) {
-      // The original phone pages have two heights. Keep their UI at one scale;
-      // extend only the blank area before the bottom navigation, never stretch text.
-      activeLayer.style.setProperty('--source-height', frames[index].height / stageHeight(frames[index]) * 100 + '%');
-      activeLayer.classList.toggle('native-page',!!frames[index].native);
-      const footer = picture.cloneNode();
-      footer.className = 'screen-bottom'; footer.alt = ''; footer.setAttribute('aria-hidden','true');
-      activeLayer.append(footer);
-    }
+    // Keep the source image intact, including its own navigation and device frame.
+    activeLayer.classList.toggle('native-page',phone && !!frames[index].native);
     const hotspots = document.createElement('div'); hotspots.className = 'hotspots';
     activeLayer.append(hotspots);
     screen.append(activeLayer);
@@ -339,7 +330,7 @@ if (phone) {
     }
   });
 }
-fetch('screens.json?v=glass6',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('screens');return r.json();}).then(async data=>{
+fetch('screens.json?v=original9',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('screens');return r.json();}).then(async data=>{
   frames=data.frames; flows=data.flows;
   if(!frames.length || !flows.length)throw Error('empty');
   $('.flow-selector').replaceChildren(...flows.map((f,i)=>makeButton(f.title,()=>{

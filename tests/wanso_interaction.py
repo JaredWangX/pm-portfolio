@@ -19,12 +19,6 @@ with sync_playwright() as p:
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
     page.goto(BASE)
-    phone = page.frame_locator('[data-device-frame="wanso"]')
-    expect(phone.locator('.welcome h1')).to_contain_text('今天')
-    standalone=ctx.new_page()
-    standalone.goto(BASE+'demos/wanso/')
-    expect(standalone.locator('.welcome h1')).to_contain_text('今天')
-    standalone.close()
     for selector in ['.device-project','.device-title','.device-controls','.device-surface','.device-footer']:
         y = page.locator(selector).evaluate_all('(els)=>els.map(e=>e.getBoundingClientRect().top)')
         assert abs(y[0]-y[1]) < 1, (selector,y)
@@ -32,6 +26,14 @@ with sync_playwright() as p:
     assert 'blur' in page.locator('.phone-project').evaluate('e=>getComputedStyle(e).backdropFilter')
     assert page.locator('.intro-note>p').evaluate('e=>parseFloat(getComputedStyle(e).fontSize)') >= 18
     checks.append('aligned card, heading, controls and screen tops; visible blur and larger body text')
+
+    # The original-page showcase and real-input model client have separate entries.
+    page.goto(BASE+'demos/wanso/?embed=1#home')
+    phone = page
+    expect(phone.locator('.welcome h1')).to_contain_text('今天')
+    def navigate(view):
+        page.evaluate('(view)=>window.postMessage({type:"portfolio-show-frame",frame:view},location.origin)',view)
+        page.wait_for_function('view=>location.hash==="#"+view',arg=view)
 
     # Restaurant menus, quantity and a persistent favourite.
     phone.locator('.merchant').first.click()
@@ -48,7 +50,7 @@ with sync_playwright() as p:
     checks.append('menu → portion change → favourite → saved page')
 
     # Same meal and quantity, editable final fees, with discount clamped at zero.
-    page.locator('[data-device-target="wanso"][data-frame="compare"]').click()
+    navigate('compare')
     expect(phone.locator('.native-price-table tbody tr')).to_have_count(8)
     phone.locator('[data-edit-reference]').first.click()
     phone.locator('[name="grabPrice"]').fill('50000')
@@ -69,7 +71,7 @@ with sync_playwright() as p:
     expect(phone.locator('[name="shopeeOff"]')).to_have_value('0')
     checks.append('comparison uses both editable prices, common quantity, fees and discounts; no negative totals')
 
-    page.locator('[data-device-target="wanso"][data-frame="profile"]').click()
+    navigate('profile')
     phone.locator('[data-add-taste]').click()
     phone.locator('[data-pref="0"]').click()
     phone.locator('#close').click()
@@ -77,7 +79,7 @@ with sync_playwright() as p:
     phone.locator('[name="budget"][value="50000"]').check()
     phone.locator('[name="sort"][value="price"]').check()
     phone.locator('#order-settings .send').click()
-    page.locator('[data-device-target="wanso"][data-frame="explore"]').click()
+    navigate('explore')
     phone.locator('[data-nav="recommend"]').first.click()
     expect(phone.locator('#menu-budget')).to_have_value('50000')
     prices = phone.locator('.choice-foot strong').all_text_contents()
@@ -89,7 +91,7 @@ with sync_playwright() as p:
     expect(phone.locator('.choice')).to_have_count(27)
     checks.append('saved budget and sorting drive menu search; empty filter recovers')
 
-    page.locator('[data-device-target="wanso"][data-frame="profile"]').click()
+    navigate('profile')
     phone.locator('[data-profile-edit]').click()
     phone.locator('[name="name"]').fill('蓝色体验者')
     phone.locator('#profile-edit .send').click()
@@ -99,7 +101,7 @@ with sync_playwright() as p:
     phone.locator('#app-settings .send').click()
     expect(phone.locator('html')).to_have_attribute('data-theme','paper')
     page.reload()
-    page.locator('[data-device-target="wanso"][data-frame="profile"]').click()
+    navigate('profile')
     expect(phone.locator('.profile-identity h2')).to_have_text('蓝色体验者')
     expect(phone.locator('[data-pref="0"]')).to_have_attribute('aria-pressed','true')
     expect(phone.locator('html')).to_have_attribute('data-theme','paper')
@@ -125,7 +127,7 @@ with sync_playwright() as p:
         requests.append(body)
         route.fulfill(status=200,content_type='application/json',body=json.dumps({'answer':'按你的预算，可以查看牛肉汉堡套餐；价格来自历史菜单。','picks':[{**item,'reason':'40,000 越南盾，不含鸡肉。'}],'followups':['再看看其他牛肉餐品']},ensure_ascii=False))
     page.route('**/api/wanso',reply)
-    page.locator('[data-device-target="wanso"][data-frame="home"]').click()
+    navigate('home')
     phone.locator('#ask textarea').fill('午餐想吃牛肉，不吃鸡肉')
     phone.locator('#ask .send').click()
     expect(phone.locator('.assistant-message')).to_have_count(1)
@@ -151,7 +153,7 @@ with sync_playwright() as p:
 
     page.unroute('**/api/wanso')
     page.route('**/api/wanso',lambda route:route.fulfill(status=503,content_type='application/json',body='{"error":"unavailable"}'))
-    page.locator('[data-device-target="wanso"][data-frame="home"]').click()
+    navigate('home')
     phone.locator('#ask textarea').fill('保留我的问题')
     phone.locator('#ask .send').click()
     expect(phone.locator('#chat-error')).to_contain_text('请重试')
@@ -163,36 +165,25 @@ with sync_playwright() as p:
     expect(phone.locator('.user-message')).to_have_count(1)
     checks.append('API failure retains input; retry does not duplicate the question')
 
-    # Expanding opens the real app, shares local saved state, and scopes Escape to one dialog.
-    page.locator('[data-device-target="wanso"][data-frame="profile"]').click()
-    page.locator('.phone-project [data-phone-preview]').click()
-    modal = page.frame_locator('.phone-modal iframe')
-    expect(modal.locator('.profile-identity h2')).to_have_text('蓝色体验者')
-    modal.locator('[data-app-settings]').click()
-    modal.locator('#close').focus()
-    page.keyboard.press('Escape')
-    expect(modal.locator('#sheet')).not_to_be_visible()
-    assert page.locator('#overlay').evaluate('d=>d.open')
-    modal.locator('[data-nav="home"]').click()
-    page.keyboard.press('Escape')
-    expect(page.locator('#overlay')).not_to_be_visible()
-    checks.append('expanded phone shares state; nested Escape closes only the active sheet')
+    # A visitor may open the model client separately and keep their saved preferences.
+    other=ctx.new_page()
+    other.goto(BASE+'demos/wanso/?embed=1#profile')
+    expect(other.locator('.profile-identity h2')).to_have_text('蓝色体验者')
+    other.locator('[data-app-settings]').click()
+    other.locator('#close').focus()
+    other.keyboard.press('Escape')
+    expect(other.locator('#sheet')).not_to_be_visible()
+    other.close()
+    checks.append('separate model-client tab shares local preferences; Escape closes settings')
 
-    # Each app view remains bounded; only its content scrolls and the real nav stays reachable.
     for width,height in [(1440,900),(1024,768),(768,1024),(390,844),(320,640)]:
         page.set_viewport_size({'width':width,'height':height})
-        page.locator('[data-device-target="wanso"][data-frame="home"]').click()
-        page.locator('.phone-project [data-phone-preview]').click()
-        modal.locator('.welcome h1').wait_for()
-        box=page.locator('.phone-modal').bounding_box()
-        assert box['x']>=0 and box['y']>=0 and box['x']+box['width']<=width+1 and box['y']+box['height']<=height+1
         for view in ['home','explore','saved','profile']:
-            modal.locator('[data-nav="'+view+'"]').last.click()
-            assert not modal.locator('html').evaluate('e=>e.scrollWidth>innerWidth+1')
-            nav=modal.locator('.tabbar').bounding_box();iframe_box=page.locator('.phone-modal iframe').bounding_box()
-            assert nav['y']+nav['height']<=iframe_box['y']+iframe_box['height']
-        page.locator('.phone-modal .close').click()
-    checks.append('five viewport sizes: phone bounds, four nav pages, pinned navigation and no overflow')
+            navigate(view)
+            assert not phone.locator('html').evaluate('e=>e.scrollWidth>innerWidth+1')
+            nav=phone.locator('.tabbar').bounding_box()
+            assert nav['y']+nav['height']<=height+1
+    checks.append('model client: five widths, four nav pages, pinned navigation, no overflow')
 
     if '--live' in sys.argv:
         live_context=browser.new_context(viewport={'width':390,'height':844})
