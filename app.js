@@ -183,6 +183,15 @@ function attachPlayer(root) {
 }
 document.querySelectorAll('[data-player]').forEach(attachPlayer);
 
+document.querySelectorAll('.faithful-switcher').forEach(root => {
+  const choose = project => {
+    root.querySelectorAll('[data-demo]').forEach(panel => {panel.hidden = panel.dataset.demo !== project;});
+    root.querySelectorAll('[data-project]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.project === project)));
+  };
+  root.querySelectorAll('[data-project]').forEach(button => button.addEventListener('click', () => choose(button.dataset.project)));
+  choose(matchMedia('(max-width:760px)').matches ? 'wanso' : 'onentra');
+});
+
 const slider = document.getElementById('cost');
 if (slider) {
   const format = value => value.toLocaleString('en-US') + ' ₫';

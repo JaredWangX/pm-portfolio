@@ -1,19 +1,58 @@
 {
   "recordedAt": "2026-11-19",
   "currency": "VND",
-  "note": "已采集菜单样例，价格与可售状态不是实时信息。配送费、优惠和过敏原须在商家平台核实。",
+  "note": "作品演示菜单：胡志明市菜单保留原采集样例；河内菜单从本地历史备份恢复，采集日期未确认。价格与可售状态均不是实时信息。配送费、优惠和过敏原须在商家平台核实。",
   "shops": [
     {
       "id": "mcd",
       "name": "McDonald’s",
       "image": "mcd-combo-cheese.webp",
-      "source": "https://food.grab.com/vn/vi/"
+      "source": "https://food.grab.com/vn/vi/",
+      "city": "hcm",
+      "categoryVi": "Burger",
+      "categoryZh": "汉堡"
     },
     {
       "id": "bamysu",
       "name": "Bamysu",
       "image": "bamysu-photo.webp",
-      "source": "https://shopeefood.vn/"
+      "source": "https://shopeefood.vn/",
+      "city": "hcm",
+      "categoryVi": "Burger",
+      "categoryZh": "汉堡"
+    },
+    {
+      "id": "pho-nguyet",
+      "name": "Phở Gà Nguyệt - Phủ Doãn",
+      "city": "hanoi",
+      "categoryVi": "Phở gà",
+      "categoryZh": "河粉 / 鸡肉",
+      "image": "scenario_late.webp",
+      "platform": "ShopeeFood",
+      "url": "https://shopeefood.vn/ha-noi/pho-ga-nguyet-phu-doan",
+      "source": "本地历史采集备份；采集日期未确认"
+    },
+    {
+      "id": "com-rang",
+      "name": "Cơm Rang Dưa Bò - Tôn Đức Thắng",
+      "city": "hanoi",
+      "categoryVi": "Cơm rang",
+      "categoryZh": "炒饭 / 牛肉",
+      "image": "scenario_gym.webp",
+      "platform": "ShopeeFood",
+      "url": "https://shopeefood.vn/ha-noi/com-rang-dua-bo-mien-xao-my-chua-cay-22b-163-ton-duc-thang",
+      "source": "本地历史采集备份；采集日期未确认"
+    },
+    {
+      "id": "chay-co-hong",
+      "name": "Chay Cồ Hồng - EZ Veggie",
+      "city": "hanoi",
+      "categoryVi": "Món chay",
+      "categoryZh": "素食 / 越南菜",
+      "image": "scenario_date.webp",
+      "platform": "ShopeeFood",
+      "url": "https://shopeefood.vn/ha-noi/chay-co-hong-ez-veggie",
+      "source": "本地历史采集备份；采集日期未确认"
     }
   ],
   "items": [
@@ -232,6 +271,295 @@
       "name": "Hamburger Xúc xích x2 phô mai",
       "price": 57000,
       "description": "2 cây xúc xích, phô mai, rau xà lách, cà chua, dưa leo, sốt mayo, tương cà, tương ớt"
+    },
+    {
+      "id": "pho-nguyet-1",
+      "shop": "pho-nguyet",
+      "category": "PHỞ TRỘN",
+      "name": "Phở Trộn Đùi",
+      "price": 80000,
+      "description": "Quán thái đùi bắp hoặc má đùi ngẫu nhiên. Má đùi có màu thịt trắng hơn, không nâu sẫm như đùi bắp.",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "pho-nguyet-2",
+      "shop": "pho-nguyet",
+      "category": "PHỞ TRỘN",
+      "name": "Phở Trộn Gà Thường",
+      "price": 65000,
+      "description": "Thịt Gà Xé Thường",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "pho-nguyet-3",
+      "shop": "pho-nguyet",
+      "category": "PHỞ TRỘN",
+      "name": "Phở Trộn Cánh",
+      "price": 75000,
+      "description": "Cánh nguyên chiếc, bao gồm cả phần thịt trắng đầu cánh",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "pho-nguyet-4",
+      "shop": "pho-nguyet",
+      "category": "PHỞ TRỘN",
+      "name": "Phở Trộn Da ( LƯNG )",
+      "price": 70000,
+      "description": "Thịt da/ Lưng.",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "pho-nguyet-5",
+      "shop": "pho-nguyet",
+      "category": "PHỞ TRỘN",
+      "name": "Lòng Mề Nhỏ",
+      "price": 60000,
+      "description": "",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "pho-nguyet-6",
+      "shop": "pho-nguyet",
+      "category": "PHỞ TRỘN",
+      "name": "Lòng Mề To",
+      "price": 110000,
+      "description": "",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "pho-nguyet-7",
+      "shop": "pho-nguyet",
+      "category": "PHỞ TRỘN",
+      "name": "Phở Trộn Gà + Trà Tắc",
+      "price": 95000,
+      "description": "01 suất phở trộn thịt gà thường xé và 01 chai trà tắc",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "pho-nguyet-8",
+      "shop": "pho-nguyet",
+      "category": "PHỞ NƯỚC",
+      "name": "Phở Đùi",
+      "price": 80000,
+      "description": "Quán thái đùi bắp hoặc má đùi ngẫu nhiên. Má đùi có màu thịt trắng hơn, không nâu sẫm như đùi bắp.",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "pho-nguyet-9",
+      "shop": "pho-nguyet",
+      "category": "PHỞ NƯỚC",
+      "name": "Phở Gà Thường",
+      "price": 65000,
+      "description": "Thịt Gà Xé Thường",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "pho-nguyet-10",
+      "shop": "pho-nguyet",
+      "category": "PHỞ NƯỚC",
+      "name": "Phở Trắng (LƯỜN/ ỨC)",
+      "price": 65000,
+      "description": "Thịt nạc trắng/ thịt ức/ lườn.",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "com-rang-1",
+      "shop": "com-rang",
+      "category": "Cơm Rang",
+      "name": "Cơm rang dưa bò",
+      "price": 60000,
+      "description": "",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "com-rang-2",
+      "shop": "com-rang",
+      "category": "Cơm Rang",
+      "name": "Cơm rang thập cẩm",
+      "price": 60000,
+      "description": "",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "com-rang-3",
+      "shop": "com-rang",
+      "category": "Mỳ Xào",
+      "name": "Mỳ chua cay thập cẩm",
+      "price": 65000,
+      "description": "(mỳ nước)",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "com-rang-4",
+      "shop": "com-rang",
+      "category": "Mỳ Xào",
+      "name": "Mỳ xào bò",
+      "price": 65000,
+      "description": "",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "com-rang-5",
+      "shop": "com-rang",
+      "category": "Mỳ Xào",
+      "name": "Mỳ chua cay",
+      "price": 55000,
+      "description": "Ví dụ bò +tim (mỳ nước tuỳ chọn 2 món)",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "com-rang-6",
+      "shop": "com-rang",
+      "category": "Mỳ Xào",
+      "name": "Mỳ xào tim cật",
+      "price": 65000,
+      "description": "",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "com-rang-7",
+      "shop": "com-rang",
+      "category": "Mỳ Xào",
+      "name": "Mỳ xào thập cẩm",
+      "price": 70000,
+      "description": "",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "com-rang-8",
+      "shop": "com-rang",
+      "category": "Mỳ Xào",
+      "name": "Mỳ tim",
+      "price": 55000,
+      "description": "Mỳ nước ( chua cay )",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "com-rang-9",
+      "shop": "com-rang",
+      "category": "Mỳ Xào",
+      "name": "Mỳ bò",
+      "price": 55000,
+      "description": "Mỳ nước ( chua cay )",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "com-rang-10",
+      "shop": "com-rang",
+      "category": "Mỳ Xào",
+      "name": "Mỳ cật",
+      "price": 55000,
+      "description": "Mỳ nước ( chua cay )",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "chay-co-hong-1",
+      "shop": "chay-co-hong",
+      "category": "MÓN Á (Asia Cuisine)",
+      "name": "Bánh Mỳ Chay Đặc Biệt",
+      "price": 25000,
+      "description": "",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "chay-co-hong-2",
+      "shop": "chay-co-hong",
+      "category": "MÓN Á (Asia Cuisine)",
+      "name": "Bún Riêu Chay",
+      "price": 38000,
+      "description": "Bún Riêu Chay Cồ Hồng: gồm đậu giòn, thêm nhân Nấm, hành khô cùng vị nước đặc chưng của Bếp. Với hành lá và các loại rau sống ăn kemf",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "chay-co-hong-3",
+      "shop": "chay-co-hong",
+      "category": "MÓN Á (Asia Cuisine)",
+      "name": "Bánh Mỳ Chay",
+      "price": 18000,
+      "description": "",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "chay-co-hong-4",
+      "shop": "chay-co-hong",
+      "category": "MÓN Á (Asia Cuisine)",
+      "name": "Bún Riêu Chay Đặc Biệt",
+      "price": 48000,
+      "description": "Thêm topping sườn non chiên giòn và rong biển sấy",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "chay-co-hong-5",
+      "shop": "chay-co-hong",
+      "category": "MÓN Á (Asia Cuisine)",
+      "name": "Miến Chay Trộn",
+      "price": 45000,
+      "description": "Miến trộn rau củ các loại, thêm nước chua ngọt",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "chay-co-hong-6",
+      "shop": "chay-co-hong",
+      "category": "MÓN Á (Asia Cuisine)",
+      "name": "Set Cơm Chay THẢNH THƠI",
+      "price": 55000,
+      "description": "Set cơm: Gồm món kho, xào, luộc, canh, cơm. Mix theo từng ngày menu linh hoạt.\nĐã bao gồm 5000đ tiền hộp",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "chay-co-hong-7",
+      "shop": "chay-co-hong",
+      "category": "MÓN Á (Asia Cuisine)",
+      "name": "Bún Trộn Chao Chay Tự Tại",
+      "price": 45000,
+      "description": "Bún tươi và các loại rau, nấm, ram và xốt chao rất ngon cho mùa hè mát mẻ",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "chay-co-hong-8",
+      "shop": "chay-co-hong",
+      "category": "MÓN Á (Asia Cuisine)",
+      "name": "Bún \"Ốc\" Chay",
+      "price": 48000,
+      "description": "Phiên bản món bestseller bún riêu thêm tảo xoắn",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "chay-co-hong-9",
+      "shop": "chay-co-hong",
+      "category": "MÓN Á (Asia Cuisine)",
+      "name": "Pate Chay hộp mang về",
+      "price": 50000,
+      "description": "Pate chay làm từ các loại hạt dinh dưỡng, hộp 200gr có thể dùng ăn với bánh mỳ. Quay lò vi sóng là có thể dùng ngay được",
+      "source": "ShopeeFood 本地历史菜单"
+    },
+    {
+      "id": "chay-co-hong-10",
+      "shop": "chay-co-hong",
+      "category": "MÓN Á (Asia Cuisine)",
+      "name": "Nem Rán Chay",
+      "price": 60000,
+      "description": "Nem rán nhân rau củ quả 60k/ 6chiếc",
+      "source": "ShopeeFood 本地历史菜单"
     }
-  ]
+  ],
+  "cities": [
+    {
+      "id": "hcm",
+      "name": "TP.HCM",
+      "nameZh": "胡志明市"
+    },
+    {
+      "id": "hanoi",
+      "name": "Hà Nội",
+      "nameZh": "河内"
+    }
+  ],
+  "recovery": {
+    "restoredOn": "2026-11-22",
+    "restaurants": 3,
+    "items": 30,
+    "source": "ShopeeFood 本地历史采集备份",
+    "priceCheck": "仅导入 price 与 price_text 一致且价格在合理范围内的记录；不导入联系方式或账号数据"
+  }
 }

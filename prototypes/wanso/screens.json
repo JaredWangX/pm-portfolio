@@ -1,0 +1,1373 @@
+{
+  "product": "wanso",
+  "default": "home",
+  "frames": [
+    {
+      "id": "home",
+      "title": "首页",
+      "group": "选餐入口",
+      "src": "../../assets/prototypes/wanso-home.webp",
+      "width": 1224,
+      "height": 2586,
+      "note": "预算、口味和场景从一个输入框开始；Wanso 推荐卡保留菜系、评分、距离与平台信息。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "进入推荐示例",
+          "target": "recommend",
+          "x": 7,
+          "y": 30,
+          "w": 85,
+          "h": 14
+        },
+        {
+          "label": "查看历史",
+          "target": "history",
+          "x": 72,
+          "y": 9,
+          "w": 20,
+          "h": 5
+        },
+        {
+          "label": "查看推荐餐厅",
+          "target": "restaurant",
+          "x": 7,
+          "y": 50,
+          "w": 85,
+          "h": 33
+        }
+      ]
+    },
+    {
+      "id": "explore",
+      "title": "探索",
+      "group": "选餐入口",
+      "src": "../../assets/prototypes/wanso-explore.webp",
+      "width": 1224,
+      "height": 2586,
+      "note": "发现页以午餐场景、平台信息和餐厅卡片帮助用户缩小选择范围。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "查看餐厅",
+          "target": "restaurant",
+          "x": 7,
+          "y": 50,
+          "w": 85,
+          "h": 30
+        },
+        {
+          "label": "查看会话历史",
+          "target": "history",
+          "x": 73,
+          "y": 9,
+          "w": 19,
+          "h": 5
+        }
+      ]
+    },
+    {
+      "id": "taste",
+      "title": "饮食偏好",
+      "group": "选餐入口",
+      "src": "../../assets/prototypes/wanso-taste.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "设置平时的饮食习惯，作为推荐背景；本次明确提出的要求优先。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        }
+      ]
+    },
+    {
+      "id": "order",
+      "title": "平台偏好",
+      "group": "选餐入口",
+      "src": "../../assets/prototypes/wanso-order.webp",
+      "width": 1224,
+      "height": 2586,
+      "note": "在常用平台、预算与排序之间选择偏好，不改变本次已经确认的约束。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        }
+      ]
+    },
+    {
+      "id": "recommend",
+      "title": "首次推荐",
+      "group": "推荐与追问",
+      "src": "../../assets/prototypes/wanso-recommend.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "示例需求：有点累，想吃牛肉芝士汉堡，餐费不超过 60,000 ₫，不吃鸡。推荐保留明确理由和菜单依据。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        },
+        {
+          "label": "查看完整菜单",
+          "target": "menu",
+          "x": 10,
+          "y": 76,
+          "w": 39,
+          "h": 5
+        },
+        {
+          "label": "确认已选餐品",
+          "target": "confirm",
+          "x": 51,
+          "y": 76,
+          "w": 39,
+          "h": 5
+        },
+        {
+          "label": "继续追问",
+          "target": "followup",
+          "x": 6,
+          "y": 85,
+          "w": 87,
+          "h": 7
+        }
+      ]
+    },
+    {
+      "id": "alternative",
+      "title": "另一家候选",
+      "group": "推荐与追问",
+      "src": "../../assets/prototypes/wanso-alternative.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "向下查看麦当劳候选。两家店的商品、价格与推荐理由分别展示，避免只给一段文字。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        },
+        {
+          "label": "查看完整菜单",
+          "target": "mcd",
+          "x": 10,
+          "y": 76,
+          "w": 39,
+          "h": 5
+        },
+        {
+          "label": "确认已选餐品",
+          "target": "confirm",
+          "x": 51,
+          "y": 76,
+          "w": 39,
+          "h": 5
+        },
+        {
+          "label": "继续追问",
+          "target": "followup",
+          "x": 6,
+          "y": 85,
+          "w": 87,
+          "h": 7
+        }
+      ]
+    },
+    {
+      "id": "followup",
+      "title": "比较候选",
+      "group": "推荐与追问",
+      "src": "../../assets/prototypes/wanso-followup.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "追问另一家有什么可选时，继续沿用这一轮的预算与忌口，不让用户重新输入。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        },
+        {
+          "label": "继续下一轮追问",
+          "target": "water",
+          "x": 7,
+          "y": 85,
+          "w": 87,
+          "h": 7
+        }
+      ]
+    },
+    {
+      "id": "water",
+      "title": "调整饮品",
+      "group": "推荐与追问",
+      "src": "../../assets/prototypes/wanso-water.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "保留 49,000 ₫ 的汉堡，加 10,000 ₫ 的水，重新确认 59,000 ₫ 的餐费。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        },
+        {
+          "label": "继续下一轮追问",
+          "target": "egg",
+          "x": 7,
+          "y": 85,
+          "w": 87,
+          "h": 7
+        }
+      ]
+    },
+    {
+      "id": "restaurant",
+      "title": "餐厅信息",
+      "group": "菜单与比价",
+      "src": "../../assets/prototypes/wanso-restaurant.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "从推荐进入餐厅详情，查看为什么适合、现有菜单及平台入口。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        },
+        {
+          "label": "查看菜单",
+          "target": "menu",
+          "x": 8,
+          "y": 75,
+          "w": 43,
+          "h": 6
+        },
+        {
+          "label": "确认餐品",
+          "target": "confirm",
+          "x": 53,
+          "y": 75,
+          "w": 39,
+          "h": 6
+        }
+      ]
+    },
+    {
+      "id": "menu",
+      "title": "汉堡菜单",
+      "group": "菜单与比价",
+      "src": "../../assets/prototypes/wanso-menu.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "菜单完整展示双层、芝士和配料差异，用户可以核对推荐所引用的价格。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        },
+        {
+          "label": "汉堡单品",
+          "target": "menu",
+          "x": 8,
+          "y": 16,
+          "w": 18,
+          "h": 4
+        },
+        {
+          "label": "查看套餐",
+          "target": "combo",
+          "x": 26,
+          "y": 16,
+          "w": 18,
+          "h": 4
+        },
+        {
+          "label": "加料和饮品",
+          "target": "extras",
+          "x": 44,
+          "y": 16,
+          "w": 18,
+          "h": 4
+        }
+      ]
+    },
+    {
+      "id": "combo",
+      "title": "套餐菜单",
+      "group": "菜单与比价",
+      "src": "../../assets/prototypes/wanso-combo.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "在单品与套餐之间查看份量和组合，选择之前先明确具体包含什么。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        },
+        {
+          "label": "汉堡单品",
+          "target": "menu",
+          "x": 8,
+          "y": 16,
+          "w": 18,
+          "h": 4
+        },
+        {
+          "label": "查看套餐",
+          "target": "combo",
+          "x": 26,
+          "y": 16,
+          "w": 18,
+          "h": 4
+        },
+        {
+          "label": "加料和饮品",
+          "target": "extras",
+          "x": 44,
+          "y": 16,
+          "w": 18,
+          "h": 4
+        }
+      ]
+    },
+    {
+      "id": "extras",
+      "title": "加料与饮品",
+      "group": "菜单与比价",
+      "src": "../../assets/prototypes/wanso-extras.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "单独查看饮品、配料和加价；修改选择后，餐费需要重新计算。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        },
+        {
+          "label": "汉堡单品",
+          "target": "menu",
+          "x": 8,
+          "y": 16,
+          "w": 18,
+          "h": 4
+        },
+        {
+          "label": "查看套餐",
+          "target": "combo",
+          "x": 26,
+          "y": 16,
+          "w": 18,
+          "h": 4
+        },
+        {
+          "label": "加料和饮品",
+          "target": "extras",
+          "x": 44,
+          "y": 16,
+          "w": 18,
+          "h": 4
+        }
+      ]
+    },
+    {
+      "id": "mcd",
+      "title": "麦当劳单品",
+      "group": "菜单与比价",
+      "src": "../../assets/prototypes/wanso-mcd.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "同样的菜单结构用于另一家候选店，保留单品名称、说明和实际采集价格。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        },
+        {
+          "label": "切换单品与套餐",
+          "target": "mcd-combo",
+          "x": 8,
+          "y": 16,
+          "w": 44,
+          "h": 4
+        }
+      ]
+    },
+    {
+      "id": "mcd-combo",
+      "title": "麦当劳套餐",
+      "group": "菜单与比价",
+      "src": "../../assets/prototypes/wanso-mcd-combo.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "套餐配图和价格共同展示，帮助用户区分单品与组合。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        },
+        {
+          "label": "切换单品与套餐",
+          "target": "mcd",
+          "x": 8,
+          "y": 16,
+          "w": 44,
+          "h": 4
+        }
+      ]
+    },
+    {
+      "id": "egg",
+      "title": "追加配料",
+      "group": "推荐与追问",
+      "src": "../../assets/prototypes/wanso-egg.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "继续追问加蛋时，对比单独加料和套餐的费用，明确哪些选择仍在预算内。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        },
+        {
+          "label": "继续下一轮追问",
+          "target": "confirm",
+          "x": 7,
+          "y": 85,
+          "w": 87,
+          "h": 7
+        }
+      ]
+    },
+    {
+      "id": "confirm",
+      "title": "最终确认",
+      "group": "推荐与追问",
+      "src": "../../assets/prototypes/wanso-confirm.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "确认已选汉堡和饮品、费用小计与后续平台入口。配送费另行核实。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        }
+      ]
+    },
+    {
+      "id": "compare",
+      "title": "同店比价",
+      "group": "菜单与比价",
+      "src": "../../assets/prototypes/wanso-compare.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "对齐同店、同份量之后再比较平台价格，避免把不同商品当成便宜的替代。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        }
+      ]
+    },
+    {
+      "id": "compare-full",
+      "title": "完整比价",
+      "group": "菜单与比价",
+      "src": "../../assets/prototypes/wanso-compare-full.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "按同一菜单逐项查看两家平台价格，并保留明确的前往平台按钮。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        }
+      ]
+    },
+    {
+      "id": "reviews",
+      "title": "餐厅评价",
+      "group": "菜单与比价",
+      "src": "../../assets/prototypes/wanso-reviews.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "评价与餐厅信息分开呈现，补充菜品口味、服务与配送体验的判断依据。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "title": "平台费用",
+      "group": "菜单与比价",
+      "src": "../../assets/prototypes/wanso-delivery.webp",
+      "width": 1224,
+      "height": 2808,
+      "note": "同一家店并排显示平台、预计送达、运费与菜单，不把标价等同于到手价。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "返回首页",
+          "target": "home",
+          "x": 4,
+          "y": 4,
+          "w": 11,
+          "h": 6
+        }
+      ]
+    },
+    {
+      "id": "save",
+      "title": "选择收藏夹",
+      "group": "收藏与历史",
+      "src": "../../assets/prototypes/wanso-save.webp",
+      "width": 1224,
+      "height": 2586,
+      "note": "从推荐结果打开收藏夹选择器，按使用场景保存餐厅。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "选择收藏夹",
+          "target": "saved",
+          "x": 15,
+          "y": 49,
+          "w": 70,
+          "h": 15
+        }
+      ]
+    },
+    {
+      "id": "saved",
+      "title": "收藏列表",
+      "group": "收藏与历史",
+      "src": "../../assets/prototypes/wanso-saved.webp",
+      "width": 1224,
+      "height": 2586,
+      "note": "收藏保留餐厅信息与平台入口，可按午餐、常吃等场景组织。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏夹选择",
+          "target": "save",
+          "x": 72,
+          "y": 11,
+          "w": 19,
+          "h": 5
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "会话历史",
+      "group": "收藏与历史",
+      "src": "../../assets/prototypes/wanso-history.webp",
+      "width": 1224,
+      "height": 2586,
+      "note": "回到最近的选餐记录继续追问，不丢失之前确认的预算与选择。",
+      "hotspots": [
+        {
+          "label": "首页",
+          "target": "home",
+          "x": 7,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "探索",
+          "target": "explore",
+          "x": 29,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "收藏",
+          "target": "saved",
+          "x": 51,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "偏好",
+          "target": "taste",
+          "x": 73,
+          "y": 92.3,
+          "w": 20,
+          "h": 5.6
+        },
+        {
+          "label": "恢复最近对话",
+          "target": "recommend",
+          "x": 8,
+          "y": 23,
+          "w": 83,
+          "h": 11
+        }
+      ]
+    }
+  ],
+  "tour": [
+    "home",
+    "recommend",
+    "menu",
+    "followup",
+    "water",
+    "confirm",
+    "compare",
+    "saved"
+  ]
+}
