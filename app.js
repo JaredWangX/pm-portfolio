@@ -67,26 +67,65 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 function attachPlayer(root) {
   const panels = [...root.querySelectorAll('[data-demo]')];
   const switches = [...root.querySelectorAll('[data-project]')];
+  const phone = root.querySelector('.native-phone');
+  const video = root.querySelector('video[data-reel]');
   let panel = panels[0], frame = 0, paused = reduced.matches, visible = false, timer;
+  let failedVideo = false;
+  if (phone) phone.tabIndex = 0;
+  const scenes = () => panel.querySelectorAll('[data-scene]');
+  function canPlay() {
+    const focused = document.activeElement;
+    return !paused && visible && !document.hidden && !overlay.open &&
+      (!root.contains(focused) || focused.hasAttribute('data-play'));
+  }
+  function advance() {
+    if (!canPlay()) return;
+    frame = (frame + 1) % scenes().length;
+    render();
+  }
   function schedule() {
     clearTimeout(timer);
-    const focused = document.activeElement;
-    if (paused || !visible || document.hidden || overlay.open || (root.contains(focused) && !focused.hasAttribute('data-play'))) return;
-    timer = setTimeout(() => {
-      frame = (frame + 1) % panel.querySelectorAll('[data-scene]').length;
-      render();
-    }, 8500);
+    const onVideo = video && panel.dataset.demo === 'wanso' && frame === 0;
+    if (video && (!onVideo || !canPlay())) video.pause();
+    if (!onVideo && video && video.currentTime) {
+      video.currentTime = 0;
+      video.classList.remove('ready');
+    }
+    if (!canPlay()) return;
+    if (onVideo && !failedVideo) {
+      if (!video.getAttribute('src')) video.src = video.dataset.reel;
+      video.play().catch(error => {
+        if (error.name !== 'AbortError') {
+          failedVideo = true;
+          schedule();
+        }
+      });
+      return;
+    }
+    timer = setTimeout(advance, 8500);
   }
   function render() {
     panels.forEach(el => { el.hidden = el !== panel; });
     switches.forEach(el => el.setAttribute('aria-pressed', String(el.dataset.project === panel.dataset.demo)));
-    panel.querySelectorAll('[data-scene]').forEach((el, i) => { el.hidden = i !== frame; });
+    scenes().forEach((el, i) => { el.hidden = i !== frame; });
+    panel.querySelectorAll('[data-caption]').forEach((el,i) => {el.hidden = i !== frame;});
     panel.querySelectorAll('[data-step]').forEach((el, i) => el.setAttribute('aria-pressed', String(i === frame)));
+    if (phone) phone.classList.toggle('can-swipe', panel.dataset.demo === 'wanso' && frame < 2);
     const play = panel.querySelector('[data-play]');
     play.setAttribute('aria-label', paused ? '播放演示' : '暂停演示');
     play.title = play.getAttribute('aria-label');
     play.firstElementChild.textContent = paused ? '▶' : 'Ⅱ';
     schedule();
+  }
+  function choose(i) {
+    frame = i;
+    paused = true;
+    render();
+  }
+  if (video) {
+    video.addEventListener('playing', () => video.classList.add('ready'));
+    video.addEventListener('ended', advance);
+    video.addEventListener('error', () => {failedVideo = true;video.classList.remove('ready');schedule();});
   }
   root.addEventListener('click', event => {
     const button = event.target.closest('button');
@@ -94,31 +133,49 @@ function attachPlayer(root) {
     if (button.hasAttribute('data-project')) {
       panel = panels.find(el => el.dataset.demo === button.dataset.project);
       frame = 0;
-      paused = true;
+      render();
     } else if (button.hasAttribute('data-step')) {
-      frame = Number(button.dataset.step);
-      paused = true;
-    } else if (button.hasAttribute('data-next')) {
-      frame = (frame + 1) % panel.querySelectorAll('[data-scene]').length;
-      paused = true;
-      panel.querySelector('[data-step="' + frame + '"]').focus({preventScroll: true});
+      choose(Number(button.dataset.step));
+    } else if (button.hasAttribute('data-goto')) {
+      choose(Number(button.dataset.goto));
+      panel.querySelector('[data-step="' + frame + '"]').focus({preventScroll:true});
     } else if (button.hasAttribute('data-play')) {
       paused = !paused;
-    } else if (button.hasAttribute('data-image')) {
+      render();
+    } else if (button.hasAttribute('data-image') || button.hasAttribute('data-launch')) {
       paused = true;
-    } else return;
-    render();
+      render();
+    }
   });
-  root.addEventListener('focusin', () => clearTimeout(timer));
+  if (phone) {
+    let startY, lastWheel = 0;
+    function scrollToScene(delta) {
+      if ((frame === 0 && delta > 28) || (frame === 1 && delta < -28)) {
+        choose(delta > 0 ? 1 : 0);
+        return true;
+      }
+      return false;
+    }
+    phone.addEventListener('pointerdown', e => {startY = e.clientY;});
+    phone.addEventListener('pointercancel', () => {startY = undefined;});
+    phone.addEventListener('pointerup', e => {
+      if (startY !== undefined) scrollToScene(startY-e.clientY);
+      startY = undefined;
+    });
+    phone.addEventListener('wheel', e => {
+      if (performance.now()-lastWheel < 550) return;
+      if (scrollToScene(e.deltaY)) {e.preventDefault();lastWheel=performance.now();}
+    },{passive:false});
+    phone.addEventListener('keydown',e=>{
+      if ((e.key==='ArrowDown' || e.key==='ArrowUp') && scrollToScene(e.key==='ArrowDown' ? 60 : -60)) e.preventDefault();
+    });
+  }
+  root.addEventListener('focusin', schedule);
   root.addEventListener('focusout', () => requestAnimationFrame(schedule));
   document.addEventListener('visibilitychange', schedule);
-  overlay.addEventListener('close', schedule);
-  reduced.addEventListener('change', e => { if (e.matches) { paused = true; render(); } });
-  const observer = new IntersectionObserver(entries => {
-    visible = entries[0].isIntersecting;
-    schedule();
-  }, {threshold: .48});
-  observer.observe(root);
+  new MutationObserver(schedule).observe(overlay, {attributes:true,attributeFilter:['open']});
+  reduced.addEventListener('change', e => { if (e.matches) {paused = true;render();} });
+  new IntersectionObserver(([entry]) => {visible = entry.isIntersecting;schedule();}, {threshold:.35}).observe(root);
   if (panels.length > 1 && matchMedia('(min-width: 761px)').matches) panel = panels.find(el => el.dataset.demo === 'onentra');
   render();
 }
