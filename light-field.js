@@ -63,7 +63,7 @@
       gl.linkProgram(program);
       if (!gl.getProgramParameter(program,gl.LINK_STATUS)) throw Error('Shader linking failed');
       gl.useProgram(program);
-      const points=[], ids=[], across=100, ribs=196;
+      const points=[], ids=[], across=64, ribs=112;
       for(let i=0;i<=across;i++) for(let j=0;j<=ribs;j++) points.push(i/across,j/ribs*2-1);
       for(let i=0;i<across;i++) for(let j=0;j<ribs;j++){
         const a=i*(ribs+1)+j,b=a+ribs+1;ids.push(a,b,a+1,a+1,b,b+1);
@@ -76,7 +76,7 @@
       const phase=gl.getUniformLocation(program,'phase'),band=gl.getUniformLocation(program,'band'),aspect=gl.getUniformLocation(program,'aspect');
       gl.enable(gl.DEPTH_TEST);gl.clearColor(0,0,0,0);
       draw=()=>{
-        const w=Math.min(1500,Math.round(canvas.clientWidth*1.1)), h=Math.round(w*canvas.clientHeight/Math.max(1,canvas.clientWidth));
+        const w=Math.min(1200,Math.round(canvas.clientWidth)), h=Math.round(w*canvas.clientHeight/Math.max(1,canvas.clientWidth));
         if (w<2 || h<2) return;
         if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
         gl.viewport(0,0,w,h);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
@@ -89,7 +89,7 @@
   const running=()=>!paused && visible && !document.hidden;
   function frame(now){
     if(!running() || !draw)return;
-    if(!previous || now-previous>=42){elapsed+=previous?Math.min((now-previous)/1000,.13):0;previous=now;draw();}
+    if(!previous || now-previous>=30){elapsed+=previous?Math.min((now-previous)/1000,.13):0;previous=now;draw();}
     raf=requestAnimationFrame(frame);
   }
   function sync(){

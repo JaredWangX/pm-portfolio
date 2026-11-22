@@ -119,16 +119,6 @@ if (contents.length) {
   highlight();
 }
 
-document.querySelectorAll('[data-doc]').forEach(button=>button.addEventListener('click',()=>{
-  const key=button.dataset.doc;
-  openDialog(button,key==='wanso'?'Wanso · 选餐推荐与费用确认':'ONENTRA · 任务上下文与文件交付',document.getElementById('doc-'+key).content.cloneNode(true));
-}));
-
-document.querySelectorAll('[data-note]').forEach(button => button.addEventListener('click', () => {
-  const title = button.querySelector('strong').textContent;
-  openDialog(button, title, document.getElementById('note-' + button.dataset.note).content.cloneNode(true));
-}));
-
 document.querySelectorAll('[data-copy-email]').forEach(button => button.addEventListener('click', async () => {
   const feedback = button.closest('.contact-card').querySelector('.copy-feedback');
   try {

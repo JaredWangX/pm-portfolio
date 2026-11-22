@@ -35,7 +35,7 @@ with sync_playwright() as p:
         loaded(data['flows'][0]['steps'][2]['id'])
         assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
         manual = page.url
-        page.wait_for_timeout(8300)
+        page.wait_for_timeout(10300)
         assert page.url == manual, 'manual inspection must remain paused'
         page.locator('.autoplay').click()
         page.wait_for_function('url => location.href !== url', arg=manual, timeout=12000)
@@ -54,8 +54,8 @@ with sync_playwright() as p:
         for frame in data['frames']:
             page.locator('[data-screen="' + frame['id'] + '"]').click()
             loaded(frame['id'])
-            assert page.locator('.original-screen').evaluate('(img)=>img.complete && img.naturalWidth>0')
-            ratio = page.locator('.original-screen').evaluate('(img)=>img.clientWidth/img.clientHeight')
+            assert page.locator('.page-layer:not(.leaving) .original-screen').evaluate('(img)=>img.complete && img.naturalWidth>0')
+            ratio = page.locator('.page-layer:not(.leaving) .original-screen').evaluate('(img)=>img.clientWidth/img.clientHeight')
             assert abs(ratio - frame['width'] / frame['height']) < .015
         # A catalog selection is free browsing; Continue explicitly returns to the guided flow.
         assert page.locator('.continue').inner_text() == '回到流程 →'
@@ -66,6 +66,38 @@ with sync_playwright() as p:
         page.keyboard.press('Escape')
         assert 'zoomed' not in page.locator('body').get_attribute('class')
         checks.append(product + ': autoplay, pause/resume, 3 flows, catalog, image proportions, zoom')
+
+    page.goto(BASE + 'prototypes/wanso/')
+    loaded('home')
+    page.locator('.autoplay').click()
+    geometry = page.locator('.screen').bounding_box()
+    page.locator('.next').click()
+    loaded('recommend')
+    assert page.locator('.screen').bounding_box() == geometry, 'phone shell must not resize between source aspect ratios'
+    page.locator('.next').click(click_count=3, delay=50)
+    page.wait_for_timeout(400)
+    assert page.locator('.page-layer').count() == 1, 'rapid navigation must not leave stale layers'
+    page.locator('.screen').dispatch_event('pointerdown', {'pointerType':'touch','pointerId':1,'clientX':200,'clientY':300})
+    before = page.url
+    page.locator('.screen').dispatch_event('pointerup', {'pointerType':'touch','pointerId':1,'clientX':100,'clientY':305})
+    page.wait_for_function('url => location.href !== url', arg=before)
+    assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
+    checks.append('phone: stable shell, rapid-navigation cleanup, horizontal swipe and pause')
+    for slug in ['wanso-prd','onentra-prd','recommendation-review','delivery-review']:
+        page.goto(BASE)
+        page.locator('a[href="documents/'+slug+'/"]').click()
+        assert '/documents/'+slug+'/' in page.url
+        assert len(page.locator('.reading-content').inner_text()) > 1500
+        link = page.locator('.reader-contents nav a').nth(2)
+        target = link.get_attribute('href')
+        link.click()
+        page.wait_for_timeout(600)
+        assert page.locator(target).bounding_box()['y'] >= 70
+        assert page.locator(target).bounding_box()['y'] < 160
+        page.evaluate('window.__printed=false;window.print=()=>window.__printed=true')
+        page.locator('.print-document').click()
+        assert page.evaluate('window.__printed')
+    checks.append('4 complete documents: reachable links, section anchors, print action')
 
     # An unavailable image must give a working retry, not an indefinitely frozen player.
     page.route('**/wanso-home.webp', lambda route: route.abort())
@@ -78,7 +110,7 @@ with sync_playwright() as p:
     checks.append('image failure: clear error + retry recovers')
 
     page.goto(BASE)
-    for selector in ['[data-quick="wanso"]','[data-quick="onentra"]','[data-doc="wanso"]','[data-doc="onentra"]','[data-note="recommend"]','[data-note="delivery"]']:
+    for selector in ['[data-quick="wanso"]','[data-quick="onentra"]']:
         page.locator(selector).click()
         assert page.locator('#overlay').evaluate('(d)=>d.open')
         page.keyboard.press('Escape')
@@ -88,16 +120,16 @@ with sync_playwright() as p:
     page.wait_for_function('document.querySelector(".copy-feedback").textContent.includes("已复制")')
     assert page.evaluate('navigator.clipboard.readText()') == '13971032326@163.com'
     assert page.locator('a[href^="mailto:"]').first.get_attribute('href') == 'mailto:13971032326@163.com'
-    checks.append('6 dialogs: Escape + focus restored; real mailto and clipboard')
+    checks.append('2 quick dialogs: Escape + focus restored; real mailto and clipboard')
 
     for width in [1440,1024,768,390,320]:
         page.set_viewport_size({'width':width,'height':900 if width>640 else 844})
-        for path in ['', 'wanso/', 'onentra/', 'prototypes/wanso/', 'prototypes/onentra/']:
+        for path in ['', 'wanso/', 'onentra/', 'prototypes/wanso/', 'prototypes/onentra/', 'documents/wanso-prd/', 'documents/onentra-prd/', 'documents/recommendation-review/', 'documents/delivery-review/']:
             page.goto(BASE + path)
             page.wait_for_timeout(350)
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+1'), (width,path)
             assert not page.locator('img').evaluate_all('(imgs)=>imgs.some(i=>i.getBoundingClientRect().width>0 && i.complete && !i.naturalWidth)'), (width,path)
-    checks.append('5 pages × 5 widths: no horizontal overflow or broken visible images')
+    checks.append('9 pages × 5 widths: no horizontal overflow or broken visible images')
 
     page.goto(BASE)
     page.locator('.menu').click()
@@ -106,7 +138,7 @@ with sync_playwright() as p:
     assert page.locator('.menu').get_attribute('aria-expanded') == 'false'
     checks.append('mobile navigation closes after selecting Contact')
 
-    page.goto(BASE + '#about')
+    page.goto(BASE + '?deep-link-test=1#about')
     page.wait_for_timeout(100)
     first_y = page.locator('#about').bounding_box()['y']
     page.wait_for_timeout(700)

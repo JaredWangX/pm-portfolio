@@ -4,8 +4,16 @@ const embed = new URLSearchParams(location.search).has('embed');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 document.body.classList.add('show-hotspots');
 document.body.classList.toggle('embed', embed);
-const screen = $('.screen'), viewport = $('.viewport'), picture = $('.original-screen');
-const duration = 8000;
+const screen = $('.screen'), viewport = $('.viewport');
+const phone = document.body.dataset.product === 'wanso';
+let picture = $('.original-screen');
+let transition;
+const layer = document.createElement('div');
+layer.className = 'page-layer';
+screen.append(layer);
+layer.append(picture, $('.hotspots'));
+let activeLayer = layer;
+const duration = 10000;
 let frames = [], flows = [], flow = 0, current = -1, playing = false, zoomed = false, guided = true;
 let visible = true, parentVisible = true, loading = false, loadId = 0, ready = false, failed = false;
 let tick = 0, hintTimer = 0, elapsed = 0, previousTime = 0;
@@ -16,10 +24,11 @@ const activeStep = () => steps()[stepIndex()];
 function fit() {
   const f = frames[current];
   if (!f) return;
-  const nativeWidth = document.body.dataset.product === 'wanso' ? 402 : 1440;
-  const scale = zoomed ? nativeWidth / f.width : Math.min((viewport.clientWidth - 20) / f.width, (viewport.clientHeight - 20) / f.height, nativeWidth / f.width);
-  screen.style.width = Math.max(1, Math.round(f.width * scale)) + 'px';
-  screen.style.height = Math.max(1, Math.round(f.height * scale)) + 'px';
+  const nativeWidth = phone ? 402 : 1440;
+  const height = phone ? 2808 : f.height;
+  const scale = zoomed ? nativeWidth / f.width : Math.min((viewport.clientWidth - 20) / f.width, (viewport.clientHeight - 20) / height, nativeWidth / f.width);
+  screen.style.width = Math.max(1, f.width * scale) + 'px';
+  screen.style.height = Math.max(1, height * scale) + 'px';
 }
 function decoded(f) {
   if (!cached.has(f.id)) {
@@ -29,6 +38,11 @@ function decoded(f) {
       image.src = f.src;
       image.decode().then(() => {clearTimeout(timeout);resolve(image);}).catch(error => {clearTimeout(timeout);cached.delete(f.id); reject(error);});
     }));
+  }
+  // Bound decoded image memory while retaining the current page and nearby steps.
+  if (cached.size > 8) {
+    const oldest = [...cached.keys()].find(id => id !== f.id && id !== frames[current]?.id);
+    if (oldest) cached.delete(oldest);
   }
   return cached.get(f.id);
 }
@@ -95,20 +109,25 @@ function renderFrame() {
   }
   const nextId = steps()[(position+1) % steps().length]?.id;
   const preferred = position >= 0 ? f.hotspots.find(h => h.target === nextId) : f.hotspots.find(h=>h.target!==f.id);
-  $('.hotspots').replaceChildren(...f.hotspots.map(h => {
+  activeLayer.querySelector('.hotspots').replaceChildren(...f.hotspots.map(h => {
     const b = makeButton('', () => {
       if (h.target === f.id) {setPlaying(false);hint('你已经在这个页面。可点击其他发光点，或继续体验下一步。');}
       else {guided=steps().some(s=>s.id===h.target);show(h.target);}
     }, 'hotspot');
     b.setAttribute('aria-label',h.label); b.dataset.target = h.target;
-    Object.assign(b.style,{left:h.x+'%',top:h.y+'%',width:h.w+'%',height:h.h+'%'});
+    const height = phone ? 2808 : f.height;
+    const shift = phone && h.y >= 88 ? height - f.height : 0;
+    Object.assign(b.style,{left:h.x+'%',top:(h.y * f.height / 100 + shift) / height * 100+'%',width:h.w+'%',height:h.h * f.height / height+'%'});
     if (h === preferred) {b.classList.add('suggested');const dot=document.createElement('span');dot.className='hotspot-dot';dot.setAttribute('aria-hidden','true');b.append(dot);}
     return b;
   }));
   fit();
   history.replaceState(null,'','#'+f.id);
-  const upcoming = frames.find(f=>f.id===nextId);
-  if (upcoming && upcoming.id!==f.id) decoded(upcoming).catch(()=>{});
+  const upcoming = [nextId, steps()[(position+2) % steps().length]?.id, frames[current+1]?.id];
+  for (const id of new Set(upcoming)) {
+    const f = frames.find(f=>f.id===id);
+    if (f && f.id!==frames[current].id) decoded(f).catch(()=>{});
+  }
 }
 async function show(id, manual = true, returnToViewer = false) {
   const index = frames.findIndex(f => f.id === id);
@@ -117,20 +136,51 @@ async function show(id, manual = true, returnToViewer = false) {
   if (manual) setPlaying(false);
   loading = true; failed = false; schedule();
   $('.viewer').setAttribute('aria-busy','true');
-  $('.image-loading').hidden = false;
+  const loadingNotice = setTimeout(() => {if (request === loadId && loading) $('.image-loading').hidden = false;}, 180);
   $('.image-loading').textContent = '正在载入原版页面…';
   $('.load-error').hidden = true;
   try {
     const image = await decoded(frames[index]);
     if (request !== loadId) return;
+    const hadPage = current >= 0;
+    const backwards = index < current;
     current = index;
-    picture.src = image.src;
+    transition?.cancel();
+    screen.querySelectorAll('.page-layer.leaving').forEach(node => node.remove());
+    const oldLayer = activeLayer;
+    oldLayer.classList.add('leaving');
+    oldLayer.inert = true;
+    oldLayer.setAttribute('aria-hidden', 'true');
+    activeLayer = document.createElement('div');
+    activeLayer.className = 'page-layer';
+    picture = image.cloneNode();
+    picture.className = 'original-screen';
+    picture.draggable = false;
     picture.alt = `${document.body.dataset.product.toUpperCase()} · ${frames[index].title} · 原版页面`;
+    activeLayer.append(picture);
+    if (phone) {
+      // The original phone pages have two heights. Keep their UI at one scale;
+      // extend only the blank area before the bottom navigation, never stretch text.
+      activeLayer.style.setProperty('--source-height', frames[index].height / 2808 * 100 + '%');
+      const footer = picture.cloneNode();
+      footer.className = 'screen-bottom'; footer.alt = ''; footer.setAttribute('aria-hidden','true');
+      activeLayer.append(footer);
+    }
+    const hotspots = document.createElement('div'); hotspots.className = 'hotspots';
+    activeLayer.append(hotspots);
+    screen.append(activeLayer);
     renderFrame();
+    if (hadPage && !reduced.matches) {
+      transition = activeLayer.animate([
+        {opacity:0,transform:`translateX(${backwards ? -12 : 12}px)`},
+        {opacity:1,transform:'translateX(0)'}
+      ], {duration:280,easing:'cubic-bezier(.22,1,.36,1)'});
+      transition.finished.then(() => oldLayer.remove()).catch(() => oldLayer.remove());
+    } else oldLayer.remove();
     if (returnToViewer && !embed && matchMedia('(max-width:760px)').matches) {
       $('.viewer').scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});
     }
-    if (!reduced.matches) picture.animate([{opacity:.55,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}],{duration:260,easing:'ease-out'});
+
     elapsed = 0;
     $('.play-progress span').style.transform = 'scaleX(0)';
   } catch {
@@ -140,6 +190,7 @@ async function show(id, manual = true, returnToViewer = false) {
     $('.load-error').hidden = false;
     $('.load-error').dataset.retry = id;
   } finally {
+    clearTimeout(loadingNotice);
     if (request === loadId) {
       loading = false;
       $('.viewer').removeAttribute('aria-busy');
@@ -182,10 +233,30 @@ $('.zoom-toggle').addEventListener('click',event=>{
   event.currentTarget.setAttribute('aria-pressed',String(zoomed));
   setPlaying(false);fit();
 });
+let swipeStart, ignoreClick = false;
+screen.addEventListener('pointerdown', event => {
+  if (event.pointerType === 'mouse' || zoomed) return;
+  setPlaying(false);
+  swipeStart = {x:event.clientX,y:event.clientY,id:event.pointerId};
+});
+screen.addEventListener('pointercancel', () => {swipeStart = null;});
+screen.addEventListener('pointerup', event => {
+  if (!swipeStart || swipeStart.id !== event.pointerId) return;
+  const dx = event.clientX - swipeStart.x, dy = event.clientY - swipeStart.y;
+  swipeStart = null;
+  if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.6) {
+    ignoreClick = true;
+    dx < 0 ? next() : previous();
+    setTimeout(() => {ignoreClick = false;}, 350);
+  }
+});
+screen.addEventListener('click', event => {
+  if (ignoreClick) {event.preventDefault();event.stopImmediatePropagation();}
+}, true);
 $('.screen').addEventListener('click',event=>{
   if (!event.target.closest('.hotspot')) {
     setPlaying(false);
-    hint('点击发光点或下方“继续”体验流程；自由输入请打开在线体验。');
+    hint('点击页面按钮或左右滑动查看。想自由输入，可以打开在线体验。');
   }
 });
 $('.retry').addEventListener('click',()=>{
@@ -207,7 +278,7 @@ new ResizeObserver(fit).observe(viewport);
 new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;schedule();},{threshold:.1}).observe($('.viewer'));
 reduced.addEventListener('change',event=>{if(event.matches)setPlaying(false);});
 window.addEventListener('hashchange',()=>{if(ready && location.hash.slice(1)!==frames[current]?.id)show(location.hash.slice(1));});
-fetch('screens.json?v=review2',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('screens');return r.json();}).then(async data=>{
+fetch('screens.json?v=reading3',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('screens');return r.json();}).then(async data=>{
   frames=data.frames; flows=data.flows;
   if(!frames.length || !flows.length)throw Error('empty');
   $('.flow-selector').replaceChildren(...flows.map((f,i)=>makeButton(f.title,()=>{
