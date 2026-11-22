@@ -70,7 +70,8 @@ function attachPlayer(root) {
   let panel = panels[0], frame = 0, paused = reduced.matches, visible = false, timer;
   function schedule() {
     clearTimeout(timer);
-    if (paused || !visible || document.hidden || overlay.open || root.contains(document.activeElement)) return;
+    const focused = document.activeElement;
+    if (paused || !visible || document.hidden || overlay.open || (root.contains(focused) && !focused.hasAttribute('data-play'))) return;
     timer = setTimeout(() => {
       frame = (frame + 1) % panel.querySelectorAll('[data-scene]').length;
       render();
@@ -103,7 +104,6 @@ function attachPlayer(root) {
       panel.querySelector('[data-step="' + frame + '"]').focus({preventScroll: true});
     } else if (button.hasAttribute('data-play')) {
       paused = !paused;
-      if (!paused) button.blur();
     } else if (button.hasAttribute('data-image')) {
       paused = true;
     } else return;
