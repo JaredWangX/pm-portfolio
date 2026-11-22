@@ -21,6 +21,10 @@ with sync_playwright() as p:
     page.goto(BASE)
     phone = page.frame_locator('[data-device-frame="wanso"]')
     expect(phone.locator('.welcome h1')).to_contain_text('今天')
+    standalone=ctx.new_page()
+    standalone.goto(BASE+'demos/wanso/')
+    expect(standalone.locator('.welcome h1')).to_contain_text('今天')
+    standalone.close()
     for selector in ['.device-project','.device-title','.device-controls','.device-frame']:
         y = page.locator(selector).evaluate_all('(els)=>els.map(e=>e.getBoundingClientRect().top)')
         assert abs(y[0]-y[1]) < 1, (selector,y)

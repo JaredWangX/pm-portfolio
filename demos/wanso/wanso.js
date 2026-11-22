@@ -10,6 +10,7 @@ const read = (key, fallback) => {try {return JSON.parse(localStorage.getItem('wa
 const write = (key, value) => {try {localStorage.setItem('wanso-demo-' + key, JSON.stringify(value));} catch {}};
 let lang = read('language', embedded ? 'zh' : 'vi');
 if (!['zh','vi'].includes(lang)) lang = 'zh';
+write('language',lang);
 let city = read('city', 'hcm');
 if (!['hcm','hanoi'].includes(city)) city = 'hcm';
 let settings = read('settings', {name:'', budget:0, sort:'recommended', theme:'ocean'});
