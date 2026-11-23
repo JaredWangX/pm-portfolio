@@ -18,6 +18,19 @@ with sync_playwright() as p:
         page.goto(BASE + path, wait_until='load')
         expect(page.locator('.identity')).to_have_text('王稼瑞')
         assert page.locator('.identity img').evaluate('(i)=>i.complete && i.naturalWidth>0')
+    page.goto(BASE, wait_until='load')
+    for width in [1440,1024,768,390,320]:
+        page.set_viewport_size({'width':width,'height':900})
+        page.locator('#cases').scroll_into_view_if_needed()
+        assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
+        if width>760:
+            for selector in ['.project-identity','.project-cover','.project-summary>p','.project-summary>.actions']:
+                rects=page.locator(selector).evaluate_all('(es)=>es.map(e=>e.getBoundingClientRect().toJSON())')
+                assert abs(rects[0]['top']-rects[1]['top'])<2, (width,selector,rects)
+        image=page.locator('.cover-desktop>img').bounding_box()
+        cover=page.locator('.onentra-cover').bounding_box()
+        assert image['y']>=cover['y'] and image['y']+image['height']<=cover['y']+cover['height'], (width,image,cover)
+    print('Homepage: aligned project covers, text/actions and complete desktop image passed')
     for product in ['wanso', 'onentra']:
         page.goto(BASE + product + '/', wait_until='load')
         expect(page.locator('.study-section')).to_have_count(5)
@@ -31,6 +44,9 @@ with sync_playwright() as p:
                 heading = page.locator(target+' h2')
                 assert heading.bounding_box()['y'] >= page.locator('.study-nav').bounding_box()['y'] + page.locator('.study-nav').bounding_box()['height'] - 2
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'), (product,width)
+            gallery=page.locator('#first-use' if product=='wanso' else '#resource-pages')
+            gallery.evaluate('(e)=>e.scrollIntoView({block:"start",behavior:"instant"})')
+            assert gallery.locator('h3').first.bounding_box()['y'] >= page.locator('.study-nav').evaluate('(e)=>e.getBoundingClientRect().bottom'), (product,width,'gallery heading hidden')
             # The document screen is readable at its original aspect ratio, with no crop.
             trigger=page.locator('.design-row .study-screen').first
             trigger.click()
@@ -41,6 +57,9 @@ with sync_playwright() as p:
             page.keyboard.press('Escape')
             expect(page.locator('#overlay')).not_to_be_visible()
             expect(trigger).to_be_focused()
+        for pair in page.locator('.phone-board .board-images').all():
+            rects=pair.locator('.study-screen').evaluate_all('(es)=>es.map(e=>e.getBoundingClientRect().toJSON())')
+            assert abs(rects[0]['top']-rects[1]['top'])<1 and abs(rects[0]['height']-rects[1]['height'])<1
         # Scroll through every design so deferred source images are exercised.
         for screen in page.locator('.study-screen img').all():
             screen.scroll_into_view_if_needed()
