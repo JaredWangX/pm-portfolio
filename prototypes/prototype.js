@@ -23,6 +23,9 @@ let visible = true, parentVisible = true, loading = false, loadId = 0, ready = f
 let tick = 0, hintTimer = 0, elapsed = 0, previousTime = 0;
 const cached = new Map();
 const screenHistory = [];
+const phoneTabs = new Set(['home', 'explore', 'saved', 'profile']);
+const tabViews = new Map();
+let phoneTab = 'home', chatNodes;
 const steps = () => flows[flow]?.steps || [];
 const stepIndex = () => guided ? steps().findIndex(s => s.id === frames[current]?.id) : -1;
 const activeStep = () => steps()[stepIndex()];
@@ -105,13 +108,30 @@ function renderFlow() {
   }));
 }
 function selectFrame(id, returnToViewer = false, runSearch = false, navigation = 'reset') {
-  const matching = flows.findIndex(item => item.steps.some(step => step.id === id));
+  const tab = navigation === 'tab' ? tabViews.get(id) : null;
+  const destination = tab?.view.id || id;
+  const matching = flows.findIndex(item => item.steps.some(step => step.id === destination));
   guided = matching >= 0;
   if (guided && matching !== flow) {
     flow = matching;
     renderFlow();
   }
   return show(id, true, returnToViewer, runSearch, navigation);
+}
+function currentPhoneView() {
+  const width = screen.clientWidth || 1;
+  const scroll = activeLayer.querySelector('.phone-scroll');
+  const carousel = activeLayer.querySelector('.ios-carousel');
+  return {id: frames[current]?.id, scroll: scroll?.scrollTop / width || 0, slide: carousel?.scrollLeft / width || 0};
+}
+function goBack(fallback) {
+  const target = screenHistory.at(-1)?.id || fallback;
+  if (target) return selectFrame(target, false, false, 'back');
+}
+function openPhoneAction(hotspot) {
+  setPlaying(false);
+  window.wansoControls.open(hotspot, frames[current], screen, (id, runSearch = false, navigation = 'forward') =>
+    navigation === 'back' ? goBack(id) : selectFrame(id, false, runSearch, navigation));
 }
 function renderFrame(buildHotspots = true) {
   const f = frames[current], position = stepIndex(), step = activeStep();
@@ -127,7 +147,7 @@ function renderFrame(buildHotspots = true) {
   const liveLink = $('.live-link');
   if (liveLink && !phone && /^#[a-z0-9/-]+$/.test(f.route || '')) liveLink.hash = f.route;
   $('.continue').textContent = position < 0 ? '回到流程 →' : position === steps().length-1 ? '重新体验 ↺' : '继续 →';
-  $('.previous').disabled = position < 0 ? current === 0 : position === 0;
+  $('.previous').disabled = !(capturedPhone && screenHistory.length) && (position < 0 ? current === 0 : position === 0);
   $('.next').disabled = false;
   for (const b of document.querySelectorAll('[data-screen],[data-step],[data-shortcut]')) {
     const active = b.dataset.shortcut ? b.dataset.shortcut === (f.section || f.id) : (b.dataset.screen || b.dataset.step) === f.id;
@@ -135,25 +155,24 @@ function renderFrame(buildHotspots = true) {
     else b.removeAttribute('aria-current');
   }
   const nextId = steps()[(position+1) % steps().length]?.id;
-  for (const h of buildHotspots ? f.hotspots : []) {
+  const hits = f.hotspots.slice();
+  if (activeLayer.classList.contains('ios-store-push')) {
+    hits.push(...frames.find(entry => entry.chat).hotspots.filter(h => h.nav));
+  }
+  for (const h of buildHotspots ? hits : []) {
     const select = () => {
       if (h.notice) {setPlaying(false);hint(h.notice);return;}
-      if (h.action) {
-        setPlaying(false);
-        window.wansoControls.open(h, f, screen, (id, runSearch = false, navigation = 'forward') => {
-          const target = navigation === 'back' ? screenHistory.at(-1)?.id || id : id;
-          return selectFrame(target, false, runSearch, navigation);
-        });
-        return;
-      }
-      if (h.back) selectFrame(screenHistory.at(-1)?.id || h.target, false, false, 'back');
-      else if (h.target) selectFrame(h.target, false, h.runSearch, h.nav ? 'reset' : h.swap ? 'preserve' : 'forward');
+      if (h.action) openPhoneAction(h);
+      else if (h.back) goBack(h.target);
+      else if (h.target) selectFrame(h.target, false, h.runSearch, h.nav && capturedPhone ? 'tab' : h.nav ? 'reset' : h.swap ? 'preserve' : 'forward');
     };
-    const b = makeButton('', select, 'hotspot');
+    const b = f.id === 'home' && h.action === 'search'
+      ? window.wansoControls.createSearchInput(() => openPhoneAction({action:'runSearch'}))
+      : makeButton('', select, 'hotspot');
     b.setAttribute('aria-label',h.label); if(h.target) b.dataset.target = h.target;
-    if (h.nav && h.target === f.id) b.setAttribute('aria-current', 'page');
+    if (h.nav && !h.scroll && h.target === (capturedPhone ? phoneTab : f.id)) b.setAttribute('aria-current', 'page');
     Object.assign(b.style,{left:h.x+'%',top:h.y+'%',width:h.w+'%',height:h.h+'%'});
-    window.wansoControls?.register(b, h, f);
+    if (b.tagName === 'BUTTON') window.wansoControls?.register(b, h, f);
     activeLayer.querySelector(h.scroll ? '.scroll-content .hotspots' : ':scope > .hotspots').append(b);
   }
   if (buildHotspots) window.wansoControls?.paint(activeLayer, f);
@@ -167,6 +186,10 @@ function renderFrame(buildHotspots = true) {
   }
 }
 async function show(id, manual = true, returnToViewer = false, runSearch = false, navigation = 'reset') {
+  const tab = navigation === 'tab' ? id : null;
+  if (tab === phoneTab) return;
+  const recalled = tabViews.get(tab);
+  if (recalled) id = recalled.view.id;
   const index = frames.findIndex(f => f.id === id);
   if (index < 0) return;
   if (returnToViewer && flowDialog?.open) flowDialog.close();
@@ -178,21 +201,43 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
   $('.load-error').hidden = true;
   try {
     const frame = frames[index];
-    if (current === index) {
+    const previousFrame = frames[current];
+    if (current === index && !tab) {
       renderFrame(false);
       if (runSearch) queueSearchStep(frame, request);
       return;
     }
+    if (frame.chat && previousFrame?.chat && !tab) {
+      current = index;
+      const rail = activeLayer.querySelector('.ios-carousel');
+      rail.scrollLeft = frame.chat === 'second' ? rail.scrollWidth : 0;
+      renderFrame(false);
+      return;
+    }
     const [image, scrollImage] = await decoded(frame);
     if (request !== loadId) return;
-    const restore = navigation === 'back' ? screenHistory.pop() : null;
+    const oldView = currentPhoneView();
+    let restore = navigation === 'back' ? screenHistory.pop() : null;
     if (navigation === 'forward' && current >= 0) {
-      screenHistory.push({id: frames[current].id, scroll: activeLayer.querySelector('.phone-scroll')?.scrollTop});
-    } else if (navigation === 'reset') screenHistory.length = 0;
+      screenHistory.push(oldView);
+    } else if (tab) {
+      tabViews.set(phoneTab, {view: oldView, stack: [...screenHistory]});
+      phoneTab = tab;
+      screenHistory.splice(0, screenHistory.length, ...(recalled?.stack || []));
+      restore = recalled?.view;
+    } else if (navigation === 'reset') {
+      screenHistory.length = 0;
+      if (phoneTabs.has(frame.id)) phoneTab = frame.id;
+    } else if (navigation === 'preserve' && frame.store && frame.store === previousFrame?.store) {
+      restore = oldView;
+    }
     const restoreFocus = activeLayer.contains(document.activeElement) && document.activeElement.matches(':focus-visible');
     current = index;
     activeLayer = document.createElement('div');
     activeLayer.className = 'page-layer';
+    const storeOrigin = frame.store && frames.find(entry => entry.id === screenHistory.at(-1)?.id);
+    const pushedStore = storeOrigin && (storeOrigin.chat || storeOrigin.id === 'saved');
+    activeLayer.classList.toggle('ios-store-push', Boolean(pushedStore));
     image.className = 'original-screen';
     image.draggable = false;
     image.alt = `${document.body.dataset.product.toUpperCase()} · ${frame.title}`;
@@ -209,6 +254,12 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
     }
     // Keep the source image intact, including its own navigation and device frame.
     activeLayer.classList.toggle('native-page',phone && !!frames[index].native);
+    if (pushedStore || (frame.hotspots.some(h => h.nav) && ['explore', 'saved'].includes(phoneTab) && !phoneTabs.has(frame.id))) {
+      const chrome = document.createElement('div');
+      chrome.className = 'ios-tab-chrome';
+      chrome.style.backgroundImage = `url(${frames.find(entry => entry.id === phoneTab).src})`;
+      activeLayer.append(chrome);
+    }
     const hotspots = document.createElement('div'); hotspots.className = 'hotspots';
     activeLayer.append(hotspots);
     if (scrollImage) {
@@ -217,8 +268,8 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
       scroll.tabIndex = 0;
       scroll.setAttribute('role', 'region');
       scroll.setAttribute('aria-label', frame.title + '，上下滚动查看');
-      scroll.style.top = frame.scroll.top + '%';
-      scroll.style.height = frame.scroll.height + '%';
+      scroll.style.top = (pushedStore ? 0 : frame.scroll.top) + '%';
+      scroll.style.height = (pushedStore ? 90.9 : frame.scroll.height) + '%';
       const content = document.createElement('div');
       content.className = 'scroll-content';
       scrollImage.width = scrollImage.naturalWidth;
@@ -228,15 +279,56 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
       const contentHotspots = document.createElement('div');
       contentHotspots.className = 'hotspots';
       content.append(scrollImage, contentHotspots);
+      if (frame.id === 'home' && capturedPhone) {
+        scroll.classList.add('ios-home-scroll');
+        content.append(window.wansoNative.homeRestaurants(target => selectFrame(target, false, false, 'forward')));
+      }
       scroll.append(content);
+      if (frame.store) window.wansoNative.appendMenu(scroll, frame.store, window.wansoControls.menuLanguage(frame.store));
       activeLayer.append(scroll);
+      if (pushedStore) {
+        const status = document.createElement('div');
+        status.className = 'ios-status-chrome';
+        status.style.backgroundImage = `url(${frames.find(entry => entry.id === 'home').src})`;
+        activeLayer.append(status);
+      } else if (storeOrigin && ['home', 'explore'].includes(storeOrigin.id)) {
+        const swipe = document.createElement('div');
+        swipe.className = 'ios-sheet-swipe';
+        activeLayer.append(swipe);
+      }
+    }
+    if (frame.chat) {
+      if (!chatNodes) {
+        window.wansoNative.mountChat(activeLayer,
+          (target, runSearch = false, mode = 'forward') => selectFrame(target, false, runSearch, mode),
+          (action, value) => openPhoneAction({action, value}),
+          target => {
+            if (loading || !frames[current]?.chat || frames[current].id === target) return;
+            current = frames.findIndex(f => f.id === target);
+            renderFrame(false);
+          });
+        chatNodes = Array.from(activeLayer.querySelectorAll('.ios-chat, .ios-composer'));
+      } else activeLayer.append(...chatNodes);
+    }
+    if (capturedPhone && frame.hotspots.some(h => h.back)) {
+      const edge = document.createElement('div');
+      edge.className = 'ios-back-edge';
+      edge.setAttribute('aria-hidden', 'true');
+      activeLayer.append(edge);
     }
     // Reuse the decoded image and swap the complete frame on one paint.
     screen.replaceChildren(activeLayer);
-    document.querySelectorAll('.viewer button, .viewer-tools button').forEach(b=>b.disabled=false);
+    document.querySelectorAll('.viewer-footer button, .viewer-tools button, .phone-shortcuts button, .continue')
+      .forEach(b=>b.disabled=false);
     renderFrame();
     const scroll = activeLayer.querySelector('.phone-scroll');
-    if (scroll) scroll.scrollTop = restore?.scroll ?? scroll.scrollHeight * (frame.scroll.startAt || 0) / 100;
+    if (scroll) {
+      const width = screen.clientWidth;
+      const initialOffset = frame.scroll?.startAt ? frame.scroll.startAt * width / 402 : 0;
+      scroll.scrollTop = restore ? restore.scroll * width : initialOffset;
+      const rail = activeLayer.querySelector('.ios-carousel');
+      if (rail) rail.scrollLeft = restore ? restore.slide * width : frame.chat === 'second' ? rail.scrollWidth : 0;
+    }
     if (restoreFocus) screen.focus({preventScroll: true});
     if (returnToViewer && !embed && matchMedia('(max-width:760px)').matches) {
       const viewer = $('.viewer');
@@ -280,6 +372,10 @@ function next(manual = true) {
 }
 function previous() {
   if (!ready) return;
+  if (capturedPhone && screenHistory.length) {
+    goBack();
+    return;
+  }
   const position = stepIndex();
   const id = position < 0 ? frames[Math.max(0,current-1)].id : steps()[Math.max(0,position-1)].id;
   show(id);
@@ -307,23 +403,30 @@ let swipeStart, ignoreClick = false;
 screen.addEventListener('pointerdown', event => {
   ignoreClick = false;
   if (!event.isPrimary || event.button !== 0 || (event.pointerType === 'mouse' && !capturedPhone)) return;
-  const horizontal = !capturedPhone || screen.hasAttribute('data-swipeable');
+  const rail = event.target.closest('.ios-carousel');
+  const edge = event.target.closest('.ios-back-edge');
+  const sheet = event.target.closest('.ios-sheet-swipe');
+  const horizontal = rail || !capturedPhone || screen.hasAttribute('data-swipeable');
   const scroller = event.target.closest('.phone-scroll');
-  if ((!horizontal && !scroller) || (zoomed && !capturedPhone)) return;
+  if ((!horizontal && !scroller && !edge && !sheet) || (zoomed && !capturedPhone)) return;
   setPlaying(false);
+  if (capturedPhone && event.pointerType === 'touch' && !edge && !sheet && (rail || scroller)) return;
   swipeStart = {
     x: event.clientX, y: event.clientY, id: event.pointerId,
-    horizontal, scroller, top: scroller?.scrollTop, axis: ''
+    horizontal, scroller, rail, top: scroller?.scrollTop, left: rail?.scrollLeft, edge, sheet, axis: ''
   };
 });
 screen.addEventListener('pointermove', event => {
   if (swipeStart?.id !== event.pointerId) return;
   const dx = event.clientX - swipeStart.x, dy = event.clientY - swipeStart.y;
   if (!swipeStart.axis) {
-    if (swipeStart.horizontal && Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.4) swipeStart.axis = 'x';
+    if (swipeStart.edge && dx > 12 && dx > Math.abs(dy) * 1.4) swipeStart.axis = 'edge';
+    else if (swipeStart.sheet && dy > 12 && dy > Math.abs(dx) * 1.4) swipeStart.axis = 'sheet';
+    else if (swipeStart.horizontal && Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.4) swipeStart.axis = 'x';
     else if (swipeStart.scroller && Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) swipeStart.axis = 'y';
     if (swipeStart.axis && !screen.hasPointerCapture(event.pointerId)) screen.setPointerCapture(event.pointerId);
   }
+  if (swipeStart.axis === 'x' && swipeStart.rail) swipeStart.rail.scrollLeft = swipeStart.left - dx;
   if (swipeStart.axis === 'y') swipeStart.scroller.scrollTop = swipeStart.top - dy;
 });
 screen.addEventListener('pointercancel', () => {swipeStart = null;});
@@ -333,9 +436,12 @@ screen.addEventListener('lostpointercapture', event => {
 screen.addEventListener('pointerup', event => {
   if (!swipeStart || swipeStart.id !== event.pointerId) return;
   const dx = event.clientX - swipeStart.x, dy = event.clientY - swipeStart.y;
-  const {axis, horizontal} = swipeStart;
+  const {axis, horizontal, rail} = swipeStart;
   swipeStart = null;
-  const changedCard = horizontal && axis !== 'y' && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.4;
+  if ((axis === 'edge' && dx > 58) || (axis === 'sheet' && dy > 58)) {
+    goBack(frames[current]?.hotspots.find(h => h.back)?.target);
+  }
+  const changedCard = !rail && horizontal && axis === 'x' && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.4;
   if (changedCard) {
     const frame = frames[current];
     const target = dx < 0 ? frame?.swipeLeft : frame?.swipeRight;
@@ -451,9 +557,10 @@ async function loadManifest() {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
   try {
-    const response = await fetch('screens.json?v=prototype5', {signal: controller.signal});
+    const response = await fetch(capturedPhone ? 'screens.json?v=native-scroll' : 'screens.json?v=prototype5', {signal: controller.signal});
     if (!response.ok) throw Error('screens');
     const data = await response.json();
+    if (capturedPhone) await window.wansoNative.load(controller.signal);
     frames = data.frames;
     flows = data.flows;
     if (!frames.length || !flows.length) throw Error('empty');

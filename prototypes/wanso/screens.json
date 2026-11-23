@@ -24,7 +24,7 @@
       "id": "home",
       "title": "首页",
       "group": "AI 选餐",
-      "src": "../../assets/wanso/native/home.webp",
+      "src": "../../assets/wanso/native/home.webp?v=native-scroll",
       "width": 804,
       "height": 1748,
       "note": "从河内发起选餐。输入预算与餐品后可同时比较 GrabFood 和 ShopeeFood，也可以从万象精选直接查看店铺。",
@@ -37,24 +37,6 @@
           "h": 4.589,
           "scroll": true,
           "action": "runSearch"
-        },
-        {
-          "label": "查看 Hương Vị Mộc",
-          "x": 2.985,
-          "y": 40.472,
-          "w": 51.244,
-          "h": 35.153,
-          "target": "store-first",
-          "scroll": true
-        },
-        {
-          "label": "查看 Phở Quyên",
-          "x": 56.716,
-          "y": 40.472,
-          "w": 43.035,
-          "h": 35.153,
-          "target": "store-second",
-          "scroll": true
         },
         {
           "label": "探索",
@@ -167,7 +149,7 @@
         }
       ],
       "scroll": {
-        "src": "../../assets/wanso/native/home-scroll.webp?v=devices3",
+        "src": "../../assets/wanso/native/home-scroll.webp?v=native-scroll",
         "top": 7.094,
         "height": 83.41
       }
@@ -294,7 +276,7 @@
       "src": "../../assets/wanso/native/recommend.webp",
       "width": 804,
       "height": 1748,
-      "note": "两家都有鸡腿河粉。Hương Vị Mộc 在 ShopeeFood 的餐品标价为 73,000 ₫。左右滑动看另一家，点店名看菜单。",
+      "note": "同一段对话中上下浏览消息、左右滑动查看两家店。点店铺看完整菜单，点 Order 在手机内核对平台和费用。",
       "hotspots": [
         {
           "label": "返回",
@@ -304,32 +286,6 @@
           "h": 5.034,
           "target": "home",
           "back": true
-        },
-        {
-          "label": "查看 Hương Vị Mộc 菜单",
-          "x": 13.93,
-          "y": 31.236,
-          "w": 54.726,
-          "h": 37.872,
-          "target": "store-first"
-        },
-        {
-          "label": "Hương Vị Mộc · ShopeeFood 下单",
-          "x": 45.771,
-          "y": 69.68,
-          "w": 20.398,
-          "h": 5.149,
-          "action": "order",
-          "value": "moc-shopee"
-        },
-        {
-          "label": "查看第二家店",
-          "x": 71.393,
-          "y": 31.236,
-          "w": 22.637,
-          "h": 44.394,
-          "target": "recommend-2",
-          "swap": true
         },
         {
           "label": "探索",
@@ -366,60 +322,9 @@
           "h": 6.293,
           "target": "home",
           "nav": true
-        },
-        {
-          "label": "继续提问",
-          "x": 2.985,
-          "y": 84.439,
-          "w": 81.095,
-          "h": 4.577,
-          "action": "followup"
-        },
-        {
-          "label": "发送追问",
-          "x": 85.821,
-          "y": 83.753,
-          "w": 12.189,
-          "h": 5.721,
-          "action": "followup"
         }
       ],
-      "swipeLeft": "recommend-2",
-      "metrics": [
-        {
-          "text": "75.887đ",
-          "x": 16.866,
-          "y": 57.986,
-          "w": 13.184
-        },
-        {
-          "text": "2.7km",
-          "x": 55.945,
-          "y": 57.986,
-          "w": 9.95,
-          "tone": "distance"
-        },
-        {
-          "text": "60.823đ",
-          "x": 74.08,
-          "y": 57.986,
-          "w": 13.184
-        },
-        {
-          "text": "餐品标价  73,000 ₫",
-          "x": 16.87,
-          "y": 62.5,
-          "w": 48.1,
-          "tone": "meal-price"
-        },
-        {
-          "text": "ShopeeFood 配送费待核对",
-          "x": 16.87,
-          "y": 65.5,
-          "w": 48.1,
-          "tone": "delivery-fee"
-        }
-      ]
+      "chat": "first"
     },
     {
       "id": "recommend-2",
@@ -428,7 +333,7 @@
       "src": "../../assets/wanso/native/recommend-2.webp",
       "width": 804,
       "height": 1748,
-      "note": "Phở Quyên 在 GrabFood 的鸡腿汤河粉标价为 59,000 ₫。点 Order 核对历史配送费，或在对话中继续追问。",
+      "note": "Phở Quyên 的鸡腿汤河粉标价为 59,000 ₫。可在对话底部继续提问，或进入店铺查看原菜单。",
       "hotspots": [
         {
           "label": "返回",
@@ -438,41 +343,6 @@
           "h": 5.034,
           "target": "home",
           "back": true
-        },
-        {
-          "label": "查看第一家店",
-          "x": 13.93,
-          "y": 31.236,
-          "w": 18.657,
-          "h": 37.872,
-          "target": "recommend",
-          "swap": true
-        },
-        {
-          "label": "Hương Vị Mộc · ShopeeFood 下单",
-          "x": 13.93,
-          "y": 69.68,
-          "w": 15.92,
-          "h": 5.149,
-          "action": "order",
-          "value": "moc-shopee"
-        },
-        {
-          "label": "查看 Phở Quyên 菜单",
-          "x": 35.075,
-          "y": 31.236,
-          "w": 54.975,
-          "h": 37.872,
-          "target": "store-second"
-        },
-        {
-          "label": "Phở Quyên · GrabFood 下单",
-          "x": 67.413,
-          "y": 69.68,
-          "w": 19.652,
-          "h": 5.149,
-          "action": "order",
-          "value": "quyen-grab"
         },
         {
           "label": "探索",
@@ -509,68 +379,16 @@
           "h": 6.293,
           "target": "home",
           "nav": true
-        },
-        {
-          "label": "继续提问",
-          "x": 2.985,
-          "y": 84.439,
-          "w": 81.095,
-          "h": 4.577,
-          "action": "followup"
-        },
-        {
-          "label": "发送追问",
-          "x": 85.821,
-          "y": 83.753,
-          "w": 12.189,
-          "h": 5.721,
-          "action": "followup"
         }
       ],
       "section": "recommend",
-      "swipeRight": "recommend",
-      "metrics": [
-        {
-          "text": "2.7km",
-          "x": 20.1,
-          "y": 57.986,
-          "w": 10.199,
-          "tone": "distance"
-        },
-        {
-          "text": "60.823đ",
-          "x": 38.234,
-          "y": 57.986,
-          "w": 13.93
-        },
-        {
-          "text": "1.5km",
-          "x": 77.313,
-          "y": 57.986,
-          "w": 10.199,
-          "tone": "distance"
-        },
-        {
-          "text": "餐品标价  59,000 ₫",
-          "x": 38.24,
-          "y": 62.5,
-          "w": 48.0,
-          "tone": "meal-price"
-        },
-        {
-          "text": "GrabFood 配送费 12,000 ₫",
-          "x": 38.24,
-          "y": 65.5,
-          "w": 48.0,
-          "tone": "delivery-fee"
-        }
-      ]
+      "chat": "second"
     },
     {
       "id": "store-first",
       "title": "Hương Vị Mộc 店铺详情",
       "group": "店铺与菜单",
-      "note": "上滑查看同店比价和完整的菜单区。两种颜色的下单按钮分别打开 ShopeeFood 与 GrabFood。",
+      "note": "上滑经过两平台报价和同店比价，再按原有分类查看该店完整历史菜单。",
       "src": "../../assets/wanso/native/store-first.webp?v=devices3",
       "width": 804,
       "height": 1748,
@@ -578,9 +396,9 @@
         {
           "label": "返回",
           "x": 0.995,
-          "y": 1.608,
+          "y": 4.186,
           "w": 10.697,
-          "h": 1.758,
+          "h": 4.576,
           "scroll": true,
           "target": "recommend",
           "back": true
@@ -588,9 +406,9 @@
         {
           "label": "Hương Vị Mộc · ShopeeFood 下单",
           "x": 2.736,
-          "y": 23.903,
+          "y": 62.225,
           "w": 45.771,
-          "h": 1.571,
+          "h": 4.09,
           "scroll": true,
           "action": "order",
           "value": "moc-shopee"
@@ -598,28 +416,19 @@
         {
           "label": "Hương Vị Mộc · GrabFood 下单",
           "x": 50.995,
-          "y": 23.903,
+          "y": 62.225,
           "w": 45.771,
-          "h": 1.571,
+          "h": 4.09,
           "scroll": true,
           "action": "order",
           "value": "moc-grab"
         },
         {
-          "label": "查看菜品比价",
-          "x": 2.239,
-          "y": 25.848,
-          "w": 95.522,
-          "h": 2.057,
-          "scroll": true,
-          "target": "compare"
-        },
-        {
           "label": "生成 AI 总结",
           "x": 2.736,
-          "y": 14.514,
+          "y": 37.783,
           "w": 94.279,
-          "h": 1.459,
+          "h": 3.798,
           "scroll": true,
           "target": "summary-first",
           "swap": true
@@ -627,19 +436,20 @@
         {
           "label": "选择菜单翻译语言",
           "x": 2.736,
-          "y": 16.646,
+          "y": 43.333,
           "w": 61.692,
-          "h": 2.431,
+          "h": 6.328,
           "scroll": true,
-          "target": "translate-first",
-          "menuLocale": "moc"
+          "menuLocale": "moc",
+          "action": "chooseMenuLanguage",
+          "value": "moc"
         },
         {
           "label": "分享店铺",
           "x": 78.856,
-          "y": 1.87,
+          "y": 4.868,
           "w": 8.955,
-          "h": 1.347,
+          "h": 3.507,
           "scroll": true,
           "action": "share",
           "value": "moc"
@@ -647,9 +457,9 @@
         {
           "label": "收藏餐厅",
           "x": 89.801,
-          "y": 1.87,
+          "y": 4.868,
           "w": 8.955,
-          "h": 1.347,
+          "h": 3.507,
           "scroll": true,
           "action": "favorite",
           "value": "moc"
@@ -657,9 +467,9 @@
         {
           "label": "翻译菜单",
           "x": 64.677,
-          "y": 16.944,
+          "y": 44.109,
           "w": 32.338,
-          "h": 1.795,
+          "h": 4.673,
           "scroll": true,
           "action": "translate",
           "value": "moc"
@@ -667,10 +477,11 @@
       ],
       "section": "recommend",
       "scroll": {
-        "src": "../../assets/wanso/native/store-first-scroll.webp?v=devices3",
+        "src": "../../assets/wanso/native/store-first-scroll.webp?v=native-scroll",
         "top": 7.094,
         "height": 92.906
-      }
+      },
+      "store": "moc"
     },
     {
       "id": "compare",
@@ -684,19 +495,19 @@
         {
           "label": "返回",
           "x": 0.995,
-          "y": 1.608,
+          "y": 4.186,
           "w": 10.697,
-          "h": 1.758,
+          "h": 4.576,
           "scroll": true,
-          "target": "store-first",
+          "target": "recommend",
           "back": true
         },
         {
           "label": "Hương Vị Mộc · ShopeeFood 下单",
           "x": 2.736,
-          "y": 23.903,
+          "y": 62.225,
           "w": 45.771,
-          "h": 1.571,
+          "h": 4.09,
           "scroll": true,
           "action": "order",
           "value": "moc-shopee"
@@ -704,9 +515,9 @@
         {
           "label": "Hương Vị Mộc · GrabFood 下单",
           "x": 50.995,
-          "y": 23.903,
+          "y": 62.225,
           "w": 45.771,
-          "h": 1.571,
+          "h": 4.09,
           "scroll": true,
           "action": "order",
           "value": "moc-grab"
@@ -714,9 +525,9 @@
         {
           "label": "分享店铺",
           "x": 78.856,
-          "y": 1.87,
+          "y": 4.868,
           "w": 8.955,
-          "h": 1.347,
+          "h": 3.507,
           "scroll": true,
           "action": "share",
           "value": "moc"
@@ -724,9 +535,9 @@
         {
           "label": "收藏餐厅",
           "x": 89.801,
-          "y": 1.87,
+          "y": 4.868,
           "w": 8.955,
-          "h": 1.347,
+          "h": 3.507,
           "scroll": true,
           "action": "favorite",
           "value": "moc"
@@ -734,9 +545,9 @@
         {
           "label": "翻译菜单",
           "x": 64.677,
-          "y": 16.944,
+          "y": 44.109,
           "w": 32.338,
-          "h": 1.795,
+          "h": 4.673,
           "scroll": true,
           "action": "translate",
           "value": "moc"
@@ -744,19 +555,20 @@
         {
           "label": "选择菜单翻译语言",
           "x": 2.985,
-          "y": 16.645,
+          "y": 43.33,
           "w": 61.692,
-          "h": 2.394,
+          "h": 6.232,
           "scroll": true,
-          "target": "translate-first",
-          "menuLocale": "moc"
+          "menuLocale": "moc",
+          "action": "chooseMenuLanguage",
+          "value": "moc"
         },
         {
           "label": "生成 AI 总结",
           "x": 2.985,
-          "y": 14.588,
+          "y": 37.976,
           "w": 94.279,
-          "h": 1.309,
+          "h": 3.408,
           "scroll": true,
           "target": "summary-first",
           "swap": true
@@ -764,17 +576,18 @@
       ],
       "section": "compare",
       "scroll": {
-        "src": "../../assets/wanso/native/store-first-scroll.webp?v=devices3",
+        "src": "../../assets/wanso/native/store-first-scroll.webp?v=native-scroll",
         "top": 7.094,
         "height": 92.906,
-        "startAt": 22.07
-      }
+        "startAt": 590
+      },
+      "store": "moc"
     },
     {
       "id": "store-second",
       "title": "Phở Quyên 店铺详情",
       "group": "店铺与菜单",
-      "note": "下滑查看店铺菜单，包含鸡腿汤河粉 59,000 ₫。GrabFood 配送费为该历史样本记录。",
+      "note": "从店铺详情上滑，可依次查看 GrabFood 配送信息及这家店的完整历史菜单。",
       "src": "../../assets/wanso/native/store-second.webp?v=devices3",
       "width": 804,
       "height": 1748,
@@ -782,9 +595,9 @@
         {
           "label": "返回",
           "x": 0.498,
-          "y": 2.115,
+          "y": 6.575,
           "w": 11.194,
-          "h": 2.361,
+          "h": 7.339,
           "scroll": true,
           "target": "recommend-2",
           "back": true
@@ -792,9 +605,9 @@
         {
           "label": "Phở Quyên · GrabFood 下单",
           "x": 1.99,
-          "y": 29.956,
+          "y": 93.12,
           "w": 95.771,
-          "h": 2.115,
+          "h": 6.575,
           "scroll": true,
           "action": "order",
           "value": "quyen-grab"
@@ -802,9 +615,9 @@
         {
           "label": "生成 AI 总结",
           "x": 1.99,
-          "y": 17.708,
+          "y": 55.046,
           "w": 96.02,
-          "h": 1.869,
+          "h": 5.81,
           "scroll": true,
           "target": "summary-second",
           "swap": true
@@ -812,19 +625,20 @@
         {
           "label": "选择菜单翻译语言",
           "x": 1.99,
-          "y": 20.413,
+          "y": 63.455,
           "w": 63.682,
-          "h": 3.148,
+          "h": 9.786,
           "scroll": true,
-          "target": "translate-second",
-          "menuLocale": "quyen"
+          "menuLocale": "quyen",
+          "action": "chooseMenuLanguage",
+          "value": "quyen"
         },
         {
           "label": "分享店铺",
           "x": 79.602,
-          "y": 2.459,
+          "y": 7.644,
           "w": 8.955,
-          "h": 1.771,
+          "h": 5.505,
           "scroll": true,
           "action": "share",
           "value": "quyen"
@@ -832,9 +646,9 @@
         {
           "label": "收藏餐厅",
           "x": 90.547,
-          "y": 2.459,
+          "y": 7.644,
           "w": 8.955,
-          "h": 1.771,
+          "h": 5.505,
           "scroll": true,
           "action": "favorite",
           "value": "quyen"
@@ -842,9 +656,9 @@
         {
           "label": "翻译菜单",
           "x": 65.672,
-          "y": 20.856,
+          "y": 64.832,
           "w": 32.338,
-          "h": 2.361,
+          "h": 7.339,
           "scroll": true,
           "action": "translate",
           "value": "quyen"
@@ -852,52 +666,77 @@
       ],
       "section": "recommend",
       "scroll": {
-        "src": "../../assets/wanso/native/store-second-scroll.webp?v=devices3",
+        "src": "../../assets/wanso/native/store-second-scroll.webp?v=native-scroll",
         "top": 7.094,
         "height": 92.906
-      }
+      },
+      "store": "quyen"
     },
     {
       "id": "explore",
       "title": "探索",
       "group": "应用页面",
-      "note": "可以从午餐场景开始选餐，也可直接进同店比价。精选餐厅来自与对话相同的河内菜单样本。",
-      "src": "../../assets/wanso/native/explore.webp?v=devices3",
+      "note": "从平台概览往下滑，可以看到两家餐厅、午餐和预算场景。咨询入口回到首页。",
+      "src": "../../assets/wanso/native/explore.webp?v=native-scroll",
       "width": 804,
       "height": 1748,
       "hotspots": [
         {
-          "label": "同店比价",
-          "x": 5.721,
-          "y": 32.838,
-          "w": 88.06,
-          "h": 5.95,
-          "target": "compare"
+          "label": "会话历史",
+          "x": 78.856,
+          "y": 1.156,
+          "w": 17.164,
+          "h": 2.987,
+          "scroll": true,
+          "target": "history"
         },
         {
           "label": "查看 Hương Vị Mộc",
           "x": 0.995,
-          "y": 58.009,
-          "w": 39.303,
-          "h": 16.362,
+          "y": 42.967,
+          "w": 38.806,
+          "h": 13.584,
+          "scroll": true,
           "target": "store-first"
         },
         {
           "label": "查看 Phở Quyên",
-          "x": 41.542,
-          "y": 58.009,
-          "w": 41.045,
-          "h": 16.362,
+          "x": 40.299,
+          "y": 42.967,
+          "w": 43.781,
+          "h": 13.584,
+          "scroll": true,
           "target": "store-second"
         },
         {
           "label": "找午餐",
-          "x": 4.229,
-          "y": 81.693,
-          "w": 91.294,
-          "h": 8.81,
+          "x": 3.98,
+          "y": 63.006,
+          "w": 92.04,
+          "h": 11.368,
+          "scroll": true,
           "target": "generating",
           "runSearch": true
+        },
+        {
+          "label": "看推荐",
+          "x": 3.98,
+          "y": 75.53,
+          "w": 92.04,
+          "h": 11.368,
+          "scroll": true,
+          "target": "generating",
+          "runSearch": true
+        },
+        {
+          "label": "还是选不出来？",
+          "x": 3.98,
+          "y": 89.21,
+          "w": 92.04,
+          "h": 6.166,
+          "scroll": true,
+          "target": "home",
+          "nav": true
         },
         {
           "label": "首页",
@@ -925,40 +764,39 @@
           "h": 6.751,
           "target": "profile",
           "nav": true
-        },
-        {
-          "label": "会话历史",
-          "x": 78.856,
-          "y": 8.467,
-          "w": 17.164,
-          "h": 3.661,
-          "target": "history"
         }
-      ]
+      ],
+      "scroll": {
+        "top": 7.094,
+        "height": 82.952,
+        "src": "../../assets/wanso/native/explore-scroll.webp?v=native-scroll"
+      }
     },
     {
       "id": "saved",
       "title": "收藏",
       "group": "应用页面",
-      "note": "从已有收藏回到菜单与下单预览。可以新建收藏夹、移动店铺，也能查看这次在预览中打开过的订单入口。",
-      "src": "../../assets/wanso/native/saved.webp?v=devices3",
+      "note": "查看原版收藏中的餐厅照片和评分，也可以向下滑动发现新餐厅。",
+      "src": "../../assets/wanso/native/saved.webp?v=native-scroll",
       "width": 804,
       "height": 1748,
       "hotspots": [
         {
           "label": "查看 Phở Quyên",
           "x": 3.98,
-          "y": 43.478,
+          "y": 41.192,
           "w": 92.04,
-          "h": 10.069,
+          "h": 11.399,
+          "scroll": true,
           "target": "store-second"
         },
         {
           "label": "查看 Hương Vị Mộc",
           "x": 3.98,
-          "y": 60.297,
+          "y": 60.233,
           "w": 92.04,
-          "h": 10.069,
+          "h": 11.399,
+          "scroll": true,
           "target": "store-first"
         },
         {
@@ -991,122 +829,141 @@
         {
           "label": "会话历史",
           "x": 79.104,
-          "y": 9.268,
+          "y": 2.461,
           "w": 15.92,
-          "h": 2.975,
+          "h": 3.368,
+          "scroll": true,
           "target": "history"
         },
         {
           "label": "近期订单",
           "x": 3.98,
-          "y": 23.112,
+          "y": 18.135,
           "w": 92.04,
-          "h": 7.437,
+          "h": 8.42,
+          "scroll": true,
           "action": "recentOrders"
         },
         {
           "label": "添加收藏夹",
           "x": 80.1,
-          "y": 31.693,
+          "y": 27.85,
           "w": 15.92,
-          "h": 4.92,
+          "h": 5.57,
+          "scroll": true,
           "action": "collections"
         },
         {
           "label": "查看全部收藏",
           "x": 3.98,
-          "y": 36.613,
+          "y": 33.42,
           "w": 92.04,
-          "h": 5.95,
+          "h": 6.736,
+          "scroll": true,
           "action": "collections"
         },
         {
           "label": "Phở Quyên · GrabFood 下单",
           "x": 6.468,
-          "y": 54.577,
+          "y": 53.756,
           "w": 67.164,
-          "h": 3.89,
+          "h": 4.404,
+          "scroll": true,
           "action": "order",
           "value": "quyen-grab"
         },
         {
           "label": "移动 Phở Quyên 到收藏夹",
           "x": 75.124,
-          "y": 54.577,
+          "y": 53.756,
           "w": 8.458,
-          "h": 3.89,
+          "h": 4.404,
+          "scroll": true,
           "action": "moveSaved",
           "value": "quyen"
         },
         {
           "label": "移除 Phở Quyên 收藏",
           "x": 85.075,
-          "y": 54.577,
+          "y": 53.756,
           "w": 8.458,
-          "h": 3.89,
+          "h": 4.404,
+          "scroll": true,
           "action": "removeSaved",
           "value": "quyen"
         },
         {
           "label": "Hương Vị Mộc · ShopeeFood 下单",
           "x": 6.468,
-          "y": 71.396,
+          "y": 72.798,
           "w": 67.164,
-          "h": 3.89,
+          "h": 4.404,
+          "scroll": true,
           "action": "order",
           "value": "moc-shopee"
         },
         {
           "label": "移动 Hương Vị Mộc 到收藏夹",
           "x": 75.124,
-          "y": 71.396,
+          "y": 72.798,
           "w": 8.458,
-          "h": 3.89,
+          "h": 4.404,
+          "scroll": true,
           "action": "moveSaved",
           "value": "moc"
         },
         {
           "label": "移除 Hương Vị Mộc 收藏",
           "x": 85.075,
-          "y": 71.396,
+          "y": 72.798,
           "w": 8.458,
-          "h": 3.89,
+          "h": 4.404,
+          "scroll": true,
           "action": "removeSaved",
           "value": "moc"
         },
         {
           "label": "发现新美食",
           "x": 3.98,
-          "y": 78.032,
+          "y": 80.311,
           "w": 92.04,
-          "h": 6.407,
-          "target": "explore"
+          "h": 7.254,
+          "scroll": true,
+          "target": "home",
+          "nav": true
         }
-      ]
+      ],
+      "scroll": {
+        "top": 7.094,
+        "height": 82.952,
+        "src": "../../assets/wanso/native/saved-scroll.webp?v=native-scroll"
+      }
     },
     {
       "id": "profile",
       "title": "我的",
       "group": "应用页面",
-      "note": "在个人资料里补充口味与忌口。订单偏好管理预算、会员和 AI 排序方式，通知和账户信息各有独立入口。",
-      "src": "../../assets/wanso/native/profile.webp?v=devices3",
+      "note": "在同一页向下滑动查看偏好、通知、应用设置、账户信息和反馈。返回会保留原有位置。",
+      "src": "../../assets/wanso/native/profile.webp?v=native-scroll",
       "width": 804,
       "height": 1748,
       "hotspots": [
         {
           "label": "订单偏好",
           "x": 3.98,
-          "y": 50.915,
+          "y": 48.522,
           "w": 92.04,
-          "h": 6.865,
+          "h": 7.601,
+          "scroll": true,
           "target": "preferences"
         },
         {
           "label": "应用设置",
           "x": 3.98,
-          "y": 64.874,
+          "y": 63.978,
           "w": 92.04,
-          "h": 6.979,
+          "h": 7.728,
+          "scroll": true,
           "target": "settings"
         },
         {
@@ -1139,87 +996,74 @@
         {
           "label": "通知",
           "x": 3.98,
-          "y": 57.895,
+          "y": 56.25,
           "w": 92.04,
-          "h": 6.865,
+          "h": 7.601,
+          "scroll": true,
           "target": "notifications"
         },
         {
           "label": "账户与安全",
           "x": 3.98,
-          "y": 71.854,
+          "y": 71.706,
           "w": 92.04,
-          "h": 6.865,
+          "h": 7.601,
+          "scroll": true,
           "target": "account"
         },
         {
           "label": "更换头像",
           "x": 8.706,
-          "y": 14.874,
+          "y": 8.615,
           "w": 15.423,
-          "h": 7.094,
+          "h": 7.855,
+          "scroll": true,
           "action": "avatar"
         },
         {
           "label": "修改昵称",
           "x": 25.871,
-          "y": 14.874,
+          "y": 8.615,
           "w": 36.318,
-          "h": 2.517,
+          "h": 2.787,
+          "scroll": true,
           "action": "account",
           "value": "name",
           "subtitle": "name"
         },
         {
-          "label": "查看近期订单",
-          "x": 24.627,
-          "y": 17.849,
-          "w": 14.677,
-          "h": 4.805,
-          "action": "recentOrders"
-        },
-        {
-          "label": "查看比价",
-          "x": 45.025,
-          "y": 17.849,
-          "w": 13.93,
-          "h": 4.805,
-          "target": "compare"
-        },
-        {
-          "label": "查看收藏",
-          "x": 65.92,
-          "y": 17.849,
-          "w": 13.93,
-          "h": 4.805,
-          "target": "saved",
-          "nav": true
-        },
-        {
           "label": "添加口味标签",
           "x": 7.96,
-          "y": 35.584,
+          "y": 31.546,
           "w": 26.617,
-          "h": 3.318,
+          "h": 3.674,
+          "scroll": true,
           "action": "tastes"
         },
         {
           "label": "发送反馈",
           "x": 3.98,
-          "y": 78.833,
+          "y": 79.434,
           "w": 92.04,
-          "h": 6.865,
+          "h": 7.601,
+          "scroll": true,
           "action": "feedback"
         },
         {
           "label": "退出登录",
           "x": 3.98,
-          "y": 87.757,
+          "y": 90.076,
           "w": 92.289,
-          "h": 2.746,
+          "h": 6.461,
+          "scroll": true,
           "action": "logout"
         }
-      ]
+      ],
+      "scroll": {
+        "top": 7.094,
+        "height": 82.952,
+        "src": "../../assets/wanso/native/profile-scroll.webp?v=native-scroll"
+      }
     },
     {
       "id": "settings",
@@ -1820,9 +1664,9 @@
         {
           "label": "返回",
           "x": 0.995,
-          "y": 1.584,
+          "y": 4.022,
           "w": 10.697,
-          "h": 1.731,
+          "h": 4.396,
           "scroll": true,
           "target": "recommend",
           "back": true
@@ -1830,19 +1674,20 @@
         {
           "label": "选择菜单翻译语言",
           "x": 2.736,
-          "y": 17.866,
+          "y": 45.367,
           "w": 61.692,
-          "h": 2.394,
+          "h": 6.079,
           "scroll": true,
-          "target": "translate-first",
-          "menuLocale": "moc"
+          "menuLocale": "moc",
+          "action": "chooseMenuLanguage",
+          "value": "moc"
         },
         {
           "label": "Hương Vị Mộc · ShopeeFood 下单",
           "x": 2.736,
-          "y": 25.123,
+          "y": 63.795,
           "w": 46.02,
-          "h": 1.473,
+          "h": 3.74,
           "scroll": true,
           "action": "order",
           "value": "moc-shopee"
@@ -1850,28 +1695,19 @@
         {
           "label": "Hương Vị Mộc · GrabFood 下单",
           "x": 50.995,
-          "y": 25.123,
+          "y": 63.795,
           "w": 46.02,
-          "h": 1.473,
+          "h": 3.74,
           "scroll": true,
           "action": "order",
           "value": "moc-grab"
         },
         {
-          "label": "查看菜品比价",
-          "x": 2.239,
-          "y": 27.038,
-          "w": 95.522,
-          "h": 1.842,
-          "scroll": true,
-          "target": "compare"
-        },
-        {
           "label": "分享店铺",
           "x": 78.856,
-          "y": 1.842,
+          "y": 4.677,
           "w": 8.955,
-          "h": 1.326,
+          "h": 3.367,
           "scroll": true,
           "action": "share",
           "value": "moc"
@@ -1879,9 +1715,9 @@
         {
           "label": "收藏餐厅",
           "x": 89.801,
-          "y": 1.842,
+          "y": 4.677,
           "w": 8.955,
-          "h": 1.326,
+          "h": 3.367,
           "scroll": true,
           "action": "favorite",
           "value": "moc"
@@ -1889,9 +1725,9 @@
         {
           "label": "翻译菜单",
           "x": 64.677,
-          "y": 18.199,
+          "y": 46.213,
           "w": 32.338,
-          "h": 1.768,
+          "h": 4.489,
           "scroll": true,
           "action": "translate",
           "value": "moc"
@@ -1901,8 +1737,9 @@
       "scroll": {
         "top": 7.094,
         "height": 92.906,
-        "src": "../../assets/wanso/native/summary-first-scroll.webp?v=routes4"
-      }
+        "src": "../../assets/wanso/native/summary-first-scroll.webp?v=native-scroll"
+      },
+      "store": "moc"
     },
     {
       "id": "summary-second",
@@ -1916,9 +1753,9 @@
         {
           "label": "返回",
           "x": 0.498,
-          "y": 2.056,
+          "y": 6.04,
           "w": 11.194,
-          "h": 2.295,
+          "h": 6.742,
           "scroll": true,
           "target": "recommend-2",
           "back": true
@@ -1926,19 +1763,20 @@
         {
           "label": "选择菜单翻译语言",
           "x": 1.99,
-          "y": 22.566,
+          "y": 66.288,
           "w": 63.682,
-          "h": 3.108,
+          "h": 9.13,
           "scroll": true,
-          "target": "translate-second",
-          "menuLocale": "quyen"
+          "menuLocale": "quyen",
+          "action": "chooseMenuLanguage",
+          "value": "quyen"
         },
         {
           "label": "Phở Quyên · GrabFood 下单",
           "x": 1.99,
-          "y": 31.984,
+          "y": 93.953,
           "w": 95.771,
-          "h": 2.008,
+          "h": 5.899,
           "scroll": true,
           "action": "order",
           "value": "quyen-grab"
@@ -1946,9 +1784,9 @@
         {
           "label": "分享店铺",
           "x": 79.602,
-          "y": 2.391,
+          "y": 7.024,
           "w": 8.955,
-          "h": 1.721,
+          "h": 5.055,
           "scroll": true,
           "action": "share",
           "value": "quyen"
@@ -1956,9 +1794,9 @@
         {
           "label": "收藏餐厅",
           "x": 90.547,
-          "y": 2.391,
+          "y": 7.024,
           "w": 8.955,
-          "h": 1.721,
+          "h": 5.055,
           "scroll": true,
           "action": "favorite",
           "value": "quyen"
@@ -1966,9 +1804,9 @@
         {
           "label": "翻译菜单",
           "x": 65.672,
-          "y": 23.046,
+          "y": 67.698,
           "w": 32.338,
-          "h": 2.295,
+          "h": 6.742,
           "scroll": true,
           "action": "translate",
           "value": "quyen"
@@ -1978,8 +1816,9 @@
       "scroll": {
         "top": 7.094,
         "height": 92.906,
-        "src": "../../assets/wanso/native/summary-second-scroll.webp?v=routes4"
-      }
+        "src": "../../assets/wanso/native/summary-second-scroll.webp?v=native-scroll"
+      },
+      "store": "quyen"
     },
     {
       "id": "translate-first",
@@ -2159,13 +1998,13 @@
           "id": "recommend",
           "label": "第一家店",
           "caption": "查看理由或打开 ShopeeFood",
-          "reason": "两家都有鸡腿河粉。Hương Vị Mộc 在 ShopeeFood 的餐品标价为 73,000 ₫。左右滑动看另一家，点店名看菜单。 点 Order 可在手机内核对配送费。"
+          "reason": "同一段对话中上下浏览消息、左右滑动查看两家店。点店铺看完整菜单，点 Order 在手机内核对平台和费用。"
         },
         {
           "id": "recommend-2",
           "label": "第二家店",
           "caption": "滑动查看另一家，或打开 GrabFood",
-          "reason": "Phở Quyên 在 GrabFood 的鸡腿汤河粉标价为 59,000 ₫。点 Order 核对历史配送费，或在对话中继续追问。"
+          "reason": "Phở Quyên 的鸡腿汤河粉标价为 59,000 ₫。可在对话底部继续提问，或进入店铺查看原菜单。"
         }
       ]
     },
@@ -2177,7 +2016,7 @@
           "id": "store-first",
           "label": "Hương Vị Mộc 店铺详情",
           "caption": "上下滚动查看菜单与下单入口",
-          "reason": "上下滑动浏览实际菜单。两种平台颜色对应 ShopeeFood 和 GrabFood，打开下单预览可分别核对菜品标价和配送信息。"
+          "reason": "上滑经过两平台报价和同店比价，再按原有分类查看该店完整历史菜单。"
         },
         {
           "id": "compare",
@@ -2189,7 +2028,7 @@
           "id": "store-second",
           "label": "Phở Quyên 店铺详情",
           "caption": "上滑看 Phở Quyên 的菜单",
-          "reason": "下滑查看店铺菜单，包含鸡腿汤河粉 59,000 ₫。GrabFood 配送费为该历史样本记录。"
+          "reason": "从店铺详情上滑，可依次查看 GrabFood 配送信息及这家店的完整历史菜单。"
         }
       ]
     },
@@ -2201,19 +2040,19 @@
           "id": "explore",
           "label": "探索",
           "caption": "查看附近餐厅和推荐场景",
-          "reason": "可以从午餐场景开始选餐，也可直接进同店比价。精选餐厅来自与对话相同的河内菜单样本。"
+          "reason": "从平台概览往下滑，可以看到两家餐厅、午餐和预算场景。咨询入口回到首页。"
         },
         {
           "id": "saved",
           "label": "收藏",
           "caption": "打开收藏页",
-          "reason": "从已有收藏回到菜单与下单预览。可以新建收藏夹、移动店铺，也能查看这次在预览中打开过的订单入口。"
+          "reason": "查看原版收藏中的餐厅照片和评分，也可以向下滑动发现新餐厅。"
         },
         {
           "id": "profile",
           "label": "我的",
           "caption": "打开我的页面",
-          "reason": "在个人资料里补充口味与忌口。订单偏好管理预算、会员和 AI 排序方式，通知和账户信息各有独立入口。"
+          "reason": "在同一页向下滑动查看偏好、通知、应用设置、账户信息和反馈。返回会保留原有位置。"
         },
         {
           "id": "preferences",

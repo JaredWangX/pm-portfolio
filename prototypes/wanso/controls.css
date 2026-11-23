@@ -160,7 +160,6 @@ button.sheet-row:hover, .sheet-row[aria-pressed="true"] { background: #e7f0ff; b
   overflow: hidden;
   white-space: nowrap;
 }
-.native-prompt { inset: 0; padding-inline: 4%; background: #f7fbff; }
 .native-list-state {
   position: absolute;
   z-index: 1;
@@ -185,3 +184,5 @@ button.sheet-row:hover, .sheet-row[aria-pressed="true"] { background: #e7f0ff; b
   font-weight: 650;
 }
 .native-menu-language { inset-inline: 6.3% 9%; background: #f3f8fe; }
+
+.sheet-archive-menu { min-width: 0; }

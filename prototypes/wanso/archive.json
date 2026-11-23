@@ -1,0 +1,617 @@
+{
+  "moc": {
+    "name": "Phở Gà Hương Vị Mộc - Thái Thịnh",
+    "platform": "ShopeeFood",
+    "photo": "order-moc.webp",
+    "dish": "Phở gà đùi",
+    "sample": 73000,
+    "avg": 75887,
+    "rating": 4.6,
+    "review_count": 1000,
+    "is_open": 1,
+    "has_promo": 0,
+    "distance": 2.7,
+    "delivery_fee": 0,
+    "discounted_delivery_fee": null,
+    "eta_minutes": 0,
+    "menu": [
+      {
+        "title": "Bún sườn",
+        "items": [
+          [
+            "Bún sườn măng",
+            69000
+          ],
+          [
+            "Bún sườn mọc măng",
+            75000
+          ],
+          [
+            "Bún sườn đặc biệt",
+            89000
+          ],
+          [
+            "Bún sườn thập cẩm",
+            99000
+          ]
+        ]
+      },
+      {
+        "title": "Cháo các loại",
+        "items": [
+          [
+            "Cháo gà thường",
+            59000
+          ],
+          [
+            "Cháo gà đùi/cánh",
+            69000
+          ]
+        ]
+      },
+      {
+        "title": "Combo 1",
+        "items": [
+          [
+            "2 cơm gà hội an  tặng 2 coca",
+            148000
+          ],
+          [
+            "2 phở gà đùi  tặng 2 chai coca",
+            162000
+          ],
+          [
+            "COMBO: 3 cơm gà hội an đặc biệt tặng 3 coca",
+            270000
+          ],
+          [
+            "COMBO: 3 phở đặc biệt tặng 3 coca",
+            270000
+          ]
+        ]
+      },
+      {
+        "title": "Các món bún",
+        "items": [
+          [
+            "Bún mọc",
+            55000,
+            "Giá đã bao gồm 5k tiền hộp"
+          ],
+          [
+            "Bún gà mọc măng",
+            72000
+          ]
+        ]
+      },
+      {
+        "title": "Các món ngan",
+        "items": [
+          [
+            "Bún ngan",
+            69000
+          ],
+          [
+            "Bún ngan trộn",
+            69000
+          ],
+          [
+            "Miến ngan",
+            69000
+          ],
+          [
+            "Miến ngan mọc",
+            69000
+          ],
+          [
+            "Miến ngan trộn",
+            69000
+          ],
+          [
+            "Bún ngan mọc",
+            73000
+          ],
+          [
+            "Bún ngan đùi/cánh",
+            75000
+          ],
+          [
+            "Bún ngan trộn đùi/cánh",
+            79000
+          ],
+          [
+            "Miến ngan trộn đùi/cánh",
+            79000
+          ],
+          [
+            "Bún ngan đặc biệt",
+            89000,
+            "Bún có ngan trứng non và mọc măng"
+          ]
+        ]
+      },
+      {
+        "title": "Cơm  gà! Cơm sườn nướng",
+        "items": [
+          [
+            "Cơm gà hội an",
+            72000,
+            "Cơm cùng thịt gà thường"
+          ],
+          [
+            "Cơm gà hội an thịt đùi",
+            79000,
+            "Cơm cùng thịt gà đùi"
+          ],
+          [
+            "Cơm sườn cốt lết nướng kèm trứng ốp lòng đào",
+            85000
+          ],
+          [
+            "Cơm gà hội an đặc biệt",
+            89000,
+            "Cơm cùng thịt gà béo ngậy thơm ngon kèm trứng non"
+          ]
+        ]
+      },
+      {
+        "title": "Gà chặt",
+        "items": [
+          [
+            "Cánh gà chặt",
+            59000,
+            "Nguyên cánh kèm gia vị chấm đầy đủ"
+          ],
+          [
+            "Đùi chặt",
+            205000,
+            "Nguyên 1 đùi gồm tỏi cầ má đùi kèm nước chấm!!"
+          ],
+          [
+            "Gà chặt 1/2 con",
+            499000,
+            "1/2 con chặt bao gồm cả gia vị chấm đầy đủ! Đủ cho 4 ng ăn"
+          ]
+        ]
+      },
+      {
+        "title": "GỌI THÊM",
+        "items": [
+          [
+            "Quẩy 3 chiếc",
+            15000
+          ],
+          [
+            "TRứng Trần",
+            15000
+          ],
+          [
+            "Cơm  nấu nước gà",
+            20000
+          ],
+          [
+            "Lòng mề",
+            30000
+          ],
+          [
+            "Mọc thêm",
+            35000
+          ],
+          [
+            "Thịt gà",
+            35000
+          ],
+          [
+            "Sườn thêm",
+            45000
+          ],
+          [
+            "Thịt đùi thêm",
+            45000
+          ],
+          [
+            "Trứng non",
+            45000
+          ]
+        ]
+      },
+      {
+        "title": "Miến gà",
+        "items": [
+          [
+            "Miến gà",
+            69000,
+            "Đã bao gồm 5k tiền hôpj"
+          ],
+          [
+            "Miến gà đùi",
+            79000,
+            "Giá đã bao gồm 5k tiền hộp"
+          ],
+          [
+            "Miến đặc biệt",
+            89000,
+            "Giá đã bao gồm 5k tiền hộp Bao gồm thịt lẫn và trứng non"
+          ]
+        ]
+      },
+      {
+        "title": "Món Đang Giảm",
+        "items": [
+          [
+            "Bún ngan",
+            69000
+          ],
+          [
+            "Bún ngan trộn",
+            69000
+          ],
+          [
+            "Bún sườn măng",
+            69000
+          ],
+          [
+            "Bún trộn gà thường",
+            69000,
+            "Bún trộn kèm thịt gà thường (ko có trứng non) cùng hành khô với lạc"
+          ],
+          [
+            "Cháo gà đùi/cánh",
+            69000
+          ],
+          [
+            "Miến gà",
+            69000,
+            "Đã bao gồm 5k tiền hôpj"
+          ],
+          [
+            "Miến ngan mọc",
+            69000
+          ],
+          [
+            "Miến ngan trộn",
+            69000
+          ],
+          [
+            "Phở Trộn",
+            69000,
+            "Giá đã bao gồm 5k tiền hộp"
+          ],
+          [
+            "Bún gà mọc măng",
+            72000
+          ],
+          [
+            "Cơm gà hội an",
+            72000,
+            "Cơm cùng thịt gà thường"
+          ],
+          [
+            "Bún ngan mọc",
+            73000
+          ],
+          [
+            "Phở cánh",
+            73000,
+            "Giá đã bao gồm 5k tiền hộp"
+          ],
+          [
+            "Phở gà đùi",
+            73000,
+            "Giá đã bao gồm 5k tiền hộp"
+          ],
+          [
+            "Bún ngan đùi/cánh",
+            75000
+          ]
+        ]
+      },
+      {
+        "title": "Món trộn",
+        "items": [
+          [
+            "Bún trộn gà thường",
+            69000,
+            "Bún trộn kèm thịt gà thường (ko có trứng non) cùng hành khô với lạc"
+          ],
+          [
+            "Phở Trộn",
+            69000,
+            "Giá đã bao gồm 5k tiền hộp"
+          ],
+          [
+            "Bún trộn gà đùi",
+            79000,
+            "Bún trộn gà thịt đùi (ko có trứng non) kèm hành lạc khô"
+          ],
+          [
+            "Phở trộn cánh",
+            79000,
+            "Phở trộn cùng thịt cánh gà (ko có trứng non) kèm lạc hành khô"
+          ],
+          [
+            "Phở trộn gà đùi",
+            79000,
+            "Phở trộn với thịt gà đùi (ko có trứng non) kèm hành lạc khô và rau thơm"
+          ],
+          [
+            "Phở trộn đặc biệt",
+            89000,
+            "Bao gồm thịt + trứng non Giá đã bao gồm 5k tiền hộp"
+          ]
+        ]
+      },
+      {
+        "title": "Phở gà nước",
+        "items": [
+          [
+            "Phở gà",
+            66000,
+            "Đã bao gồm 5k tiền hôpj"
+          ],
+          [
+            "Phở cánh",
+            73000,
+            "Giá đã bao gồm 5k tiền hộp"
+          ],
+          [
+            "Phở gà đùi",
+            73000,
+            "Giá đã bao gồm 5k tiền hộp"
+          ],
+          [
+            "Phở Trứng non",
+            78000,
+            "Giá đã bao gồm 5k tiền hộp"
+          ],
+          [
+            "Phở đặc biệt",
+            93000,
+            "Giá đã bao gồm 5k tiền hộp"
+          ],
+          [
+            "Phở đùi đặc biệt",
+            99000
+          ]
+        ]
+      },
+      {
+        "title": "ĐỒ UỐNG",
+        "items": [
+          [
+            "Aquafina",
+            20000
+          ],
+          [
+            "Cam ep có tép",
+            25000,
+            "Chai"
+          ],
+          [
+            "Coke",
+            25000,
+            "Lon"
+          ],
+          [
+            "Sprite",
+            25000,
+            "Lon"
+          ]
+        ]
+      }
+    ]
+  },
+  "quyen": {
+    "name": "Phở Quyên - Phở gà trộn đặc biệt",
+    "platform": "GrabFood",
+    "photo": "order-quyen.webp",
+    "dish": "Phở gà đùi nước",
+    "sample": 59000,
+    "avg": 60823,
+    "rating": 4.4,
+    "review_count": 741,
+    "is_open": 0,
+    "has_promo": 0,
+    "distance": 1.5,
+    "delivery_fee": 24000,
+    "discounted_delivery_fee": 12000,
+    "eta_minutes": 25,
+    "menu": [
+      {
+        "title": "Gọi thêm",
+        "items": [
+          [
+            "Quẩy",
+            8000,
+            "8k/ 3 cái"
+          ],
+          [
+            "Nộm gà",
+            80000,
+            "Suất dành cho 2 người ăn."
+          ],
+          [
+            "Gà chặt nửa con",
+            175000,
+            "đã bao gồm hộp và dụng cụ ăn uống"
+          ]
+        ]
+      },
+      {
+        "title": "Menu nước",
+        "items": [
+          [
+            "Bún gà nước",
+            51000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Miến gà nước",
+            51000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Mỳ gà nước",
+            51000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Phở gà nước",
+            51000,
+            "Bao gồm 5k tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Phở gà đùi nước",
+            59000,
+            "Bao gồm 5k tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Bún gà mọc nước",
+            61000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Miến gà mọc nước",
+            61000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Mỳ gà mọc nước",
+            61000,
+            "Bao gồm 5k tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Phở gà mọc nước",
+            61000,
+            "Bao gồm 5k  tiền hộp và dụng cụ ăn uống."
+          ]
+        ]
+      },
+      {
+        "title": "Menu trộn",
+        "items": [
+          [
+            "Bún gà trộn",
+            51000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Miến gà trộn",
+            51000,
+            "Bao gồm 5k tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Mì gà trộn",
+            51000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Phở gà trộn",
+            51000,
+            "Bao gồm 5k tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Bún bò trộn",
+            55000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Miến bò trộn",
+            55000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Mì bò trộn",
+            55000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Phở bò trộn",
+            55000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Phở trộn tràng trứng non tim",
+            55000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Bún gà đùi trộn",
+            59000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Miến gà đùi trộn",
+            59000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Mì gà đùi trộn",
+            59000,
+            "Bao gồm 5k tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Phở gà đùi trộn",
+            59000,
+            "Bao gồm 5k tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Bún gà mọc trộn",
+            61000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Miến gà mọc trộn",
+            61000,
+            "Bao gồm 5k tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Mỳ gà mọc trộn",
+            61000,
+            "Bao gồm 5k tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Phở gà bò trộn",
+            61000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Phở gà mọc trộn",
+            61000,
+            "Bao gồm 5k tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Miến trộn gà + mọc + tràng trứng non",
+            62000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Phở trộn gà + mọc + tràng trứng non",
+            62000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ],
+          [
+            "Miến trộn gà +  trứng non",
+            72000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống"
+          ],
+          [
+            "Phở trộn gà + trứng non",
+            72000,
+            "Bao gồm tiền hộp và dụng cụ ăn uống."
+          ]
+        ]
+      },
+      {
+        "title": "Đồ uống ",
+        "items": [
+          [
+            "Nước mơ",
+            18000,
+            "Nước mơ nhà ngâm, mát dịu ngày hè"
+          ]
+        ]
+      }
+    ]
+  }
+}

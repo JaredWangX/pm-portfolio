@@ -59,7 +59,7 @@ window.wansoControls = (() => {
     phone: '', birthday: '', gender: '', address: '', query
   };
   const state = {...original, history: true, collections: ['全部收藏'], recent: [], tastes: [],
-    group: {moc: '全部收藏', quyen: '全部收藏'}, menuLanguage: {moc: 0, quyen: 0}};
+    group: {moc: '全部收藏', quyen: '全部收藏'}, menuLanguage: {moc: 0, quyen: 0}, translated: {moc: 0, quyen: 0}};
   const currency = number => number.toLocaleString('en-US') + ' ₫';
   const el = (tag, className, value) => {
     const node = document.createElement(tag);
@@ -244,20 +244,41 @@ window.wansoControls = (() => {
 
   function showMenu(id, fromOrder) {
     const store = stores[id];
-    const language = state.menuLanguage[id];
-    const nameIndex = [0, 1, 0, 2, 3, 4][language];
-    const menu = store.menu.map(item => row(item[nameIndex], item[5]));
+    const menu = el('div', 'sheet-archive-menu');
+    window.wansoNative.appendMenu(menu, id, state.translated[id]);
     const more = button('查看店铺详情', () => go(store.frame), 'sheet-button primary');
-    const onMerchant = ['store-first', 'summary-first', 'compare', 'store-second', 'summary-second'].includes(activeFrame.id);
     const back = fromOrder ? button('返回下单预览', () => openOrder(fromOrder)) : backButton();
-    show('菜单 · ' + menuLanguages[language], paragraph(store.name), ...menu,
-      onMerchant ? actions(back) : actions(back, more));
+    show('菜单 · ' + menuLanguages[state.translated[id]], paragraph(store.name),
+      activeFrame.store ? actions(back) : actions(back, more), menu);
   }
 
   function menuLanguage(value) {
     const id = activeFrame.id.endsWith('second') ? 'quyen' : 'moc';
     state.menuLanguage[id] = Number(value);
     go(stores[id].frame, false, 'back');
+  }
+
+  function translate(id) {
+    const menu = activeLayer.querySelector('.ios-menu');
+    if (!menu) return;
+    state.translated[id] = state.menuLanguage[id];
+    const scroll = menu.parentElement;
+    const position = scroll.scrollTop;
+    menu.remove();
+    window.wansoNative.appendMenu(scroll, id, state.translated[id]);
+    scroll.scrollTop = position;
+    scroll.querySelector('.native-live-message')?.remove();
+    const announcement = el('span','native-live-message','菜单已更新，未收录译文的菜品显示原名。');
+    announcement.setAttribute('role','status');
+    scroll.append(announcement);
+  }
+
+  function chooseMenuLanguage(id) {
+    show('翻译为', ...menuLanguages.map((language, index) => row(language, '', () => {
+      state.menuLanguage[id] = index;
+      if (!index) translate(id);
+      sheet.close();
+    }, state.menuLanguage[id] === index)));
   }
 
   function search() {
@@ -270,19 +291,6 @@ window.wansoControls = (() => {
   }
 
   const recommendation = '两家店都有鸡腿河粉。Hương Vị Mộc 在 ShopeeFood 的餐品标价为 73,000 ₫。Phở Quyên 在 GrabFood 的餐品标价为 59,000 ₫。两家都在 80,000 ₫ 的餐费预算内，配送费应单独核对。';
-  function followup() {
-    const examples = [
-      ['哪家加上配送费还能控制在八万？', 'Phở Quyên 的档案小计是 71,000 ₫（59,000 ₫ 餐费 + 12,000 ₫ 配送）。Hương Vị Mộc 在 ShopeeFood 的档案缺少确定的配送金额，暂时无法判断总价。', 'quyen-grab'],
-      ['同一家店在哪个平台买更便宜？', 'Hương Vị Mộc 的鸡腿汤河粉在 GrabFood 标价 68,000 ₫，比 ShopeeFood 的 73,000 ₫ 少 5,000 ₫。这是餐品差额，实际到手价仍要合并配送费和优惠。', 'compare'],
-      ['想换成拌河粉，可以保留预算吗？', 'Hương Vị Mộc 有鸡腿拌河粉。GrabFood 标价 71,000 ₫，ShopeeFood 标价 79,000 ₫，都在本次餐费预算内。', 'moc']
-    ];
-    show('继续提问', paragraph('沿用鸡腿河粉与 80,000 ₫ 预算，选择一个追问。'),
-      ...examples.map(([question, answer, destination]) => row(question, '', () => show(question, paragraph(answer),
-        actions(button('继续提问', followup), button(destination === 'compare' ? '查看比价' : destination === 'moc' ? '查看菜单' : '查看下单预览',
-          () => destination === 'compare' ? go('compare') : destination === 'moc' ? showMenu('moc') : openOrder(destination), 'sheet-button primary'))))),
-      actions(backButton()));
-  }
-
   function savedCount() {
     return Object.values(state.group).filter(Boolean).length;
   }
@@ -398,18 +406,25 @@ window.wansoControls = (() => {
 
   const actionHandlers = {
     order: openOrder,
-    translate: id => state.menuLanguage[id] ? showMenu(id) : go(id === 'moc' ? 'translate-first' : 'translate-second'),
+    translate: id => state.menuLanguage[id] ? translate(id) : chooseMenuLanguage(id),
+    chooseMenuLanguage,
     menuLanguage,
     search,
     runSearch: () => {
-      if (!state.query) search();
+      if (state.query.trim() !== query) search();
       else {
         state.history = true;
         go('generating', true);
       }
     },
-    clearQuery: () => {state.query = ''; sheet.close();},
-    followup,
+    clearQuery: () => {
+      state.query = '';
+      const input = activeLayer.querySelector('.native-home-query');
+      if (input) {
+        input.value = '';
+        input.focus({preventScroll:true});
+      }
+    },
     cities: () => show('选择城市', row('河内 · Hà Nội', '该城市包含本次预览的两家鸡腿河粉店。', () => sheet.close(), true),
       note('推荐以相同的河内示例位置计算，便于对照两家店。'), actions(backButton('完成'))),
     featured: () => show('万象精选', paragraph('根据本次河内菜单样本，查看店铺评分、菜品和配送选项。'),
@@ -476,9 +491,6 @@ window.wansoControls = (() => {
           control.append(indicator);
         }
       }
-      if (h.action === 'search' && !state.query) {
-        control.append(el('span', 'native-value native-prompt', '输入你想吃的菜品和预算'));
-      }
       if (h.menuLocale && state.menuLanguage[h.menuLocale]) {
         control.append(el('span', 'native-value native-menu-language', menuLanguages[state.menuLanguage[h.menuLocale]]));
       }
@@ -515,6 +527,20 @@ window.wansoControls = (() => {
   return {
     register,
     paint,
+    menuLanguage: id => state.translated[id],
+    createSearchInput(submit) {
+      const input = el('input','native-home-query');
+      input.value = state.query;
+      input.placeholder = '说说你今天想吃什么';
+      input.maxLength = 160;
+      input.addEventListener('input',() => {state.query = input.value;});
+      input.addEventListener('keydown',event => {
+        if (event.key !== 'Enter' || event.isComposing) return;
+        event.preventDefault();
+        submit();
+      });
+      return input;
+    },
     isOpen: () => sheet.open,
     open(hotspot, frame, screen, transition) {
       activeFrame = frame;
