@@ -279,9 +279,9 @@ with sync_playwright() as p:
         for slug in ['recommendation-review','delivery-review']:
             page.goto(BASE + 'documents/' + slug + '/')
             assert page.locator('.decision-example').count() == 1
-            assert page.locator('.reference-notes a[href^="https://"]').count() >= 3
+            assert page.locator('.reference-notes').count() == 0
             assert page.locator('#validation table tbody tr').count() == 3
-        checks.append('project-specific decisions, inspectable examples and attributed research')
+        checks.append('project-specific decisions, inspectable examples and concrete validation plans')
 
         # An unavailable image must give a working retry, not an indefinitely frozen player.
         home_image = re.compile(r'/assets/wanso/native/home\.webp(?:\?|$)')
@@ -402,9 +402,9 @@ with sync_playwright() as p:
     assert page.locator('#materials').count() == 0
     assert page.locator('.strengths .advantage-proof').count() == 0
     assert page.locator('.strengths article').count() == 4
-    assert page.locator('.experience-detail').count() == 3
-    page.locator('.experience-detail').nth(1).locator('summary').click()
-    assert page.locator('.experience-detail').nth(1).locator('.experience-evidence').is_visible()
+    assert page.locator('.practice-card').count() == 3
+    for evidence in page.locator('.practice-results').all():
+        assert evidence.is_visible()
     for width, height in [(1440,900),(1024,768),(768,1024),(390,844),(320,640)]:
         page.set_viewport_size({'width':width,'height':height})
         if width > 760:

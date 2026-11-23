@@ -1,7 +1,10 @@
 (()=>{
 'use strict';
 const contents = document.querySelector('.reader-contents');
-if (matchMedia('(max-width:900px)').matches) contents.open = false;
+const compactContents = matchMedia('(max-width:900px)');
+const adaptContents = () => { contents.open = !compactContents.matches; };
+adaptContents();
+compactContents.addEventListener('change', adaptContents);
 const links = [...contents.querySelectorAll('nav a')];
 const sections = links.map(link => document.querySelector(link.hash));
 let scheduled = false;

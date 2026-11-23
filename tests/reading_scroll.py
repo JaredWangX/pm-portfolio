@@ -87,7 +87,8 @@ with sync_playwright() as p:
         page.goto(BASE+'#documents',wait_until='domcontentloaded')
         page.locator('.decision-link[href="documents/'+slug+'/"]').click()
         expect(page).to_have_url(BASE+'documents/'+slug+'/')
-        assert len(page.locator('.reading-content').inner_text())>2500
+        assert len(page.locator('.reading-content').inner_text())>2000
+        assert page.locator('.reading-content section').count()>=6
         links=page.locator('.reader-contents nav a')
         for index in [0,2,links.count()-1]:
             link=links.nth(index);target=link.get_attribute('href');link.click()
@@ -96,15 +97,19 @@ with sync_playwright() as p:
             assert 70<=top<180,(slug,target,top)
         for w,h in [(1440,900),(390,844)]:
             page.set_viewport_size({'width':w,'height':h})
+            page.wait_for_function('desktop => document.querySelector(".reader-contents").open === desktop',arg=w>900)
             page.locator('.reading-content section').nth(2).evaluate('e=>e.scrollIntoView({behavior:"instant"})')
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),(slug,w)
             assert page.locator('.reading-content tbody td').evaluate_all('cells=>cells.every(c=>c.dataset.label)'),slug
             if w==390:
                 assert page.locator('.reading-content tbody td').evaluate_all('cells=>cells.every(c=>c.getBoundingClientRect().right<=innerWidth)'),slug
             page.screenshot(path=OUT/f'{slug}-body-{w}.png')
+        page.set_viewport_size({'width':1440,'height':900})
+        expect(page.locator('.reader-contents nav a').first).to_be_visible()
         expect(page.locator('.print-document')).to_have_count(0)
         expect(page.locator('a[href*="portfolio.pdf"]')).to_have_count(0)
-        assert page.locator('.reading-content a[href^="https://"]').count()>=2
+        expect(page.locator('.reader-meta')).not_to_contain_text('更新')
+        expect(page.locator('.reader-contents a[href="#references"]')).to_have_count(0)
     for path in ['', 'wanso/', 'onentra/']:
         page.goto(BASE+path,wait_until='domcontentloaded')
         expect(page.locator('a[href*="portfolio.pdf"],.print-document')).to_have_count(0)
@@ -112,5 +117,5 @@ with sync_playwright() as p:
     assert response.status==404,response.status
     assert not errors,errors
     (OUT/'reading-regression.json').write_text(json.dumps({'live':LIVE,'scroll':result,'errors':errors},ensure_ascii=False,indent=2))
-    print('PASS: four long-form documents, source links, anchor navigation, mobile layout and removed PDF/export routes',flush=True)
+    print('PASS: four long-form documents, project copy, anchor navigation, mobile layout and removed PDF/export routes',flush=True)
     browser.close()
