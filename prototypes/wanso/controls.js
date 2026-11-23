@@ -58,7 +58,7 @@ window.wansoControls = (() => {
     start: '22:00', end: '08:00', email: 'demo@wanso.example',
     phone: '', birthday: '', gender: '', address: '', query
   };
-  const state = {...original, history: true, collections: ['全部收藏'], recent: [], tastes: [],
+  const state = {...original, history: true, collections: ['全部收藏'], recent: [], tastes: ['清淡', '鸡肉', '不吃香菜'],
     group: {moc: '全部收藏', quyen: '全部收藏'}, menuLanguage: {moc: 0, quyen: 0}, translated: {moc: 0, quyen: 0}};
   const currency = number => number.toLocaleString('en-US') + ' ₫';
   const el = (tag, className, value) => {
@@ -502,6 +502,8 @@ window.wansoControls = (() => {
         control.append(value);
       }
     }
+    const livePage = layer.querySelector('.ios-data-page');
+    if (livePage) { livePage.refreshContent(); return; }
     layer.querySelector('.native-list-state')?.remove();
     if (frame.id === 'history' && !state.history) {
       const empty = el('div', 'native-list-state history-state');
@@ -525,6 +527,7 @@ window.wansoControls = (() => {
   }
 
   return {
+    viewState: () => state,
     register,
     paint,
     menuLanguage: id => state.translated[id],

@@ -41,7 +41,7 @@ function fit() {
 }
 function decoded(f) {
   if (!cached.has(f.id)) {
-    const entry = Promise.all([f.src, f.scroll?.src].filter(Boolean).map(src => new Promise((resolve, reject) => {
+    const entry = Promise.all([f.src, !f.livePage && f.scroll?.src].filter(Boolean).map(src => new Promise((resolve, reject) => {
       const image = new Image();
       const timeout = setTimeout(() => reject(Error('image timeout')), 12000);
       image.src = src;
@@ -53,7 +53,7 @@ function decoded(f) {
     cached.set(f.id, entry);
   }
   // Bound decoded image memory while retaining the current page and nearby steps.
-  if (cached.size > 8) {
+  if (cached.size > 16) {
     const oldest = [...cached.keys()].find(id => id !== f.id && id !== frames[current]?.id);
     if (oldest) cached.delete(oldest);
   }
@@ -142,7 +142,7 @@ function renderFrame(buildHotspots = true) {
   $('.step-caption').textContent = step?.caption || f.note;
   $('.page-description').textContent = step?.reason || f.note;
   $('.source-page')?.replaceChildren(document.createTextNode(
-    capturedPhone ? 'iOS 模拟器截图 · 历史菜单样本' : '公开工作台截图'
+    capturedPhone ? 'iOS 版布局与界面 · 历史菜单样本' : '公开工作台截图'
   ));
   const liveLink = $('.live-link');
   if (liveLink && !phone && /^#[a-z0-9/-]+$/.test(f.route || '')) liveLink.hash = f.route;
@@ -155,7 +155,7 @@ function renderFrame(buildHotspots = true) {
     else b.removeAttribute('aria-current');
   }
   const nextId = steps()[(position+1) % steps().length]?.id;
-  const hits = f.hotspots.slice();
+  const hits = f.hotspots.filter(h => !f.livePage || !h.scroll);
   if (activeLayer.classList.contains('ios-store-push')) {
     hits.push(...frames.find(entry => entry.chat).hotspots.filter(h => h.nav));
   }
@@ -296,6 +296,11 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
         swipe.className = 'ios-sheet-swipe';
         activeLayer.append(swipe);
       }
+    }
+    if (frame.livePage) {
+      window.wansoPages.mount(activeLayer, frame.id,
+        (target, runSearch = false, mode = 'forward') => selectFrame(target, false, runSearch, mode),
+        (action, value) => openPhoneAction({action, value}));
     }
     if (frame.chat) {
       if (!chatNodes) {
@@ -557,7 +562,7 @@ async function loadManifest() {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
   try {
-    const response = await fetch(capturedPhone ? 'screens.json?v=native-scroll' : 'screens.json?v=prototype5', {signal: controller.signal});
+    const response = await fetch(capturedPhone ? 'screens.json?v=home-fit' : 'screens.json?v=prototype5', {signal: controller.signal});
     if (!response.ok) throw Error('screens');
     const data = await response.json();
     if (capturedPhone) await window.wansoNative.load(controller.signal);
@@ -606,6 +611,17 @@ async function loadManifest() {
       $('.viewer').prepend(shortcuts);
     }
     await show(start, false);
+    // Warm the four native tabs once; switching no longer waits on a long-image decode.
+    if (capturedPhone) {
+      const warmTabs = async () => {
+        for (const id of ['home','explore','saved','profile','recommend','store-first','store-second']) {
+          const frame = frames.find(item => item.id === id);
+          if (frame) await decoded(frame).catch(() => {});
+        }
+      };
+      if ('requestIdleCallback' in window) requestIdleCallback(warmTabs, {timeout: 1800});
+      else setTimeout(warmTabs, 300);
+    }
   } catch {
     ready = false;
     failed = true;

@@ -369,7 +369,7 @@ with sync_playwright() as p:
     iframe = page.frame_locator('[data-device-frame="wanso"]')
     laptop = page.frame_locator('[data-workbench-frame]')
     iframe.locator('.page-layer:not(.leaving) .original-screen').wait_for()
-    for frame_id in ['generating','recommend','compare','home']:
+    for frame_id in ['explore','recommend','compare','home']:
         page.locator('[data-device-target="wanso"][data-frame="'+frame_id+'"]').click()
         iframe.locator('.original-screen[alt*="WANSO"]').first.wait_for()
         page.wait_for_function('''id=>document.querySelector('[data-device-frame=wanso]').contentWindow.location.hash==='#'+id''',arg=frame_id)

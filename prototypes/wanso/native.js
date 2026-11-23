@@ -199,5 +199,5 @@ window.wansoNative = (() => {
     return scroller;
   }
 
-  return {load, appendMenu, mountChat, homeRestaurants};
+  return {load, appendMenu, mountChat, homeRestaurants, restaurants: () => archive};
 })();

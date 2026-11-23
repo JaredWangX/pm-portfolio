@@ -770,7 +770,8 @@
         "top": 7.094,
         "height": 82.952,
         "src": "../../assets/wanso/native/explore-scroll.webp?v=native-scroll"
-      }
+      },
+      "livePage": true
     },
     {
       "id": "saved",
@@ -937,7 +938,8 @@
         "top": 7.094,
         "height": 82.952,
         "src": "../../assets/wanso/native/saved-scroll.webp?v=native-scroll"
-      }
+      },
+      "livePage": true
     },
     {
       "id": "profile",
@@ -1063,7 +1065,8 @@
         "top": 7.094,
         "height": 82.952,
         "src": "../../assets/wanso/native/profile-scroll.webp?v=native-scroll"
-      }
+      },
+      "livePage": true
     },
     {
       "id": "settings",
