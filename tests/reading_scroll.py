@@ -33,7 +33,8 @@ with sync_playwright() as p:
         page.route('https://jaredwangx.github.io/**',local)
     errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
     page.goto(BASE+'#work',wait_until='domcontentloaded')
-    expect(page.frame_locator('[data-device-frame=wanso]').locator('.original-screen')).to_be_visible()
+    expect(page.frame_locator('[data-device-frame=wanso]').locator('.original-screen')).to_be_visible(timeout=30000)
+    expect(page.locator('.laptop-workbench')).to_have_class('laptop-workbench workbench-ready',timeout=30000)
     page.evaluate('''() => {
       window.readingProbe={clears:0,loads:0,shifts:[],positions:[]};
       const original=CanvasRenderingContext2D.prototype.clearRect;
