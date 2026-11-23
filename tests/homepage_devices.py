@@ -122,6 +122,9 @@ with sync_playwright() as p:
     modal=page.locator('.phone-modal')
     expect(modal).to_be_visible()
     rect=modal.bounding_box();assert rect['y']>=0 and rect['y']+rect['height']<=844
+    expanded=page.frame_locator('.phone-modal iframe')
+    expect(expanded.locator('.ios-page-profile')).to_be_visible(timeout=30000)
+    assert expanded.locator('.original-screen').evaluate('e=>e.complete && e.naturalWidth>0')
     page.screenshot(path=OUT/'expanded-mobile.png')
     assert not errors,errors
     print('PASS: mobile expansion, no horizontal overflow or page errors',flush=True)
