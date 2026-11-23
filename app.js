@@ -39,7 +39,7 @@ document.querySelector('[data-launch]')?.addEventListener('click', event => {
 });
 function openPhone(trigger, frameId = '') {
   const frame = document.createElement('iframe');
-  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=devices3', document.querySelector('.identity').href).href;
+  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=routes4', document.querySelector('.identity').href).href;
   if (/^[a-z0-9-]{1,40}$/.test(frameId)) frame.src += '#' + frameId;
   frame.title = 'Wanso iOS 操作流程';
   frame.referrerPolicy = 'no-referrer';
@@ -188,11 +188,16 @@ document.querySelectorAll('[data-device-action]').forEach(button => button.addEv
   button.closest('[data-device-project]').querySelector('iframe').contentWindow.postMessage({type:'portfolio-device-action',action:button.dataset.deviceAction},location.origin);
 }));
 addEventListener('message', event => {
-  if (event.origin !== location.origin || event.data?.type !== 'portfolio-frame-changed') return;
+  if (event.origin !== location.origin) return;
   const frame = deviceFrames.find(frame => frame.contentWindow === event.source);
   if (!frame) return;
-  const id = event.data.frame;
   const section = frame.closest('[data-device-project]');
+  if (event.data?.type === 'portfolio-manifest-ready') {
+    section.querySelectorAll('[data-device-target]').forEach(button => button.disabled = false);
+    return;
+  }
+  if (event.data?.type !== 'portfolio-frame-changed') return;
+  const id = event.data.frame;
   section.querySelectorAll('button').forEach(button=>button.disabled=false);
   section.querySelector('[data-device-action="previous"]').disabled = !event.data.canPrevious;
 

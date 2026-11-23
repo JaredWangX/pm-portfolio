@@ -63,7 +63,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "explore"
+          "target": "explore",
+          "nav": true
         },
         {
           "label": "收藏",
@@ -71,7 +72,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "saved"
+          "target": "saved",
+          "nav": true
         },
         {
           "label": "我的",
@@ -79,7 +81,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "profile"
+          "target": "profile",
+          "nav": true
         },
         {
           "label": "会话历史",
@@ -121,7 +124,8 @@
           "y": 7.551,
           "w": 10.945,
           "h": 5.034,
-          "target": "home"
+          "target": "home",
+          "back": true
         },
         {
           "label": "探索",
@@ -129,7 +133,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "explore"
+          "target": "explore",
+          "nav": true
         },
         {
           "label": "收藏",
@@ -137,7 +142,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "saved"
+          "target": "saved",
+          "nav": true
         },
         {
           "label": "我的",
@@ -145,7 +151,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "profile"
+          "target": "profile",
+          "nav": true
         }
       ],
       "afterSearch": "writing"
@@ -165,7 +172,8 @@
           "y": 7.551,
           "w": 10.945,
           "h": 5.034,
-          "target": "home"
+          "target": "home",
+          "back": true
         },
         {
           "label": "探索",
@@ -173,7 +181,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "explore"
+          "target": "explore",
+          "nav": true
         },
         {
           "label": "收藏",
@@ -181,7 +190,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "saved"
+          "target": "saved",
+          "nav": true
         },
         {
           "label": "我的",
@@ -189,7 +199,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "profile"
+          "target": "profile",
+          "nav": true
         }
       ],
       "section": "generating",
@@ -210,7 +221,8 @@
           "y": 7.551,
           "w": 10.945,
           "h": 5.034,
-          "target": "home"
+          "target": "home",
+          "back": true
         },
         {
           "label": "查看 Hương Vị Mộc 菜单",
@@ -234,7 +246,8 @@
           "y": 31.236,
           "w": 22.637,
           "h": 44.394,
-          "target": "recommend-2"
+          "target": "recommend-2",
+          "swap": true
         },
         {
           "label": "探索",
@@ -242,7 +255,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "explore"
+          "target": "explore",
+          "nav": true
         },
         {
           "label": "收藏",
@@ -250,7 +264,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "saved"
+          "target": "saved",
+          "nav": true
         },
         {
           "label": "我的",
@@ -258,7 +273,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "profile"
+          "target": "profile",
+          "nav": true
         }
       ],
       "swipeLeft": "recommend-2",
@@ -299,7 +315,8 @@
           "y": 7.551,
           "w": 10.945,
           "h": 5.034,
-          "target": "home"
+          "target": "home",
+          "back": true
         },
         {
           "label": "查看第一家店",
@@ -307,7 +324,8 @@
           "y": 31.236,
           "w": 18.657,
           "h": 37.872,
-          "target": "recommend"
+          "target": "recommend",
+          "swap": true
         },
         {
           "label": "Hương Vị Mộc · ShopeeFood 下单",
@@ -339,7 +357,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "explore"
+          "target": "explore",
+          "nav": true
         },
         {
           "label": "收藏",
@@ -347,7 +366,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "saved"
+          "target": "saved",
+          "nav": true
         },
         {
           "label": "我的",
@@ -355,7 +375,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "profile"
+          "target": "profile",
+          "nav": true
         }
       ],
       "section": "recommend",
@@ -399,7 +420,8 @@
           "w": 10.697,
           "h": 1.758,
           "scroll": true,
-          "target": "recommend"
+          "target": "recommend",
+          "back": true
         },
         {
           "label": "Hương Vị Mộc · ShopeeFood 下单",
@@ -427,9 +449,28 @@
           "h": 2.057,
           "scroll": true,
           "target": "compare"
+        },
+        {
+          "label": "生成 AI 总结",
+          "x": 2.736,
+          "y": 14.514,
+          "w": 94.279,
+          "h": 1.459,
+          "scroll": true,
+          "target": "summary-first",
+          "swap": true
+        },
+        {
+          "label": "选择菜单翻译语言",
+          "x": 2.736,
+          "y": 16.646,
+          "w": 61.692,
+          "h": 2.431,
+          "scroll": true,
+          "target": "translate-first"
         }
       ],
-      "section": "compare",
+      "section": "recommend",
       "scroll": {
         "src": "../../assets/wanso/native/store-first-scroll.webp?v=devices3",
         "top": 7.094,
@@ -452,7 +493,8 @@
           "w": 10.697,
           "h": 1.758,
           "scroll": true,
-          "target": "recommend"
+          "target": "store-first",
+          "back": true
         },
         {
           "label": "Hương Vị Mộc · ShopeeFood 下单",
@@ -497,7 +539,8 @@
           "w": 11.194,
           "h": 2.361,
           "scroll": true,
-          "target": "recommend-2"
+          "target": "recommend-2",
+          "back": true
         },
         {
           "label": "Phở Quyên · GrabFood 下单",
@@ -507,6 +550,25 @@
           "h": 2.115,
           "scroll": true,
           "href": "https://food.grab.com/vn/vi/restaurant/ph%E1%BB%9F-quy%C3%AAn-ph%E1%BB%9F-g%C3%A0-tr%E1%BB%99n-%C4%91%E1%BA%B7c-bi%E1%BB%87t-delivery/5-C2BBJAVWGEEVTJ?"
+        },
+        {
+          "label": "生成 AI 总结",
+          "x": 1.99,
+          "y": 17.708,
+          "w": 96.02,
+          "h": 1.869,
+          "scroll": true,
+          "target": "summary-second",
+          "swap": true
+        },
+        {
+          "label": "选择菜单翻译语言",
+          "x": 1.99,
+          "y": 20.413,
+          "w": 63.682,
+          "h": 3.148,
+          "scroll": true,
+          "target": "translate-second"
         }
       ],
       "section": "recommend",
@@ -564,7 +626,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "home"
+          "target": "home",
+          "nav": true
         },
         {
           "label": "收藏",
@@ -572,7 +635,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "saved"
+          "target": "saved",
+          "nav": true
         },
         {
           "label": "我的",
@@ -580,7 +644,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "profile"
+          "target": "profile",
+          "nav": true
         },
         {
           "label": "会话历史",
@@ -623,7 +688,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "home"
+          "target": "home",
+          "nav": true
         },
         {
           "label": "探索",
@@ -631,7 +697,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "explore"
+          "target": "explore",
+          "nav": true
         },
         {
           "label": "我的",
@@ -639,7 +706,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "profile"
+          "target": "profile",
+          "nav": true
         },
         {
           "label": "会话历史",
@@ -682,7 +750,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "home"
+          "target": "home",
+          "nav": true
         },
         {
           "label": "探索",
@@ -690,7 +759,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "explore"
+          "target": "explore",
+          "nav": true
         },
         {
           "label": "收藏",
@@ -698,26 +768,60 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "saved"
+          "target": "saved",
+          "nav": true
+        },
+        {
+          "label": "通知",
+          "x": 3.98,
+          "y": 57.895,
+          "w": 92.04,
+          "h": 6.865,
+          "target": "notifications"
+        },
+        {
+          "label": "账户与安全",
+          "x": 3.98,
+          "y": 71.854,
+          "w": 92.04,
+          "h": 6.865,
+          "target": "account"
         }
       ]
     },
     {
       "id": "settings",
       "title": "应用设置",
-      "group": "应用页面",
-      "note": "在这里调整应用主题、语言和其他偏好。",
-      "src": "../../assets/wanso/native/settings.webp?v=devices3",
+      "group": "探索与账户",
+      "src": "../../assets/wanso/native/settings.webp?v=routes4",
       "width": 804,
       "height": 1748,
+      "note": "应用设置集中管理主题、语言、触感和历史记录。",
       "hotspots": [
         {
-          "label": "返回我的",
-          "x": 2.488,
+          "label": "返回",
+          "x": 2.736,
           "y": 7.78,
-          "w": 11.692,
-          "h": 5.263,
-          "target": "profile"
+          "w": 12.189,
+          "h": 5.492,
+          "target": "profile",
+          "back": true
+        },
+        {
+          "label": "主题",
+          "x": 3.98,
+          "y": 17.162,
+          "w": 92.04,
+          "h": 6.865,
+          "target": "theme"
+        },
+        {
+          "label": "语言",
+          "x": 3.98,
+          "y": 24.142,
+          "w": 92.04,
+          "h": 6.865,
+          "target": "language"
         }
       ]
     },
@@ -736,7 +840,8 @@
           "y": 7.78,
           "w": 11.692,
           "h": 5.263,
-          "target": "profile"
+          "target": "profile",
+          "back": true
         }
       ]
     },
@@ -755,7 +860,8 @@
           "y": 7.551,
           "w": 11.94,
           "h": 5.263,
-          "target": "home"
+          "target": "home",
+          "back": true
         },
         {
           "label": "查看鸡腿河粉推荐",
@@ -771,7 +877,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "explore"
+          "target": "explore",
+          "nav": true
         },
         {
           "label": "收藏",
@@ -779,7 +886,8 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "saved"
+          "target": "saved",
+          "nav": true
         },
         {
           "label": "我的",
@@ -787,9 +895,276 @@
           "y": 90.732,
           "w": 20.896,
           "h": 6.751,
-          "target": "profile"
+          "target": "profile",
+          "nav": true
         }
       ]
+    },
+    {
+      "id": "notifications",
+      "title": "通知设置",
+      "group": "探索与账户",
+      "src": "../../assets/wanso/native/notifications.webp?v=routes4",
+      "width": 804,
+      "height": 1748,
+      "note": "查看推送、邮件和免打扰设置。",
+      "hotspots": [
+        {
+          "label": "返回",
+          "x": 2.736,
+          "y": 7.78,
+          "w": 12.189,
+          "h": 5.492,
+          "target": "profile",
+          "back": true
+        }
+      ]
+    },
+    {
+      "id": "account",
+      "title": "账户与安全",
+      "group": "探索与账户",
+      "src": "../../assets/wanso/native/account.webp?v=routes4",
+      "width": 804,
+      "height": 1748,
+      "note": "体验账号的邮箱、个人信息和安全设置入口。",
+      "hotspots": [
+        {
+          "label": "返回",
+          "x": 2.736,
+          "y": 7.78,
+          "w": 12.189,
+          "h": 5.492,
+          "target": "profile",
+          "back": true
+        }
+      ]
+    },
+    {
+      "id": "theme",
+      "title": "主题选择",
+      "group": "探索与账户",
+      "src": "../../assets/wanso/native/theme.webp?v=routes4",
+      "width": 804,
+      "height": 1748,
+      "note": "浏览 Wanso 的配色选项，当前示例使用海洋主题。",
+      "hotspots": [
+        {
+          "label": "返回",
+          "x": 2.488,
+          "y": 8.696,
+          "w": 11.443,
+          "h": 5.492,
+          "target": "settings",
+          "back": true
+        },
+        {
+          "label": "保留海洋主题",
+          "x": 3.98,
+          "y": 31.121,
+          "w": 92.04,
+          "h": 10.984,
+          "target": "settings",
+          "back": true
+        }
+      ]
+    },
+    {
+      "id": "language",
+      "title": "语言选择",
+      "group": "探索与账户",
+      "src": "../../assets/wanso/native/language.webp?v=routes4",
+      "width": 804,
+      "height": 1748,
+      "note": "查看应用支持的语言，当前示例使用简体中文。",
+      "hotspots": [
+        {
+          "label": "关闭语言选择",
+          "x": 85.075,
+          "y": 50.0,
+          "w": 9.453,
+          "h": 4.691,
+          "target": "settings",
+          "back": true
+        },
+        {
+          "label": "继续使用中文",
+          "x": 6.716,
+          "y": 77.117,
+          "w": 86.318,
+          "h": 6.407,
+          "target": "settings",
+          "back": true
+        }
+      ]
+    },
+    {
+      "id": "summary-first",
+      "title": "Hương Vị Mộc 的店铺总结",
+      "group": "店铺与菜单",
+      "src": "../../assets/wanso/native/summary-first.webp?v=routes4",
+      "width": 804,
+      "height": 1748,
+      "note": "查看这家店的菜品、预算判断和配送费说明。可以继续滚动看菜单。",
+      "hotspots": [
+        {
+          "label": "返回",
+          "x": 0.995,
+          "y": 1.584,
+          "w": 10.697,
+          "h": 1.731,
+          "scroll": true,
+          "target": "recommend",
+          "back": true
+        },
+        {
+          "label": "选择菜单翻译语言",
+          "x": 2.736,
+          "y": 17.866,
+          "w": 61.692,
+          "h": 2.394,
+          "scroll": true,
+          "target": "translate-first"
+        },
+        {
+          "label": "Hương Vị Mộc · ShopeeFood 下单",
+          "x": 2.736,
+          "y": 25.123,
+          "w": 46.02,
+          "h": 1.473,
+          "scroll": true,
+          "href": "https://shopeefood.vn/ha-noi/pho-ga-huong-vi-moc-thai-thinh"
+        },
+        {
+          "label": "Hương Vị Mộc · GrabFood 下单",
+          "x": 50.995,
+          "y": 25.123,
+          "w": 46.02,
+          "h": 1.473,
+          "scroll": true,
+          "href": "https://food.grab.com/vn/vi/restaurant/ph-g-hng-v-mc-thi-thnh-delivery/5-C6N3V7WEAP5YG2?"
+        },
+        {
+          "label": "查看菜品比价",
+          "x": 2.239,
+          "y": 27.038,
+          "w": 95.522,
+          "h": 1.842,
+          "scroll": true,
+          "target": "compare"
+        }
+      ],
+      "section": "recommend",
+      "scroll": {
+        "top": 7.094,
+        "height": 92.906,
+        "src": "../../assets/wanso/native/summary-first-scroll.webp?v=routes4"
+      }
+    },
+    {
+      "id": "summary-second",
+      "title": "Phở Quyên 的店铺总结",
+      "group": "店铺与菜单",
+      "src": "../../assets/wanso/native/summary-second.webp?v=routes4",
+      "width": 804,
+      "height": 1748,
+      "note": "查看鸡腿汤河粉的推荐信息，向上滑动浏览菜单。",
+      "hotspots": [
+        {
+          "label": "返回",
+          "x": 0.498,
+          "y": 2.056,
+          "w": 11.194,
+          "h": 2.295,
+          "scroll": true,
+          "target": "recommend-2",
+          "back": true
+        },
+        {
+          "label": "选择菜单翻译语言",
+          "x": 1.99,
+          "y": 22.566,
+          "w": 63.682,
+          "h": 3.108,
+          "scroll": true,
+          "target": "translate-second"
+        },
+        {
+          "label": "Phở Quyên · GrabFood 下单",
+          "x": 1.99,
+          "y": 31.984,
+          "w": 95.771,
+          "h": 2.008,
+          "scroll": true,
+          "href": "https://food.grab.com/vn/vi/restaurant/ph%E1%BB%9F-quy%C3%AAn-ph%E1%BB%9F-g%C3%A0-tr%E1%BB%99n-%C4%91%E1%BA%B7c-bi%E1%BB%87t-delivery/5-C2BBJAVWGEEVTJ?"
+        }
+      ],
+      "section": "recommend",
+      "scroll": {
+        "top": 7.094,
+        "height": 92.906,
+        "src": "../../assets/wanso/native/summary-second-scroll.webp?v=routes4"
+      }
+    },
+    {
+      "id": "translate-first",
+      "title": "Hương Vị Mộc 的菜单翻译选项",
+      "group": "店铺与菜单",
+      "src": "../../assets/wanso/native/translate-first.webp?v=routes4",
+      "width": 804,
+      "height": 1748,
+      "note": "查看店铺的菜单语言选择。当前回放使用菜单原文。",
+      "hotspots": [
+        {
+          "label": "关闭菜单语言选项",
+          "x": 85.075,
+          "y": 50.0,
+          "w": 9.453,
+          "h": 4.691,
+          "target": "store-first",
+          "back": true
+        },
+        {
+          "label": "保留原文",
+          "x": 6.468,
+          "y": 55.492,
+          "w": 87.065,
+          "h": 5.149,
+          "target": "store-first",
+          "back": true
+        }
+      ],
+      "section": "recommend"
+    },
+    {
+      "id": "translate-second",
+      "title": "Phở Quyên 的菜单翻译选项",
+      "group": "店铺与菜单",
+      "src": "../../assets/wanso/native/translate-second.webp?v=routes4",
+      "width": 804,
+      "height": 1748,
+      "note": "查看店铺的菜单语言选择。当前回放使用菜单原文。",
+      "hotspots": [
+        {
+          "label": "关闭菜单语言选项",
+          "x": 85.075,
+          "y": 50.0,
+          "w": 9.453,
+          "h": 4.691,
+          "target": "store-second",
+          "back": true
+        },
+        {
+          "label": "保留原文",
+          "x": 6.468,
+          "y": 55.492,
+          "w": 87.065,
+          "h": 5.149,
+          "target": "store-second",
+          "back": true
+        }
+      ],
+      "section": "recommend"
     }
   ],
   "flows": [
@@ -892,6 +1267,30 @@
           "label": "会话历史",
           "caption": "回看一条已保存的搜餐记录",
           "reason": "打开先前保存的鸡腿河粉推荐。"
+        },
+        {
+          "id": "notifications",
+          "label": "通知设置",
+          "caption": "查看通知设置",
+          "reason": "查看推送、邮件和免打扰设置。"
+        },
+        {
+          "id": "account",
+          "label": "账户与安全",
+          "caption": "查看账户安全入口",
+          "reason": "体验账号的邮箱、个人信息和安全设置入口。"
+        },
+        {
+          "id": "theme",
+          "label": "主题选择",
+          "caption": "查看实际应用主题",
+          "reason": "浏览 Wanso 的配色选项，当前示例使用海洋主题。"
+        },
+        {
+          "id": "language",
+          "label": "语言选择",
+          "caption": "查看语言选项",
+          "reason": "查看应用支持的语言，当前示例使用简体中文。"
         }
       ]
     }

@@ -221,6 +221,15 @@ html:has(.home-page){scroll-padding-block-start:88px}
 .project-identity p { font-size: 16px; font-weight: 600; color: #345b8f; }
 .project-app-icon { flex: none; border-radius: 13px; }
 .project-wordmark { flex: none; width: clamp(68px, 9vw, 112px); height: auto; }
+.paper-link {
+  display: inline-flex;
+  margin-top: 10px;
+  color: #1756a5;
+  font-size: 15px;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
 .home-page .portfolio-ambient { inset: 0 0 auto; height: 100svh; }
 .home-page .device-project {
   background: linear-gradient(132deg, #f8fbffdb, #eaf4ffc4);

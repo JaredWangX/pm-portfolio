@@ -166,3 +166,41 @@ body[data-capture=ios] .screen[data-swipeable]:active { cursor: grabbing; }
   user-select: none;
 }
 .phone-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.hotspots { pointer-events: none; }
+.hotspot { pointer-events: auto; transition: none; }
+.show-hotspots .hotspot-dot {
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  border-width: 2px;
+  box-shadow: 0 0 0 2px #286be522;
+}
+.hotspot-dot::before { content: none; }
+@media (hover: none) {
+  .hotspot:hover:not(:focus-visible) { background: transparent; outline: none; }
+  .hotspot:hover:not(:focus-visible)::after { content: none; }
+}
+.load-error.over-preview {
+  top: auto;
+  bottom: 14px;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 24px);
+  padding: 7px 11px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.load-error.over-preview p { font-size: 13px; margin: 0; }
+.load-error.over-preview a { display: none; }
+.load-error.over-preview .retry { margin: 0; }
+.phone-shortcuts .flow-toggle {
+  flex: 0 0 auto;
+  padding-inline: 9px;
+  color: #1756a5;
+  font-weight: 650;
+}
+@media (max-width: 420px) {
+  .phone-shortcuts button { font-size: 12px; }
+  .phone-shortcuts .flow-toggle { padding-inline: 5px; }
+}

@@ -29,14 +29,18 @@ with sync_playwright() as p:
         if page.locator('.flow-toggle').count() and not page.locator('.flow-dialog').evaluate('(d)=>d.open'):
             page.locator('.flow-toggle').click()
 
+    def open_catalog():
+        guide()
+        if not page.locator('.catalog').evaluate('(details)=>details.open'):
+            page.locator('.catalog summary').click()
+
     if '--layout-only' not in sys.argv:
         for product in ['wanso', 'onentra']:
             data = json.loads((ROOT / 'prototypes' / product / 'screens.json').read_text())
             page.goto(BASE + 'prototypes/' + product + '/')
             loaded(data['default'])
-            if product == 'wanso':
-                assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
-                page.locator('.autoplay').click()
+            assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
+            page.locator('.autoplay').click()
             assert page.locator('.autoplay').get_attribute('aria-pressed') == 'true'
             first = page.url
             page.wait_for_function('url => location.href !== url', arg=first, timeout=12000)
@@ -66,8 +70,7 @@ with sync_playwright() as p:
                 else:
                     page.locator('.continue').click()
                 loaded(flow['steps'][0]['id'])
-            guide()
-            page.locator('.catalog summary').click()
+            open_catalog()
             for frame in data['frames']:
                 guide()
                 page.locator('[data-screen="' + frame['id'] + '"]').click()
@@ -155,6 +158,52 @@ with sync_playwright() as p:
         assert touch_page.evaluate("location.hash === '#store-second'")
         mobile.close()
         checks.append('real touch: horizontal restaurant switch and vertical scrolling inside the menu')
+
+        page.goto(BASE + 'prototypes/wanso/?routes=1#saved')
+        loaded('saved')
+        active.get_by_role('button', name='查看 Hương Vị Mộc', exact=True).click()
+        loaded('store-first')
+        active.get_by_role('button', name='生成 AI 总结', exact=True).click()
+        loaded('summary-first')
+        active.get_by_role('button', name='选择菜单翻译语言', exact=True).click()
+        loaded('translate-first')
+        active.get_by_role('button', name='关闭菜单语言选项', exact=True).click()
+        loaded('summary-first')
+        active.get_by_role('button', name='返回', exact=True).click()
+        loaded('saved')
+        checks.append('native store summary and translation sheet return to their original page')
+
+        page.goto(BASE + 'prototypes/onentra/?routes=1#23')
+        loaded('23')
+        page.evaluate("window.originalImage = document.querySelector('.original-screen')")
+        active.get_by_role('button',name='工作台',exact=True).click()
+        assert page.evaluate("window.originalImage === document.querySelector('.original-screen')")
+        onentra_routes = {
+            '项目协作':'projects','AI 员工':'staff','专家团队':'teams','用户管理':'users',
+            '知识库':'knowledge','我的技能':'skills','技能市场':'market','模型管理':'models',
+            '个人设置':'settings','系统设置':'system',
+        }
+        for label, frame_id in onentra_routes.items():
+            active.get_by_role('button',name=label,exact=True).click()
+            loaded(frame_id)
+            assert page.locator('.original-screen').evaluate('(img) => img.complete && img.naturalWidth > 0')
+        active.get_by_role('button',name='数据库',exact=True).click()
+        loaded('database')
+        delayed = []
+        query_image = re.compile(r'/db-support-query\.webp(?:\?|$)')
+        page.route(query_image, lambda route: delayed.append(route))
+        active.get_by_role('button',name='查询客户服务数据',exact=True).click()
+        page.wait_for_function("document.querySelector('.viewer').getAttribute('aria-busy') === 'true'")
+        page.wait_for_timeout(600)
+        assert delayed and page.url.endswith('#database')
+        assert page.locator('.original-screen').evaluate('(img) => img.complete && img.naturalWidth > 0')
+        assert page.locator('.page-layer').count() == 1
+        delayed[0].fulfill(path=str(ROOT/'assets/onentra/current/db-support-query.webp'))
+        loaded('db-support-query')
+        page.unroute(query_image)
+        active.get_by_role('button',name='关闭客户服务数据查询',exact=True).click()
+        loaded('database')
+        checks.append('actual sidebar pages, same-page clicks, slow image swap and matching query return')
         for slug in ['wanso-prd','onentra-prd','recommendation-review','delivery-review']:
             page.goto(BASE)
             page.locator('a[href="documents/'+slug+'/"]').click()
@@ -205,6 +254,8 @@ with sync_playwright() as p:
         checks.append('manifest failure: retry restores requested page without reloading')
 
     page.goto(BASE)
+    assert '国际人工智能顶级会议 ICLR 2026' in page.locator('.education').inner_text()
+    assert page.locator('.paper-link').get_attribute('href').startswith('https://proceedings.iclr.cc/')
     page.locator('[data-copy-email]').click()
     page.wait_for_function('document.querySelector(".copy-feedback").textContent.includes("已复制")')
     assert page.evaluate('navigator.clipboard.readText()') == '13971032326@163.com'
@@ -239,8 +290,7 @@ with sync_playwright() as p:
         page.locator('.viewer').wait_for()
         if product == 'wanso':
             loaded('home')
-        guide()
-        page.locator('.catalog summary').click()
+        open_catalog()
         page.locator('[data-screen="'+target+'"]').click()
         loaded(target)
         page.wait_for_timeout(1000)

@@ -12,18 +12,18 @@ const device = new URLSearchParams(location.search).has('device');
 document.body.classList.toggle('device-embed', device);
 const stageHeight = f => f.height;
 let flowDialog;
-let picture = $('.original-screen');
-let transition;
 const layer = document.createElement('div');
 layer.className = 'page-layer';
 screen.append(layer);
-layer.append(picture, $('.hotspots'));
+layer.append($('.original-screen'), $('.hotspots'));
 let activeLayer = layer;
+screen.tabIndex = -1;
 const duration = 10000;
 let frames = [], flows = [], flow = 0, current = -1, playing = false, zoomed = false, guided = true;
 let visible = true, parentVisible = true, loading = false, loadId = 0, ready = false, failed = false;
 let tick = 0, hintTimer = 0, elapsed = 0, previousTime = 0;
 const cached = new Map();
+const screenHistory = [];
 const steps = () => flows[flow]?.steps || [];
 const stepIndex = () => guided ? steps().findIndex(s => s.id === frames[current]?.id) : -1;
 const activeStep = () => steps()[stepIndex()];
@@ -105,16 +105,16 @@ function renderFlow() {
     b.append(number, label); return b;
   }));
 }
-function selectFrame(id, returnToViewer = false, runSearch = false) {
+function selectFrame(id, returnToViewer = false, runSearch = false, navigation = 'reset') {
   const matching = flows.findIndex(item => item.steps.some(step => step.id === id));
   guided = matching >= 0;
   if (guided && matching !== flow) {
     flow = matching;
     renderFlow();
   }
-  return show(id, true, returnToViewer, runSearch);
+  return show(id, true, returnToViewer, runSearch, navigation);
 }
-function renderFrame() {
+function renderFrame(buildHotspots = true) {
   const f = frames[current], position = stepIndex(), step = activeStep();
   screen.toggleAttribute('data-swipeable', Boolean(f.swipeLeft || f.swipeRight));
   $('.page-title').textContent = f.title;
@@ -137,14 +137,15 @@ function renderFrame() {
   }
   const nextId = steps()[(position+1) % steps().length]?.id;
   const preferred = position >= 0 ? f.hotspots.find(h => h.target === nextId) : f.hotspots.find(h=>h.target && h.target!==f.id);
-  for (const h of f.hotspots) {
+  for (const h of buildHotspots ? f.hotspots : []) {
     const select = () => {
       if (h.notice) {setPlaying(false);hint(h.notice);return;}
-      if (h.target === f.id) {setPlaying(false);hint('你已经在这个页面。可点击其他发光点，或继续体验下一步。');}
-      else if (h.target) selectFrame(h.target, false, h.runSearch);
+      if (h.back) selectFrame(screenHistory.at(-1)?.id || h.target, false, false, 'back');
+      else if (h.target) selectFrame(h.target, false, h.runSearch, h.nav ? 'reset' : h.swap ? 'preserve' : 'forward');
     };
     let b;
-    if (h.href && /^https:\/\/(food\.grab\.com|shopeefood\.vn)\//.test(h.href)) {
+    const external = h.href && /^https:\/\/(food\.grab\.com|shopeefood\.vn)\//.test(h.href);
+    if (external) {
       b = document.createElement('a');
       b.className = 'hotspot';
       b.href = h.href;
@@ -154,20 +155,27 @@ function renderFrame() {
       b.addEventListener('click', () => setPlaying(false));
     } else b = makeButton('', select, 'hotspot');
     b.setAttribute('aria-label',h.label); if(h.target) b.dataset.target = h.target;
+    if (h.nav && h.target === f.id) b.setAttribute('aria-current', 'page');
     Object.assign(b.style,{left:h.x+'%',top:h.y+'%',width:h.w+'%',height:h.h+'%'});
-    if (h === preferred) {b.classList.add('suggested');const dot=document.createElement('span');dot.className='hotspot-dot';dot.setAttribute('aria-hidden','true');b.append(dot);}
+    if (h === preferred) b.classList.add('suggested');
+    if (!h.nav && !h.back && (h.target || h.href)) {
+      const dot = document.createElement('span');
+      dot.className = 'hotspot-dot';
+      dot.setAttribute('aria-hidden', 'true');
+      b.append(dot);
+    }
     activeLayer.querySelector(h.scroll ? '.scroll-content .hotspots' : ':scope > .hotspots').append(b);
   }
-  fit();
-  history.replaceState(null,'','#'+f.id);
+  if (buildHotspots) fit();
+  if (location.hash !== '#' + f.id) history.replaceState(null, '', '#' + f.id);
   if (embed) parent.postMessage({type:'portfolio-frame-changed',frame:f.id,section:f.section,route:f.route,title:f.title,description:f.note,canPrevious:!$('.previous').disabled,counter:$('.page-counter').textContent},location.origin);
-  const upcoming = [f.swipeLeft, f.swipeRight, nextId, frames[current+1]?.id];
+  const upcoming = buildHotspots ? [f.swipeLeft, f.swipeRight, nextId, f.afterSearch] : [];
   for (const id of new Set(upcoming)) {
     const f = frames.find(f=>f.id===id);
     if (f && f.id!==frames[current].id) decoded(f).catch(()=>{});
   }
 }
-async function show(id, manual = true, returnToViewer = false, runSearch = false) {
+async function show(id, manual = true, returnToViewer = false, runSearch = false, navigation = 'reset') {
   const index = frames.findIndex(f => f.id === id);
   if (index < 0) return;
   if (returnToViewer && flowDialog?.open) flowDialog.close();
@@ -175,29 +183,29 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
   if (manual) setPlaying(false);
   loading = true; failed = false; schedule();
   $('.viewer').setAttribute('aria-busy','true');
-  const loadingNotice = setTimeout(() => {if (request === loadId && loading) $('.image-loading').hidden = false;}, 180);
-  $('.image-loading').textContent = '正在载入原版页面…';
+  const loadingNotice = setTimeout(() => {if (request === loadId && loading) $('.image-loading').hidden = false;}, 450);
   $('.load-error').hidden = true;
   try {
     const frame = frames[index];
+    if (current === index) {
+      renderFrame(false);
+      if (runSearch) queueSearchStep(frame, request);
+      return;
+    }
     const [image, scrollImage] = await decoded(frame);
     if (request !== loadId) return;
-    const hadPage = current >= 0;
-    const backwards = index < current;
+    const restore = navigation === 'back' ? screenHistory.pop() : null;
+    if (navigation === 'forward' && current >= 0) {
+      screenHistory.push({id: frames[current].id, scroll: activeLayer.querySelector('.phone-scroll')?.scrollTop});
+    } else if (navigation === 'reset') screenHistory.length = 0;
+    const restoreFocus = activeLayer.contains(document.activeElement) && document.activeElement.matches(':focus-visible');
     current = index;
-    transition?.cancel();
-    screen.querySelectorAll('.page-layer.leaving').forEach(node => node.remove());
-    const oldLayer = activeLayer;
-    oldLayer.classList.add('leaving');
-    oldLayer.inert = true;
-    oldLayer.setAttribute('aria-hidden', 'true');
     activeLayer = document.createElement('div');
     activeLayer.className = 'page-layer';
-    picture = image.cloneNode();
-    picture.className = 'original-screen';
-    picture.draggable = false;
-    picture.alt = `${document.body.dataset.product.toUpperCase()} · ${frames[index].title} · 原版页面`;
-    activeLayer.append(picture);
+    image.className = 'original-screen';
+    image.draggable = false;
+    image.alt = `${document.body.dataset.product.toUpperCase()} · ${frame.title}`;
+    activeLayer.append(image);
     for (const metric of frame.metrics || []) {
       const label = document.createElement('span');
       label.className = 'screen-metric';
@@ -222,43 +230,32 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
       scroll.style.height = frame.scroll.height + '%';
       const content = document.createElement('div');
       content.className = 'scroll-content';
-      const contentImage = scrollImage.cloneNode();
-      contentImage.width = scrollImage.naturalWidth;
-      contentImage.height = scrollImage.naturalHeight;
-      contentImage.draggable = false;
-      contentImage.alt = '';
+      scrollImage.width = scrollImage.naturalWidth;
+      scrollImage.height = scrollImage.naturalHeight;
+      scrollImage.draggable = false;
+      scrollImage.alt = '';
       const contentHotspots = document.createElement('div');
       contentHotspots.className = 'hotspots';
-      content.append(contentImage, contentHotspots);
+      content.append(scrollImage, contentHotspots);
       scroll.append(content);
       activeLayer.append(scroll);
     }
-    screen.append(activeLayer);
+    // Reuse the decoded image and swap the complete frame on one paint.
+    screen.replaceChildren(activeLayer);
     document.querySelectorAll('.viewer button, .flow-dialog .viewer-tools button').forEach(b=>b.disabled=false);
     renderFrame();
-    if (frame.scroll?.startAt) {
-      const scroll = activeLayer.querySelector('.phone-scroll');
-      scroll.scrollTop = scroll.scrollHeight * frame.scroll.startAt / 100;
-    }
-    if (hadPage && !capturedPhone && !device && !reduced.matches) {
-      transition = activeLayer.animate([
-        {opacity:0,transform:`translateX(${backwards ? -12 : 12}px)`},
-        {opacity:1,transform:'translateX(0)'}
-      ], {duration:280,easing:'cubic-bezier(.22,1,.36,1)'});
-      transition.finished.then(() => oldLayer.remove()).catch(() => oldLayer.remove());
-    } else oldLayer.remove();
+    const scroll = activeLayer.querySelector('.phone-scroll');
+    if (scroll) scroll.scrollTop = restore?.scroll ?? scroll.scrollHeight * (frame.scroll.startAt || 0) / 100;
+    if (restoreFocus) screen.focus({preventScroll: true});
     if (returnToViewer && !embed && matchMedia('(max-width:760px)').matches) {
-      $('.viewer').scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});
+      const viewer = $('.viewer');
+      const {top} = viewer.getBoundingClientRect();
+      if (top < 0 || top > innerHeight / 4) viewer.scrollIntoView({behavior:'instant',block:'start'});
     }
 
     elapsed = 0;
     $('.play-progress span').style.transform = 'scaleX(0)';
-    const nextFrame = frames[index].afterSearch;
-    if (runSearch && nextFrame) {
-      setTimeout(() => {
-        if (request === loadId) selectFrame(nextFrame, false, true);
-      }, 1500);
-    }
+    if (runSearch) queueSearchStep(frame, request);
   } catch {
     if (request !== loadId) return;
     failed = true;
@@ -266,6 +263,8 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
     $('.load-error').hidden = false;
     $('.load-error').dataset.retry = id;
     $('.load-error').dataset.runSearch = String(Boolean(runSearch));
+    $('.load-error').dataset.navigation = navigation;
+    $('.load-error').classList.toggle('over-preview', current >= 0);
   } finally {
     clearTimeout(loadingNotice);
     if (request === loadId) {
@@ -275,6 +274,12 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
       schedule();
     }
   }
+}
+function queueSearchStep(frame, request) {
+  if (!frame.afterSearch) return;
+  setTimeout(() => {
+    if (request === loadId) selectFrame(frame.afterSearch, false, true, 'preserve');
+  }, 1500);
 }
 function next(manual = true) {
   if (!ready) return;
@@ -347,7 +352,7 @@ screen.addEventListener('pointerup', event => {
   if (changedCard) {
     const frame = frames[current];
     const target = dx < 0 ? frame?.swipeLeft : frame?.swipeRight;
-    if (target) selectFrame(target);
+    if (target) selectFrame(target, false, false, 'preserve');
     else if (!capturedPhone) dx < 0 ? next() : previous();
   }
   if (axis || changedCard) ignoreClick = true;
@@ -359,15 +364,15 @@ screen.addEventListener('click', event => {
     event.stopImmediatePropagation();
   }
 }, true);
-$('.screen').addEventListener('click',event=>{
-  if (!event.target.closest('.hotspot')) {
-    setPlaying(false);
-    hint(capturedPhone ? '点击搜索、餐厅卡片或 Order。推荐结果支持左右滑动。' : '点击页面按钮或左右滑动查看。');
-  }
+screen.addEventListener('click', event => {
+  if (playing && !event.target.closest('.hotspot')) setPlaying(false);
 });
 $('.retry').addEventListener('click',()=>{
   if (!ready) loadManifest();
-  else show($('.load-error').dataset.retry || frames[current]?.id || steps()[0].id, true, false, $('.load-error').dataset.runSearch === 'true');
+  else {
+    const {retry, runSearch, navigation} = $('.load-error').dataset;
+    show(retry || frames[current]?.id || steps()[0].id, true, false, runSearch === 'true', navigation);
+  }
 });
 document.addEventListener('keydown',event=>{
   if (flowDialog?.open) return;
@@ -382,7 +387,8 @@ window.addEventListener('message',event=>{
   if (event.origin!==location.origin || event.source!==parent) return;
   if (event.data?.type==='portfolio-visibility') {parentVisible=event.data.visible===true;schedule();}
   if (event.data?.type==='portfolio-show-frame' && ready && frames.some(f=>f.id===event.data.frame)) {
-    selectFrame(event.data.frame, true);
+    const id = event.data.frame;
+    selectFrame(id, true, phone && id === 'generating');
   }
   if (device && event.data?.type==='portfolio-device-action') {
     if (event.data.action==='next') next();
@@ -407,9 +413,16 @@ if (phone) {
   const close = makeButton('×', () => flowDialog.close(), 'flow-close');
   close.setAttribute('aria-label', '关闭场景选择');
   heading.append(title, close);
-  flowDialog.append(heading, $('.viewer-tools'), $('.review-side'));
+  const pages = $('.review-side');
+  pages.prepend($('.catalog'));
+  flowDialog.append(heading, $('.viewer-tools'), pages);
   document.body.append(flowDialog);
-  const choose = makeButton('场景', () => {setPlaying(false);flowDialog.showModal();choose.setAttribute('aria-expanded','true');}, 'flow-toggle');
+  const choose = makeButton('全部页面', () => {
+    setPlaying(false);
+    $('.catalog').open = true;
+    flowDialog.showModal();
+    choose.setAttribute('aria-expanded','true');
+  }, 'flow-toggle');
   choose.setAttribute('aria-haspopup', 'dialog');
   choose.setAttribute('aria-controls', 'flow-dialog');
   choose.setAttribute('aria-expanded', 'false');
@@ -434,7 +447,7 @@ async function loadManifest() {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
   try {
-    const response = await fetch('screens.json?v=devices3', {signal: controller.signal});
+    const response = await fetch('screens.json?v=routes4', {signal: controller.signal});
     if (!response.ok) throw Error('screens');
     const data = await response.json();
     frames = data.frames;
@@ -468,20 +481,20 @@ async function loadManifest() {
     if (matching >= 0) flow = matching;
     renderFlow();
     ready = true;
+    if (device) parent.postMessage({type:'portfolio-manifest-ready'}, location.origin);
     if (phone && !device) {
       const shortcuts = document.createElement('nav');
       shortcuts.className = 'phone-shortcuts';
       shortcuts.setAttribute('aria-label', '常用场景');
       for (const [id, label] of data.shortcuts) {
-        const button = makeButton(label, () => selectFrame(id));
+        const button = makeButton(label, () => selectFrame(id, false, id === 'generating'));
         button.dataset.shortcut = id;
         shortcuts.append(button);
       }
+      shortcuts.append($('.flow-toggle'));
       $('.viewer').prepend(shortcuts);
     }
-    const initialLoad = loadId + 1;
     await show(start, false);
-    if (loadId === initialLoad && !failed && !reduced.matches && !device && !capturedPhone) setPlaying(true);
   } catch {
     ready = false;
     failed = true;
