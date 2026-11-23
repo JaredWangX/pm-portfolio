@@ -115,8 +115,10 @@ const contents = [...document.querySelectorAll('.sidecard nav a')];
 if (contents.length) {
   function highlight() {
     let current = contents[0];
+    const bar = document.querySelector('.study-nav');
+    const threshold = bar ? bar.getBoundingClientRect().bottom + 40 : 140;
     for (const link of contents) {
-      if (document.querySelector(link.hash).getBoundingClientRect().top <= 140) current = link;
+      if (document.querySelector(link.hash).getBoundingClientRect().top <= threshold) current = link;
     }
     for (const link of contents) {
       if (link === current) link.setAttribute('aria-current', 'location');
