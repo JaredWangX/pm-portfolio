@@ -29,3 +29,8 @@ html:has(dialog[open]){overflow:hidden;scrollbar-gutter:stable}.modal{border:1px
 @media(max-width:640px){.hero-invitation{font-size:13px;margin-top:15px}.hero-invitation br{display:none}}
 #documents .sectionhead>p:last-child{max-width:42em}
 @media(max-width:640px){.hero .faithful-preview{height:680px}}
+
+/* One personal mark is shared by the header and browser icons. */
+body .identity .monogram { width:44px; height:44px; padding:0; border:0; border-radius:14px; background:none; box-shadow:none; flex:none; }
+.identity .monogram img { display:block; width:100%; height:100%; object-fit:contain; }
+@media(max-width:640px) { body .identity .monogram { width:40px; height:40px; } }

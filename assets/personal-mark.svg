@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="blue" x1="8" y1="4" x2="55" y2="64" gradientUnits="userSpaceOnUse"><stop stop-color="#5299FF"/><stop offset=".5" stop-color="#347BED"/><stop offset="1" stop-color="#215BC5"/></linearGradient>
+    <linearGradient id="edge" x1="17" y1="2" x2="47" y2="63" gradientUnits="userSpaceOnUse"><stop stop-color="#D9EBFF"/><stop offset="1" stop-color="#3779DC"/></linearGradient>
+    <linearGradient id="light" x1="18" y1="2" x2="42" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="white" stop-opacity=".25"/><stop offset="1" stop-color="white" stop-opacity="0"/></linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="19" fill="url(#blue)"/>
+  <path d="M2 28V20C2 10 10 2 20 2h24c10 0 18 8 18 18v5C44 19 24 39 2 28Z" fill="url(#light)"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="18.5" stroke="url(#edge)"/>
+  <path d="m15 21 8 24 9-17 9 17 8-24" stroke="#164BA5" stroke-opacity=".3" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 1.5)"/>
+  <path d="m15 20 8 24 9-17 9 17 8-24" stroke="white" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
