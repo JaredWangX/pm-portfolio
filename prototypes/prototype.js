@@ -6,6 +6,7 @@ document.body.classList.add('show-hotspots');
 document.body.classList.toggle('embed', embed);
 const screen = $('.screen'), viewport = $('.viewport');
 const phone = document.body.dataset.product === 'wanso';
+const capturedPhone = document.body.dataset.capture === 'ios';
 const expanded = new URLSearchParams(location.search).has('expanded');
 const device = new URLSearchParams(location.search).has('device');
 document.body.classList.toggle('device-embed', device);
@@ -100,29 +101,52 @@ function renderFlow() {
     b.append(number, label); return b;
   }));
 }
+function selectFrame(id, returnToViewer = false, runSearch = false) {
+  const matching = flows.findIndex(item => item.steps.some(step => step.id === id));
+  guided = matching >= 0;
+  if (guided && matching !== flow) {
+    flow = matching;
+    renderFlow();
+  }
+  return show(id, true, returnToViewer, runSearch);
+}
 function renderFrame() {
   const f = frames[current], position = stepIndex(), step = activeStep();
+  screen.toggleAttribute('data-swipeable', Boolean(f.swipeLeft || f.swipeRight));
   $('.page-title').textContent = f.title;
   $('.page-counter').textContent = position >= 0 ? `${position+1} / ${steps().length}` : `${current+1} / ${frames.length}`;
   $('.step-eyebrow').textContent = position >= 0 ? `${flows[flow].title} · ${String(position+1).padStart(2,'0')}` : '自由浏览 · ' + f.group;
   $('.step-caption').textContent = step?.caption || `查看${f.title}，点击箭头翻页。`;
   $('.page-description').textContent = step?.reason || f.note;
-  $('.source-page')?.replaceChildren(document.createTextNode(f.sourcePage ? '原作品集 · 第 '+f.sourcePage+' 页' : f.native ? '安卓应用 · 实际页面核对' : '原版页面'));
+  $('.source-page')?.replaceChildren(document.createTextNode(
+    capturedPhone ? 'iOS 模拟器截图 · 历史菜单样本' : f.sourcePage ? '原作品集 · 第 '+f.sourcePage+' 页' : '原版页面'
+  ));
   $('.continue').textContent = position < 0 ? '回到流程 →' : position === steps().length-1 ? '重新体验 ↺' : '继续 →';
   $('.previous').disabled = position < 0 ? current === 0 : position === 0;
   $('.next').disabled = false;
   for (const b of document.querySelectorAll('[data-screen],[data-step],[data-shortcut]')) {
-    if ((b.dataset.screen || b.dataset.step || b.dataset.shortcut) === f.id) b.setAttribute('aria-current','step');
+    const active = b.dataset.shortcut ? b.dataset.shortcut === (f.section || f.id) : (b.dataset.screen || b.dataset.step) === f.id;
+    if (active) b.setAttribute('aria-current','step');
     else b.removeAttribute('aria-current');
   }
   const nextId = steps()[(position+1) % steps().length]?.id;
   const preferred = position >= 0 ? f.hotspots.find(h => h.target === nextId) : f.hotspots.find(h=>h.target && h.target!==f.id);
   activeLayer.querySelector('.hotspots').replaceChildren(...f.hotspots.map(h => {
-    const b = makeButton('', () => {
+    const select = () => {
       if (h.notice) {setPlaying(false);hint(h.notice);return;}
       if (h.target === f.id) {setPlaying(false);hint('你已经在这个页面。可点击其他发光点，或继续体验下一步。');}
-      else {guided=steps().some(s=>s.id===h.target);show(h.target);}
-    }, 'hotspot');
+      else if (h.target) selectFrame(h.target, false, h.runSearch);
+    };
+    let b;
+    if (h.href && /^https:\/\/(food\.grab\.com|shopeefood\.vn)\//.test(h.href)) {
+      b = document.createElement('a');
+      b.className = 'hotspot';
+      b.href = h.href;
+      b.target = '_blank';
+      b.rel = 'noopener noreferrer';
+      b.draggable = false;
+      b.addEventListener('click', () => setPlaying(false));
+    } else b = makeButton('', select, 'hotspot');
     b.setAttribute('aria-label',h.label); if(h.target) b.dataset.target = h.target;
     Object.assign(b.style,{left:h.x+'%',top:h.y+'%',width:h.w+'%',height:h.h+'%'});
     if (h === preferred) {b.classList.add('suggested');const dot=document.createElement('span');dot.className='hotspot-dot';dot.setAttribute('aria-hidden','true');b.append(dot);}
@@ -130,14 +154,14 @@ function renderFrame() {
   }));
   fit();
   history.replaceState(null,'','#'+f.id);
-  if (embed) parent.postMessage({type:'portfolio-frame-changed',frame:f.id,title:f.title,description:f.note,canPrevious:!$('.previous').disabled,counter:$('.page-counter').textContent},location.origin);
+  if (embed) parent.postMessage({type:'portfolio-frame-changed',frame:f.id,section:f.section,title:f.title,description:f.note,canPrevious:!$('.previous').disabled,counter:$('.page-counter').textContent},location.origin);
   const upcoming = [nextId, steps()[(position+2) % steps().length]?.id, frames[current+1]?.id];
   for (const id of new Set(upcoming)) {
     const f = frames.find(f=>f.id===id);
     if (f && f.id!==frames[current].id) decoded(f).catch(()=>{});
   }
 }
-async function show(id, manual = true, returnToViewer = false) {
+async function show(id, manual = true, returnToViewer = false, runSearch = false) {
   const index = frames.findIndex(f => f.id === id);
   if (index < 0) return;
   if (returnToViewer && flowDialog?.open) flowDialog.close();
@@ -187,6 +211,12 @@ async function show(id, manual = true, returnToViewer = false) {
 
     elapsed = 0;
     $('.play-progress span').style.transform = 'scaleX(0)';
+    const nextFrame = frames[index].afterSearch;
+    if (runSearch && nextFrame) {
+      setTimeout(() => {
+        if (request === loadId) selectFrame(nextFrame, false, true);
+      }, 1500);
+    }
   } catch {
     if (request !== loadId) return;
     failed = true;
@@ -240,7 +270,8 @@ $('.zoom-toggle').addEventListener('click',event=>{
 });
 let swipeStart, ignoreClick = false;
 screen.addEventListener('pointerdown', event => {
-  if (event.pointerType === 'mouse' || zoomed) return;
+  ignoreClick = false;
+  if ((event.pointerType === 'mouse' && !capturedPhone) || zoomed) return;
   setPlaying(false);
   swipeStart = {x:event.clientX,y:event.clientY,id:event.pointerId};
 });
@@ -251,7 +282,10 @@ screen.addEventListener('pointerup', event => {
   swipeStart = null;
   if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.6) {
     ignoreClick = true;
-    dx < 0 ? next() : previous();
+    const frame = frames[current];
+    const target = dx < 0 ? frame?.swipeLeft : frame?.swipeRight;
+    if (target) selectFrame(target);
+    else if (!capturedPhone) dx < 0 ? next() : previous();
     setTimeout(() => {ignoreClick = false;}, 350);
   }
 });
@@ -261,7 +295,7 @@ screen.addEventListener('click', event => {
 $('.screen').addEventListener('click',event=>{
   if (!event.target.closest('.hotspot')) {
     setPlaying(false);
-    hint('点击页面按钮或左右滑动查看。想自由输入，可以打开在线体验。');
+    hint(capturedPhone ? '点击搜索、餐厅卡片或 Order。推荐结果支持左右滑动。' : '点击页面按钮或左右滑动查看。');
   }
 });
 $('.retry').addEventListener('click',()=>{
@@ -281,10 +315,7 @@ window.addEventListener('message',event=>{
   if (event.origin!==location.origin || event.source!==parent) return;
   if (event.data?.type==='portfolio-visibility') {parentVisible=event.data.visible===true;schedule();}
   if (event.data?.type==='portfolio-show-frame' && ready && frames.some(f=>f.id===event.data.frame)) {
-    const matching=flows.findIndex(f=>f.steps.some(step=>step.id===event.data.frame));
-    guided=matching>=0;
-    if (guided) {flow=matching;renderFlow();}
-    show(event.data.frame,true,true);
+    selectFrame(event.data.frame, true);
   }
   if (device && event.data?.type==='portfolio-device-action') {
     if (event.data.action==='next') next();
@@ -330,7 +361,7 @@ if (phone) {
     }
   });
 }
-fetch('screens.json?v=original9',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('screens');return r.json();}).then(async data=>{
+fetch('screens.json?v=device2',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('screens');return r.json();}).then(async data=>{
   frames=data.frames; flows=data.flows;
   if(!frames.length || !flows.length)throw Error('empty');
   $('.flow-selector').replaceChildren(...flows.map((f,i)=>makeButton(f.title,()=>{
@@ -351,11 +382,8 @@ fetch('screens.json?v=original9',{signal:AbortSignal.timeout(15000)}).then(r=>{i
   if (phone && !device) {
     const shortcuts=document.createElement('nav');
     shortcuts.className='phone-shortcuts';shortcuts.setAttribute('aria-label','常用场景');
-    for (const [id,label] of [['home','首页'],['recommend','餐厅推荐'],['compare','同店比价'],['profile','个人中心']]) {
-      const b=makeButton(label,()=>{
-        const matching=flows.findIndex(f=>f.steps.some(step=>step.id===id));
-        guided=matching>=0;if(guided){flow=matching;renderFlow();}show(id);
-      });
+    for (const [id,label] of data.shortcuts || [['home','首页'],['recommend','餐厅推荐'],['compare','同店比价'],['profile','个人中心']]) {
+      const b=makeButton(label,()=>selectFrame(id));
       b.dataset.shortcut=id;shortcuts.append(b);
     }
     $('.viewer').prepend(shortcuts);
@@ -363,7 +391,7 @@ fetch('screens.json?v=original9',{signal:AbortSignal.timeout(15000)}).then(r=>{i
 
   const initialLoad=loadId+1;
   await show(start,false);
-  if(loadId===initialLoad && !failed && !reduced.matches && !device)setPlaying(true);
+  if(loadId===initialLoad && !failed && !reduced.matches && !device && !capturedPhone)setPlaying(true);
 }).catch(()=>{
   failed=true;setPlaying(false);$('.load-error').hidden=false;$('.image-loading').hidden=true;
 });

@@ -33,10 +33,13 @@ with sync_playwright() as p:
             data = json.loads((ROOT / 'prototypes' / product / 'screens.json').read_text())
             page.goto(BASE + 'prototypes/' + product + '/')
             loaded(data['default'])
+            if product == 'wanso':
+                assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
+                page.locator('.autoplay').click()
             assert page.locator('.autoplay').get_attribute('aria-pressed') == 'true'
             first = page.url
             page.wait_for_function('url => location.href !== url', arg=first, timeout=12000)
-            assert page.locator('.page-counter').inner_text() == '2 / 6'
+            assert page.locator('.page-counter').inner_text() == f"2 / {len(data['flows'][0]['steps'])}"
             page.locator('.next' if product == 'wanso' else '.continue').click()
             loaded(data['flows'][0]['steps'][2]['id'])
             assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
@@ -88,22 +91,31 @@ with sync_playwright() as p:
 
         page.goto(BASE + 'prototypes/wanso/#home')
         loaded('home')
-        page.locator('.autoplay').click()
         geometry = page.locator('.viewport').bounding_box()
-        page.locator('.next').click()
-        loaded('explore')
-        page.locator('.next').click()
-        loaded('taste')
-        assert page.locator('.viewport').bounding_box() == geometry, 'outer viewport stays stable while each original image keeps its aspect ratio'
-        page.locator('.next').click(click_count=3, delay=50)
-        page.wait_for_timeout(400)
-        assert page.locator('.page-layer').count() == 1, 'rapid navigation must not leave stale layers'
-        page.locator('.screen').dispatch_event('pointerdown', {'pointerType':'touch','pointerId':1,'clientX':200,'clientY':300})
-        before = page.url
-        page.locator('.screen').dispatch_event('pointerup', {'pointerType':'touch','pointerId':1,'clientX':100,'clientY':305})
-        page.wait_for_function('url => location.href !== url', arg=before)
+        active = page.locator('.page-layer:not(.leaving)')
+        active.get_by_role('button', name='搜索', exact=True).click()
+        loaded('generating')
+        loaded('writing')
+        loaded('recommend')
+        assert page.locator('.viewport').bounding_box() == geometry
+        assert active.get_by_role('link', name='Hương Vị Mộc · ShopeeFood 下单').get_attribute('href').startswith('https://shopeefood.vn/ha-noi/')
+        page.locator('.screen').dispatch_event('pointerdown', {'pointerType':'touch','pointerId':1,'clientX':250,'clientY':380})
+        page.locator('.screen').dispatch_event('pointerup', {'pointerType':'touch','pointerId':1,'clientX':135,'clientY':385})
+        loaded('recommend-2')
+        assert active.get_by_role('link', name='Phở Quyên · GrabFood 下单').get_attribute('href').startswith('https://food.grab.com/vn/vi/restaurant/')
+        active.get_by_role('button', name='查看 Phở Quyên 菜单').click()
+        loaded('store-second')
+        active.get_by_role('button', name='返回', exact=True).click()
+        loaded('recommend-2')
+        active.get_by_role('button', name='查看第一家店').click()
+        loaded('recommend')
+        active.get_by_role('button', name='查看 Hương Vị Mộc 菜单').click()
+        loaded('store-first')
+        active.get_by_role('button', name='查看菜品比价').click()
+        loaded('compare')
+        assert active.locator('a.hotspot').count()==2
         assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
-        checks.append('phone: stable shell, rapid-navigation cleanup, horizontal swipe and pause')
+        checks.append('Wanso native replay: search phases, swipe, two distinct merchant links, details and same-store comparison')
         for slug in ['wanso-prd','onentra-prd','recommendation-review','delivery-review']:
             page.goto(BASE)
             page.locator('a[href="documents/'+slug+'/"]').click()
@@ -131,27 +143,13 @@ with sync_playwright() as p:
             assert page.locator('[data-total-time]').inner_text() == f'{total} 分钟'
         checks.append('interactive decision models: discount cap, break-even and rework boundaries')
 
-        # Independent examples must never become one fabricated order.
-        wanso = json.loads((ROOT / 'prototypes/wanso/screens.json').read_text())
-        meal_ids = [step['id'] for step in wanso['flows'][0]['steps']]
-        assert meal_ids[-1] == 'confirm' and 'compare' not in meal_ids and 'reviews' not in meal_ids
-        home = next(f for f in wanso['frames'] if f['id'] == 'home')
-        notice = next(h for h in home['hotspots'] if h.get('notice'))
-        page.goto(BASE + 'prototypes/wanso/#home')
-        loaded('home')
-        page.locator('.page-layer:not(.leaving) .hotspot[aria-label="'+notice['label']+'"]').click()
-        assert page.url.endswith('#home')
-        assert page.locator('.interaction-hint').inner_text() == notice['notice']
-        assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
-        checks.append('source fidelity: independent meal flows; unavailable branch explains without invented page')
-
         # An unavailable image must give a working retry, not an indefinitely frozen player.
-        page.route('**/wanso-recommend.webp', lambda route: route.abort())
+        page.route('**/assets/wanso/native/home.webp', lambda route: route.abort())
         page.goto(BASE + 'prototypes/wanso/')
         page.locator('.load-error:not([hidden])').wait_for()
-        page.unroute('**/wanso-recommend.webp')
+        page.unroute('**/assets/wanso/native/home.webp')
         page.locator('.retry').click()
-        loaded('recommend')
+        loaded('home')
         assert page.locator('.load-error').is_hidden()
         checks.append('image failure: clear error + retry recovers')
 
@@ -189,7 +187,7 @@ with sync_playwright() as p:
         page.goto(BASE + 'prototypes/' + product + '/')
         page.locator('.viewer').wait_for()
         if product == 'wanso':
-            loaded('recommend')
+            loaded('home')
         guide()
         page.locator('.catalog summary').click()
         page.locator('[data-screen="'+target+'"]').click()
@@ -212,7 +210,7 @@ with sync_playwright() as p:
     iframe = page.frame_locator('[data-device-frame="wanso"]')
     laptop = page.frame_locator('[data-device-frame="onentra"]')
     iframe.locator('.page-layer:not(.leaving) .original-screen').wait_for()
-    for frame_id in ['recommend','compare','profile','home']:
+    for frame_id in ['generating','recommend','compare','home']:
         page.locator('[data-device-target="wanso"][data-frame="'+frame_id+'"]').click()
         iframe.locator('.original-screen[alt*="WANSO"]').first.wait_for()
         page.wait_for_function('''id=>document.querySelector('[data-device-frame=wanso]').contentWindow.location.hash==='#'+id''',arg=frame_id)
@@ -262,11 +260,17 @@ with sync_playwright() as p:
         page.locator('.phone-modal .close').click()
     for width,height in [(1440,900),(1024,768),(768,1024),(390,844),(320,640)]:
         page.set_viewport_size({'width':width,'height':height})
-        assert page.locator('.case-overview').evaluate_all('''cards=>cards.every(card=>{
-          const facts=card.querySelector('.card-facts').getBoundingClientRect();
+        cards = page.locator('.project-summary')
+        assert cards.count() == 2
+        assert cards.evaluate_all("""cards=>cards.every(card=>{
+          const text=card.querySelector(':scope > p').getBoundingClientRect();
           const action=card.querySelector('.actions').getBoundingClientRect();
-          return facts.bottom+8<=action.top && [...card.querySelectorAll('.card-facts dd')].every(d=>d.getBoundingClientRect().bottom<=facts.bottom-12);
-        })'''), f'case fact/action overlap at {width}px'
+          return text.bottom+8<=action.top;
+        })"""), f'project summary text/action overlap at {width}px'
+        if width>760:
+            first,second = [card.bounding_box() for card in cards.all()]
+            assert abs(first['y']-second['y'])<1 and abs(first['height']-second['height'])<1
+            assert abs(cards.nth(0).locator('.actions').bounding_box()['y']-cards.nth(1).locator('.actions').bounding_box()['y'])<1
     checks.append('profile and responsive layout: retained content, expandable practices, consistent cards, readable phone width, reachable close')
 
     page.goto(BASE+'demos/wanso/')

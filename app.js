@@ -43,15 +43,15 @@ document.querySelector('[data-launch]')?.addEventListener('click', event => {
 });
 function openPhone(trigger, frameId = '') {
   const frame = document.createElement('iframe');
-  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=original9', document.querySelector('.identity').href).href;
+  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=device2', document.querySelector('.identity').href).href;
   if (/^[a-z0-9-]{1,40}$/.test(frameId)) frame.src += '#' + frameId;
-  frame.title = 'Wanso 原版页面与操作流程';
+  frame.title = 'Wanso iOS 操作流程';
   frame.referrerPolicy = 'no-referrer';
   frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
   const focusTarget = overlay.contains(trigger) ? opener : trigger;
   overlay.classList.remove('workspace-modal');
   overlay.classList.add('phone-modal');
-  openDialog(focusTarget, 'Wanso · 原版交互原型', frame);
+  openDialog(focusTarget, 'Wanso · 手机端原型', frame);
 }
 document.addEventListener('click', event => {
   const phoneLink = event.target.closest('[data-phone-preview]');
@@ -182,11 +182,10 @@ addEventListener('message', event => {
   if (event.data?.type === 'portfolio-close-phone' && overlay.contains(frame)) overlay.close();
 });
 
-// One navigation protocol serves the original desktop prototype and the usable phone app.
+// The desktop prototype and phone replay use the same navigation messages.
 const deviceFrames = [...document.querySelectorAll('[data-device-frame]')];
 const deviceDescriptions = {
-  onentra: {'23':'把模型、资料和工具放进同一个任务，直到得到可复核的文件。','24':'先明确本次任务，再引用模型、技能和业务资料。','37':'查看任务安排、执行状态和计划，让重复工作有序发生。','49':'在会话空间集中查看、筛选和预览本次任务的文件。'},
-  wanso: {home:'从想吃什么开始，核对餐厅、菜单和费用，再作出选择。',recommend:'按城市、预算筛选采集菜单，查看餐厅和餐品，再决定这一餐。',compare:'保持餐品与份数一致，填写配送费和优惠，比较两家平台的预计总价。',profile:'调整日常口味、餐费预算和应用设置，偏好保存在当前浏览器。'}
+  onentra: {'23':'把模型、资料和工具放进同一个任务，直到得到可复核的文件。','24':'先明确本次任务，再引用模型、技能和业务资料。','37':'查看任务安排、执行状态和计划，让重复工作有序发生。','49':'在会话空间集中查看、筛选和预览本次任务的文件。'}
 };
 document.querySelectorAll('[data-device-target]').forEach(button => button.addEventListener('click', () => {
   const frame = deviceFrames.find(frame => frame.dataset.deviceFrame === button.dataset.deviceTarget);
@@ -204,7 +203,7 @@ addEventListener('message', event => {
   section.querySelectorAll('button').forEach(button=>button.disabled=false);
   section.querySelector('[data-device-action="previous"]').disabled = !event.data.canPrevious;
 
-  section.querySelectorAll('[data-frame]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.frame === id)));
+  section.querySelectorAll('[data-frame]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.frame === (event.data.section || id))));
 
   const description = section.querySelector('[data-device-description]');
   if (description) { description.textContent = deviceDescriptions[product]?.[id] || event.data.description; }

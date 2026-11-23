@@ -1,1906 +1,693 @@
 {
   "product": "wanso",
-  "default": "recommend",
+  "default": "home",
+  "shortcuts": [
+    [
+      "home",
+      "首页"
+    ],
+    [
+      "generating",
+      "生成过程"
+    ],
+    [
+      "recommend",
+      "两家店"
+    ],
+    [
+      "compare",
+      "同店比价"
+    ]
+  ],
   "frames": [
     {
       "id": "home",
       "title": "首页",
-      "group": "选餐入口",
-      "src": "../../assets/prototypes/wanso-home.webp",
-      "width": 1224,
-      "height": 2586,
-      "note": "首页原图填写的是 50,000 ₫ 以内的河粉，与汉堡示例分开查看。",
+      "group": "AI 选餐",
+      "src": "../../assets/wanso/native/home.webp",
+      "width": 804,
+      "height": 1748,
+      "note": "例子已经填好。点击原生搜索按钮，查看应用处理需求并展示两家店。",
       "hotspots": [
         {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
+          "label": "搜索",
+          "x": 71.642,
+          "y": 37.757,
+          "w": 20.896,
+          "h": 5.034,
+          "target": "generating",
+          "runSearch": true
+        },
+        {
+          "label": "搜索历史",
+          "x": 77.612,
+          "y": 7.78,
+          "w": 19.154,
+          "h": 5.034,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
+        },
+        {
+          "label": "查看 Hương Vị Mộc",
+          "x": 2.985,
+          "y": 51.487,
+          "w": 51.244,
+          "h": 38.558,
+          "target": "store-first"
+        },
+        {
+          "label": "查看 Phở Quyên",
+          "x": 56.716,
+          "y": 51.487,
+          "w": 43.035,
+          "h": 38.558,
+          "target": "store-second"
         },
         {
           "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
+          "x": 28.856,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "explore"
         },
         {
           "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
+          "x": 50.0,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "saved"
         },
         {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
+          "label": "我的",
+          "x": 71.144,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
+        }
+      ]
+    },
+    {
+      "id": "generating",
+      "title": "处理选餐需求",
+      "group": "AI 选餐",
+      "src": "../../assets/wanso/native/generating.webp",
+      "width": 804,
+      "height": 1748,
+      "note": "原生搜索阶段显示需求理解、选取数据源、查找平台、排序和整理答案。",
+      "hotspots": [
+        {
+          "label": "返回",
+          "x": 2.488,
+          "y": 7.551,
+          "w": 10.945,
+          "h": 5.034,
+          "target": "home"
         },
         {
-          "label": "进入推荐示例",
-          "x": 7,
-          "y": 30,
-          "w": 85,
-          "h": 14,
-          "notice": "这张原图是首页的独立示例，原稿没有对应详情。请选择上方“餐厅推荐”或“同店比价”，查看独立示例。"
+          "label": "探索",
+          "x": 28.856,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "explore"
         },
         {
-          "label": "查看历史",
-          "target": "history",
-          "x": 72,
-          "y": 9,
-          "w": 20,
-          "h": 5
+          "label": "收藏",
+          "x": 50.0,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "saved"
         },
         {
-          "label": "查看推荐餐厅",
-          "x": 7,
-          "y": 50,
-          "w": 85,
-          "h": 33,
-          "notice": "这张原图是首页的独立示例，原稿没有对应详情。请选择上方“餐厅推荐”或“同店比价”，查看独立示例。"
+          "label": "我的",
+          "x": 71.144,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
         }
       ],
-      "sourcePage": 6
+      "afterSearch": "writing"
+    },
+    {
+      "id": "writing",
+      "title": "整理推荐理由",
+      "group": "AI 选餐",
+      "src": "../../assets/wanso/native/writing.webp",
+      "width": 804,
+      "height": 1748,
+      "note": "查找并排序后，客户端显示正在整理答案。",
+      "hotspots": [
+        {
+          "label": "返回",
+          "x": 2.488,
+          "y": 7.551,
+          "w": 10.945,
+          "h": 5.034,
+          "target": "home"
+        },
+        {
+          "label": "探索",
+          "x": 28.856,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "explore"
+        },
+        {
+          "label": "收藏",
+          "x": 50.0,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "saved"
+        },
+        {
+          "label": "我的",
+          "x": 71.144,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
+        }
+      ],
+      "section": "generating",
+      "afterSearch": "recommend"
+    },
+    {
+      "id": "recommend",
+      "title": "Hương Vị Mộc 的推荐",
+      "group": "AI 选餐",
+      "src": "../../assets/wanso/native/recommend.webp",
+      "width": 804,
+      "height": 1748,
+      "note": "Hương Vị Mộc 的鸡腿河粉菜单价是 73,000 ₫，符合 80,000 ₫ 的餐费预算。本卡对应 ShopeeFood。",
+      "hotspots": [
+        {
+          "label": "返回",
+          "x": 2.488,
+          "y": 7.551,
+          "w": 10.945,
+          "h": 5.034,
+          "target": "home"
+        },
+        {
+          "label": "查看 Hương Vị Mộc 菜单",
+          "x": 13.93,
+          "y": 31.236,
+          "w": 54.726,
+          "h": 37.872,
+          "target": "store-first"
+        },
+        {
+          "label": "Hương Vị Mộc · ShopeeFood 下单",
+          "x": 45.771,
+          "y": 69.68,
+          "w": 20.398,
+          "h": 5.149,
+          "href": "https://shopeefood.vn/ha-noi/pho-ga-huong-vi-moc-thai-thinh"
+        },
+        {
+          "label": "查看第二家店",
+          "x": 71.393,
+          "y": 31.236,
+          "w": 22.637,
+          "h": 44.394,
+          "target": "recommend-2"
+        },
+        {
+          "label": "探索",
+          "x": 28.856,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "explore"
+        },
+        {
+          "label": "收藏",
+          "x": 50.0,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "saved"
+        },
+        {
+          "label": "我的",
+          "x": 71.144,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
+        }
+      ],
+      "swipeLeft": "recommend-2"
+    },
+    {
+      "id": "recommend-2",
+      "title": "Phở Quyên 的推荐",
+      "group": "AI 选餐",
+      "src": "../../assets/wanso/native/recommend-2.webp",
+      "width": 804,
+      "height": 1748,
+      "note": "Phở Quyên 的鸡腿汤河粉菜单价是 59,000 ₫。这张卡对应 GrabFood，左侧仍保留上一家店的入口。",
+      "hotspots": [
+        {
+          "label": "返回",
+          "x": 2.488,
+          "y": 7.551,
+          "w": 10.945,
+          "h": 5.034,
+          "target": "home"
+        },
+        {
+          "label": "查看第一家店",
+          "x": 13.93,
+          "y": 31.236,
+          "w": 18.657,
+          "h": 37.872,
+          "target": "recommend"
+        },
+        {
+          "label": "Hương Vị Mộc · ShopeeFood 下单",
+          "x": 13.93,
+          "y": 69.68,
+          "w": 15.92,
+          "h": 5.149,
+          "href": "https://shopeefood.vn/ha-noi/pho-ga-huong-vi-moc-thai-thinh"
+        },
+        {
+          "label": "查看 Phở Quyên 菜单",
+          "x": 35.075,
+          "y": 31.236,
+          "w": 54.975,
+          "h": 37.872,
+          "target": "store-second"
+        },
+        {
+          "label": "Phở Quyên · GrabFood 下单",
+          "x": 67.413,
+          "y": 69.68,
+          "w": 19.652,
+          "h": 5.149,
+          "href": "https://food.grab.com/vn/vi/restaurant/ph%E1%BB%9F-quy%C3%AAn-ph%E1%BB%9F-g%C3%A0-tr%E1%BB%99n-%C4%91%E1%BA%B7c-bi%E1%BB%87t-delivery/5-C2BBJAVWGEEVTJ?"
+        },
+        {
+          "label": "探索",
+          "x": 28.856,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "explore"
+        },
+        {
+          "label": "收藏",
+          "x": 50.0,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "saved"
+        },
+        {
+          "label": "我的",
+          "x": 71.144,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
+        }
+      ],
+      "section": "recommend",
+      "swipeRight": "recommend"
+    },
+    {
+      "id": "store-first",
+      "title": "Hương Vị Mộc 店铺详情",
+      "group": "餐厅与比价",
+      "src": "../../assets/wanso/native/store-first.webp",
+      "width": 804,
+      "height": 1748,
+      "note": "这家店有两个平台入口。商家详情分别列出配送信息、优惠与订单跳转，菜品标价另行比较。",
+      "hotspots": [
+        {
+          "label": "返回",
+          "x": 0.746,
+          "y": 5.263,
+          "w": 10.945,
+          "h": 5.034,
+          "target": "recommend"
+        },
+        {
+          "label": "Hương Vị Mộc · ShopeeFood 下单",
+          "x": 2.736,
+          "y": 73.455,
+          "w": 46.269,
+          "h": 4.462,
+          "href": "https://shopeefood.vn/ha-noi/pho-ga-huong-vi-moc-thai-thinh"
+        },
+        {
+          "label": "Hương Vị Mộc · GrabFood 下单",
+          "x": 50.995,
+          "y": 73.455,
+          "w": 46.269,
+          "h": 4.462,
+          "href": "https://food.grab.com/vn/vi/restaurant/ph-g-hng-v-mc-thi-thnh-delivery/5-C6N3V7WEAP5YG2?"
+        },
+        {
+          "label": "查看菜品比价",
+          "x": 2.488,
+          "y": 78.833,
+          "w": 94.527,
+          "h": 11.785,
+          "target": "compare"
+        },
+        {
+          "label": "探索",
+          "x": 28.856,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "explore"
+        },
+        {
+          "label": "收藏",
+          "x": 50.0,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "saved"
+        },
+        {
+          "label": "我的",
+          "x": 71.144,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
+        }
+      ],
+      "section": "compare"
+    },
+    {
+      "id": "compare",
+      "title": "同店菜品比价",
+      "group": "餐厅与比价",
+      "src": "../../assets/wanso/native/compare.webp",
+      "width": 804,
+      "height": 1748,
+      "note": "同一分店的 Phở gà đùi 标价为 GrabFood 68,000 ₫、ShopeeFood 73,000 ₫。菜单价格与配送费分开展示。",
+      "hotspots": [
+        {
+          "label": "Hương Vị Mộc · ShopeeFood 下单",
+          "x": 2.736,
+          "y": 21.625,
+          "w": 46.269,
+          "h": 4.577,
+          "href": "https://shopeefood.vn/ha-noi/pho-ga-huong-vi-moc-thai-thinh"
+        },
+        {
+          "label": "Hương Vị Mộc · GrabFood 下单",
+          "x": 50.995,
+          "y": 21.625,
+          "w": 46.269,
+          "h": 4.577,
+          "href": "https://food.grab.com/vn/vi/restaurant/ph-g-hng-v-mc-thi-thnh-delivery/5-C6N3V7WEAP5YG2?"
+        },
+        {
+          "label": "探索",
+          "x": 28.856,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "explore"
+        },
+        {
+          "label": "收藏",
+          "x": 50.0,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "saved"
+        },
+        {
+          "label": "我的",
+          "x": 71.144,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
+        }
+      ]
+    },
+    {
+      "id": "store-second",
+      "title": "Phở Quyên 店铺详情",
+      "group": "餐厅与比价",
+      "src": "../../assets/wanso/native/store-second.webp",
+      "width": 804,
+      "height": 1748,
+      "note": "可查看店铺、平台配送信息与菜单。该推荐卡的下单按钮指向 Phở Quyên 的 GrabFood 页面。",
+      "hotspots": [
+        {
+          "label": "返回",
+          "x": 0.0,
+          "y": 5.263,
+          "w": 10.945,
+          "h": 5.034,
+          "target": "recommend-2"
+        },
+        {
+          "label": "Phở Quyên · GrabFood 下单",
+          "x": 1.741,
+          "y": 69.794,
+          "w": 96.517,
+          "h": 5.034,
+          "href": "https://food.grab.com/vn/vi/restaurant/ph%E1%BB%9F-quy%C3%AAn-ph%E1%BB%9F-g%C3%A0-tr%E1%BB%99n-%C4%91%E1%BA%B7c-bi%E1%BB%87t-delivery/5-C2BBJAVWGEEVTJ?"
+        },
+        {
+          "label": "探索",
+          "x": 28.856,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "explore"
+        },
+        {
+          "label": "收藏",
+          "x": 50.0,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "saved"
+        },
+        {
+          "label": "我的",
+          "x": 71.144,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
+        }
+      ],
+      "section": "recommend"
     },
     {
       "id": "explore",
       "title": "探索",
-      "group": "选餐入口",
-      "src": "../../assets/prototypes/wanso-explore.webp",
-      "width": 1224,
-      "height": 2586,
-      "note": "发现页以午餐场景、平台信息和餐厅卡片帮助用户缩小选择范围。",
+      "group": "手机应用",
+      "src": "../../assets/wanso/native/explore.webp",
+      "width": 804,
+      "height": 1748,
+      "note": "浏览原应用的用餐场景、店铺卡片及两平台比较入口。",
       "hotspots": [
         {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
+          "label": "搜索历史",
+          "x": 77.612,
+          "y": 7.78,
+          "w": 19.154,
+          "h": 5.034,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
         },
         {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
+          "label": "比较平台",
+          "x": 80.348,
+          "y": 34.783,
+          "w": 14.179,
+          "h": 5.034,
+          "target": "compare"
+        },
+        {
+          "label": "查看 Hương Vị Mộc",
+          "x": 3.98,
+          "y": 51.831,
+          "w": 37.313,
+          "h": 16.59,
+          "target": "store-first"
+        },
+        {
+          "label": "查看 Phở Quyên",
+          "x": 43.532,
+          "y": 51.831,
+          "w": 37.313,
+          "h": 16.59,
+          "target": "store-second"
+        },
+        {
+          "label": "首页",
+          "x": 5.97,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "home"
         },
         {
           "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
+          "x": 50.0,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "saved"
         },
         {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "查看餐厅",
-          "x": 7,
-          "y": 50,
-          "w": 85,
-          "h": 30,
-          "notice": "这张原图是首页的独立示例，原稿没有对应详情。请选择上方“餐厅推荐”或“同店比价”，查看独立示例。"
-        },
-        {
-          "label": "查看会话历史",
-          "target": "history",
-          "x": 73,
-          "y": 9,
-          "w": 19,
-          "h": 5
+          "label": "我的",
+          "x": 71.144,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
         }
-      ],
-      "sourcePage": 6
-    },
-    {
-      "id": "taste",
-      "title": "饮食偏好",
-      "group": "选餐入口",
-      "src": "../../assets/prototypes/wanso-taste.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "设置平时的饮食习惯，作为推荐背景；本次明确提出的要求优先。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "预算、会员与排序",
-          "target": "order",
-          "x": 7,
-          "y": 39,
-          "w": 84,
-          "h": 8
-        }
-      ],
-      "sourcePage": 7
-    },
-    {
-      "id": "order",
-      "title": "预算、会员与排序",
-      "group": "选餐入口",
-      "src": "../../assets/prototypes/wanso-order.webp",
-      "width": 1224,
-      "height": 2586,
-      "note": "默认预算、平台会员条件，以及均衡、距离优先、价格优先；会员价格为原稿示意。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        }
-      ],
-      "sourcePage": 7
-    },
-    {
-      "id": "recommend",
-      "title": "首次推荐",
-      "group": "推荐与追问",
-      "src": "../../assets/prototypes/wanso-recommend.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "示例需求：有点累，想吃牛肉芝士汉堡，餐费不超过 60,000 ₫，不吃鸡。推荐保留明确理由和菜单依据。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回首页",
-          "target": "home",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "查看完整菜单",
-          "target": "menu",
-          "x": 10,
-          "y": 76,
-          "w": 39,
-          "h": 5
-        },
-        {
-          "label": "确认已选餐品",
-          "target": "confirm",
-          "x": 51,
-          "y": 76,
-          "w": 39,
-          "h": 5
-        },
-        {
-          "label": "继续追问",
-          "target": "followup",
-          "x": 6,
-          "y": 85,
-          "w": 87,
-          "h": 7
-        }
-      ],
-      "sourcePage": 8
-    },
-    {
-      "id": "alternative",
-      "title": "另一家候选",
-      "group": "推荐与追问",
-      "src": "../../assets/prototypes/wanso-alternative.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "向下查看麦当劳候选。两家店的商品、价格与推荐理由分别展示，避免只给一段文字。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回首页",
-          "target": "home",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "查看完整菜单",
-          "target": "mcd",
-          "x": 10,
-          "y": 76,
-          "w": 39,
-          "h": 5
-        },
-        {
-          "label": "确认已选餐品",
-          "x": 51,
-          "y": 76,
-          "w": 39,
-          "h": 5,
-          "notice": "这是麦当劳的备选，原稿没有它的最终确认页。可继续追问、查看菜单，或返回首选餐厅。"
-        },
-        {
-          "label": "继续追问",
-          "target": "followup",
-          "x": 6,
-          "y": 85,
-          "w": 87,
-          "h": 7
-        }
-      ],
-      "sourcePage": 8
-    },
-    {
-      "id": "followup",
-      "title": "比较候选",
-      "group": "推荐与追问",
-      "src": "../../assets/prototypes/wanso-followup.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "追问另一家有什么可选时，继续沿用这一轮的预算与忌口，不让用户重新输入。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回上一页",
-          "target": "recommend",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "继续下一轮追问",
-          "target": "water",
-          "x": 7,
-          "y": 85,
-          "w": 87,
-          "h": 7
-        }
-      ],
-      "sourcePage": 9
-    },
-    {
-      "id": "water",
-      "title": "调整饮品",
-      "group": "推荐与追问",
-      "src": "../../assets/prototypes/wanso-water.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "保留 49,000 ₫ 的汉堡，加 10,000 ₫ 的水，重新确认 59,000 ₫ 的餐费。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回上一页",
-          "target": "followup",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "继续下一轮追问",
-          "target": "egg",
-          "x": 7,
-          "y": 85,
-          "w": 87,
-          "h": 7
-        }
-      ],
-      "sourcePage": 9
-    },
-    {
-      "id": "restaurant",
-      "title": "餐厅信息",
-      "group": "菜单与比价",
-      "src": "../../assets/prototypes/wanso-restaurant.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "从推荐进入餐厅详情，查看为什么适合、现有菜单及平台入口。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回首页",
-          "target": "home",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "查看菜单",
-          "target": "menu",
-          "x": 8,
-          "y": 75,
-          "w": 43,
-          "h": 6
-        },
-        {
-          "label": "确认餐品",
-          "target": "confirm",
-          "x": 53,
-          "y": 75,
-          "w": 39,
-          "h": 6
-        }
-      ],
-      "sourcePage": 10
-    },
-    {
-      "id": "menu",
-      "title": "汉堡菜单",
-      "group": "菜单与比价",
-      "src": "../../assets/prototypes/wanso-menu.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "菜单完整展示双层、芝士和配料差异，用户可以核对推荐所引用的价格。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回上一页",
-          "target": "restaurant",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "汉堡单品",
-          "target": "menu",
-          "x": 8,
-          "y": 16,
-          "w": 18,
-          "h": 4
-        },
-        {
-          "label": "查看套餐",
-          "target": "combo",
-          "x": 26,
-          "y": 16,
-          "w": 18,
-          "h": 4
-        },
-        {
-          "label": "加料和饮品",
-          "target": "extras",
-          "x": 44,
-          "y": 16,
-          "w": 18,
-          "h": 4
-        }
-      ],
-      "sourcePage": 10
-    },
-    {
-      "id": "combo",
-      "title": "套餐菜单",
-      "group": "菜单与比价",
-      "src": "../../assets/prototypes/wanso-combo.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "在单品与套餐之间查看份量和组合，选择之前先明确具体包含什么。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回上一页",
-          "target": "restaurant",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "汉堡单品",
-          "target": "menu",
-          "x": 8,
-          "y": 16,
-          "w": 18,
-          "h": 4
-        },
-        {
-          "label": "查看套餐",
-          "target": "combo",
-          "x": 26,
-          "y": 16,
-          "w": 18,
-          "h": 4
-        },
-        {
-          "label": "加料和饮品",
-          "target": "extras",
-          "x": 44,
-          "y": 16,
-          "w": 18,
-          "h": 4
-        }
-      ],
-      "sourcePage": 11
-    },
-    {
-      "id": "extras",
-      "title": "加料与饮品",
-      "group": "菜单与比价",
-      "src": "../../assets/prototypes/wanso-extras.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "单独查看饮品、配料和加价；修改选择后，餐费需要重新计算。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回上一页",
-          "target": "restaurant",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "汉堡单品",
-          "target": "menu",
-          "x": 8,
-          "y": 16,
-          "w": 18,
-          "h": 4
-        },
-        {
-          "label": "查看套餐",
-          "target": "combo",
-          "x": 26,
-          "y": 16,
-          "w": 18,
-          "h": 4
-        },
-        {
-          "label": "加料和饮品",
-          "target": "extras",
-          "x": 44,
-          "y": 16,
-          "w": 18,
-          "h": 4
-        }
-      ],
-      "sourcePage": 11
-    },
-    {
-      "id": "mcd",
-      "title": "麦当劳单品",
-      "group": "菜单与比价",
-      "src": "../../assets/prototypes/wanso-mcd.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "同样的菜单结构用于另一家候选店，保留单品名称、说明和实际采集价格。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回上一页",
-          "target": "alternative",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "切换单品与套餐",
-          "target": "mcd-combo",
-          "x": 8,
-          "y": 16,
-          "w": 44,
-          "h": 4
-        }
-      ],
-      "sourcePage": 12
-    },
-    {
-      "id": "mcd-combo",
-      "title": "麦当劳套餐",
-      "group": "菜单与比价",
-      "src": "../../assets/prototypes/wanso-mcd-combo.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "套餐配图和价格共同展示，帮助用户区分单品与组合。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回上一页",
-          "target": "alternative",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "切换单品与套餐",
-          "target": "mcd",
-          "x": 8,
-          "y": 16,
-          "w": 44,
-          "h": 4
-        }
-      ],
-      "sourcePage": 12
-    },
-    {
-      "id": "egg",
-      "title": "追加配料",
-      "group": "推荐与追问",
-      "src": "../../assets/prototypes/wanso-egg.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "双层芝士汉堡单独加蛋 59,000 ₫，现成含蛋单品 55,000 ₫；再配水为 65,000 ₫，超出 60,000 ₫ 餐费预算。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回上一页",
-          "target": "water",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "继续下一轮追问",
-          "target": "confirm",
-          "x": 7,
-          "y": 85,
-          "w": 87,
-          "h": 7
-        },
-        {
-          "label": "保留双层汉堡配水",
-          "target": "confirm",
-          "x": 6,
-          "y": 67,
-          "w": 43,
-          "h": 5
-        },
-        {
-          "label": "查看加蛋配水的选择",
-          "notice": "原稿展示单层加蛋配水 54,000 ₫ 的备选，未提供这条分支的确认页。当前演示保留已提供的双层汉堡配水结局。",
-          "x": 52,
-          "y": 67,
-          "w": 42,
-          "h": 5
-        }
-      ],
-      "sourcePage": 13
-    },
-    {
-      "id": "confirm",
-      "title": "最终确认",
-      "group": "推荐与追问",
-      "src": "../../assets/prototypes/wanso-confirm.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "确认已选汉堡和饮品、费用小计与后续平台入口。配送费另行核实。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回上一页",
-          "target": "egg",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "在 GrabFood 核实订单",
-          "notice": "原型到此确认 59,000 ₫ 餐费。实际订单仍需在 GrabFood 核实，展示页不会创建订单。",
-          "x": 6,
-          "y": 68,
-          "w": 88,
-          "h": 5
-        }
-      ],
-      "sourcePage": 13
-    },
-    {
-      "id": "compare",
-      "title": "同店比价",
-      "group": "菜单与比价",
-      "src": "../../assets/prototypes/wanso-compare.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "独立烤鸡菜单示例：280,000 与 250,000 ₫ 为同品标价，配送费另算，与汉堡对话无关。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回首页",
-          "target": "home",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        },
-        {
-          "label": "查看完整价格对照",
-          "target": "compare-full",
-          "x": 6,
-          "y": 42,
-          "w": 87,
-          "h": 41
-        }
-      ],
-      "sourcePage": 14
-    },
-    {
-      "id": "compare-full",
-      "title": "优惠价格对照",
-      "group": "菜单与比价",
-      "src": "../../assets/prototypes/wanso-compare-full.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "按同一菜单逐项查看两家平台价格，并保留明确的前往平台按钮。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回上一页",
-          "target": "compare",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        }
-      ],
-      "sourcePage": 14
-    },
-    {
-      "id": "reviews",
-      "title": "餐厅评价",
-      "group": "菜单与比价",
-      "src": "../../assets/prototypes/wanso-reviews.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "Bún Bò Huế Cô Ba 粉店评价，来源平台逐条标注。不是 Bamysu 汉堡店的评价。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回首页",
-          "target": "home",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        }
-      ],
-      "sourcePage": 15
-    },
-    {
-      "id": "delivery",
-      "title": "平台费用",
-      "group": "菜单与比价",
-      "src": "../../assets/prototypes/wanso-delivery.webp",
-      "width": 1224,
-      "height": 2808,
-      "note": "同一家店并排显示平台、预计送达、运费与菜单，不把标价等同于到手价。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "返回上一页",
-          "target": "reviews",
-          "x": 4,
-          "y": 4,
-          "w": 11,
-          "h": 6
-        }
-      ],
-      "sourcePage": 16
-    },
-    {
-      "id": "save",
-      "title": "选择收藏夹",
-      "group": "收藏与历史",
-      "src": "../../assets/prototypes/wanso-save.webp",
-      "width": 1224,
-      "height": 2586,
-      "note": "从推荐结果打开收藏夹选择器，按使用场景保存餐厅。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "选择收藏夹",
-          "target": "saved",
-          "x": 15,
-          "y": 49,
-          "w": 70,
-          "h": 15
-        }
-      ],
-      "sourcePage": 17
+      ]
     },
     {
       "id": "saved",
-      "title": "收藏列表",
-      "group": "收藏与历史",
-      "src": "../../assets/prototypes/wanso-saved.webp",
-      "width": 1224,
-      "height": 2586,
-      "note": "收藏保留餐厅信息与平台入口，可按午餐、常吃等场景组织。",
+      "title": "收藏",
+      "group": "手机应用",
+      "src": "../../assets/wanso/native/saved.webp",
+      "width": 804,
+      "height": 1748,
+      "note": "在收藏页查看餐厅收藏夹和最近订单。",
       "hotspots": [
         {
+          "label": "搜索历史",
+          "x": 77.612,
+          "y": 7.78,
+          "w": 19.154,
+          "h": 5.034,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
+        },
+        {
+          "label": "发现新美食",
+          "x": 3.98,
+          "y": 54.348,
+          "w": 92.04,
+          "h": 6.407,
+          "target": "explore"
+        },
+        {
           "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
+          "x": 5.97,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "home"
         },
         {
           "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
+          "x": 28.856,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "target": "explore"
         },
         {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏夹选择",
-          "target": "save",
-          "x": 72,
-          "y": 11,
-          "w": 19,
-          "h": 5
-        }
-      ],
-      "sourcePage": 17
-    },
-    {
-      "id": "history",
-      "title": "会话历史",
-      "group": "收藏与历史",
-      "src": "../../assets/prototypes/wanso-history.webp",
-      "width": 1224,
-      "height": 2586,
-      "note": "回到最近的选餐记录继续追问，不丢失之前确认的预算与选择。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 92.3,
-          "w": 20,
-          "h": 5.6
-        },
-        {
-          "label": "恢复最近对话",
-          "target": "recommend",
-          "x": 8,
-          "y": 23,
-          "w": 83,
-          "h": 11
-        }
-      ],
-      "sourcePage": 18
-    },
-    {
-      "id": "profile",
-      "title": "个人中心",
-      "group": "个人中心与设置",
-      "src": "../../assets/prototypes/wanso-profile.png",
-      "width": 1080,
-      "height": 2400,
-      "native": true,
-      "note": "已打开 Android 应用核对的真实页面。这里演示设置的层级与入口，不连接个人账户。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 89.8,
-          "w": 20,
-          "h": 4.5
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 89.8,
-          "w": 20,
-          "h": 4.5
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 89.8,
-          "w": 20,
-          "h": 4.5
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 89.8,
-          "w": 20,
-          "h": 4.5
-        },
-        {
-          "label": "口味档案",
-          "target": "taste",
-          "x": 5,
-          "y": 23,
-          "w": 90,
-          "h": 17
-        },
-        {
-          "label": "订单偏好",
-          "target": "native-order",
-          "x": 5,
-          "y": 44.8,
-          "w": 90,
-          "h": 5.7
-        },
-        {
-          "label": "应用设置",
-          "target": "settings",
-          "x": 5,
-          "y": 58.3,
-          "w": 90,
-          "h": 5.7
-        },
-        {
-          "label": "通知设置",
-          "x": 5,
-          "y": 51.5,
-          "w": 90,
-          "h": 5.5,
-          "notice": "公开原型保留原应用的通知设置入口；个人账户操作未接入此演示。"
-        },
-        {
-          "label": "账户与安全",
-          "x": 5,
-          "y": 65,
-          "w": 90,
-          "h": 5.5,
-          "notice": "公开原型保留原应用的账户与安全入口；个人账户操作未接入此演示。"
-        },
-        {
-          "label": "反馈",
-          "x": 5,
-          "y": 71.6,
-          "w": 90,
-          "h": 5.5,
-          "notice": "公开原型保留原应用的反馈入口；个人账户操作未接入此演示。"
-        },
-        {
-          "label": "退出账户",
-          "x": 5,
-          "y": 82,
-          "w": 90,
-          "h": 5.5,
-          "notice": "公开原型保留原应用的退出账户入口；个人账户操作未接入此演示。"
-        }
-      ]
-    },
-    {
-      "id": "native-order",
-      "title": "订单偏好 · 安卓",
-      "group": "个人中心与设置",
-      "src": "../../assets/prototypes/wanso-native-order.png",
-      "width": 1080,
-      "height": 2400,
-      "native": true,
-      "note": "已打开 Android 应用核对的真实页面。这里演示设置的层级与入口，不连接个人账户。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 89.8,
-          "w": 20,
-          "h": 4.5
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 89.8,
-          "w": 20,
-          "h": 4.5
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 89.8,
-          "w": 20,
-          "h": 4.5
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 89.8,
-          "w": 20,
-          "h": 4.5
-        },
-        {
-          "label": "返回个人中心",
-          "target": "profile",
-          "x": 3,
-          "y": 4,
-          "w": 10,
-          "h": 5
-        },
-        {
-          "label": "平台会员",
-          "x": 5,
-          "y": 14,
-          "w": 90,
-          "h": 6,
-          "notice": "此处保留原应用的平台会员界面。原型只演示流程，不会修改你的账户设置。"
-        },
-        {
-          "label": "默认预算",
-          "x": 5,
-          "y": 36,
-          "w": 90,
-          "h": 6,
-          "notice": "此处保留原应用的默认预算界面。原型只演示流程，不会修改你的账户设置。"
-        },
-        {
-          "label": "比较模式",
-          "x": 5,
-          "y": 51,
-          "w": 90,
-          "h": 6,
-          "notice": "此处保留原应用的比较模式界面。原型只演示流程，不会修改你的账户设置。"
-        }
-      ]
-    },
-    {
-      "id": "settings",
-      "title": "应用设置 · 安卓",
-      "group": "个人中心与设置",
-      "src": "../../assets/prototypes/wanso-settings.png",
-      "width": 1080,
-      "height": 2400,
-      "native": true,
-      "note": "已打开 Android 应用核对的真实页面。这里演示设置的层级与入口，不连接个人账户。",
-      "hotspots": [
-        {
-          "label": "首页",
-          "target": "home",
-          "x": 7,
-          "y": 89.8,
-          "w": 20,
-          "h": 4.5
-        },
-        {
-          "label": "探索",
-          "target": "explore",
-          "x": 29,
-          "y": 89.8,
-          "w": 20,
-          "h": 4.5
-        },
-        {
-          "label": "收藏",
-          "target": "saved",
-          "x": 51,
-          "y": 89.8,
-          "w": 20,
-          "h": 4.5
-        },
-        {
-          "label": "个人中心",
-          "target": "profile",
-          "x": 73,
-          "y": 89.8,
-          "w": 20,
-          "h": 4.5
-        },
-        {
-          "label": "返回个人中心",
-          "target": "profile",
-          "x": 3,
-          "y": 4,
-          "w": 10,
-          "h": 5
-        },
-        {
-          "label": "主题",
-          "x": 5,
-          "y": 12.6,
-          "w": 90,
-          "h": 6,
-          "notice": "此处保留原应用的主题界面。原型只演示流程，不会修改你的账户设置。"
-        },
-        {
-          "label": "语言",
-          "x": 5,
-          "y": 19.4,
-          "w": 90,
-          "h": 6,
-          "notice": "此处保留原应用的语言界面。原型只演示流程，不会修改你的账户设置。"
-        },
-        {
-          "label": "震动反馈",
-          "x": 5,
-          "y": 32,
-          "w": 90,
-          "h": 6,
-          "notice": "此处保留原应用的震动反馈界面。原型只演示流程，不会修改你的账户设置。"
-        },
-        {
-          "label": "数据分享",
-          "x": 5,
-          "y": 40,
-          "w": 90,
-          "h": 6,
-          "notice": "此处保留原应用的数据分享界面。原型只演示流程，不会修改你的账户设置。"
-        },
-        {
-          "label": "清除记忆",
-          "x": 5,
-          "y": 48,
-          "w": 90,
-          "h": 6,
-          "notice": "此处保留原应用的清除记忆界面。原型只演示流程，不会修改你的账户设置。"
+          "label": "我的",
+          "x": 71.144,
+          "y": 90.618,
+          "w": 21.393,
+          "h": 6.522,
+          "notice": "本段回放以选餐、推荐与菜单为主。"
         }
       ]
     }
   ],
-  "tour": [
-    "home",
-    "recommend",
-    "followup",
-    "water",
-    "confirm",
-    "compare"
-  ],
   "flows": [
     {
-      "id": "meal",
-      "title": "汉堡选餐 · 60,000 ₫ 预算",
-      "summary": "同一段选餐对话：双层牛肉芝士、不吃鸡、不喝汽水，最后选择汉堡配水。",
-      "steps": [
-        {
-          "id": "recommend",
-          "label": "理解本次要求",
-          "caption": "牛肉芝士、不要鸡肉，餐费上限 60,000 ₫。",
-          "reason": "原稿第 8 页：首选 Bamysu 49,000 ₫ 双层芝士汉堡。菜单价格与解释使用同一依据。"
-        },
-        {
-          "id": "alternative",
-          "label": "了解第二家候选",
-          "caption": "再看麦当劳的 59,000 ₫ 备选。",
-          "reason": "这是同一次推荐的第二家餐厅；先展示备选，后续“第二家”才有明确指代。"
-        },
-        {
-          "id": "followup",
-          "label": "追问第二家贵不贵",
-          "caption": "沿用刚才的候选顺序，比较单点和套餐。",
-          "reason": "原稿第 9 页：用户追问第二家，指向麦当劳，不应突然换成其他餐厅。"
-        },
-        {
-          "id": "water",
-          "label": "保留汉堡，搭配水",
-          "caption": "49,000 ₫ 汉堡 + 10,000 ₫ 水 = 59,000 ₫。",
-          "reason": "继承双层牛肉的选择，把“不喝汽水”落实为矿泉水；这里是餐费，尚未计配送。"
-        },
-        {
-          "id": "egg",
-          "label": "比较加蛋的取舍",
-          "caption": "含蛋组合 55,000 ₫；再带水则超预算。",
-          "reason": "原稿第 13 页：单独加蛋需 59,000 ₫，现成含蛋汉堡 55,000 ₫；含蛋再带水为 65,000 ₫。不能把更便宜的单品误写成更便宜的一餐。"
-        },
-        {
-          "id": "confirm",
-          "label": "最终选择汉堡配水",
-          "caption": "确认 59,000 ₫ 餐费，再前往 GrabFood。",
-          "reason": "用户最终保留双层芝士汉堡与水，没有采用加蛋方案。原稿此处不接烤鸡比价，那是另一个示例。"
-        }
-      ]
-    },
-    {
-      "id": "menu",
-      "title": "菜单核对 · 两家汉堡店",
-      "summary": "对照两家候选的单品、套餐与加料；展示菜单不等于推荐其中所有菜品。",
-      "steps": [
-        {
-          "id": "restaurant",
-          "label": "Bamysu 餐厅信息",
-          "caption": "查看首选餐厅和推荐理由。",
-          "reason": "原稿第 10 页：这是 Hamburger Bamysu，不是粉店或烤鸡店。"
-        },
-        {
-          "id": "menu",
-          "label": "核对汉堡单品",
-          "caption": "单层、双层、三层和加蛋组合分别标价。",
-          "reason": "份量与配料必须一起核对；同样叫汉堡，不代表可以直接比较总价。"
-        },
-        {
-          "id": "combo",
-          "label": "浏览多人套餐",
-          "caption": "可以浏览多人组合，但本次仍是单人预算。",
-          "reason": "原稿第 11 页：完整菜单包含超出本次预算的选项，浏览范围与推荐范围分开。"
-        },
-        {
-          "id": "extras",
-          "label": "检查饮品与加料",
-          "caption": "水和配料集中呈现，便于重新计算。",
-          "reason": "选择加料会改变总餐费；不应默认把所有备选项累加。"
-        },
-        {
-          "id": "mcd",
-          "label": "切换到麦当劳单品",
-          "caption": "现在查看第二家候选，不是同店比价。",
-          "reason": "原稿第 12 页：不同餐厅的菜单独立展示；鸡肉和鱼肉可浏览，不进入“不吃鸡”的本次推荐。"
-        },
-        {
-          "id": "mcd-combo",
-          "label": "区分单点与套餐",
-          "caption": "套餐包含配餐，不能与单个汉堡等量比较。",
-          "reason": "标清汉堡、薯条和饮料，解释超出预算的部分。"
-        }
-      ]
-    },
-    {
-      "id": "price",
-      "title": "独立示例 · 烤鸡菜单比价",
-      "summary": "原稿第 14 页的另一个需求示例，与“不吃鸡”的汉堡对话无关。",
-      "steps": [
-        {
-          "id": "compare",
-          "label": "比较同品菜单价格",
-          "caption": "烤鸡套餐 280,000 / 250,000 ₫，差 30,000 ₫。",
-          "reason": "比较的是同份量菜单标价；差价不包含配送费，也不是前一段汉堡订单的报价。"
-        },
-        {
-          "id": "compare-full",
-          "label": "核对优惠后的价格",
-          "caption": "优惠表逐项列出菜品，配送费仍需另算。",
-          "reason": "不同菜品的优惠条件可能不同，不可将某一行的折扣套到整份菜单。"
-        }
-      ]
-    },
-    {
-      "id": "pho",
-      "title": "独立示例 · 粉店评价与下单",
-      "summary": "Bún Bò Huế Cô Ba 粉店：评价与两平台费用是同一家店的连续示例。",
-      "steps": [
-        {
-          "id": "reviews",
-          "label": "查看粉店评价",
-          "caption": "原稿第 15 页：评价标明来自哪个平台。",
-          "reason": "这里只展示粉店食客评价；不能把它接成 Bamysu 汉堡店的评价。"
-        },
-        {
-          "id": "delivery",
-          "label": "选择下单平台",
-          "caption": "GrabFood 免配送；ShopeeFood 八五折、封顶 15,000 ₫。",
-          "reason": "原稿第 16 页：ShopeeFood 配送费 12,000 ₫。优惠封顶和餐费共同影响选择，跳转后仍需核实最终金额。"
-        }
-      ]
-    },
-    {
-      "id": "reuse",
-      "title": "首页、偏好与复访",
-      "summary": "独立功能导览：输入入口、偏好、收藏和历史；不表示同一个订单的连续状态。",
+      "title": "选餐与推荐",
+      "summary": "用 80,000 ₫ 的餐费预算，查看两家有鸡腿河粉的店。",
       "steps": [
         {
           "id": "home",
-          "label": "首页输入",
-          "caption": "首页展示的是 50,000 ₫ 以内的河粉需求。",
-          "reason": "原稿第 6 页：首页这句话与汉堡对话是不同示例，不能把点击此输入框伪装成发送汉堡需求。"
+          "label": "提交用餐需求",
+          "caption": "点击搜索",
+          "reason": "例子已经填好。点击原生搜索按钮，查看应用处理需求并展示两家店。"
         },
         {
-          "id": "explore",
-          "label": "发现附近餐厅",
-          "caption": "没有明确菜名时，也可以浏览餐厅卡片。",
-          "reason": "探索页提供另一种进入方式，不强迫所有用户先与 AI 对话。"
+          "id": "generating",
+          "label": "理解需求",
+          "caption": "根据这次搜索选择数据源",
+          "reason": "原生搜索阶段显示需求理解、选取数据源、查找平台、排序和整理答案。"
         },
         {
-          "id": "taste",
-          "label": "设置口味偏好",
-          "caption": "记录常用喜好，本次要求仍优先。",
-          "reason": "原稿第 7 页的口味设置；不把这里的长期喜好当作本次任务的硬约束。"
+          "id": "writing",
+          "label": "整理答案",
+          "caption": "汇集两家店的推荐依据",
+          "reason": "查找并排序后，客户端显示正在整理答案。"
         },
         {
-          "id": "order",
-          "label": "预算、会员与排序",
-          "caption": "默认预算、平台会员条件和 AI 排序各自可见。",
-          "reason": "这页并非仅选择平台：还包括均衡、距离优先、价格优先。会员权益是原型示意，不代表当前平台售价。"
+          "id": "recommend",
+          "label": "第一家店",
+          "caption": "查看理由或打开 ShopeeFood",
+          "reason": "Hương Vị Mộc 的鸡腿河粉菜单价是 73,000 ₫，符合 80,000 ₫ 的餐费预算。本卡对应 ShopeeFood。"
         },
         {
-          "id": "save",
-          "label": "选择收藏分组",
-          "caption": "将喜欢的餐厅放入指定收藏夹。",
-          "reason": "原稿第 17 页：收藏是跨次访问的组织方式，不等于创建订单。"
-        },
-        {
-          "id": "saved",
-          "label": "从收藏再次找到店",
-          "caption": "按分组查看已经保存的餐厅。",
-          "reason": "再次使用时仍需核对当时价格与可售状态，历史选择不等于实时承诺。"
-        },
-        {
-          "id": "history",
-          "label": "找回历史会话",
-          "caption": "回看原来的餐厅卡片与推荐理由。",
-          "reason": "原稿第 18 页还展示分享网页；当前原型目录保留手机历史页，不声称已展示分享网页。"
+          "id": "recommend-2",
+          "label": "第二家店",
+          "caption": "滑动查看另一家，或打开 GrabFood",
+          "reason": "Phở Quyên 的鸡腿汤河粉菜单价是 59,000 ₫。这张卡对应 GrabFood，左侧仍保留上一家店的入口。"
         }
       ]
     },
     {
-      "id": "profile",
-      "title": "个人中心 · 偏好与设置",
-      "summary": "按实际 Android 应用核对：个人中心是一级页面，口味、订单偏好与应用设置分别进入。",
+      "title": "店铺、订单与比价",
+      "summary": "点开店铺看菜单和平台入口，同一分店可以按菜品比较。",
       "steps": [
         {
-          "id": "profile",
-          "label": "进入个人中心",
-          "caption": "先看口味档案，再按需要进入设置。",
-          "reason": "第四个底部导航是个人中心，不应直接等同于口味偏好。"
+          "id": "store-first",
+          "label": "Hương Vị Mộc",
+          "caption": "查看同一家店的两个平台",
+          "reason": "这家店有两个平台入口。商家详情分别列出配送信息、优惠与订单跳转，菜品标价另行比较。"
         },
         {
-          "id": "taste",
-          "label": "查看口味档案",
-          "caption": "记录日常习惯，为推荐提供背景。",
-          "reason": "本次任务里的预算、禁忌等明确要求优先于日常偏好。"
+          "id": "compare",
+          "label": "同店菜品比价",
+          "caption": "看鸡腿河粉和拌粉的两平台菜单价",
+          "reason": "同一分店的 Phở gà đùi 标价为 GrabFood 68,000 ₫、ShopeeFood 73,000 ₫。菜单价格与配送费分开展示。"
         },
         {
-          "id": "native-order",
-          "label": "查看订单偏好",
-          "caption": "预算、平台会员和推荐排序分别配置。",
-          "reason": "默认预算只在用户没有指定本次预算时生效。"
+          "id": "store-second",
+          "label": "Phở Quyên",
+          "caption": "查看另一家店的 GrabFood 入口和菜单",
+          "reason": "可查看店铺、平台配送信息与菜单。该推荐卡的下单按钮指向 Phở Quyên 的 GrabFood 页面。"
+        }
+      ]
+    },
+    {
+      "title": "探索与收藏",
+      "summary": "通过底部导航查看 iOS 的应用页面。",
+      "steps": [
+        {
+          "id": "explore",
+          "label": "探索",
+          "caption": "浏览用餐场景与餐厅",
+          "reason": "浏览原应用的用餐场景、店铺卡片及两平台比较入口。"
         },
         {
-          "id": "settings",
-          "label": "查看应用设置",
-          "caption": "主题、语言与行为设置集中管理。",
-          "reason": "对应用外观的调整应与选餐约束分开，不把设置全堆在一个页面。"
+          "id": "saved",
+          "label": "收藏",
+          "caption": "查看收藏夹和订单入口",
+          "reason": "在收藏页查看餐厅收藏夹和最近订单。"
         }
       ]
     }
