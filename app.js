@@ -39,11 +39,11 @@ document.querySelector('[data-launch]')?.addEventListener('click', event => {
 });
 function openPhone(trigger, frameId = '') {
   const frame = document.createElement('iframe');
-  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=routes4', document.querySelector('.identity').href).href;
+  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=prototype5', document.querySelector('.identity').href).href;
   if (/^[a-z0-9-]{1,40}$/.test(frameId)) frame.src += '#' + frameId;
   frame.title = 'Wanso iOS 操作流程';
   frame.referrerPolicy = 'no-referrer';
-  frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
+  frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
   const focusTarget = overlay.contains(trigger) ? opener : trigger;
   overlay.classList.remove('workspace-modal');
   overlay.classList.add('phone-modal');
@@ -178,7 +178,7 @@ addEventListener('message', event => {
   if (event.data?.type === 'portfolio-close-phone' && overlay.contains(frame)) overlay.close();
 });
 
-// The desktop prototype and phone replay use the same navigation messages.
+// Keep the phone controls synchronized with its current page.
 const deviceFrames = [...document.querySelectorAll('[data-device-frame]')];
 document.querySelectorAll('[data-device-target]').forEach(button => button.addEventListener('click', () => {
   const frame = deviceFrames.find(frame => frame.dataset.deviceFrame === button.dataset.deviceTarget);

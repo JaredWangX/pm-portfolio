@@ -2,7 +2,6 @@
 const $ = selector => document.querySelector(selector);
 const embed = new URLSearchParams(location.search).has('embed');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-document.body.classList.add('show-hotspots');
 document.body.classList.toggle('embed', embed);
 const screen = $('.screen'), viewport = $('.viewport');
 const phone = document.body.dataset.product === 'wanso';
@@ -120,7 +119,7 @@ function renderFrame(buildHotspots = true) {
   $('.page-title').textContent = f.title;
   $('.page-counter').textContent = position >= 0 ? `${position+1} / ${steps().length}` : `${current+1} / ${frames.length}`;
   $('.step-eyebrow').textContent = position >= 0 ? `${flows[flow].title} · ${String(position+1).padStart(2,'0')}` : '自由浏览 · ' + f.group;
-  $('.step-caption').textContent = step?.caption || `查看${f.title}，点击箭头翻页。`;
+  $('.step-caption').textContent = step?.caption || f.note;
   $('.page-description').textContent = step?.reason || f.note;
   $('.source-page')?.replaceChildren(document.createTextNode(
     capturedPhone ? 'iOS 模拟器截图 · 历史菜单样本' : '公开工作台截图'
@@ -136,36 +135,28 @@ function renderFrame(buildHotspots = true) {
     else b.removeAttribute('aria-current');
   }
   const nextId = steps()[(position+1) % steps().length]?.id;
-  const preferred = position >= 0 ? f.hotspots.find(h => h.target === nextId) : f.hotspots.find(h=>h.target && h.target!==f.id);
   for (const h of buildHotspots ? f.hotspots : []) {
     const select = () => {
       if (h.notice) {setPlaying(false);hint(h.notice);return;}
+      if (h.action) {
+        setPlaying(false);
+        window.wansoControls.open(h, f, screen, (id, runSearch = false, navigation = 'forward') => {
+          const target = navigation === 'back' ? screenHistory.at(-1)?.id || id : id;
+          return selectFrame(target, false, runSearch, navigation);
+        });
+        return;
+      }
       if (h.back) selectFrame(screenHistory.at(-1)?.id || h.target, false, false, 'back');
       else if (h.target) selectFrame(h.target, false, h.runSearch, h.nav ? 'reset' : h.swap ? 'preserve' : 'forward');
     };
-    let b;
-    const external = h.href && /^https:\/\/(food\.grab\.com|shopeefood\.vn)\//.test(h.href);
-    if (external) {
-      b = document.createElement('a');
-      b.className = 'hotspot';
-      b.href = h.href;
-      b.target = '_blank';
-      b.rel = 'noopener noreferrer';
-      b.draggable = false;
-      b.addEventListener('click', () => setPlaying(false));
-    } else b = makeButton('', select, 'hotspot');
+    const b = makeButton('', select, 'hotspot');
     b.setAttribute('aria-label',h.label); if(h.target) b.dataset.target = h.target;
     if (h.nav && h.target === f.id) b.setAttribute('aria-current', 'page');
     Object.assign(b.style,{left:h.x+'%',top:h.y+'%',width:h.w+'%',height:h.h+'%'});
-    if (h === preferred) b.classList.add('suggested');
-    if (!h.nav && !h.back && (h.target || h.href)) {
-      const dot = document.createElement('span');
-      dot.className = 'hotspot-dot';
-      dot.setAttribute('aria-hidden', 'true');
-      b.append(dot);
-    }
+    window.wansoControls?.register(b, h, f);
     activeLayer.querySelector(h.scroll ? '.scroll-content .hotspots' : ':scope > .hotspots').append(b);
   }
+  if (buildHotspots) window.wansoControls?.paint(activeLayer, f);
   if (buildHotspots) fit();
   if (location.hash !== '#' + f.id) history.replaceState(null, '', '#' + f.id);
   if (embed) parent.postMessage({type:'portfolio-frame-changed',frame:f.id,section:f.section,route:f.route,title:f.title,description:f.note,canPrevious:!$('.previous').disabled,counter:$('.page-counter').textContent},location.origin);
@@ -242,7 +233,7 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
     }
     // Reuse the decoded image and swap the complete frame on one paint.
     screen.replaceChildren(activeLayer);
-    document.querySelectorAll('.viewer button, .flow-dialog .viewer-tools button').forEach(b=>b.disabled=false);
+    document.querySelectorAll('.viewer button, .viewer-tools button').forEach(b=>b.disabled=false);
     renderFrame();
     const scroll = activeLayer.querySelector('.phone-scroll');
     if (scroll) scroll.scrollTop = restore?.scroll ?? scroll.scrollHeight * (frame.scroll.startAt || 0) / 100;
@@ -303,10 +294,6 @@ $('.autoplay').addEventListener('click',()=>{
   if (playing) setPlaying(false);
   else if (stepIndex()<0) {guided=true;show(steps()[0].id,false);setPlaying(true);}
   else setPlaying(true);
-});
-$('.hotspot-toggle').addEventListener('click',event=>{
-  const enabled=document.body.classList.toggle('show-hotspots');
-  event.currentTarget.setAttribute('aria-pressed',String(enabled));
 });
 $('.zoom-toggle').addEventListener('click',event=>{
   zoomed=!zoomed;
@@ -375,7 +362,7 @@ $('.retry').addEventListener('click',()=>{
   }
 });
 document.addEventListener('keydown',event=>{
-  if (flowDialog?.open) return;
+  if (flowDialog?.open || window.wansoControls?.isOpen()) return;
   if (event.key === 'Escape' && phone && expanded && !zoomed) parent.postMessage({type:'portfolio-close-phone'}, location.origin);
   if (event.altKey || event.ctrlKey || event.metaKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
   if (event.key==='ArrowRight') {event.preventDefault();next();}
@@ -414,12 +401,29 @@ if (phone) {
   close.setAttribute('aria-label', '关闭场景选择');
   heading.append(title, close);
   const pages = $('.review-side');
-  pages.prepend($('.catalog'));
-  flowDialog.append(heading, $('.viewer-tools'), pages);
+  const tools = $('.viewer-tools');
+  const wideReview = matchMedia('(min-width: 850px)');
+  const placeGuide = () => {
+    if (flowDialog.open) flowDialog.close();
+    const besidePhone = !embed && wideReview.matches;
+    document.body.classList.toggle('wide-phone-review', besidePhone);
+    if (besidePhone) {
+      pages.append(tools);
+      $('.review').append(pages);
+    } else flowDialog.append(tools, pages);
+  };
+  flowDialog.append(heading, tools);
   document.body.append(flowDialog);
+  wideReview.addEventListener('change', placeGuide);
+  placeGuide();
   const choose = makeButton('全部页面', () => {
     setPlaying(false);
     $('.catalog').open = true;
+    if (document.body.classList.contains('wide-phone-review')) {
+      $('.catalog summary').focus({preventScroll:true});
+      $('.catalog').scrollIntoView({block:'nearest'});
+      return;
+    }
     flowDialog.showModal();
     choose.setAttribute('aria-expanded','true');
   }, 'flow-toggle');
@@ -447,7 +451,7 @@ async function loadManifest() {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
   try {
-    const response = await fetch('screens.json?v=routes4', {signal: controller.signal});
+    const response = await fetch('screens.json?v=prototype5', {signal: controller.signal});
     if (!response.ok) throw Error('screens');
     const data = await response.json();
     frames = data.frames;

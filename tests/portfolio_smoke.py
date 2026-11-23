@@ -26,8 +26,13 @@ with sync_playwright() as p:
         page.wait_for_function('id => location.hash === "#"+id && !document.querySelector(".viewer").hasAttribute("aria-busy")', arg=frame_id)
 
     def guide():
-        if page.locator('.flow-toggle').count() and not page.locator('.flow-dialog').evaluate('(d)=>d.open'):
+        if (page.locator('.flow-toggle').count()
+                and not page.locator('body').evaluate('(body)=>body.classList.contains("wide-phone-review")')
+                and not page.locator('.flow-dialog').evaluate('(d)=>d.open')):
             page.locator('.flow-toggle').click()
+
+    def replay_path(product):
+        return 'prototypes/' + product + '/' + ('replay.html' if product == 'onentra' else '')
 
     def open_catalog():
         guide()
@@ -37,7 +42,7 @@ with sync_playwright() as p:
     if '--layout-only' not in sys.argv:
         for product in ['wanso', 'onentra']:
             data = json.loads((ROOT / 'prototypes' / product / 'screens.json').read_text())
-            page.goto(BASE + 'prototypes/' + product + '/')
+            page.goto(BASE + replay_path(product))
             loaded(data['default'])
             assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
             page.locator('.autoplay').click()
@@ -102,7 +107,19 @@ with sync_playwright() as p:
         loaded('writing')
         loaded('recommend')
         assert page.locator('.viewport').bounding_box() == geometry
-        assert active.get_by_role('link', name='Hương Vị Mộc · ShopeeFood 下单').get_attribute('href').startswith('https://shopeefood.vn/ha-noi/')
+        assert page.locator('.hotspot-dot, .hotspot-toggle').count() == 0
+        popups = []
+        page.on('popup', lambda popup: popups.append(popup.url))
+        active.get_by_role('button', name='Hương Vị Mộc · ShopeeFood 下单').click()
+        order = page.get_by_role('dialog', name='下单预览', exact=True)
+        assert '73,000 ₫' in order.inner_text()
+        assert '以平台结算为准' in order.inner_text()
+        order.get_by_role('button', name='查看菜单', exact=True).click()
+        assert 'Phở trộn gà đùi' in page.locator('.wanso-sheet').inner_text()
+        page.get_by_role('button', name='返回下单预览', exact=True).click()
+        page.keyboard.press('Escape')
+        assert page.locator('.wanso-sheet').is_hidden()
+        assert page.url.endswith('#recommend') and not popups
         screen = page.locator('.screen').bounding_box()
         start_x = screen['x'] + screen['width'] * .75
         center_y = screen['y'] + screen['height'] * .5
@@ -111,7 +128,11 @@ with sync_playwright() as p:
         page.mouse.move(screen['x'] + screen['width'] * .27, center_y, steps=10)
         page.mouse.up()
         loaded('recommend-2')
-        assert active.get_by_role('link', name='Phở Quyên · GrabFood 下单').get_attribute('href').startswith('https://food.grab.com/vn/vi/restaurant/')
+        active.get_by_role('button', name='Phở Quyên · GrabFood 下单').click()
+        assert '71,000 ₫' in order.inner_text()
+        assert '24,000 ₫ → 12,000 ₫' in order.inner_text()
+        order.get_by_role('button', name='关闭', exact=True).click()
+        assert page.url.endswith('#recommend-2') and not popups
         active.get_by_role('button', name='查看 Phở Quyên 菜单').click()
         loaded('store-second')
         active.get_by_role('button', name='返回', exact=True).click()
@@ -122,10 +143,16 @@ with sync_playwright() as p:
         loaded('store-first')
         active.get_by_role('button', name='查看菜品比价').click()
         loaded('compare')
-        assert active.locator('a.hotspot').count()==2
         assert active.locator('.phone-scroll').evaluate('(s)=>s.scrollTop>0')
+        active.get_by_role('button', name='Hương Vị Mộc · GrabFood 下单').click()
+        assert '68,000 ₫' in order.inner_text()
+        assert '40,000 ₫' in order.inner_text()
+        scroll_top = active.locator('.phone-scroll').evaluate('(s)=>s.scrollTop')
+        page.keyboard.press('Escape')
+        assert active.locator('.phone-scroll').evaluate('(s)=>s.scrollTop') == scroll_top
+        assert page.url.endswith('#compare') and not popups
         assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
-        checks.append('Wanso native replay: search phases, swipe, two distinct merchant links, details and same-store comparison')
+        checks.append('Wanso native replay: search, swipe, local order and menu sheets, comparison, preserved menu scroll, no popups')
 
         mobile = browser.new_context(**p.devices['iPhone 13'], reduced_motion='reduce')
         touch_page = mobile.new_page()
@@ -167,13 +194,16 @@ with sync_playwright() as p:
         loaded('summary-first')
         active.get_by_role('button', name='选择菜单翻译语言', exact=True).click()
         loaded('translate-first')
-        active.get_by_role('button', name='关闭菜单语言选项', exact=True).click()
+        active.get_by_role('button', name='中文', exact=True).click()
         loaded('summary-first')
+        active.get_by_role('button', name='翻译菜单', exact=True).click()
+        assert '鸡腿拌河粉' in page.get_by_role('dialog', name='菜单 · 中文', exact=True).inner_text()
+        page.keyboard.press('Escape')
         active.get_by_role('button', name='返回', exact=True).click()
         loaded('saved')
-        checks.append('native store summary and translation sheet return to their original page')
+        checks.append('native store summary and selected menu language correctly return to the source page')
 
-        page.goto(BASE + 'prototypes/onentra/?routes=1#23')
+        page.goto(BASE + replay_path('onentra') + '?routes=1#23')
         loaded('23')
         page.evaluate("window.originalImage = document.querySelector('.original-screen')")
         active.get_by_role('button',name='工作台',exact=True).click()
@@ -286,7 +316,7 @@ with sync_playwright() as p:
     checks.append('deep links: immediate, stable section position')
 
     for product, target in [('wanso','recommend'),('onentra','38')]:
-        page.goto(BASE + 'prototypes/' + product + '/')
+        page.goto(BASE + replay_path(product))
         page.locator('.viewer').wait_for()
         if product == 'wanso':
             loaded('home')
@@ -309,16 +339,26 @@ with sync_playwright() as p:
     assert page.locator('[data-device-project="wanso"]').is_visible()
     assert page.locator('[data-device-project="onentra"]').is_visible()
     iframe = page.frame_locator('[data-device-frame="wanso"]')
-    laptop = page.frame_locator('[data-device-frame="onentra"]')
+    laptop = page.frame_locator('[data-workbench-frame]')
     iframe.locator('.page-layer:not(.leaving) .original-screen').wait_for()
     for frame_id in ['generating','recommend','compare','home']:
         page.locator('[data-device-target="wanso"][data-frame="'+frame_id+'"]').click()
         iframe.locator('.original-screen[alt*="WANSO"]').first.wait_for()
         page.wait_for_function('''id=>document.querySelector('[data-device-frame=wanso]').contentWindow.location.hash==='#'+id''',arg=frame_id)
-    page.locator('.device-controls [data-device-target="onentra"][data-frame="49"]').click()
-    laptop.locator('.page-title').filter(has_text='文件管理').wait_for(state='attached')
-    laptop.get_by_role('button', name='预览渠道明细表').click()
-    laptop.locator('.page-title').filter(has_text='Excel 文件预览').wait_for(state='attached')
+    laptop.get_by_text('工作台', exact=True).first.wait_for()
+    workbench_frame = page.locator('[data-workbench-frame]')
+    workspace = workbench_frame.element_handle().content_frame()
+    workspace.evaluate('window.portfolioSmokeMarker = true')
+    page.locator('.device-controls [data-workbench-route="files"]').click()
+    # Use screen coordinates for the scaled laptop iframe, including across local/public origins.
+    sheet_link = laptop.locator('[data-action="file-preview"][data-id="case-weekly-sheet"]')
+    sheet_link.evaluate("el => el.scrollIntoView({block:'center', behavior:'instant'})")
+    workbench_frame.evaluate("el => el.scrollIntoView({block:'center', behavior:'instant'})")
+    x, y = sheet_link.evaluate("el => {const b=el.getBoundingClientRect();return [b.x+b.width/2,b.y+b.height/2]}")
+    left, top, scale = workbench_frame.evaluate("el => {const b=el.getBoundingClientRect();return [b.x,b.y,b.width/el.offsetWidth]}")
+    page.mouse.click(left + x * scale, top + y * scale)
+    laptop.get_by_role('dialog').get_by_text('下载文件', exact=True).wait_for()
+    assert workspace.evaluate('window.portfolioSmokeMarker === true')
     assert page.locator('[data-current-product]').get_attribute('href').endswith('/#files')
     checks.append('device stage: native Wanso and actual ONENTRA file preview')
 

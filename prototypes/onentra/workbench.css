@@ -1,0 +1,46 @@
+.workbench-page {
+  margin: 0;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background: #f6faff;
+  color: #193352;
+  font: 15px/1.5 "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+}
+.workbench-header {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 max(14px,env(safe-area-inset-left));
+  border-bottom: 1px solid #d5e3f5;
+  background: #f3f8ff;
+}
+.workbench-header a { color: #23579c; text-decoration: none; }
+.workbench-header a:hover { text-decoration: underline; }
+.workbench-header strong { font-size: 17px; color: #162d4a; }
+.workbench-links { display: flex; gap: 14px; }
+.workbench-full { height: calc(100svh - 55px); }
+.workbench-full iframe { width: 100%; height: 100%; display: block; border: 0; }
+.laptop-workbench { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 4px; background: #f6f9ff; }
+.laptop-workbench iframe { position: absolute; inset: 0 auto auto 0; border: 0; transform-origin: top left; }
+@media (max-width: 650px) {
+  .laptop-workbench { aspect-ratio: auto; height: min(650px, 77svh); min-height: 420px; }
+  .workbench-header { font-size: 13px; }
+  .workbench-links { gap: 9px; }
+}
+
+[data-workbench] { position: relative; }
+.workbench-poster {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: top center;
+  background: #f5f9fd;
+}
+.workbench-ready .workbench-poster { display: none; }
+[data-workbench]:not(.workbench-ready) [data-workbench-frame] { opacity: 0; pointer-events: none; }
