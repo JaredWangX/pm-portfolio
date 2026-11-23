@@ -5,6 +5,7 @@ Screenshots are optional evidence, not committed test fixtures.
 """
 import json
 import os
+import re
 import sys
 from pathlib import Path
 from playwright.sync_api import sync_playwright
@@ -99,8 +100,13 @@ with sync_playwright() as p:
         loaded('recommend')
         assert page.locator('.viewport').bounding_box() == geometry
         assert active.get_by_role('link', name='Hương Vị Mộc · ShopeeFood 下单').get_attribute('href').startswith('https://shopeefood.vn/ha-noi/')
-        page.locator('.screen').dispatch_event('pointerdown', {'pointerType':'touch','pointerId':1,'clientX':250,'clientY':380})
-        page.locator('.screen').dispatch_event('pointerup', {'pointerType':'touch','pointerId':1,'clientX':135,'clientY':385})
+        screen = page.locator('.screen').bounding_box()
+        start_x = screen['x'] + screen['width'] * .75
+        center_y = screen['y'] + screen['height'] * .5
+        page.mouse.move(start_x, center_y)
+        page.mouse.down()
+        page.mouse.move(screen['x'] + screen['width'] * .27, center_y, steps=10)
+        page.mouse.up()
         loaded('recommend-2')
         assert active.get_by_role('link', name='Phở Quyên · GrabFood 下单').get_attribute('href').startswith('https://food.grab.com/vn/vi/restaurant/')
         active.get_by_role('button', name='查看 Phở Quyên 菜单').click()
@@ -114,8 +120,41 @@ with sync_playwright() as p:
         active.get_by_role('button', name='查看菜品比价').click()
         loaded('compare')
         assert active.locator('a.hotspot').count()==2
+        assert active.locator('.phone-scroll').evaluate('(s)=>s.scrollTop>0')
         assert page.locator('.autoplay').get_attribute('aria-pressed') == 'false'
         checks.append('Wanso native replay: search phases, swipe, two distinct merchant links, details and same-store comparison')
+
+        mobile = browser.new_context(**p.devices['iPhone 13'], reduced_motion='reduce')
+        touch_page = mobile.new_page()
+        touch_page.goto(BASE + 'prototypes/wanso/#recommend')
+        cdp = mobile.new_cdp_session(touch_page)
+
+        def swipe(box, start, end):
+            for step in range(11):
+                fraction = step / 10
+                x, y = [first + (last - first) * fraction for first, last in zip(start, end)]
+                cdp.send('Input.dispatchTouchEvent', {
+                    'type': 'touchStart' if step == 0 else 'touchMove',
+                    'touchPoints': [{'x': box['x'] + x * box['width'], 'y': box['y'] + y * box['height']}],
+                })
+                touch_page.wait_for_timeout(16)
+            cdp.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
+
+        touch_page.locator('.screen[data-swipeable]').wait_for()
+        swipe(touch_page.locator('.screen').bounding_box(), (.78,.49), (.22,.49))
+        touch_page.wait_for_url('**/#recommend-2')
+        touch_page.get_by_role('button', name='查看 Phở Quyên 菜单').tap()
+        touch_page.wait_for_url('**/#store-second')
+        scroller = touch_page.locator('.phone-scroll')
+        scroller.wait_for()
+        assert scroller.evaluate('(s)=>s.scrollHeight > 1.5*s.clientHeight')
+        visible_box = scroller.bounding_box()
+        visible_box['height'] = min(visible_box['height'], touch_page.viewport_size['height'] - visible_box['y'] - 12)
+        swipe(visible_box, (.52,.8), (.52,.26))
+        touch_page.wait_for_function("document.querySelector('.phone-scroll').scrollTop > 80")
+        assert touch_page.evaluate("location.hash === '#store-second'")
+        mobile.close()
+        checks.append('real touch: horizontal restaurant switch and vertical scrolling inside the menu')
         for slug in ['wanso-prd','onentra-prd','recommendation-review','delivery-review']:
             page.goto(BASE)
             page.locator('a[href="documents/'+slug+'/"]').click()
@@ -144,14 +183,26 @@ with sync_playwright() as p:
         checks.append('interactive decision models: discount cap, break-even and rework boundaries')
 
         # An unavailable image must give a working retry, not an indefinitely frozen player.
-        page.route('**/assets/wanso/native/home.webp', lambda route: route.abort())
+        home_image = re.compile(r'/assets/wanso/native/home\.webp(?:\?|$)')
+        page.route(home_image, lambda route: route.abort())
         page.goto(BASE + 'prototypes/wanso/')
         page.locator('.load-error:not([hidden])').wait_for()
-        page.unroute('**/assets/wanso/native/home.webp')
+        page.unroute(home_image)
         page.locator('.retry').click()
         loaded('home')
         assert page.locator('.load-error').is_hidden()
         checks.append('image failure: clear error + retry recovers')
+
+        manifest = re.compile(r'/prototypes/wanso/screens\.json(?:\?|$)')
+        page.route(manifest, lambda route: route.fulfill(status=503, body='Temporarily unavailable'))
+        page.goto(BASE + 'prototypes/wanso/?retry-manifest=1#profile')
+        page.locator('.load-error:not([hidden])').wait_for()
+        page.evaluate('window.retryProbe = true')
+        page.unroute(manifest)
+        page.locator('.retry').click()
+        loaded('profile')
+        assert page.evaluate('window.retryProbe')
+        checks.append('manifest failure: retry restores requested page without reloading')
 
     page.goto(BASE)
     page.locator('[data-copy-email]').click()
@@ -215,8 +266,11 @@ with sync_playwright() as p:
         iframe.locator('.original-screen[alt*="WANSO"]').first.wait_for()
         page.wait_for_function('''id=>document.querySelector('[data-device-frame=wanso]').contentWindow.location.hash==='#'+id''',arg=frame_id)
     page.locator('.device-controls [data-device-target="onentra"][data-frame="49"]').click()
-    laptop.locator('.page-title').filter(has_text='会话文件').wait_for(state='attached')
-    checks.append('device stage: original Wanso pages and original laptop navigation')
+    laptop.locator('.page-title').filter(has_text='文件管理').wait_for(state='attached')
+    laptop.get_by_role('button', name='预览渠道明细表').click()
+    laptop.locator('.page-title').filter(has_text='Excel 文件预览').wait_for(state='attached')
+    assert page.locator('[data-current-product]').get_attribute('href').endswith('/#files')
+    checks.append('device stage: native Wanso and actual ONENTRA file preview')
 
     page.locator('.phone-project [data-phone-preview]').click()
     phone = page.frame_locator('.phone-modal iframe')

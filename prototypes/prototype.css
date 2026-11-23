@@ -128,6 +128,7 @@ body[data-capture=ios] .screen {
   border-radius: 9.5% / 4.4%;
   overflow: hidden;
   box-shadow: 0 0 0 1px #97aeca, 0 14px 30px #20467024;
+  container-type: inline-size;
 }
 body[data-capture=ios] .screen:has(.hotspot:focus-visible) {
   outline: 2px solid #2467c4;
@@ -138,3 +139,30 @@ body[data-capture=ios] .hotspot {
 }
 body[data-capture=ios] .screen[data-swipeable] { cursor: grab; }
 body[data-capture=ios] .screen[data-swipeable]:active { cursor: grabbing; }
+.phone-scroll {
+  position: absolute;
+  inset-inline: 0;
+  overflow: auto;
+  scrollbar-width: none;
+  touch-action: none;
+}
+.phone-scroll::-webkit-scrollbar { display: none; }
+.scroll-content { position: relative; }
+.screen-metric {
+  position: absolute;
+  background: #fff;
+  color: #203143;
+  font: 600 11px/1.3 -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  font-size: 3.22cqw;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.screen-metric[data-tone="distance"] { color: #498bc6; }
+.scroll-content > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+.phone-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }

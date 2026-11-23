@@ -1,11 +1,7 @@
 'use strict';
 
-// Deep links land immediately; smooth scrolling only starts after initial layout.
-addEventListener('load', () => {
-  const target = document.querySelector(':target');
-  if (target) target.scrollIntoView({behavior:'instant', block:'start'});
-  requestAnimationFrame(() => document.documentElement.classList.add('smooth-scroll'));
-}, {once:true});
+// Let the browser restore the anchor or the visitor's scroll position.
+requestAnimationFrame(() => document.documentElement.classList.add('smooth-scroll'));
 
 const menu = document.querySelector('.menu');
 const mobileNav = document.querySelector('#mobile-nav');
@@ -43,7 +39,7 @@ document.querySelector('[data-launch]')?.addEventListener('click', event => {
 });
 function openPhone(trigger, frameId = '') {
   const frame = document.createElement('iframe');
-  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=device2', document.querySelector('.identity').href).href;
+  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=devices3', document.querySelector('.identity').href).href;
   if (/^[a-z0-9-]{1,40}$/.test(frameId)) frame.src += '#' + frameId;
   frame.title = 'Wanso iOS 操作流程';
   frame.referrerPolicy = 'no-referrer';
@@ -184,9 +180,6 @@ addEventListener('message', event => {
 
 // The desktop prototype and phone replay use the same navigation messages.
 const deviceFrames = [...document.querySelectorAll('[data-device-frame]')];
-const deviceDescriptions = {
-  onentra: {'23':'把模型、资料和工具放进同一个任务，直到得到可复核的文件。','24':'先明确本次任务，再引用模型、技能和业务资料。','37':'查看任务安排、执行状态和计划，让重复工作有序发生。','49':'在会话空间集中查看、筛选和预览本次任务的文件。'}
-};
 document.querySelectorAll('[data-device-target]').forEach(button => button.addEventListener('click', () => {
   const frame = deviceFrames.find(frame => frame.dataset.deviceFrame === button.dataset.deviceTarget);
   frame?.contentWindow?.postMessage({type:'portfolio-show-frame',frame:button.dataset.frame},location.origin);
@@ -198,7 +191,7 @@ addEventListener('message', event => {
   if (event.origin !== location.origin || event.data?.type !== 'portfolio-frame-changed') return;
   const frame = deviceFrames.find(frame => frame.contentWindow === event.source);
   if (!frame) return;
-  const product = frame.dataset.deviceFrame, id = event.data.frame;
+  const id = event.data.frame;
   const section = frame.closest('[data-device-project]');
   section.querySelectorAll('button').forEach(button=>button.disabled=false);
   section.querySelector('[data-device-action="previous"]').disabled = !event.data.canPrevious;
@@ -206,7 +199,9 @@ addEventListener('message', event => {
   section.querySelectorAll('[data-frame]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.frame === (event.data.section || id))));
 
   const description = section.querySelector('[data-device-description]');
-  if (description) { description.textContent = deviceDescriptions[product]?.[id] || event.data.description; }
+  if (description) description.textContent = event.data.description;
+  const productLink = section.querySelector('[data-current-product]');
+  if (productLink && /^#[a-z0-9/-]+$/.test(event.data.route || '')) productLink.hash = event.data.route;
   const expand = section.querySelector('[data-phone-preview]');
   if (expand) expand.hash = id;
 });

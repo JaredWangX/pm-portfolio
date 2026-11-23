@@ -5,12 +5,16 @@
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const hero = document.querySelector('.portfolio-intro');
+  let heroVisible = true;
   let width = 1, height = 1, frame = 0, last = 0, time = 0;
   let pointer = {x:.72, y:.32}, aim = {...pointer};
-  const running = () => !document.hidden && !reduced.matches && !document.body.classList.contains('ambient-paused');
+  const running = () => heroVisible && !document.hidden && !reduced.matches && !document.body.classList.contains('ambient-paused');
   function resize() {
-    width = innerWidth; height = innerHeight;
-    const dpr = Math.min(devicePixelRatio || 1, 1.5);
+    const nextWidth = canvas.clientWidth, nextHeight = canvas.clientHeight;
+    if (width === nextWidth && height === nextHeight) return;
+    width = Math.max(1, nextWidth); height = Math.max(1, nextHeight);
+    const dpr = Math.min(devicePixelRatio || 1, width < 760 ? 1 : 1.5);
     canvas.width = width * dpr; canvas.height = height * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     draw();
@@ -56,7 +60,7 @@
   function tick(now) {
     frame=0;
     if (!running()) return;
-    if (now-last >= 32) {
+    if (now-last >= 40) {
       time += Math.min((now-last)/1000,.05);last=now;
       pointer.x+=(aim.x-pointer.x)*.06;pointer.y+=(aim.y-pointer.y)*.06;
       draw();
@@ -72,5 +76,9 @@
   addEventListener('portfolio-ambient',sync);
   document.addEventListener('visibilitychange',sync);
   reduced.addEventListener('change',sync);
+  if (hero) new IntersectionObserver(([entry]) => {
+    heroVisible = entry.isIntersecting;
+    sync();
+  }).observe(hero);
   resize();sync();
 })();

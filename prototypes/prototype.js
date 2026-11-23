@@ -39,12 +39,16 @@ function fit() {
 }
 function decoded(f) {
   if (!cached.has(f.id)) {
-    cached.set(f.id, new Promise((resolve, reject) => {
+    const entry = Promise.all([f.src, f.scroll?.src].filter(Boolean).map(src => new Promise((resolve, reject) => {
       const image = new Image();
-      const timeout = setTimeout(() => {cached.delete(f.id); reject(Error('image timeout'));}, 15000);
-      image.src = f.src;
-      image.decode().then(() => {clearTimeout(timeout);resolve(image);}).catch(error => {clearTimeout(timeout);cached.delete(f.id); reject(error);});
-    }));
+      const timeout = setTimeout(() => reject(Error('image timeout')), 12000);
+      image.src = src;
+      image.decode().then(() => resolve(image), reject).finally(() => clearTimeout(timeout));
+    }))).catch(error => {
+      if (cached.get(f.id) === entry) cached.delete(f.id);
+      throw error;
+    });
+    cached.set(f.id, entry);
   }
   // Bound decoded image memory while retaining the current page and nearby steps.
   if (cached.size > 8) {
@@ -119,8 +123,10 @@ function renderFrame() {
   $('.step-caption').textContent = step?.caption || `查看${f.title}，点击箭头翻页。`;
   $('.page-description').textContent = step?.reason || f.note;
   $('.source-page')?.replaceChildren(document.createTextNode(
-    capturedPhone ? 'iOS 模拟器截图 · 历史菜单样本' : f.sourcePage ? '原作品集 · 第 '+f.sourcePage+' 页' : '原版页面'
+    capturedPhone ? 'iOS 模拟器截图 · 历史菜单样本' : '公开工作台截图'
   ));
+  const liveLink = $('.live-link');
+  if (liveLink && !phone && /^#[a-z0-9/-]+$/.test(f.route || '')) liveLink.hash = f.route;
   $('.continue').textContent = position < 0 ? '回到流程 →' : position === steps().length-1 ? '重新体验 ↺' : '继续 →';
   $('.previous').disabled = position < 0 ? current === 0 : position === 0;
   $('.next').disabled = false;
@@ -131,7 +137,7 @@ function renderFrame() {
   }
   const nextId = steps()[(position+1) % steps().length]?.id;
   const preferred = position >= 0 ? f.hotspots.find(h => h.target === nextId) : f.hotspots.find(h=>h.target && h.target!==f.id);
-  activeLayer.querySelector('.hotspots').replaceChildren(...f.hotspots.map(h => {
+  for (const h of f.hotspots) {
     const select = () => {
       if (h.notice) {setPlaying(false);hint(h.notice);return;}
       if (h.target === f.id) {setPlaying(false);hint('你已经在这个页面。可点击其他发光点，或继续体验下一步。');}
@@ -150,12 +156,12 @@ function renderFrame() {
     b.setAttribute('aria-label',h.label); if(h.target) b.dataset.target = h.target;
     Object.assign(b.style,{left:h.x+'%',top:h.y+'%',width:h.w+'%',height:h.h+'%'});
     if (h === preferred) {b.classList.add('suggested');const dot=document.createElement('span');dot.className='hotspot-dot';dot.setAttribute('aria-hidden','true');b.append(dot);}
-    return b;
-  }));
+    activeLayer.querySelector(h.scroll ? '.scroll-content .hotspots' : ':scope > .hotspots').append(b);
+  }
   fit();
   history.replaceState(null,'','#'+f.id);
-  if (embed) parent.postMessage({type:'portfolio-frame-changed',frame:f.id,section:f.section,title:f.title,description:f.note,canPrevious:!$('.previous').disabled,counter:$('.page-counter').textContent},location.origin);
-  const upcoming = [nextId, steps()[(position+2) % steps().length]?.id, frames[current+1]?.id];
+  if (embed) parent.postMessage({type:'portfolio-frame-changed',frame:f.id,section:f.section,route:f.route,title:f.title,description:f.note,canPrevious:!$('.previous').disabled,counter:$('.page-counter').textContent},location.origin);
+  const upcoming = [f.swipeLeft, f.swipeRight, nextId, frames[current+1]?.id];
   for (const id of new Set(upcoming)) {
     const f = frames.find(f=>f.id===id);
     if (f && f.id!==frames[current].id) decoded(f).catch(()=>{});
@@ -173,7 +179,8 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
   $('.image-loading').textContent = '正在载入原版页面…';
   $('.load-error').hidden = true;
   try {
-    const image = await decoded(frames[index]);
+    const frame = frames[index];
+    const [image, scrollImage] = await decoded(frame);
     if (request !== loadId) return;
     const hadPage = current >= 0;
     const backwards = index < current;
@@ -191,14 +198,49 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
     picture.draggable = false;
     picture.alt = `${document.body.dataset.product.toUpperCase()} · ${frames[index].title} · 原版页面`;
     activeLayer.append(picture);
+    for (const metric of frame.metrics || []) {
+      const label = document.createElement('span');
+      label.className = 'screen-metric';
+      label.dataset.tone = metric.tone || '';
+      label.textContent = metric.text;
+      Object.assign(label.style, {
+        left: metric.x + '%', top: metric.y + '%', width: metric.w + '%'
+      });
+      activeLayer.append(label);
+    }
     // Keep the source image intact, including its own navigation and device frame.
     activeLayer.classList.toggle('native-page',phone && !!frames[index].native);
     const hotspots = document.createElement('div'); hotspots.className = 'hotspots';
     activeLayer.append(hotspots);
+    if (scrollImage) {
+      const scroll = document.createElement('div');
+      scroll.className = 'phone-scroll';
+      scroll.tabIndex = 0;
+      scroll.setAttribute('role', 'region');
+      scroll.setAttribute('aria-label', frame.title + '，上下滚动查看');
+      scroll.style.top = frame.scroll.top + '%';
+      scroll.style.height = frame.scroll.height + '%';
+      const content = document.createElement('div');
+      content.className = 'scroll-content';
+      const contentImage = scrollImage.cloneNode();
+      contentImage.width = scrollImage.naturalWidth;
+      contentImage.height = scrollImage.naturalHeight;
+      contentImage.draggable = false;
+      contentImage.alt = '';
+      const contentHotspots = document.createElement('div');
+      contentHotspots.className = 'hotspots';
+      content.append(contentImage, contentHotspots);
+      scroll.append(content);
+      activeLayer.append(scroll);
+    }
     screen.append(activeLayer);
     document.querySelectorAll('.viewer button, .flow-dialog .viewer-tools button').forEach(b=>b.disabled=false);
     renderFrame();
-    if (hadPage && !reduced.matches) {
+    if (frame.scroll?.startAt) {
+      const scroll = activeLayer.querySelector('.phone-scroll');
+      scroll.scrollTop = scroll.scrollHeight * frame.scroll.startAt / 100;
+    }
+    if (hadPage && !capturedPhone && !device && !reduced.matches) {
       transition = activeLayer.animate([
         {opacity:0,transform:`translateX(${backwards ? -12 : 12}px)`},
         {opacity:1,transform:'translateX(0)'}
@@ -223,6 +265,7 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
     setPlaying(false);
     $('.load-error').hidden = false;
     $('.load-error').dataset.retry = id;
+    $('.load-error').dataset.runSearch = String(Boolean(runSearch));
   } finally {
     clearTimeout(loadingNotice);
     if (request === loadId) {
@@ -271,26 +314,50 @@ $('.zoom-toggle').addEventListener('click',event=>{
 let swipeStart, ignoreClick = false;
 screen.addEventListener('pointerdown', event => {
   ignoreClick = false;
-  if ((event.pointerType === 'mouse' && !capturedPhone) || zoomed) return;
+  if (!event.isPrimary || event.button !== 0 || (event.pointerType === 'mouse' && !capturedPhone)) return;
+  const horizontal = !capturedPhone || screen.hasAttribute('data-swipeable');
+  const scroller = event.target.closest('.phone-scroll');
+  if ((!horizontal && !scroller) || (zoomed && !capturedPhone)) return;
   setPlaying(false);
-  swipeStart = {x:event.clientX,y:event.clientY,id:event.pointerId};
+  swipeStart = {
+    x: event.clientX, y: event.clientY, id: event.pointerId,
+    horizontal, scroller, top: scroller?.scrollTop, axis: ''
+  };
+});
+screen.addEventListener('pointermove', event => {
+  if (swipeStart?.id !== event.pointerId) return;
+  const dx = event.clientX - swipeStart.x, dy = event.clientY - swipeStart.y;
+  if (!swipeStart.axis) {
+    if (swipeStart.horizontal && Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.4) swipeStart.axis = 'x';
+    else if (swipeStart.scroller && Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) swipeStart.axis = 'y';
+    if (swipeStart.axis && !screen.hasPointerCapture(event.pointerId)) screen.setPointerCapture(event.pointerId);
+  }
+  if (swipeStart.axis === 'y') swipeStart.scroller.scrollTop = swipeStart.top - dy;
 });
 screen.addEventListener('pointercancel', () => {swipeStart = null;});
+screen.addEventListener('lostpointercapture', event => {
+  if (event.target === screen && swipeStart?.id === event.pointerId) swipeStart = null;
+});
 screen.addEventListener('pointerup', event => {
   if (!swipeStart || swipeStart.id !== event.pointerId) return;
   const dx = event.clientX - swipeStart.x, dy = event.clientY - swipeStart.y;
+  const {axis, horizontal} = swipeStart;
   swipeStart = null;
-  if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.6) {
-    ignoreClick = true;
+  const changedCard = horizontal && axis !== 'y' && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.4;
+  if (changedCard) {
     const frame = frames[current];
     const target = dx < 0 ? frame?.swipeLeft : frame?.swipeRight;
     if (target) selectFrame(target);
     else if (!capturedPhone) dx < 0 ? next() : previous();
-    setTimeout(() => {ignoreClick = false;}, 350);
   }
+  if (axis || changedCard) ignoreClick = true;
 });
 screen.addEventListener('click', event => {
-  if (ignoreClick) {event.preventDefault();event.stopImmediatePropagation();}
+  if (ignoreClick && event.detail > 0) {
+    ignoreClick = false;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
 }, true);
 $('.screen').addEventListener('click',event=>{
   if (!event.target.closest('.hotspot')) {
@@ -299,8 +366,8 @@ $('.screen').addEventListener('click',event=>{
   }
 });
 $('.retry').addEventListener('click',()=>{
-  if (!ready) location.reload();
-  else show($('.load-error').dataset.retry || frames[current]?.id || steps()[0].id);
+  if (!ready) loadManifest();
+  else show($('.load-error').dataset.retry || frames[current]?.id || steps()[0].id, true, false, $('.load-error').dataset.runSearch === 'true');
 });
 document.addEventListener('keydown',event=>{
   if (flowDialog?.open) return;
@@ -361,37 +428,68 @@ if (phone) {
     }
   });
 }
-fetch('screens.json?v=device2',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('screens');return r.json();}).then(async data=>{
-  frames=data.frames; flows=data.flows;
-  if(!frames.length || !flows.length)throw Error('empty');
-  $('.flow-selector').replaceChildren(...flows.map((f,i)=>makeButton(f.title,()=>{
-    flow=i;guided=true;renderFlow();show(steps()[0].id,true,true);
-  })));
-  const groups=[...new Set(frames.map(f=>f.group))];
-  for(const group of groups){
-    const h=document.createElement('h2');h.textContent=group;$('.screen-nav').append(h);
-    frames.filter(f=>f.group===group).forEach(f=>{
-      const b=makeButton(f.title,()=>{guided=false;show(f.id,true,true);});b.dataset.screen=f.id;$('.screen-nav').append(b);
-    });
-  }
-  $('.catalog-count').textContent=frames.length+' 页';
-  const start=frames.some(f=>f.id===location.hash.slice(1))?location.hash.slice(1):data.default;
-  const matching=flows.findIndex(f=>f.steps.some(s=>s.id===start));
-  if(matching>=0)flow=matching;
-  renderFlow(); ready=true;
-  if (phone && !device) {
-    const shortcuts=document.createElement('nav');
-    shortcuts.className='phone-shortcuts';shortcuts.setAttribute('aria-label','常用场景');
-    for (const [id,label] of data.shortcuts || [['home','首页'],['recommend','餐厅推荐'],['compare','同店比价'],['profile','个人中心']]) {
-      const b=makeButton(label,()=>selectFrame(id));
-      b.dataset.shortcut=id;shortcuts.append(b);
+async function loadManifest() {
+  $('.load-error').hidden = true;
+  $('.image-loading').hidden = false;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12000);
+  try {
+    const response = await fetch('screens.json?v=devices3', {signal: controller.signal});
+    if (!response.ok) throw Error('screens');
+    const data = await response.json();
+    frames = data.frames;
+    flows = data.flows;
+    if (!frames.length || !flows.length) throw Error('empty');
+    $('.flow-selector').replaceChildren(...flows.map((f, i) => makeButton(f.title, () => {
+      flow = i;
+      guided = true;
+      renderFlow();
+      show(steps()[0].id, true, true);
+    })));
+    const catalog = $('.screen-nav');
+    catalog.replaceChildren();
+    for (const group of new Set(frames.map(f => f.group))) {
+      const heading = document.createElement('h2');
+      heading.textContent = group;
+      catalog.append(heading);
+      for (const f of frames.filter(f => f.group === group)) {
+        const button = makeButton(f.title, () => {
+          guided = false;
+          show(f.id, true, true);
+        });
+        button.dataset.screen = f.id;
+        catalog.append(button);
+      }
     }
-    $('.viewer').prepend(shortcuts);
+    $('.catalog-count').textContent = frames.length + ' 页';
+    const requested = location.hash.slice(1);
+    const start = frames.some(f => f.id === requested) ? requested : data.default;
+    const matching = flows.findIndex(f => f.steps.some(s => s.id === start));
+    if (matching >= 0) flow = matching;
+    renderFlow();
+    ready = true;
+    if (phone && !device) {
+      const shortcuts = document.createElement('nav');
+      shortcuts.className = 'phone-shortcuts';
+      shortcuts.setAttribute('aria-label', '常用场景');
+      for (const [id, label] of data.shortcuts) {
+        const button = makeButton(label, () => selectFrame(id));
+        button.dataset.shortcut = id;
+        shortcuts.append(button);
+      }
+      $('.viewer').prepend(shortcuts);
+    }
+    const initialLoad = loadId + 1;
+    await show(start, false);
+    if (loadId === initialLoad && !failed && !reduced.matches && !device && !capturedPhone) setPlaying(true);
+  } catch {
+    ready = false;
+    failed = true;
+    setPlaying(false);
+    $('.load-error').hidden = false;
+    $('.image-loading').hidden = true;
+  } finally {
+    clearTimeout(timeout);
   }
-
-  const initialLoad=loadId+1;
-  await show(start,false);
-  if(loadId===initialLoad && !failed && !reduced.matches && !device && !capturedPhone)setPlaying(true);
-}).catch(()=>{
-  failed=true;setPlaying(false);$('.load-error').hidden=false;$('.image-loading').hidden=true;
-});
+}
+loadManifest();
