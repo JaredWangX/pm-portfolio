@@ -1,4 +1,7 @@
-"""Case reading: anchors, original screens, phone replay and responsive layout."""
+"""Case reading: anchors, original screens, video chapters and responsive layout.
+
+The preview server must support HTTP byte ranges for native video seeking.
+"""
 import os
 from playwright.sync_api import sync_playwright, expect
 
@@ -68,15 +71,35 @@ with sync_playwright() as p:
         print(product+': 5 viewport sizes, directory, image zoom/focus and all source images passed')
     page.set_viewport_size({'width':1440,'height':900})
     page.goto(BASE+'wanso/',wait_until='load')
-    page.locator('[data-phone-preview]').first.click()
-    frame=page.frame_locator('.phone-modal iframe')
-    expect(frame.locator('.page-layer:not(.leaving) .original-screen')).to_be_visible()
-    frame.locator('.page-layer:not(.leaving)').get_by_role('button',name='搜索',exact=True).click()
-    expect(frame.locator('.ios-carousel')).to_be_visible(timeout=15000)
-    frame.get_by_role('button',name='Hương Vị Mộc · ShopeeFood 下单',exact=True).click()
-    expect(frame.get_by_role('dialog',name='下单预览',exact=True)).to_be_visible()
-    page.locator('#overlay .close').click()
-    expect(page.locator('#overlay')).not_to_be_visible()
+    expect(page.locator('iframe')).to_have_count(0)
+    expect(page.locator('[data-phone-preview]')).to_have_count(0)
+    video=page.locator('.product-film video')
+    video.scroll_into_view_if_needed()
+    page.wait_for_function('()=>{const v=document.querySelector("video");return v.readyState>=2&&v.duration>30}',timeout=30000)
+    assert video.evaluate('(v)=>v.controls&&!v.autoplay&&v.videoWidth>0')
+    for chapter in page.locator('[data-film-seek]').all():
+        chapter.click()
+        moment=float(chapter.get_attribute('data-film-seek'))
+        page.wait_for_function('(t)=>{const v=document.querySelector("video");return !v.paused&&v.currentTime>=t&&v.currentTime<t+3}',arg=moment)
+        expect(chapter).to_have_attribute('aria-current','step')
+        video.evaluate('(v)=>v.pause()')
+    for width in [1440,1024,768,390,320]:
+        page.set_viewport_size({'width':width,'height':900})
+        assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
+        assert video.evaluate('(v)=>Math.abs(v.clientWidth/v.clientHeight-v.videoWidth/v.videoHeight)<.02')
+    print('Wanso: native video loads, plays and seeks all four chapters; no embedded prototype')
+    page.goto(BASE+'onentra/',wait_until='load')
+    expect(page.locator('iframe')).to_have_count(0)
+    entry=page.locator('.product-entry-link')
+    expect(entry).to_have_attribute('href','https://jaredwangx.github.io/ai-work-platform/')
+    assert not page.locator('#prototype').get_by_text('演示',exact=False).count()
+    for width in [1440,1024,768,390,320]:
+        page.set_viewport_size({'width':width,'height':900})
+        assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
+        panel=page.locator('.workspace-map').bounding_box()
+        for part in page.locator('.map-resources li,.task-node,.delivery-node').all():
+            r=part.bounding_box()
+            assert r['x']>=panel['x'] and r['x']+r['width']<=panel['x']+panel['width']+1
     assert not errors, errors
-    print('Shared identity, Wanso search/order preview, and JavaScript error checks passed')
+    print('ONENTRA: five-width diagram bounds and direct product destination passed')
     browser.close()
