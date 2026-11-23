@@ -1,3 +1,6 @@
 .DS_Store
 .taste-skill/
 work/
+
+# The public portfolio is read online; keep PDF originals outside this repository.
+*.pdf

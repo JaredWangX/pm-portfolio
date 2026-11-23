@@ -40,7 +40,7 @@ body.case-page,body.reading-page{background:radial-gradient(ellipse at 100% 0,#b
 .reading-page .reading-content :is(p,li,td){color:#3d5470}
 .reading-page .reader-cover .eyebrow,.case-page .eyebrow{font-size:16px;font-weight:650;letter-spacing:0}
 .reading-page :is(.reader-flow,.reader-callout,.research-reference){background:#e8f2ff;border-color:#a9c8ed}
-.reading-page :is(.print-document:hover,.reader-contents nav a:hover){background:#dcecff}
+.reading-page .reader-contents nav a:hover{background:#dcecff}
 .case-page .metricgrid b{font-size:27px}
 .case-page .reqs details{background:#f5f9ff;border-color:#c8ddf4}
 .case-page .roadmap li>span{background:#e0edff;border-color:#bdd4f1;border-radius:12px}

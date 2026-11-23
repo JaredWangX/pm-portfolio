@@ -273,10 +273,8 @@ with sync_playwright() as p:
             page.wait_for_timeout(600)
             assert page.locator(target).bounding_box()['y'] >= 70
             assert page.locator(target).bounding_box()['y'] < 160
-            page.evaluate('window.__printed=false;window.print=()=>window.__printed=true')
-            page.locator('.print-document').click()
-            assert page.evaluate('window.__printed')
-        checks.append('4 complete documents: reachable links, section anchors, print action')
+            assert page.locator('.print-document,a[href*="portfolio.pdf"]').count() == 0
+        checks.append('4 complete documents: reachable links, section anchors, no PDF/export actions')
 
         for slug in ['recommendation-review','delivery-review']:
             page.goto(BASE + 'documents/' + slug + '/')

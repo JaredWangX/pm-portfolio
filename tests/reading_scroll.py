@@ -102,10 +102,15 @@ with sync_playwright() as p:
             if w==390:
                 assert page.locator('.reading-content tbody td').evaluate_all('cells=>cells.every(c=>c.getBoundingClientRect().right<=innerWidth)'),slug
             page.screenshot(path=OUT/f'{slug}-body-{w}.png')
-        page.evaluate('window.didPrint=false;window.print=()=>window.didPrint=true')
-        page.locator('.print-document').click();assert page.evaluate('window.didPrint')
+        expect(page.locator('.print-document')).to_have_count(0)
+        expect(page.locator('a[href*="portfolio.pdf"]')).to_have_count(0)
         assert page.locator('.reading-content a[href^="https://"]').count()>=2
+    for path in ['', 'wanso/', 'onentra/']:
+        page.goto(BASE+path,wait_until='domcontentloaded')
+        expect(page.locator('a[href*="portfolio.pdf"],.print-document')).to_have_count(0)
+    response=page.goto(BASE+'downloads/portfolio.pdf',wait_until='domcontentloaded')
+    assert response.status==404,response.status
     assert not errors,errors
     (OUT/'reading-regression.json').write_text(json.dumps({'live':LIVE,'scroll':result,'errors':errors},ensure_ascii=False,indent=2))
-    print('PASS: four long-form documents, source links, anchor navigation, mobile layout and print',flush=True)
+    print('PASS: four long-form documents, source links, anchor navigation, mobile layout and removed PDF/export routes',flush=True)
     browser.close()
