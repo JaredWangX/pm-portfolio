@@ -9,7 +9,10 @@ let scheduled = false;
 function highlight() {
   let active = 0;
   sections.forEach((section, index) => {if (section.getBoundingClientRect().top < 180) active = index;});
-  links.forEach((link, index) => index === active ? link.setAttribute('aria-current','location') : link.removeAttribute('aria-current'));
+  links.forEach((link, index) => {
+    if (index === active && !link.hasAttribute('aria-current')) link.setAttribute('aria-current','location');
+    else if (index !== active && link.hasAttribute('aria-current')) link.removeAttribute('aria-current');
+  });
 }
 addEventListener('scroll', () => {
   if (scheduled) return;

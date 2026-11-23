@@ -3,7 +3,7 @@
 .home-page .exhibition-heading { margin-bottom: 16px; }
 .home-page .exhibition-heading h2 { font-size: 30px; line-height: 1.4; }
 .home-page .device-pair { grid-template-columns: minmax(0,1fr) minmax(290px, 30%); gap: 22px; max-width: none; }
-.home-page .device-project { display: grid; grid-template-rows: 50px 46px var(--device-height) 44px; gap: 12px; padding: 18px 22px; border-radius: 25px; align-items: stretch; }
+.home-page .device-project { display: grid; grid-template-columns:minmax(0,1fr); grid-template-rows: 50px 46px var(--device-height) 44px; gap: 12px; padding: 18px 22px; border-radius: 25px; align-items: stretch; }
 .home-page .phone-project { grid-row: auto; }
 .home-page .device-title { min-height: 0; margin: 0; }
 .home-page .device-title h3 { font-size: 26px; line-height: 1.1; }
@@ -68,4 +68,13 @@
  .workbench-story-heading>span { display: none; }
  .workbench-story-heading strong { font-size: 16px; }
  .workbench-story p { font-size: 14px; }
+}
+@media(max-width:380px) {
+ .home-page .device-title { gap:8px; }
+ .home-page .device-title h3 { min-width:0; }
+ .home-page .device-title h3 span { white-space:normal; }
+ .home-page .device-controls { gap:2px; }
+}
+@media(max-width:380px) {
+ .home-page .computer-project { grid-template-rows:minmax(74px,auto) 46px auto 44px; }
 }

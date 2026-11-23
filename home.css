@@ -18,7 +18,7 @@ html:has(.home-page){scroll-padding-block-start:88px}
 .home-page .button:active{transform:translateY(1px)}
 .home-page :is(button,a,summary):focus-visible{outline:3px solid #1b62d6;outline-offset:4px}
 /* The sharp arcs outside each pane become diffuse beneath it: the backdrop itself proves transparency. */
-.portfolio-ambient{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:radial-gradient(ellipse at 15% 0%,#ffffff 0,transparent 46%),radial-gradient(ellipse at 100% 42%,#92bfff6b,transparent 50%),linear-gradient(135deg,#eaf4ff,#d3e5fc 55%,#e8f4ff)}
+.portfolio-ambient{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden;contain:paint;background:radial-gradient(ellipse at 15% 0%,#ffffff 0,transparent 46%),radial-gradient(ellipse at 100% 42%,#92bfff6b,transparent 50%),linear-gradient(135deg,#eaf4ff,#d3e5fc 55%,#e8f4ff)}
 .portfolio-ambient:before{content:'';position:absolute;width:80vw;height:80vw;min-width:800px;min-height:800px;top:10vh;left:-26vw;border:85px solid #81b5fa34;border-radius:50%;box-shadow:0 0 100px #a2c9ff35,inset 0 0 60px #a2c9ff24;transform:rotate(-20deg) scaleY(.55)}
 .portfolio-ambient:after{content:'';position:absolute;inset:0;background-image:radial-gradient(#497cb633 .65px,transparent .8px);background-size:18px 18px;mask-image:linear-gradient(transparent 15%,#0004 70%,transparent);opacity:.35}
 .portfolio-ambient span{position:absolute;width:58vw;height:68vw;min-width:450px;min-height:480px;top:3vh;right:-15vw;border-radius:45% 55% 60% 40%;background:linear-gradient(145deg,#8bc7ff05 4%,#3b82f638 45%,#93d7ff70 70%,#e6f3ffb0);border:1px solid #ffffff7a;box-shadow:inset 14px 14px 55px #ffffff80,inset -18px -12px 90px #5798ec30;transform:rotate(-23deg);animation:light-drift 28s ease-in-out infinite alternate}
@@ -314,3 +314,11 @@ html:has(.home-page){scroll-padding-block-start:88px}
   min-height: 0;
   margin: 14px 4px 0;
 }
+
+/* Keep the moving light field local to the hero. Reading panes need no live
+   backdrop sampling over an already diffuse ground; their glass stays translucent. */
+.home-page { position: relative; background: radial-gradient(ellipse 900px 650px at 100% 1800px,#cde3ff75,transparent),radial-gradient(ellipse 800px 600px at 0 3600px,#d7e9ff80,transparent),var(--ground); }
+.home-page .portfolio-ambient { mask-image: linear-gradient(#000 72%,transparent); }
+.portfolio-ambient.ambient-idle::before { animation-play-state: paused; }
+.home-page :is(.project-summary,.strengths article,.education,.experience-detail,.contact-card) { backdrop-filter:none; -webkit-backdrop-filter:none; }
+.home-page > header { transform:translateZ(0); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); background:#f5f9ffdb; }

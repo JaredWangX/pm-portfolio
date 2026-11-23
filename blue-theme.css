@@ -64,3 +64,6 @@ body.case-page,body.reading-page{background:radial-gradient(ellipse at 100% 0,#b
  .case-page .readout{overflow-x:auto}.case-page .readout table{min-width:530px;font-size:15px}
  .case-page .prototype-actions{flex-direction:column;align-items:stretch}
 }
+/* Blurred fixed/sticky surfaces must not keep repainting every reading panel. */
+.reading-page > header { transform:translateZ(0); background:#f3f8ffeb; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+.reading-page :is(.reader-cover-insight,.reader-contents,.evidence-panel,.decision-lab) { backdrop-filter:none; -webkit-backdrop-filter:none; }

@@ -278,16 +278,12 @@ with sync_playwright() as p:
             assert page.evaluate('window.__printed')
         checks.append('4 complete documents: reachable links, section anchors, print action')
 
-        page.goto(BASE + 'documents/recommendation-review/#decision-lab')
-        for amount, expected in [(30000,37500),(80000,80000),(100000,97000),(150000,147000)]:
-            page.locator('#meal-cost').fill(str(amount))
-            assert page.locator('[data-grab]').inner_text() == f'{amount:,} ₫'
-            assert page.locator('[data-shopee]').inner_text() == f'{expected:,} ₫'
-        page.goto(BASE + 'documents/delivery-review/#decision-lab')
-        for minutes, total in [(0,30),(20,50),(30,60),(60,90)]:
-            page.locator('#rework-time').fill(str(minutes))
-            assert page.locator('[data-total-time]').inner_text() == f'{total} 分钟'
-        checks.append('interactive decision models: discount cap, break-even and rework boundaries')
+        for slug in ['recommendation-review','delivery-review']:
+            page.goto(BASE + 'documents/' + slug + '/')
+            assert page.locator('.decision-example').count() == 1
+            assert page.locator('.reference-notes a[href^="https://"]').count() >= 3
+            assert page.locator('#validation table tbody tr').count() == 3
+        checks.append('project-specific decisions, inspectable examples and attributed research')
 
         # An unavailable image must give a working retry, not an indefinitely frozen player.
         home_image = re.compile(r'/assets/wanso/native/home\.webp(?:\?|$)')
@@ -414,7 +410,7 @@ with sync_playwright() as p:
     for width, height in [(1440,900),(1024,768),(768,1024),(390,844),(320,640)]:
         page.set_viewport_size({'width':width,'height':height})
         if width > 760:
-            for selector in ['.strengths article','.research-card']:
+            for selector in ['.strengths article','.decision-project']:
                 boxes = page.locator(selector).evaluate_all('(items)=>items.map(i=>({top:i.getBoundingClientRect().top,height:i.getBoundingClientRect().height}))')
                 for left,right in zip(boxes[::2],boxes[1::2]):
                     if abs(left['top']-right['top'])<1:

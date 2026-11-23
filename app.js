@@ -153,7 +153,10 @@ if (homeLinks.length) {
       if (document.querySelector(link.hash)?.getBoundingClientRect().top <= 160) current = link;
     }
     if (scrollY + innerHeight >= document.documentElement.scrollHeight - 5) current = homeLinks.at(-1);
-    homeLinks.forEach(link => link === current ? link.setAttribute('aria-current','location') : link.removeAttribute('aria-current'));
+    homeLinks.forEach(link => {
+      if (link === current && !link.hasAttribute('aria-current')) link.setAttribute('aria-current','location');
+      else if (link !== current && link.hasAttribute('aria-current')) link.removeAttribute('aria-current');
+    });
   }
   addEventListener('scroll', () => {
     if (queued) return;

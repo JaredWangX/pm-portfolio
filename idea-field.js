@@ -6,6 +6,7 @@
   if (!ctx) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const hero = document.querySelector('.portfolio-intro');
+  const ambient = canvas.closest('.portfolio-ambient');
   let heroVisible = true;
   let width = 1, height = 1, frame = 0, last = 0, time = 0;
   let pointer = {x:.72, y:.32}, aim = {...pointer};
@@ -68,7 +69,8 @@
     frame=requestAnimationFrame(tick);
   }
   function sync() {
-    cancelAnimationFrame(frame);frame=0;last=performance.now();draw();
+    cancelAnimationFrame(frame);frame=0;last=performance.now();
+    ambient.classList.toggle('ambient-idle', !running());
     if (running()) frame=requestAnimationFrame(tick);
   }
   addEventListener('pointermove',event=>{if(event.pointerType==='mouse')aim={x:event.clientX/width,y:event.clientY/height};},{passive:true});
@@ -77,6 +79,7 @@
   document.addEventListener('visibilitychange',sync);
   reduced.addEventListener('change',sync);
   if (hero) new IntersectionObserver(([entry]) => {
+    if (heroVisible === entry.isIntersecting) return;
     heroVisible = entry.isIntersecting;
     sync();
   }).observe(hero);
