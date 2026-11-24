@@ -1,87 +1,84 @@
-/* An ambient sketch of ideas finding a structure. It never drives page layout. */
+/* Slow optical ribbons, confined to the opening viewport. */
 (() => {
   const canvas = document.querySelector('#idea-field');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const hero = document.querySelector('.portfolio-intro');
   const ambient = canvas.closest('.portfolio-ambient');
-  let heroVisible = true;
-  let width = 1, height = 1, frame = 0, last = 0, time = 0;
-  let pointer = {x:.72, y:.32}, aim = {...pointer};
-  const running = () => heroVisible && !document.hidden && !reduced.matches && !document.body.classList.contains('ambient-paused');
+  let visible = true, width = 1, height = 1, frame = 0, last = 0, time = 0;
+  const running = () => visible && !document.hidden && !reduced.matches && !document.body.classList.contains('ambient-paused');
   function resize() {
-    const nextWidth = canvas.clientWidth, nextHeight = canvas.clientHeight;
-    if (width === nextWidth && height === nextHeight) return;
-    width = Math.max(1, nextWidth); height = Math.max(1, nextHeight);
-    const dpr = Math.min(devicePixelRatio || 1, width < 760 ? 1 : 1.5);
-    canvas.width = width * dpr; canvas.height = height * dpr;
+    const w = Math.max(1, canvas.clientWidth), h = Math.max(1, canvas.clientHeight);
+    if (width === w && height === h) return;
+    width = w; height = h;
+    const dpr = Math.min(devicePixelRatio || 1, width < 760 ? 1 : 1.25);
+    canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     draw();
   }
+  function curve(i) {
+    const phase = time * .16;
+    return [
+      [-.16 * width, height * (.62 + i * .032)],
+      [width * (.30 + Math.sin(phase + i * .13) * .045), height * (1.02 + i * .022)],
+      [width * (.55 + Math.cos(phase * .8) * .035), height * (-.20 + i * .022)],
+      [width * 1.16, height * (.20 + i * .052)]
+    ];
+  }
+  function trace(p) {
+    ctx.moveTo(...p[0]); ctx.bezierCurveTo(...p[1], ...p[2], ...p[3]);
+  }
   function draw() {
-    ctx.clearRect(0,0,width,height);
-    const shiftX = (pointer.x - .5) * 28, shiftY = (pointer.y - .5) * 22;
-    // Three curved paths carry the ideas between loose clusters and an ordered grid.
-    for (let lane = 0; lane < 3; lane++) {
-      const y = height * (.21 + lane * .31) + shiftY;
-      const path = x => y + Math.sin(x / width * 5 + time * .13 + lane) * height * .085;
-      const grad = ctx.createLinearGradient(0,0,width,0);
-      grad.addColorStop(0,'rgba(59,130,246,0)');
-      grad.addColorStop(.35,'rgba(59,130,246,.12)');
-      grad.addColorStop(.7,'rgba(98,165,255,.25)');
-      grad.addColorStop(1,'rgba(59,130,246,0)');
-      ctx.beginPath();
-      for (let x = -10; x <= width+10; x += 8) ctx.lineTo(x,path(x));
-      ctx.lineWidth = 1; ctx.strokeStyle = grad; ctx.stroke();
-      for (let i=0;i<6;i++) {
-        const p = ((i / 6 + time * .013 + lane * .11) % 1);
-        const x = p * (width + 80) - 40;
-        ctx.beginPath(); ctx.arc(x,path(x),2.1,0,Math.PI*2);
-        ctx.fillStyle='rgba(47,118,235,.45)';ctx.fill();
-        ctx.beginPath();ctx.arc(x,path(x),7,0,Math.PI*2);
-        ctx.fillStyle='rgba(75,151,248,.055)';ctx.fill();
-      }
-    }
-    const points=[];
-    for (let i=0;i<30;i++) {
-      const col=i%6,row=Math.floor(i/6), settle=(1+Math.sin(time*.18))*.5;
-      const x=width*.64+col*width*.067+Math.sin(i*3.7+time*.11)*(1-settle)*35+shiftX;
-      const y=height*.13+row*height*.135+Math.cos(i*2.3+time*.12)*(1-settle)*32+shiftY;
-      points.push({x,y});
-      ctx.beginPath();ctx.roundRect(x-3,y-3,6,6,1.6);
-      ctx.fillStyle=i%7===0?'rgba(43,116,233,.42)':'rgba(61,132,225,.20)';ctx.fill();
-      if (col && (i+Math.floor(time/8))%3!==0) {
-        ctx.beginPath();ctx.moveTo(points[i-1].x,points[i-1].y);ctx.lineTo(x,y);
-        ctx.strokeStyle=`rgba(52,128,225,${.04+settle*.07})`;ctx.lineWidth=.8;ctx.stroke();
+    ctx.clearRect(0, 0, width, height);
+    // Shared control points keep the ribbons connected as the field slowly bends.
+    for (let i = 0; i < 6; i++) {
+      const p = curve(i), band = height * (.026 + i * .004);
+      const fill = ctx.createLinearGradient(width * .1, height * .75, width, height * .12);
+      fill.addColorStop(0, 'rgba(120,190,255,0)');
+      fill.addColorStop(.36, `rgba(79,150,247,${.05 + i * .009})`);
+      fill.addColorStop(.72, `rgba(66,143,244,${.10 + i * .015})`);
+      fill.addColorStop(1, 'rgba(190,231,255,.02)');
+      ctx.beginPath(); trace(p);
+      ctx.lineTo(p[3][0],p[3][1]+band);
+      ctx.bezierCurveTo(p[2][0],p[2][1]+band,p[1][0],p[1][1]+band,p[0][0],p[0][1]+band);
+      ctx.closePath();ctx.fillStyle=fill;ctx.fill();
+      const edge=ctx.createLinearGradient(0,0,width,0);
+      edge.addColorStop(0,'rgba(255,255,255,0)');
+      edge.addColorStop(.45,'rgba(255,255,255,.8)');
+      edge.addColorStop(.72,'rgba(84,158,248,.3)');
+      edge.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.beginPath();trace(p);ctx.strokeStyle=edge;ctx.lineWidth=i%2 ? 1 : 1.4;ctx.stroke();
+      if (i % 2) {
+        const progress=(time * .025 + i * .21) % 1, u=1-progress;
+        const x=u*u*u*p[0][0]+3*u*u*progress*p[1][0]+3*u*progress*progress*p[2][0]+progress**3*p[3][0];
+        const y=u*u*u*p[0][1]+3*u*u*progress*p[1][1]+3*u*progress*progress*p[2][1]+progress**3*p[3][1];
+        const alpha=Math.sin(Math.PI*progress)*.62;
+        const glow=ctx.createRadialGradient(x,y,0,x,y,18);
+        glow.addColorStop(0,`rgba(255,255,255,${alpha})`);glow.addColorStop(.2,`rgba(72,150,255,${alpha*.6})`);glow.addColorStop(1,'rgba(72,150,255,0)');
+        ctx.fillStyle=glow;ctx.fillRect(x-18,y-18,36,36);
       }
     }
   }
   function tick(now) {
     frame=0;
     if (!running()) return;
-    if (now-last >= 40) {
-      time += Math.min((now-last)/1000,.05);last=now;
-      pointer.x+=(aim.x-pointer.x)*.06;pointer.y+=(aim.y-pointer.y)*.06;
-      draw();
+    if (now-last >= (width<760 ? 50 : 33)) {
+      time+=Math.min((now-last)/1000,.08);last=now;draw();
     }
     frame=requestAnimationFrame(tick);
   }
   function sync() {
     cancelAnimationFrame(frame);frame=0;last=performance.now();
-    ambient.classList.toggle('ambient-idle', !running());
+    ambient.classList.toggle('ambient-idle',!running());
     if (running()) frame=requestAnimationFrame(tick);
   }
-  addEventListener('pointermove',event=>{if(event.pointerType==='mouse')aim={x:event.clientX/width,y:event.clientY/height};},{passive:true});
-  addEventListener('resize',resize,{passive:true});
-  addEventListener('portfolio-ambient',sync);
+  new ResizeObserver(resize).observe(canvas);
+  new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;sync();}).observe(ambient);
   document.addEventListener('visibilitychange',sync);
-  reduced.addEventListener('change',sync);
-  if (hero) new IntersectionObserver(([entry]) => {
-    if (heroVisible === entry.isIntersecting) return;
-    heroVisible = entry.isIntersecting;
-    sync();
-  }).observe(hero);
+  addEventListener('portfolio-ambient',sync);
+  reduced.addEventListener('change',()=>{draw();sync();});
+  addEventListener('pagehide',()=>{cancelAnimationFrame(frame);frame=0;});
+  addEventListener('pageshow',sync);
   resize();sync();
 })();

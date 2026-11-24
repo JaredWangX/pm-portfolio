@@ -219,10 +219,13 @@ const ambientToggle = document.querySelector('[data-ambient-toggle]');
 if (ambientToggle) {
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   function setAmbient(playing) {
+    playing = playing && !reducedMotion.matches;
+    ambientToggle.disabled = reducedMotion.matches;
     document.body.classList.toggle('ambient-paused',!playing);
     ambientToggle.setAttribute('aria-pressed',String(playing));
-    ambientToggle.setAttribute('aria-label',playing?'暂停背景光影':'播放背景光影');
-    ambientToggle.textContent = playing?'Ⅱ':'▷';
+    ambientToggle.setAttribute('aria-label',reducedMotion.matches?'已跟随系统关闭背景动效':playing?'暂停背景光影':'播放背景光影');
+    ambientToggle.innerHTML = '<span class="ambient-toggle-icon" aria-hidden="true">'+(playing?'Ⅱ':'▷')+'</span><span>背景光影</span>';
+    ambientToggle.title = playing?'暂停背景光影':'播放背景光影';
     window.dispatchEvent(new CustomEvent('portfolio-ambient',{detail:{playing}}));
   }
   setAmbient(!reducedMotion.matches);
