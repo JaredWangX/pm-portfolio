@@ -17,23 +17,6 @@
         .fromTo('.intro-line-text em',{'--underline-progress':0},{'--underline-progress':1,duration:.9},.4);
     }
   });
-  media.add('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',()=>{
-    const cleanups=[];
-    document.querySelectorAll('.device-project,.project-summary,.decision-project,.strengths article,.practice-card,.contact-card').forEach(card=>{
-      const wrap=document.createElement('span');wrap.className='glass-light-wrap';wrap.setAttribute('aria-hidden','true');
-      const light=document.createElement('span');light.className='glass-light';wrap.append(light);card.append(wrap);card.classList.add('motion-glass');
-      const xTo=gsap.quickTo(light,'x',{duration:.55,ease:'power3.out'}), yTo=gsap.quickTo(light,'y',{duration:.55,ease:'power3.out'});
-      let rect;
-      function enter(e) {rect=card.getBoundingClientRect();gsap.set(light,{x:e.clientX-rect.left,y:e.clientY-rect.top});gsap.to(light,{opacity:.8,duration:.3,overwrite:'auto'});}
-      function move(e) {if(rect){xTo(e.clientX-rect.left);yTo(e.clientY-rect.top);}}
-      function leave() {if(!rect)return;rect=null;gsap.to(light,{opacity:0,duration:.3,overwrite:'auto'});}
-      card.addEventListener('pointerenter',enter);card.addEventListener('pointermove',move);card.addEventListener('pointerleave',leave);
-      // A scrolling card changes coordinates; clear the spotlight instead of remeasuring each frame.
-      addEventListener('scroll',leave,{passive:true});
-      cleanups.push(()=>{card.removeEventListener('pointerenter',enter);card.removeEventListener('pointermove',move);card.removeEventListener('pointerleave',leave);removeEventListener('scroll',leave);wrap.remove();card.classList.remove('motion-glass');});
-    });
-    return ()=>cleanups.forEach(clean=>clean());
-  });
   // Finish the entrance if focus moves into it; keyboard navigation is never hidden.
   hero.addEventListener('focusin',()=>{gsap.getTweensOf(hero.querySelectorAll('.intro-line-text,.intro-note>p,.button')).forEach(t=>t.progress(1));});
 })();
