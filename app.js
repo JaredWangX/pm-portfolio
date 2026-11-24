@@ -218,17 +218,19 @@ addEventListener('message', event => {
 const ambientToggle = document.querySelector('[data-ambient-toggle]');
 if (ambientToggle) {
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
   function setAmbient(playing) {
-    playing = playing && !reducedMotion.matches;
-    ambientToggle.disabled = reducedMotion.matches;
+    playing = playing && !reducedMotion.matches && finePointer.matches;
+    ambientToggle.disabled = reducedMotion.matches || !finePointer.matches;
     document.body.classList.toggle('ambient-paused',!playing);
     ambientToggle.setAttribute('aria-pressed',String(playing));
-    ambientToggle.setAttribute('aria-label',reducedMotion.matches?'已跟随系统关闭背景动效':playing?'暂停背景光影':'播放背景光影');
-    ambientToggle.innerHTML = '<span class="ambient-toggle-icon" aria-hidden="true">'+(playing?'Ⅱ':'▷')+'</span><span>背景光影</span>';
-    ambientToggle.title = playing?'暂停背景光影':'播放背景光影';
+    ambientToggle.setAttribute('aria-label',reducedMotion.matches?'已跟随系统关闭背景动效':!finePointer.matches?'触屏设备使用静态背景':playing?'暂停鼠标光影':'开启鼠标光影');
+    ambientToggle.innerHTML = '<span class="ambient-toggle-icon" aria-hidden="true">'+(playing?'Ⅱ':'▷')+'</span><span>'+(ambientToggle.disabled?'静态背景':'鼠标光影')+'</span>';
+    ambientToggle.title = ambientToggle.getAttribute('aria-label');
     window.dispatchEvent(new CustomEvent('portfolio-ambient',{detail:{playing}}));
   }
   setAmbient(!reducedMotion.matches);
   ambientToggle.addEventListener('click',()=>setAmbient(ambientToggle.getAttribute('aria-pressed')!=='true'));
   reducedMotion.addEventListener('change',event=>setAmbient(!event.matches));
+  finePointer.addEventListener('change',event=>setAmbient(event.matches));
 }
