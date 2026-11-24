@@ -1,6 +1,6 @@
 /* A small magnetic field lives in the empty space; content never moves. */
 (() => {
-  const selectors = '.intro-note,.device-project,.project-summary,.decision-project,.strengths article,.practice-card,.education,.honor-grid article,.contact-card,.role-panel,.screen-board,.desktop-stage,.resource-grid>article,.workspace-map,.satisfaction,.test-results>div,.product-film,.product-entry,.reader-cover-insight,.prd-flow,.decision-example';
+  const selectors = '[data-surface="card"],[data-surface="frame"],[data-surface="inset"]';
   const motion = matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)');
   const transparency = matchMedia('(prefers-reduced-transparency:reduce)');
   const canvas = document.createElement('canvas');
@@ -8,7 +8,7 @@
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
   const exclusions = 'h1,h2,h3,h4,h5,p,a,button,summary,dt,dd,img,svg,iframe,video,pre,table,strong,small';
-  let active, bounds, points = [], masks = [], frame = 0, previous = 0, inside = false;
+  let active, bounds, needle, pending = null, points = [], masks = [], maskPath, frame = 0, previous = 0, inside = false;
   let pointer = {x:0,y:0}, alpha = 0;
   const resize = new ResizeObserver(() => {
     if (!active) return;
@@ -21,9 +21,10 @@
   });
   document.querySelectorAll('.ability-symbol[data-ability="check"] path,.ability-symbol[data-ability="conversation"] path:last-child').forEach(path => path.setAttribute('pathLength','1'));
   function clear() {
-    if (active) {resize.unobserve(active);active.classList.remove('is-playing'); active.style.removeProperty('--needle-angle');}
+    if (active) {resize.unobserve(active);active.classList.remove('is-playing');}
+    needle?.style.removeProperty('--needle-angle');
     cancelAnimationFrame(frame); frame = 0; active = bounds = null;
-    canvas.remove(); points = []; masks = []; alpha = 0;
+    canvas.remove(); points = []; masks = []; maskPath = needle = pending = null; alpha = 0;
   }
   function start(card, event) {
     clear();
@@ -41,6 +42,8 @@
       if(!node.textContent.trim() || node.parentElement.closest(exclusions+', [aria-hidden="true"]')) continue;
       range.selectNodeContents(node); [...range.getClientRects()].forEach(addMask);
     }
+    maskPath = new Path2D();
+    for(const r of masks) maskPath.rect(r.x,r.y,r.w,r.h);
     const spacing = Math.max(24, Math.sqrt(bounds.width*bounds.height/650));
     const cols = Math.floor((bounds.width-36)/spacing), rows = Math.floor((bounds.height-36)/spacing);
     const ox = (bounds.width-(cols-1)*spacing)/2, oy = (bounds.height-(rows-1)*spacing)/2;
@@ -48,13 +51,14 @@
       const x=ox+col*spacing, y=oy+row*spacing;
       if (!masks.some(r => x>r.x && x<r.x+r.w && y>r.y && y<r.y+r.h)) points.push({bx:x,by:y,x,y,vx:0,vy:0});
     }
-    active = card; card.append(canvas); card.classList.add('is-playing'); inside = true;
-    resize.observe(card); move(event); request();
+    active = card; needle = card.querySelector('[data-ability="compass"]');
+    card.append(canvas); card.classList.add('is-playing'); inside = true;
+    resize.observe(card); move(event);
   }
   function move(event) {
     pointer = {x:event.clientX-bounds.left,y:event.clientY-bounds.top};
     // Only the compass needle rotates; the frame and text keep their position.
-    active.style.setProperty('--needle-angle',`${(pointer.x/bounds.width-.5)*65}deg`);
+    needle?.style.setProperty('--needle-angle',`${((pointer.x/bounds.width-.5)*65).toFixed(2)}deg`);
   }
   function draw() {
     ctx.clearRect(0,0,bounds.width,bounds.height);
@@ -64,10 +68,21 @@
       ctx.beginPath(); ctx.arc(dot.x,dot.y,1.4+nearby*2,0,Math.PI*2); ctx.fill();
     }
     // The displaced dots also stay outside text, not just their rest positions.
-    for (const r of masks) ctx.clearRect(r.x,r.y,r.w,r.h);
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = '#000'; ctx.fill(maskPath);
+    ctx.globalCompositeOperation = 'source-over';
   }
   function tick(now) {
     frame = 0;
+    // Coalesce high-frequency input: measure, write and draw at most once per frame.
+    if (pending) {
+      const event = pending; pending = null;
+      if (document.querySelector('dialog[open]')) {clear();return;}
+      const card = event.target instanceof Element ? event.target.closest('[data-play-surface]') : null;
+      if (!card) leave();
+      else if (card !== active) start(card,event);
+      else {if(!inside){inside=true;card.classList.add('is-playing');}move(event);}
+    }
     if (!active) return;
     const dt = Math.min((now-previous)/16.667,2); previous = now;
     const blend = 1-Math.pow(.82,dt), damping = Math.pow(.74,dt);
@@ -87,16 +102,13 @@
     else if (!inside) clear();
   }
   function request() { if (!frame) {previous=performance.now();frame=requestAnimationFrame(tick);} }
-  function leave() { if (!active || !inside) return; inside=false;active.classList.remove('is-playing');active.style.removeProperty('--needle-angle');request(); }
+  function leave() { if (!active || !inside) return; inside=false;active.classList.remove('is-playing');needle?.style.removeProperty('--needle-angle'); }
   document.addEventListener('pointermove', event => {
-    if (event.pointerType!=='mouse' || !motion.matches || transparency.matches || document.querySelector('dialog[open]')) {clear();return;}
-    const card=event.target instanceof Element?event.target.closest('[data-play-surface]'):null;
-    if (!card) {leave();return;}
-    if (card!==active) start(card,event);
-    else {inside=true;card.classList.add('is-playing');move(event);request();}
+    if (event.pointerType!=='mouse' || !motion.matches || transparency.matches) {clear();return;}
+    pending = {clientX:event.clientX,clientY:event.clientY,target:event.target}; request();
   },{passive:true});
   document.addEventListener('pointerover',event => {if(event.target instanceof Element && event.target.matches('iframe')) clear();},{passive:true});
-  document.documentElement.addEventListener('pointerleave',leave);
+  document.documentElement.addEventListener('pointerleave',()=>{pending=null;leave();request();});
   // Geometry is stale after scroll or resize; never follow yesterday's coordinates.
   addEventListener('scroll',clear,{passive:true,capture:true});
   addEventListener('resize',clear,{passive:true});
