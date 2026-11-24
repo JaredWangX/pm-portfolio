@@ -1,0 +1,57 @@
+/* PRDs share the portfolio palette; diagrams remain readable HTML at every width. */
+.prd-page .reader-cover,.prd-page .reader-layout{max-width:1100px}
+.prd-page .reader-cover{align-items:start;padding-top:38px;padding-bottom:40px;grid-template-columns:minmax(0,1fr) 300px}
+.prd-page .reader-cover h1{font-size:clamp(29px,3vw,40px);line-height:1.45;letter-spacing:-.025em;text-wrap:balance}
+.prd-page .reader-cover .eyebrow{margin-bottom:18px}
+.prd-page .reader-deck{font-size:17px;line-height:1.9}
+.prd-page .reader-meta{gap:6px 18px;margin-top:20px}
+.prd-page .reader-meta>span{font-size:14px}
+.prd-page .reader-layout{grid-template-columns:210px minmax(0,1fr);gap:32px}
+.prd-page .reading-content{padding:36px 38px;border-radius:22px;min-width:0}
+.prd-page .reader-contents nav a{font-size:15px;white-space:nowrap;text-wrap:nowrap;display:flex;gap:10px;align-items:center}
+.prd-page .reader-contents nav a>span{font-size:12px;font-variant-numeric:tabular-nums;color:#35577d}
+.prd-page .reader-case-link{font-size:14px}
+.prd-page .decision-summary{padding:26px;min-height:0}
+.prd-page .decision-summary li{font-size:16px;line-height:1.85;text-wrap:pretty}
+.prd-page .reading-content h2{display:flex;align-items:center;gap:14px;font-size:28px;line-height:1.45;margin-bottom:24px}
+.prd-step{display:inline-grid;place-items:center;flex:0 0 40px;height:40px;border-radius:12px;background:#e5efff;color:#2868bc;font-size:15px;font-variant-numeric:tabular-nums;border:1px solid #c8dcf8}
+.prd-page .reading-content h3{margin:32px 0 14px;font-size:21px;color:#244d80}
+.prd-page .reading-content p{font-size:18px;line-height:1.95;margin-bottom:20px;overflow-wrap:break-word}
+.prd-page .reading-content section{padding-bottom:42px;margin-bottom:44px}
+.prd-page .reading-content table{font-size:15px;line-height:1.85;table-layout:fixed}
+.prd-page .reading-content th,.prd-page .reading-content td{padding:16px 15px;overflow-wrap:anywhere;min-width:0}
+.prd-page .reading-content :is(th,td):first-child{width:24%}
+.prd-page .reading-content tbody td:first-child{font-weight:650;color:#234f85}
+.prd-decision{margin:28px 0;padding:24px;border:1px solid #bdd6f7;border-radius:16px;background:linear-gradient(120deg,#edf5ff,#f6faff)}
+.prd-decision>strong{display:block;font-size:17px;line-height:1.6;color:#20579a}
+.prd-page .prd-decision p{margin:10px 0 0;font-size:16px;line-height:1.9}
+.prd-contract{margin:24px 0;border:1px solid #c4d8f1;border-radius:14px;background:#f7faff;overflow:hidden}
+.prd-contract summary{padding:17px 20px;min-height:52px;font-size:16px;line-height:1.7;font-weight:600;color:#255b9d;cursor:pointer}
+.prd-contract summary:hover{background:#eaf3ff}
+.prd-contract summary:focus-visible{outline:3px solid #3b82f6;outline-offset:-4px}
+.prd-contract pre{margin:0;padding:20px;border-top:1px solid #ccdef4;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.95;font-size:14px;color:#2d4b70;background:#f1f6fd}
+.prd-contract code{font-family:ui-monospace,SFMono-Regular,Consolas,"Microsoft YaHei",monospace}
+.prd-flow{margin:28px 0 34px;padding:26px 24px;border:1px solid #c3d9f5;background:linear-gradient(145deg,#f2f7ff,#fbfdff);border-radius:18px}
+.prd-flow figcaption{font-size:17px;font-weight:700;color:#234f85;margin:0 0 24px;line-height:1.7}
+.prd-flow ol{padding:0;margin:0;list-style:none}
+.prd-page .prd-flow-row{display:grid;grid-template-columns:minmax(0,1fr) 32%;column-gap:26px;position:relative;margin:0;padding:0 0 30px;font-size:15px;line-height:1.7}
+.prd-flow-row:last-child{padding-bottom:0}
+.flow-node{grid-column:1;position:relative;display:flex;align-items:flex-start;gap:12px;padding:18px 16px;background:#fff;border:1px solid #c6daf3;border-radius:12px;box-shadow:0 5px 14px -10px #487dbf40;z-index:1}
+.flow-node:after{content:'↓';position:absolute;left:calc(50% - 7px);bottom:-27px;font-size:22px;line-height:24px;color:#4379be}
+.prd-flow-row:last-child .flow-node:after{content:none}
+.flow-number{font-size:12px;font-weight:700;line-height:24px;color:#3168a7;font-variant-numeric:tabular-nums;flex:0 0 20px}
+.flow-node strong{display:block;color:#214e83;font-size:16px;line-height:1.65;margin-bottom:5px}
+.flow-node div>span{display:block;color:#455f7f;font-size:14px;line-height:1.8}
+.flow-node.decision{border-color:#83b3ed;background:#eaf3ff}
+.flow-node.result{background:#2866b5;border-color:#2866b5}
+.flow-node.result :is(strong,span){color:#fff}
+.flow-branch{align-self:center;position:relative;padding:12px 0 12px 13px;border-left:2px solid #9ebfe7}
+.flow-branch:before{content:'→';position:absolute;left:-25px;top:calc(50% - 12px);color:#537eaf;font-size:19px;line-height:24px}
+.flow-branch b{display:block;font-size:14px;line-height:1.7;color:#365e8f;margin-bottom:5px}
+.flow-branch>span{display:block;font-size:13px;line-height:1.85;color:#496585}
+@media(max-width:1100px){.prd-page .reader-layout{grid-template-columns:190px minmax(0,1fr);gap:24px}.prd-page .reading-content{padding:30px 26px}.prd-page .reader-cover{grid-template-columns:minmax(0,1fr) 270px;gap:28px}.prd-flow{padding:22px 18px}.prd-page .prd-flow-row{column-gap:22px;grid-template-columns:minmax(0,1fr) 33%}}
+@media(max-width:900px){.prd-page .reader-layout,.prd-page .reader-cover{display:block}.prd-page .reader-cover-insight{margin-top:26px}.prd-page .reader-contents nav{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.prd-page .reader-aside{margin-bottom:28px}.prd-page .reader-contents{padding:10px 16px}.prd-page .reader-case-link{margin-top:12px}.prd-page .reading-content{padding:30px}}
+@media(max-width:650px){.prd-page .reader-cover{padding-top:24px;padding-bottom:28px}.prd-page .reader-cover h1{font-size:29px}.prd-page .reader-cover .back{margin-bottom:18px}.prd-page .reader-deck{font-size:16px}.prd-page .reading-content{padding:0;background:transparent;border:0;box-shadow:none}.prd-page .reader-contents nav{grid-template-columns:repeat(2,minmax(0,1fr))}.prd-page .reader-contents nav a{padding:10px 6px;font-size:14px;gap:6px}.prd-page .reading-content h2{font-size:25px;gap:12px}.prd-page .reading-content h3{font-size:20px}.prd-page .reading-content p{font-size:16px}.prd-page .reading-content :is(th,td):first-child{width:100%}.prd-page .reading-content .table-wrap td{padding:8px 0}.prd-decision{padding:20px}.prd-contract summary{padding:16px;font-size:15px}.prd-contract pre{padding:16px;font-size:13px}.prd-flow{padding:20px 16px}.prd-flow figcaption{font-size:16px}.prd-page .prd-flow-row{display:block;padding-bottom:32px}.flow-node{padding:16px 14px}.flow-node:after{left:17px;bottom:-29px}.flow-branch{margin:12px 0 0 31px;padding:9px 0 9px 13px}.flow-branch:before{left:-24px;top:12px;content:'↳'}.flow-node strong{font-size:16px}.flow-node div>span{font-size:14px}.flow-branch b{font-size:14px}.flow-branch>span{font-size:14px}.prd-flow-row:has(.flow-branch) .flow-node:after{content:none}.prd-flow-row:has(.flow-branch):before{content:'';position:absolute;top:30px;bottom:16px;left:18px;border-left:1px solid #aac6e8}.prd-flow-row:has(.flow-branch):after{content:'↓';position:absolute;bottom:3px;left:11px;color:#4379be;font-size:22px}.prd-page .reading-content section{scroll-margin-top:calc(var(--header) + 20px)}}
+@media(max-width:350px){.prd-page .reader-contents nav{grid-template-columns:1fr}.prd-page .reader-cover h1{font-size:27px}.prd-flow{padding:18px 12px}.flow-node{gap:8px}}
+
+.prd-page .decision-summary li:before{color:#35577d}
