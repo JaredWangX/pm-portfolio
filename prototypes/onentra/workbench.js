@@ -1,6 +1,6 @@
 'use strict';
 
-const product = 'https://jaredwangx.github.io/ai-work-platform/';
+const product = 'https://jiaruiwang13.github.io/ai-work-platform/';
 const entryRoutes = {
   home: ['工作台串起会话、项目和业务资料', '从最近工作继续，也可以选用经营分析、文档撰写等助手。', ['最近会话', '项目进度', 'AI 员工']],
   chat: ['一份经营记录，生成周报和核查明细', '读取渠道数据，解释销售变化、定位退款异常，并把结论与负责人写进可编辑文件。', ['经营周报.docx', '渠道明细.xlsx', '退款核对清单']],

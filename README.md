@@ -1,6 +1,6 @@
 # 王稼瑞 · AI 产品经理作品集
 
-公开地址：https://jaredwangx.github.io/pm-portfolio/
+公开地址：https://jiaruiwang13.github.io/pm-portfolio/
 
 Wanso 与 ONENTRA 两个产品案例。每个案例按照背景、职责、产品判断、架构、用户流程、原型、验证与路线图展开；首页的需求文档可以直接打开阅读。使用原生 HTML、CSS、JavaScript，通过 GitHub Pages 从 main 分支根目录发布。
 
@@ -85,6 +85,6 @@ Wanso 从首页、案例和内嵌预览展开时使用同一手机比例弹窗�
 
 Wanso 案例第五节改为 iOS 客户端操作录像，移除该案例内的手机 iframe 和交互原型入口。录像支持浏览器播放控制和四个章节跳转，使用历史菜单环境；它不是实时平台报价或真实下单。首页原有的交互设备和独立原型地址保持可用。素材来源与录制范围见 [录像说明](assets/wanso/selection-film.md)。
 
-ONENTRA 案例用资源、任务、交付三层图说明工作方式。底部入口和工作台截图均直接打开 [AI 工作平台](https://jaredwangx.github.io/ai-work-platform/)，不再嵌入案例演示。
+ONENTRA 案例用资源、任务、交付三层图说明工作方式。底部入口和工作台截图均直接打开 [AI 工作平台](https://jiaruiwang13.github.io/ai-work-platform/)，不再嵌入案例演示。
 
 `tests/case_studies.py` 增加视频播放、章节定位、五种宽度和完整产品链接检查。检查视频跳转时，预览服务器须支持 HTTP Range；Python 的基础 `http.server` 可看页面，但不适合验证媒体拖动。可用 `PORTFOLIO_URL` 指向支持 Range 的静态服务器或已部署的 GitHub Pages。

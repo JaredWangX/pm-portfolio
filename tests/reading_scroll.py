@@ -8,7 +8,7 @@ from urllib.parse import unquote, urlsplit
 from playwright.sync_api import sync_playwright, expect
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = os.environ.get('PORTFOLIO_URL', 'https://jaredwangx.github.io/pm-portfolio/').rstrip('/')+'/'
+BASE = os.environ.get('PORTFOLIO_URL', 'https://jiaruiwang13.github.io/pm-portfolio/').rstrip('/')+'/'
 OUT = ROOT/'work/scroll-research'
 OUT.mkdir(parents=True, exist_ok=True)
 LIVE = 'PORTFOLIO_URL' in os.environ
@@ -30,7 +30,7 @@ with sync_playwright() as p:
             if f.is_dir(): f /= 'index.html'
             if f.is_relative_to(root) and f.is_file(): route.fulfill(path=str(f))
             else: route.fulfill(status=404,body='Not found')
-        page.route('https://jaredwangx.github.io/**',local)
+        page.route('https://jiaruiwang13.github.io/**',local)
     errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
     page.goto(BASE+'#work',wait_until='domcontentloaded')
     expect(page.frame_locator('[data-device-frame=wanso]').locator('.original-screen')).to_be_visible(timeout=30000)

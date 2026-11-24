@@ -31,7 +31,7 @@ function openDialog(trigger, title, child) {
 }
 document.querySelector('[data-launch]')?.addEventListener('click', event => {
   const frame = document.createElement('iframe');
-  frame.src = 'https://jaredwangx.github.io/ai-work-platform/#home';
+  frame.src = 'https://jiaruiwang13.github.io/ai-work-platform/#home';
   frame.title = 'ONENTRA 公开工作台';
   frame.referrerPolicy = 'no-referrer';
   overlay.classList.add('workspace-modal');

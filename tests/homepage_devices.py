@@ -9,7 +9,7 @@ from urllib.parse import unquote, urlsplit
 from playwright.sync_api import sync_playwright, expect
 
 ROOT=Path(__file__).resolve().parents[1]
-BASE=os.environ.get('PORTFOLIO_URL','https://jaredwangx.github.io/pm-portfolio/').rstrip('/')+'/'
+BASE=os.environ.get('PORTFOLIO_URL','https://jiaruiwang13.github.io/pm-portfolio/').rstrip('/')+'/'
 LIVE='PORTFOLIO_URL' in os.environ
 APP=ROOT.parent/'ai-work-platform/dist'
 OUT=ROOT/'work/home-repair';OUT.mkdir(exist_ok=True)
@@ -31,7 +31,7 @@ with sync_playwright() as p:
             if file.is_dir():file=file/'index.html'
             if file.is_relative_to(base) and file.is_file():route.fulfill(path=str(file))
             else:route.fulfill(status=404,body='Not found')
-        page.route('https://jaredwangx.github.io/**',local_files)
+        page.route('https://jiaruiwang13.github.io/**',local_files)
     errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
     page.goto(BASE+'#work',wait_until='domcontentloaded')
     phone=page.frame_locator('[data-device-frame=wanso]')

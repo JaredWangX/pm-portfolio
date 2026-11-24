@@ -188,7 +188,7 @@ with sync_playwright() as p:
     if '--live' in sys.argv:
         live_context=browser.new_context(viewport={'width':390,'height':844})
         live=live_context.new_page()
-        live.goto(os.getenv('WANSO_LIVE_URL','https://jaredwangx.github.io/pm-portfolio/demos/wanso/?embed=1#home'))
+        live.goto(os.getenv('WANSO_LIVE_URL','https://jiaruiwang13.github.io/pm-portfolio/demos/wanso/?embed=1#home'))
         live.locator('#ask textarea').fill('午餐一个人，餐费不超过60000越南盾，不吃鸡肉，给我一个牛肉汉堡选择。')
         with live.expect_response(lambda r: r.url.endswith('/api/wanso') and r.request.method=='POST',timeout=80000) as received:
             live.locator('#ask .send').click()

@@ -91,7 +91,7 @@ with sync_playwright() as p:
     page.goto(BASE+'onentra/',wait_until='load')
     expect(page.locator('iframe')).to_have_count(0)
     entry=page.locator('.product-entry-link')
-    expect(entry).to_have_attribute('href','https://jaredwangx.github.io/ai-work-platform/')
+    expect(entry).to_have_attribute('href','https://jiaruiwang13.github.io/ai-work-platform/')
     assert not page.locator('#prototype').get_by_text('演示',exact=False).count()
     for width in [1440,1024,768,390,320]:
         page.set_viewport_size({'width':width,'height':900})
