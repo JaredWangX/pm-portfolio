@@ -17,7 +17,8 @@
   });
   document.querySelectorAll(selectors).forEach(card => {
     if (card.parentElement.closest(selectors)) return;
-    card.classList.add('glass-surface'); card.dataset.playSurface = '';
+    card.classList.add('glass-surface');
+    if (!card.querySelector('iframe,video')) card.dataset.playSurface = '';
   });
   document.querySelectorAll('.ability-symbol[data-ability="check"] path,.ability-symbol[data-ability="conversation"] path:last-child').forEach(path => path.setAttribute('pathLength','1'));
   function clear() {

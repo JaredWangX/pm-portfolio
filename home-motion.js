@@ -11,8 +11,8 @@
     if (!entered && timely && !location.hash && scrollY<30) {
       entered=true;
       gsap.timeline({defaults:{ease:'power3.out',duration:.85}})
-        .from('.intro-line-text',{yPercent:105,autoAlpha:0,stagger:.11,clearProps:'transform,opacity,visibility'},0)
-        .from('.intro-note>p',{y:14,autoAlpha:0,clearProps:'transform,opacity,visibility'},.18)
+        .from('.intro-line-text',{y:4,stagger:.07,clearProps:'transform'},0)
+        .from('.intro-note>p',{y:4,clearProps:'transform'},.18)
         .from('.intro-note .button',{y:12,autoAlpha:0,stagger:.09,clearProps:'transform,opacity,visibility'},.32)
         .fromTo('.intro-line-text em',{'--underline-progress':0},{'--underline-progress':1,duration:.9},.4);
     }

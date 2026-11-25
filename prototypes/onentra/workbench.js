@@ -33,8 +33,10 @@ for (const workspace of document.querySelectorAll('[data-workbench]')) {
   }
   const project = workspace.closest('[data-device-project]');
   const buttons = project?.querySelectorAll('[data-workbench-route]') || [];
+  let describedRoute, connectedDocument;
   const describe = route => {
-    if (!project) return;
+    if (!project || route === describedRoute) return;
+    describedRoute = route;
     const area = route.split('/')[0];
     const selected = Array.from(buttons).find(button => button.dataset.workbenchRoute === route) ||
       Array.from(buttons).find(button => button.dataset.workbenchRoute.split('/')[0] === area);
@@ -69,16 +71,9 @@ for (const workspace of document.querySelectorAll('[data-workbench]')) {
     const doc = frame.contentDocument;
     if (doc && !doc.querySelector('#app')?.childElementCount) return;
     workspace.classList.add('workbench-ready');
-    if (!doc || !project) return;
-    const sync = () => {
-      const route = frame.contentWindow.location.hash.slice(1) || 'home';
-      describe(route);
-      // The homepage starts on a completed example, including its delivered files.
-      if (/^chat\/portfolio-/.test(route)) requestAnimationFrame(() => {
-        const messages = doc.querySelector('.messages');
-        if (messages) messages.scrollTop = messages.scrollHeight;
-      });
-    };
+    if (!doc || !project || doc === connectedDocument) return;
+    connectedDocument = doc;
+    const sync = () => describe(frame.contentWindow.location.hash.slice(1) || 'home');
     frame.contentWindow.addEventListener('hashchange', sync);
     sync();
   };

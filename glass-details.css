@@ -197,3 +197,11 @@ body:is(.home-page,.study-page,.reading-page) footer>div { flex-wrap:wrap; gap:8
   .surface-points { display:none; }
 }
 @media print { .surface-points { display:none; } }
+
+/* A solid reading bar avoids re-blurring the moving workbench and canvas beneath it. */
+body:is(.home-page,.study-page,.reading-page) > header {
+  background: #f5f9ff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transform: none;
+}
