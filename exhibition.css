@@ -78,3 +78,8 @@
 @media(max-width:380px) {
  .home-page .computer-project { grid-template-rows:minmax(74px,auto) 46px auto 44px; }
 }
+@media (max-width: 480px) {
+ .home-page .computer-project { grid-template-rows: minmax(54px, auto) auto auto 44px; }
+ .home-page .computer-project .device-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+ .home-page .computer-project .device-controls button { min-height: 44px; }
+}

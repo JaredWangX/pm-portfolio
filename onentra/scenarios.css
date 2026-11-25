@@ -58,7 +58,7 @@
   font-weight: 650;
 }
 .scenario-intro h3 {
-  font-size: clamp(23px, 3vw, 34px);
+  font-size: clamp(23px, 3vw, 29px);
   line-height: 1.35;
   margin: 8px 0 10px;
   text-wrap: pretty;
@@ -82,7 +82,7 @@
 .scenario-metrics > div + div { border-left: 1px solid var(--report-line); }
 .scenario-metrics dt, .scenario-metrics span { color: var(--report-muted); font-size: 13px; }
 .scenario-metrics dd {
-  font-size: clamp(25px, 3.2vw, 42px);
+  font-size: clamp(24px, 2.6vw, 31px);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   letter-spacing: -.035em;
@@ -123,15 +123,15 @@
 .scenario-share i:first-child { background: #3374c5; }
 .scenario-share i:last-child { background: #99bded; }
 .scenario-share p { font-size: 13px; margin: 6px 0 0; color: var(--report-muted); }
-.scenario-detail { border-block: 1px solid var(--report-line); }
+.scenario-detail { background: #f2f7ff; border-radius: 9px; }
 .scenario-detail summary {
   min-height: 46px;
-  padding: 11px 3px;
+  padding: 11px 14px;
   cursor: pointer;
   color: var(--report-blue);
   font-weight: 650;
 }
-.scenario-detail > div { display: grid; gap: 10px; padding: 0 3px 15px; }
+.scenario-detail > div { display: grid; gap: 10px; padding: 0 14px 15px; }
 .scenario-sources { padding-left: 22px; }
 .scenario-detail a { text-decoration: underline; text-underline-offset: 3px; color: var(--report-blue); }
 .scenario-actions { display: flex; flex-wrap: wrap; gap: 8px; }
