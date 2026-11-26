@@ -195,6 +195,7 @@ window.wansoPages = (() => {
   function saved(root, data, state, route, open) {
     const header=el('div','ios-page-heading');
     header.append(el('h1','','♥ 已收藏'),btn('◷ 历史',()=>route('history'),'ios-page-link','会话历史'));
+    data={...data,...Object.fromEntries(window.wansoCatalog.map(store=>[store.id,{...store,photo:store.image,review_count:store.reviewCount,dish:store.dishZh,sample:store.platforms.grab.price,platform:'GrabFood'}]))};
     const ids=Object.keys(data).filter(id=>state.group[id]);
     const intro=el('div','ios-saved-intro');
     intro.append(el('strong','',`已收藏 ${ids.length} 家 · 万象精选`),el('span','','查看菜单、核对费用，把喜欢的店留在手边。'));
@@ -208,16 +209,16 @@ window.wansoPages = (() => {
     for (const id of ids.reverse()) {
       const store=data[id];
       const card=el('article','ios-saved-store');
-      const main=btn('',()=>route(storeRoute(id)),'ios-saved-main','查看 '+storeTitle(id));
+      const main=btn('',()=>store.id?open('catalogStore',id):route(storeRoute(id)),'ios-saved-main','查看 '+store.name);
       const copy=el('span');
       copy.append(el('strong','',store.name),el('span','',`★ ${store.rating.toFixed(1)} · ${number(store.review_count)} 条评价`),
         el('small','',`${store.dish}  ${money(store.sample)}`));
-      main.append(photo(asset('native/'+store.photo)),copy);
+      main.append(photo(store.id?store.image:asset('native/'+store.photo)),copy);
       const actions=el('div','ios-saved-actions');
-      const order=btn('在 '+store.platform+' 下单 →',()=>open('order',orderId(id)),'ios-saved-order',storeTitle(id)+' · '+store.platform+' 下单');
+      const order=btn('在 '+store.platform+' 下单 →',()=>store.id?open('catalogOrder',{id,platform:'grab',request:''}):open('order',orderId(id)),'ios-saved-order',store.name+' · '+store.platform+' 下单');
       order.dataset.platform=id==='moc'?'shopee':'grab';
-      actions.append(order,btn('▱',()=>open('moveSaved',id),'ios-saved-icon','移动 '+storeTitle(id)+' 到收藏夹'),
-        btn('⌫',()=>open('removeSaved',id),'ios-saved-icon','移除 '+storeTitle(id)+' 收藏'));
+      actions.append(order,btn('▱',()=>open('moveSaved',id),'ios-saved-icon','移动 '+store.name+' 到收藏夹'),
+        btn('⌫',()=>open('removeSaved',id),'ios-saved-icon','移除 '+store.name+' 收藏'));
       actions.querySelectorAll('.ios-saved-icon').forEach((item,i)=>item.replaceChildren(glyph(i?'trash':'folder')));
       card.append(main,actions);root.append(card);
     }
@@ -227,7 +228,9 @@ window.wansoPages = (() => {
   function profile(root, data, state, route, open) {
     root.append(el('h1','ios-profile-title','个人资料'));
     const profile=el('div','ios-profile-card');
-    profile.append(btn(state.avatar,()=>open('avatar'),'ios-profile-avatar','更换头像'));
+    const avatar=btn(state.avatarUrl?'':state.avatar,()=>open('avatar'),'ios-profile-avatar','更换头像');
+    if(state.avatarUrl)avatar.append(photo(state.avatarUrl));
+    profile.append(avatar);
     const copy=el('div');
     copy.append(btn(state.name+' ✎',()=>open('account','name'),'ios-profile-name','修改昵称'));
     const counts=el('div','ios-profile-counts');
@@ -238,7 +241,7 @@ window.wansoPages = (() => {
     const tastes=el('section','ios-taste-card');
     const label=el('div','ios-group-heading');label.append(el('strong','','✦ 口味档案'),el('span','',state.tastes.length+'/9'));
     const tags=el('div','ios-taste-tags');
-    for(const taste of state.tastes) tags.append(el('span','',taste));
+    for(const taste of state.tastes) tags.append(el('span','',(state.tasteEmojis?.[taste]||'')+' '+taste));
     tags.append(btn('＋ 添加',()=>open('tastes'),'ios-page-link','添加口味标签'));
     tastes.append(label,tags,el('p','','用于补充推荐条件。对话里这次明确提出的要求优先。'));
     const preferences=el('div','ios-profile-settings');

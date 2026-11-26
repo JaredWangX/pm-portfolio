@@ -51,3 +51,4 @@
 @media(pointer:coarse){.ios-page-home .native-home-query:focus {font-size:16px;}}
 /* Mask the archived page text below the native bottom navigation. */
 .page-layer.native-page:has(.ios-page-home)::after {content:"";position:absolute;inset:97% 0 0;pointer-events:none;background:#edf5ff;}
+.ios-home-tip span {color:#526b83;}.ios-home-tip b {color:#275e9e;}

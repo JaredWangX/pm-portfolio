@@ -147,6 +147,12 @@ button.sheet-row:hover, .sheet-row[aria-pressed="true"] { background: #e7f0ff; b
 }
 .native-switch[data-on="true"] { background: #317ae5; }
 .native-switch[data-on="true"]::after { left: 51%; }
+.native-membership-check {position:absolute;top:50%;right:3.5%;display:grid;place-items:center;width:5.7cqw;height:5.7cqw;transform:translateY(-50%);border:1.5px solid #e5eef8;border-radius:50%;background:#fff;color:#fff;font-size:3.4cqw;font-weight:700;line-height:1;}
+.native-membership-choice[data-platform=grab] {--membership:#00b14f;}
+.native-membership-choice[data-platform=shopee] {--membership:#ee4d2d;}
+.native-membership-choice[aria-pressed=true] {background:color-mix(in srgb,var(--membership) 7%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--membership) 40%,transparent);border-radius:4cqw;}
+.native-membership-check[data-on=true] {border-color:var(--membership);}
+.native-membership-check[data-on=true]::after {content:'';width:55%;height:55%;border-radius:50%;background:var(--membership);}
 .native-value {
   position: absolute;
   inset: 54% 12% 17% 17.8%;
@@ -186,3 +192,32 @@ button.sheet-row:hover, .sheet-row[aria-pressed="true"] { background: #e7f0ff; b
 .native-menu-language { inset-inline: 6.3% 9%; background: #f3f8fe; }
 
 .sheet-archive-menu { min-width: 0; }
+/* Native sheet layouts from CityPickerSheet and CollectionPickerDialog. */
+.native-city-sheet,.native-collection-sheet {border-radius:24px 24px 16px 16px;background:#fff;}
+.native-city-sheet::before,.native-collection-sheet::before {content:"";display:block;width:36px;height:4px;margin:12px auto 0;background:#d2d7dc;border-radius:6px;}
+.native-city-sheet .sheet-header {padding:6px 16px;background:#fff;border:0;}
+.native-city-sheet .sheet-header h2 {font-size:14px;color:#748398;}
+.native-city-sheet .sheet-content {gap:8px;padding:0 24px 24px;}
+.native-city-intro {text-align:center;margin-bottom:10px;}
+.native-city-mark {display:grid;place-items:center;width:48px;height:48px;margin:0 auto 14px;border-radius:50%;background:#e6f0ff;color:#3b82f6;font-size:22px;}
+.native-city-intro h3 {margin:0 0 4px;font-size:17px;}
+.native-city-intro p {font-size:12px;color:#78889a;}
+.native-city-row,.native-collection-row {display:flex;align-items:center;gap:12px;width:100%;padding:14px;border:1px solid #e2e8f0;border-radius:14px;background:#fff;color:#1e344d;text-align:left;}
+.native-city-row strong,.native-collection-row strong {font-size:14px;font-weight:500;}
+.native-city-row[aria-pressed=true] {background:#edf5ff;border-color:#86b5f4;color:#3478ce;}
+.native-choice-check,.native-collection-row>span:last-child {margin-left:auto;color:#83a0bd;}
+.native-collection-row>span:first-child {font-size:20px;}
+.native-collection-sheet .sheet-header {border:0;background:#fff;}
+.native-collection-sheet .sheet-content {padding:10px 22px 24px;gap:6px;}
+.native-choice-chip {display:flex;align-items:center;justify-content:center;background:#f0f5fb!important;border:1px solid #e0e8f2!important;color:#556b82!important;font-size:3cqw!important;font-weight:600;}
+.native-choice-chip[aria-pressed=true] {background:#e4efff!important;border-color:#71a6ed!important;color:#2572ce!important;}
+.hotspot:disabled {cursor:default;background:#e8eef4a6;}
+.native-avatar-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
+.native-avatar-grid button {height:80px;border:3px solid transparent;border-radius:12px;font-size:36px;}
+.native-avatar-grid button[aria-pressed=true] {border-color:#3b82f6;box-shadow:0 0 0 2px #fff inset;}
+.native-taste-grid {display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;}
+.native-taste-grid button {height:40px;border:2px solid transparent;border-radius:10px;background:#f1f6fc;font-size:18px;padding:0;}
+.native-taste-grid button[aria-pressed=true] {border-color:#3b82f6;background:#e2efff;}
+.native-taste-preview {display:flex;gap:8px;flex-wrap:wrap;}
+.native-taste-preview button {border:1px solid #c7daf3;border-radius:18px;background:#eaf3ff;color:#29649e;padding:5px 10px;font-size:13px;}
+.ios-profile-avatar img {display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit;}

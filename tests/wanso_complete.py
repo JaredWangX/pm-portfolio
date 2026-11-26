@@ -99,16 +99,16 @@ with sync_playwright() as playwright:
 
         page.get_by_role('button', name='选择位置', exact=True).click()
         sheet = page.locator('.wanso-sheet')
-        sheet.locator('.sheet-row').filter(has=page.locator('strong', has_text='胡志明市')).click()
-        sheet.locator('.sheet-row').filter(has=page.locator('strong', has_text='第一郡')).click()
+        expect(sheet.locator('.native-city-row')).to_have_count(3)
+        sheet.locator('.native-city-row').filter(has=page.locator('strong', has_text='胡志明市')).click()
         expect(sheet).not_to_be_visible()
         expect(page.locator('.ios-home-location')).to_contain_text('胡志明市')
         assert all(store['city'] == 'hcm' for store in current_store_data(page, '.rich-home-card'))
         page.get_by_role('button', name='选择位置', exact=True).click()
-        sheet.locator('.sheet-row').filter(has=page.locator('strong', has_text='河内')).click()
-        sheet.locator('.sheet-row').filter(has=page.locator('strong', has_text='还剑区')).click()
-        expect(page.locator('.ios-home-location')).to_contain_text('河内 · 还剑区')
-        checks.append(f'{name}: location sheet changes city, district, label and featured restaurants')
+        sheet.locator('.native-city-row').filter(has=page.locator('strong', has_text='河内')).click()
+        expect(sheet).not_to_be_visible()
+        expect(page.locator('.ios-home-location')).to_contain_text('河内')
+        checks.append(f'{name}: source city picker has GPS and two city rows; city selection updates featured restaurants')
 
         # Use the actual search form; the six-step sequence must finish before results.
         prompt = '想吃鸡肉热汤河粉，不吃香菜，含配送预算八万越南盾，推荐五家。'
@@ -136,20 +136,25 @@ with sync_playwright() as playwright:
         assert chat.evaluate('(node) => node.scrollHeight > node.clientHeight'), 'conversation must scroll within the phone'
         checks.append(f'{name}: six processing states finish; three substantive rounds with five dual-platform recommendations each')
 
-        # A restaurant opens a local menu, and both platform totals remain inspectable.
+        # Both entry points now use the same full scrolling restaurant detail.
         first = rails.first.locator('.rich-recommendation').first
+        store_id = first.get_attribute('data-store-id')
         first.locator('.ios-restaurant-main').click()
-        expect(sheet).to_be_visible()
-        expect(sheet.locator('.sheet-catalog-menu .sheet-row')).to_have_count(3)
-        sheet.get_by_role('button', name='GrabFood', exact=False).click()
+        detail = page.locator('.native-store-view')
+        expect(detail).to_have_attribute('data-store-id', store_id)
+        expect(sheet).not_to_be_visible()
+        assert detail.locator('.native-store-menu-row').count() >= 3
+        detail.get_by_role('button', name='立即下单 · GrabFood', exact=True).click()
         expect(sheet.locator('h2')).to_have_text('下单预览 · GrabFood')
         expect(sheet).to_contain_text('配送费')
         sheet.get_by_role('button', name='换到 ShopeeFood', exact=True).click()
         expect(sheet.locator('h2')).to_have_text('下单预览 · ShopeeFood')
         screenshot(page, name + '-order')
         sheet.get_by_role('button', name='返回菜单', exact=True).click()
-        expect(sheet.locator('.sheet-catalog-menu')).to_be_visible()
-        sheet.get_by_role('button', name='关闭', exact=True).click()
+        expect(sheet).not_to_be_visible()
+        expect(detail).to_have_attribute('data-store-id', store_id)
+        detail.get_by_role('button', name='返回上一页', exact=True).click()
+        expect(detail).to_have_count(0)
         expect(visible(page, '.ios-chat-reply')).to_have_count(3)
         assert len(context.pages) == 1, 'Order should remain in the prototype'
         checks.append(f'{name}: menu → GrabFood preview → ShopeeFood comparison → menu → same conversation')

@@ -186,6 +186,7 @@ function renderFrame(buildHotspots = true) {
   }
 }
 async function show(id, manual = true, returnToViewer = false, runSearch = false, navigation = 'reset') {
+  window.wansoControls?.dismissStore();
   const tab = navigation === 'tab' ? id : null;
   if (tab === phoneTab) return;
   const recalled = tabViews.get(tab);
@@ -419,6 +420,7 @@ $('.zoom-toggle').addEventListener('click',event=>{
 let swipeStart, ignoreClick = false;
 screen.addEventListener('pointerdown', event => {
   ignoreClick = false;
+  if (screen.hasAttribute('data-store-open')) return;
   if (!event.isPrimary || event.button !== 0 || (event.pointerType === 'mouse' && !capturedPhone)) return;
   const rail = event.target.closest('.ios-carousel');
   const edge = event.target.closest('.ios-back-edge');
