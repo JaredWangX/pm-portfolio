@@ -12,7 +12,7 @@
     ],
     [
       "recommend",
-      "两家店"
+      "五家推荐"
     ],
     [
       "compare",
@@ -152,7 +152,8 @@
         "src": "../../assets/wanso/native/home-scroll.webp?v=native-scroll",
         "top": 7.094,
         "height": 83.41
-      }
+      },
+      "livePage": true
     },
     {
       "id": "generating",
@@ -271,12 +272,12 @@
     },
     {
       "id": "recommend",
-      "title": "Hương Vị Mộc 的推荐",
+      "title": "五家餐厅与连续追问",
       "group": "AI 选餐",
       "src": "../../assets/wanso/native/recommend.webp",
       "width": 804,
       "height": 1748,
-      "note": "同一段对话中上下浏览消息、左右滑动查看两家店。点店铺看完整菜单，点 Order 在手机内核对平台和费用。",
+      "note": "先推荐五家符合本餐要求的店铺，再按口味、预算和配送继续比较。",
       "hotspots": [
         {
           "label": "返回",
@@ -328,12 +329,12 @@
     },
     {
       "id": "recommend-2",
-      "title": "Phở Quyên 的推荐",
+      "title": "五家餐厅与连续追问",
       "group": "AI 选餐",
       "src": "../../assets/wanso/native/recommend-2.webp",
       "width": 804,
       "height": 1748,
-      "note": "Phở Quyên 的鸡腿汤河粉标价为 59,000 ₫。可在对话底部继续提问，或进入店铺查看原菜单。",
+      "note": "先推荐五家符合本餐要求的店铺，再按口味、预算和配送继续比较。",
       "hotspots": [
         {
           "label": "返回",
@@ -676,7 +677,7 @@
       "id": "explore",
       "title": "探索",
       "group": "应用页面",
-      "note": "从平台概览往下滑，可以看到两家餐厅、午餐和预算场景。咨询入口回到首页。",
+      "note": "按越南当地时段切换场景，结合所选位置查看双平台餐厅。",
       "src": "../../assets/wanso/native/explore.webp?v=native-scroll",
       "width": 804,
       "height": 1748,
@@ -1977,13 +1978,13 @@
   "flows": [
     {
       "title": "选餐与推荐",
-      "summary": "用 80,000 ₫ 的餐费预算，查看两家有鸡腿河粉的店。",
+      "summary": "按用餐位置、预算与口味查看五家双平台店铺，再继续追问费用与菜品。",
       "steps": [
         {
           "id": "home",
           "label": "提交用餐需求",
           "caption": "点击搜索",
-          "reason": "例子已经填好。点击原生搜索按钮，查看应用处理需求并展示两家店。"
+          "reason": "选择位置并输入用餐要求。首页每批展示五家店，刷新可继续换一批。"
         },
         {
           "id": "generating",
@@ -1994,20 +1995,20 @@
         {
           "id": "writing",
           "label": "整理答案",
-          "caption": "汇集两家店的推荐依据",
-          "reason": "查找并排序后，客户端显示正在整理答案。"
+          "caption": "核对菜品、总价与推荐依据",
+          "reason": "逐步展示条件整理、平台筛选、费用比较与答案检查。"
         },
         {
           "id": "recommend",
-          "label": "第一家店",
-          "caption": "查看理由或打开 ShopeeFood",
-          "reason": "同一段对话中上下浏览消息、左右滑动查看两家店。点店铺看完整菜单，点 Order 在手机内核对平台和费用。"
+          "label": "五家推荐",
+          "caption": "查看具体菜品与双平台费用",
+          "reason": "上下浏览三轮对话，左右比较五家餐厅。点店铺看菜单，点平台看餐费、配送和优惠。"
         },
         {
           "id": "recommend-2",
-          "label": "第二家店",
-          "caption": "滑动查看另一家，或打开 GrabFood",
-          "reason": "Phở Quyên 的鸡腿汤河粉标价为 59,000 ₫。可在对话底部继续提问，或进入店铺查看原菜单。"
+          "label": "继续追问",
+          "caption": "改预算、口味或人数",
+          "reason": "输入新的要求后保留会话上下文，重新筛选符合条件的店铺，并更新推荐理由。"
         }
       ]
     },
@@ -2043,7 +2044,7 @@
           "id": "explore",
           "label": "探索",
           "caption": "查看附近餐厅和推荐场景",
-          "reason": "从平台概览往下滑，可以看到两家餐厅、午餐和预算场景。咨询入口回到首页。"
+          "reason": "查看当前城市的平台概览和五家精选；场景随越南当地早晨、午间、下午和夜间变化，点场景即可开始选餐。"
         },
         {
           "id": "saved",

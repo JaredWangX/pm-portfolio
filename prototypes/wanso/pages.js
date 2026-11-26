@@ -45,53 +45,152 @@ window.wansoPages = (() => {
     if (description) wrap.append(el('p','',description));
     return wrap;
   };
-  function explore(root, data, route, open) {
-    const hero = el('section','ios-explore-hero');
-    hero.append(photo(asset('explore_hero.webp')),
-      btn('◷ 历史',()=>route('history'),'ios-photo-history','会话历史'));
-    const intro = el('div','ios-photo-copy');
-    intro.append(el('small','','HÀ NỘI · 河内'),el('h1','','这一餐，\n想吃点什么？'));
-    hero.append(intro);
-    const insight = btn('',()=>route('compare'),'ios-explore-insight','查看同店比价');
+  function timeOfDay(date = new Date()) {
+    const hour = Number(new Intl.DateTimeFormat('en-GB', {timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',hourCycle:'h23'}).format(date));
+    if (hour >= 5 && hour <= 10) return 'morning';
+    if (hour >= 11 && hour <= 14) return 'noon';
+    if (hour >= 15 && hour <= 18) return 'afternoon';
+    return 'night';
+  }
+  const meals = {
+    morning: {label:'早晨',title:'早餐能量？\n早餐轻松搞定。',picks:'早餐推荐',stories:[
+      ['通勤早餐','一碗热汤，慢慢醒来','清汤河粉配一份蛋白质，先看看离出发位置近的店。','推荐附近清淡的早餐，想吃热汤河粉，不吃香菜，含配送预算八万越南盾。','scenario_late.webp'],
+      ['赶时间','早餐带走，准点出发','面包方便拿着吃，分开核对餐品与运费，留足出门时间。','想吃方便带走的早餐，推荐鸡肉面包或饭团，含配送预算六万越南盾。','scenario_rain.png'],
+      ['运动之后','蛋白质加一份，口味轻一点','留意鸡肉、鸡蛋与蔬菜搭配，酱汁可以单独放。','晨练后想吃鸡肉和蔬菜，少油不辣，含配送预算九万越南盾，推荐五家。','scenario_gym.webp'],
+      ['周末早餐','和朋友慢慢吃一顿','两人份先看菜品与分量，热食和饮品分开选择更清楚。','两个人吃早餐，想要河粉和面包各一份，含配送总预算十五万越南盾。','scenario_date.webp']
+    ]},
+    noon: {label:'午餐',title:'午饭时间。\n今天吃啥好？',picks:'午间推荐',stories:[
+      ['工作日午餐','饭点到了，先吃好再忙','米饭、鸡肉和蔬菜搭配完整，比较距离和到手价后再选。','工作日午餐想吃鸡肉饭，有蔬菜、不太油，含配送预算八万越南盾。','scenario_popular.png'],
+      ['午间轻食','吃饱，也想吃得清爽','清汤、蒸煮或酱汁分装都可以，按实际菜品核对选择。','午餐想吃清淡一点的河粉或沙拉，不辣不吃香菜，预算八万越南盾含配送。','scenario_healthy.png'],
+      ['一起点餐','和同事拼一顿午饭','同一家店选不同主食，先统一预算，再核对每个人的忌口。','两位同事一起吃午餐，一个不吃辣，一个想吃鸡肉，含配送预算十六万越南盾。','scenario_date.webp'],
+      ['预算优先','六万以内，也要好好吃','先看餐品价格与配送费用，满减条件要一起算进去。','午餐含配送六万越南盾以内，想吃米饭或面包，比较两个平台。','scenario_value.png']
+    ]},
+    afternoon: {label:'下午',title:'下午零食？\n茶还是咖啡？',picks:'午后精选',stories:[
+      ['咖啡时间','给下午补一点精神','饮品大小和甜度要选清楚，再配一份小点心。','下午想喝咖啡，配一点小吃，少糖，含配送预算七万越南盾。','scenario_date.webp'],
+      ['加班前','先吃一口，晚一点再忙','分量适中的面包或米卷更方便，避开重油和大份套餐。','下午饿了，想吃鸡肉面包或米卷，少油不辣，预算六万越南盾含配送。','scenario_late.webp'],
+      ['运动前','轻一点，补一点能量','水果、蔬菜和适量主食组合，按你的运动安排决定分量。','傍晚运动前想吃一份小份轻食，有蔬菜和鸡肉，含配送预算八万越南盾。','scenario_gym.webp'],
+      ['分享下午茶','两个人的下午茶','饮品与甜点先确认份数，按同一组合比较平台总价。','给两个人选下午茶，想要饮品和小吃，少糖，含配送预算十二万越南盾。','scenario_explore.png']
+    ]},
+    night: {label:'今夜',title:'今晚你\n想吃啥？',picks:'今晚推荐',stories:[
+      ['加班夜宵','忙了一天，来碗热的','一份热汤河粉更舒服，挑选鸡腿或鸡胸，香草按需添加。','加班后想吃热汤鸡肉河粉，不辣不吃香菜，含配送预算八万越南盾。','scenario_late.webp'],
+      ['两人晚餐','今晚和喜欢的人一起吃','先照顾两个人的口味，再搭配主食和配菜，价格核到同一份量。','两个人吃晚餐，想吃越南菜，有鸡肉和蔬菜，含配送预算十八万越南盾。','scenario_date.webp'],
+      ['健身餐','练完再吃，清爽也满足','鸡肉和蔬菜一起选，优先清淡做法，酱汁可以另放。','健身后吃晚餐，想要鸡肉、蔬菜和少量主食，少油不辣，含配送预算九万越南盾。','scenario_gym.webp'],
+      ['换换口味','总吃同一家，今晚换一下','保留你在意的预算和忌口，看看其他店的招牌做法。','晚餐想换一家，推荐五家不同风格的餐厅，预算九万越南盾含配送，不吃香菜。','scenario_explore.png']
+    ]}
+  };
+  function chooseScenario(prompt, state, route) {
+    state.query = prompt;
+    window.wansoNative.setQuery(prompt);
+    route('generating', true);
+  }
+  function home(root, data, state, route, open) {
+    const top=el('header','ios-home-top');
+    const location=btn('',()=>open('cities'),'ios-home-location','选择位置');
+    location.append(el('span','ios-location-mark','⌖'),el('span','',state.location.label),el('span','ios-location-chevron','⌄'));
+    top.append(location,btn('◷ 历史',()=>route('history'),'ios-home-history','会话历史'));
+    const headline=el('div','ios-home-headline');
+    headline.append(el('span','ios-home-ai-label','✨ AI 助手'));
+    const title=el('h1');
+    title.append(el('span','','你今天'),el('br'),el('em','','想吃'),document.createTextNode('什么呢？'));
+    headline.append(title,el('p','','一句话帮你决定要吃什么。'));
+    const form=el('form','ios-home-search');
+    const inputRow=el('div','ios-home-search-input');
+    const icon=el('span','ios-home-input-icon','✦');icon.setAttribute('aria-hidden','true');
+    const input=window.wansoControls.createSearchInput(()=>open('runSearch'));
+    input.setAttribute('aria-label','输入选餐要求');input.placeholder='说说想吃什么、预算和忌口';
+    input.addEventListener('input',()=>window.wansoNative.setQuery(input.value));
+    const clear=btn('×',()=>{state.query='';input.value='';window.wansoNative.setQuery('');input.focus({preventScroll:true});},'ios-home-clear','清空选餐要求');
+    inputRow.append(icon,input,clear);
+    const tools=el('div','ios-home-search-tools');
+    const compare=btn('',()=>open('toggle','compareAll'),'ios-home-compare','全平台比较设置');
+    compare.append(el('i','ios-grab-dot'),el('i','ios-shopee-dot'),el('span','',state.compareAll?'全平台比较':'按默认平台推荐'));
+    const search=btn('⌕ 搜索',()=>open('runSearch'),'ios-home-search-submit','搜索');
+    tools.append(compare,search);form.append(inputRow,tools);
+    form.addEventListener('submit',event=>{event.preventDefault();open('runSearch');});
+    const section=el('section','ios-home-featured');
+    const sectionHead=el('div','ios-home-featured-heading');
+    sectionHead.append(el('h2','','✦ 万象精选'),btn('↻ 刷新',()=>open('featured'),'ios-home-refresh','刷新万象精选'));
+    section.append(sectionHead,window.wansoNative.homeRestaurants(route,open));
+    const suggestion=el('div','ios-home-suggestions');
+    suggestion.append(heading('最近搜索'));
+    const recent=state.historyEntries?.length?state.historyEntries.slice(0,3).map(entry=>entry.query||entry.prompt||entry.title).filter(Boolean):[state.query].filter(Boolean);
+    for(const text of recent){
+      const item=btn('',()=>chooseScenario(text,state,route),'ios-home-recent','再次搜索 '+text);
+      item.append(el('span','ios-recent-query',text),el('span','','↗'));suggestion.append(item);
+    }
+    const tip=btn('',()=>open('tastes'),'ios-home-tip','设置口味偏好');
+    tip.append(el('strong','','✦ Wanso 小贴士'),el('span','','告诉我忌口与常用预算，下次选餐可以少说一点。'),el('b','','完善口味 →'));
+    suggestion.append(tip);root.append(top,headline,form,section,suggestion);
+  }
+  function explore(root, data, state, route, open) {
+    const hero=el('section','ios-explore-hero');
+    hero.append(photo(asset('explore_hero.webp')),btn('◷ 历史',()=>route('history'),'ios-photo-history','会话历史'));
+    const intro=el('div','ios-photo-copy');
+    const label=btn('',()=>open('cities'),'ios-explore-location','选择位置');
+    const title=el('h1');intro.append(label,title);hero.append(intro);
+    const insight=btn('',()=>nextInsight(),'ios-explore-insight','切换万象洞察');
     insight.append(el('span','ios-insight-icon','✦'));
-    const insightCopy = el('span');
-    insightCopy.append(el('strong','','万象洞察 · 同店比价'), el('span','','同一碗鸡腿河粉，两个平台标价相差 5.000đ。'));
-    insight.append(insightCopy,el('span','','›'));
-    const body = el('div','ios-page-content');
-    const stats = el('section','ios-explore-stats');
-    const statsHeader = el('div','ios-stats-heading');
-    statsHeader.append(el('strong','','🟢 🟠 双平台'),el('span','','河内 · 历史快照'));
-    const values = el('dl','ios-stat-values');
-    // COUNT(*) and conditional counts from the local Wanso restaurant archive.
-    for (const [value,label] of [[42643,'店铺'],[11918,'促销中'],[4803,'配送优惠']]) {
-      const pair=el('div');pair.append(el('dd','',number(value)),el('dt','',label));values.append(pair);
+    const insightCopy=el('span');const insightTitle=el('strong');const insightText=el('span');
+    insightCopy.append(insightTitle,insightText);
+    const insightIndex=el('span','ios-insight-counter');insight.append(insightCopy,insightIndex);
+    const insights=[
+      ['比价提醒','同一家店也可能有不同的平台价格，餐品、配送和优惠一起算。'],
+      ['选餐偏好','先告诉我不能吃什么，再说预算；推荐理由会对应到具体菜品。'],
+      ['点餐技巧','多人点餐先统一份数，优惠门槛与实付金额才有比较依据。']
+    ];
+    let insightNumber=0;
+    function nextInsight(advance=true){
+      if(advance)insightNumber=(insightNumber+1)%insights.length;
+      insightTitle.textContent='万象洞察 · '+insights[insightNumber][0];
+      insightText.textContent=insights[insightNumber][1];insightIndex.textContent=(insightNumber+1)+' / '+insights.length;
     }
-    stats.append(statsHeader,values);
-    const picks = el('div','ios-carousel ios-explore-picks');
-    picks.tabIndex=0;picks.setAttribute('aria-label','万象精选，左右滑动查看餐厅');
-    for (const [id,store] of Object.entries(data)) {
-      const card=btn('',()=>route(storeRoute(id)),'ios-explore-store','查看 '+storeTitle(id));
-      const cover=el('div','ios-explore-cover');
-      cover.append(photo(asset('native/'+store.photo)),el('span','ios-store-platform',store.platform),el('strong','ios-photo-name',store.name));
-      const details=el('div','ios-explore-details');
-      details.append(el('strong','',`★ ${store.rating.toFixed(1)}  ·  ${number(store.review_count)} 条评价`),
-        el('span','',`${store.dish} · ${money(store.sample)}`),el('span','',`距示例位置 ${store.distance} km`));
-      card.append(cover,details);picks.append(card);
+    nextInsight(false);
+    const body=el('div','ios-page-content');const stats=el('section','ios-explore-stats');
+    const statsHeader=el('div','ios-stats-heading');
+    statsHeader.append(el('strong','','🟢 🟠 双平台'),el('span','','当前城市 · 示例店铺'));
+    const catalog=window.wansoNative.catalogForLocation();const values=el('dl','ios-stat-values');
+    const promoCount=catalog.filter(store=>Object.values(store.platforms).some(p=>p.discount>0)).length;
+    const freeCount=catalog.filter(store=>Object.values(store.platforms).some(p=>p.fee===0)).length;
+    for(const [value,text] of [[catalog.length,'店铺'],[promoCount,'有优惠'],[freeCount,'免配送费']]){
+      const pair=el('div');pair.append(el('dd','',number(value)),el('dt','',text));values.append(pair);
     }
-    body.append(stats,heading('今晚推荐','有菜单依据，也有选择理由'),picks,heading('你的场景','点选用餐场景，带着预算开始推荐'));
-    for (const [tag,title,description,action,image] of [
-      ['午餐','午餐想吃一碗热河粉？','两家河内餐厅都有鸡腿河粉，先看菜品，再核对价格。','找午餐','scenario_date.webp'],
-      ['预算','一餐八万越南盾以内','Phở Quyên 餐品 59.000đ，加上档案运费合计 71.000đ。','看推荐','scenario_late.webp']
-    ]) {
-      const story=btn('',()=>route('generating',true),'ios-scenario',action);
-      story.append(photo(asset(image)),el('span','ios-scenario-tag',tag));
-      const copy=el('div','ios-scenario-copy');
-      copy.append(el('strong','',title),el('span','',description),el('b','',action+' →'));
-      story.append(copy);body.append(story);
+    stats.append(statsHeader,values);const picksHeading=heading('');
+    const picks=el('div','ios-carousel ios-explore-picks');
+    picks.tabIndex=0;picks.setAttribute('aria-label','精选餐厅，左右滑动查看五家推荐');
+    function paintMealPicks(bucket) {
+      const query={morning:'早餐预算八万',noon:'鸡肉饭预算八万',afternoon:'咖啡或下午茶预算八万',night:'热汤预算八万'}[bucket];
+      picks.replaceChildren();
+      for(const store of window.wansoNative.selectedStores({limit:5,query})){
+      const card=btn('',()=>open('catalogStore',store.id),'ios-explore-store','查看 '+store.name);
+      const image=el('div','ios-explore-cover');image.append(photo(store.image),el('strong','ios-photo-name',store.name));
+      const details=el('div','ios-explore-details');const price=Math.min(store.platforms.grab.total,store.platforms.shopee.total);
+      details.append(el('strong','',`★ ${store.rating.toFixed(1)} · ${store.district} · ${store.distance.toFixed(1)} km`),el('span','',store.dishZh+' · 到手 '+money(price)+' 起'));
+      const brands=el('div','ios-explore-platforms');
+      brands.append(el('span','ios-platform-grab','G GrabFood'),el('span','ios-platform-shopee','S ShopeeFood'));
+      details.append(brands);card.append(image,details);picks.append(card);
     }
+    }
+    const storyHead=heading('你的场景','按越南当地时段，找一份适合现在的推荐');
+    const stories=el('div','ios-time-scenarios');let currentBucket='';
+    root.updateTimeContent=()=>{
+      const bucket=timeOfDay();if(bucket===currentBucket)return;
+      currentBucket=bucket;root.dataset.timeOfDay=bucket;const meal=meals[bucket];
+      label.textContent=state.location.label+' · '+meal.label+' ⌄';title.textContent=meal.title;
+      picksHeading.querySelector('h2').textContent=meal.picks;
+      const scrollTop=root.scrollTop;
+      paintMealPicks(bucket);stories.replaceChildren();
+      for(const [tag,headline,description,prompt,image] of meal.stories){
+        const story=btn('',()=>chooseScenario(prompt,state,route),'ios-scenario',headline);story.dataset.scenario=tag;
+        story.append(photo(asset(image)),el('span','ios-scenario-tag',tag));
+        const copy=el('div','ios-scenario-copy');copy.append(el('strong','',headline),el('span','',description),el('b','','帮我推荐 →'));
+        story.append(copy);stories.append(story);
+      }
+      root.scrollTop=scrollTop;
+    };
+    root.updateTimeContent();
     const ask=btn('',()=>route('home',false,'tab'),'ios-page-cta','还是选不出来？');
     ask.append(el('strong','','还是选不出来？'),el('span','','把预算、忌口和想吃的告诉万象。'),el('b','','问问 AI →'));
-    body.append(ask);root.append(hero,insight,body);
+    body.append(stats,picksHeading,picks,storyHead,stories,ask);root.append(hero,insight,body);
   }
   function saved(root, data, state, route, open) {
     const header=el('div','ios-page-heading');
@@ -122,7 +221,7 @@ window.wansoPages = (() => {
       actions.querySelectorAll('.ios-saved-icon').forEach((item,i)=>item.replaceChildren(glyph(i?'trash':'folder')));
       card.append(main,actions);root.append(card);
     }
-    if(!ids.length) root.append(el('p','ios-empty-copy','喜欢的餐厅会保存在这里。先看看附近的两家推荐。'));
+    if(!ids.length) root.append(el('p','ios-empty-copy','喜欢的餐厅会保存在这里。先看看附近的推荐餐厅。'));
     root.append(btn('✦ 发现新美食 →',()=>route('explore',false,'tab'),'ios-page-cta','发现新美食'));
   }
   function profile(root, data, state, route, open) {
@@ -160,18 +259,20 @@ window.wansoPages = (() => {
   function mount(layer, id, route, open) {
     const scroll=el('section','phone-scroll ios-data-page ios-page-'+id);
     scroll.tabIndex=0;scroll.setAttribute('role','region');
-    scroll.setAttribute('aria-label',({explore:'探索',saved:'收藏',profile:'个人资料'})[id]+'，上下滚动查看');
-    const render={explore,saved,profile}[id];
+    scroll.setAttribute('aria-label',({home:'首页',explore:'探索',saved:'收藏',profile:'个人资料'})[id]+'，上下滚动查看');
+    const render={home,explore,saved,profile}[id];
     scroll.refreshContent=()=>{
       const top=scroll.scrollTop;
       scroll.replaceChildren();
       const data=window.wansoNative.restaurants();
       const state=window.wansoControls.viewState();
-      if(id==='explore') render(scroll,data,route,open);
-      else render(scroll,data,state,route,open);
+      render(scroll,data,state,route,open);
       scroll.scrollTop=top;
     };
     scroll.refreshContent();layer.append(scroll);return scroll;
   }
-  return {mount};
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) document.querySelector('.ios-page-explore')?.updateTimeContent?.();
+  });
+  return {mount, timeOfDay};
 })();

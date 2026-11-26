@@ -204,7 +204,10 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
     const previousFrame = frames[current];
     if (current === index && !tab) {
       renderFrame(false);
-      if (runSearch) queueSearchStep(frame, request);
+      if (runSearch) {
+        if (frame.id === 'generating') chatNodes = undefined;
+        queueSearchStep(frame, request);
+      }
       return;
     }
     if (frame.chat && previousFrame?.chat && !tab) {
@@ -312,7 +315,7 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
             current = frames.findIndex(f => f.id === target);
             renderFrame(false);
           });
-        chatNodes = Array.from(activeLayer.querySelectorAll('.ios-chat, .ios-composer'));
+        chatNodes = Array.from(activeLayer.querySelectorAll('.ios-chat, .ios-composer, .rich-chat-header'));
       } else activeLayer.append(...chatNodes);
     }
     if (capturedPhone && frame.hotspots.some(h => h.back)) {
@@ -343,7 +346,10 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
 
     elapsed = 0;
     $('.play-progress span').style.transform = 'scaleX(0)';
-    if (runSearch) queueSearchStep(frame, request);
+    if (runSearch) {
+      if (frame.id === 'generating') chatNodes = undefined;
+      queueSearchStep(frame, request);
+    }
   } catch {
     if (request !== loadId) return;
     failed = true;
@@ -364,6 +370,12 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
   }
 }
 function queueSearchStep(frame, request) {
+  if (capturedPhone && ['generating', 'writing'].includes(frame.id)) {
+    window.wansoNative.mountProgress(activeLayer, () => {
+      if (request === loadId) selectFrame('recommend', false, false, 'preserve');
+    });
+    return;
+  }
   if (!frame.afterSearch) return;
   setTimeout(() => {
     if (request === loadId) selectFrame(frame.afterSearch, false, true, 'preserve');
@@ -562,7 +574,7 @@ async function loadManifest() {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
   try {
-    const response = await fetch(capturedPhone ? 'screens.json?v=home-fit' : 'screens.json?v=prototype5', {signal: controller.signal});
+    const response = await fetch(capturedPhone ? 'screens.json?v=wanso-complete1' : 'screens.json?v=prototype5', {signal: controller.signal});
     if (!response.ok) throw Error('screens');
     const data = await response.json();
     if (capturedPhone) await window.wansoNative.load(controller.signal);

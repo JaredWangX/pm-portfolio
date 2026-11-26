@@ -1,7 +1,7 @@
 'use strict';
 
 window.wansoControls = (() => {
-  const query = '鸡腿河粉，预算八万越南盾，找两家店';
+  const query = '想吃鸡肉河粉，清淡一点，含配送不超过八万越南盾，推荐五家';
   const stores = {
     moc: {
       name: 'Phở Gà Hương Vị Mộc - Thái Thịnh', frame: 'store-first', rating: '4.6 · 1,000 条评价',
@@ -58,7 +58,7 @@ window.wansoControls = (() => {
     start: '22:00', end: '08:00', email: 'demo@wanso.example',
     phone: '', birthday: '', gender: '', address: '', query
   };
-  const state = {...original, history: true, collections: ['全部收藏'], recent: [], tastes: ['清淡', '鸡肉', '不吃香菜'],
+  const state = {...original, location: {city:'hanoi',label:'河内 · 还剑区',district:'还剑区'}, history: true, collections: ['全部收藏'], recent: [], tastes: ['清淡', '鸡肉', '不吃香菜'],
     group: {moc: '全部收藏', quyen: '全部收藏'}, menuLanguage: {moc: 0, quyen: 0}, translated: {moc: 0, quyen: 0}};
   const currency = number => number.toLocaleString('en-US') + ' ₫';
   const el = (tag, className, value) => {
@@ -281,16 +281,72 @@ window.wansoControls = (() => {
     }, state.menuLanguage[id] === index)));
   }
 
-  function search() {
-    show('这次想吃什么？', paragraph('把菜品、预算和想比较的店铺数量一起告诉万象。这个原型可以体验一条河内鸡腿河粉搜索。'),
-      row(query, '菜单标价不超过 80,000 ₫，可比较两家店及配送费。', () => {
-        state.query = query;
-        state.history = true;
-        go('generating', true);
-      }), actions(backButton()));
+  function runSearch() {
+    const text = state.query.trim();
+    if (!text) return search();
+    window.wansoNative.setQuery(text);
+    state.history = true;
+    go('generating', true);
   }
 
-  const recommendation = '两家店都有鸡腿河粉。Hương Vị Mộc 在 ShopeeFood 的餐品标价为 73,000 ₫。Phở Quyên 在 GrabFood 的餐品标价为 59,000 ₫。两家都在 80,000 ₫ 的餐费预算内，配送费应单独核对。';
+  function search() {
+    field('这次想吃什么？', '告诉万象这次的预算、口味和人数，推荐后还可以继续追问。', state.query,
+      value => { state.query = value; runSearch(); }, {submit:'开始选餐'});
+  }
+
+  const locations = {
+    hanoi: {name:'河内', districts:['还剑区','巴亭区','栋多区','纸桥区','二征夫人区']},
+    hcm: {name:'胡志明市', districts:['第一郡','第三郡','平盛郡','第七郡','守德市']}
+  };
+  function saveLocation(city, district, address = '') {
+    state.location = {city, district, label:locations[city].name + ' · ' + district};
+    state.address = address;
+    window.wansoNative.setLocation(state.location);
+    sheet.close();
+  }
+  function districtPicker(city) {
+    show('选择' + locations[city].name + '的位置', paragraph('选择用餐区域后，首页精选和探索会更新到对应城市。'),
+      ...locations[city].districts.map(district=>row(district, '附近餐厅', ()=>saveLocation(city,district), state.location.city===city && state.location.district===district)),
+      button('填写具体地址',()=>field('常用地址','填写本次体验使用的地址。',state.address,value=>saveLocation(city,locations[city].districts[0],value),{submit:'使用这个地址'})),
+      note('店铺、费用及距离为演示数据，实际配送以平台地址为准。'), actions(button('返回城市',chooseLocation)));
+  }
+  function chooseLocation() {
+    show('选择位置', paragraph('当前为 ' + state.location.label + (state.address ? ' · '+state.address : '')),
+      ...Object.entries(locations).map(([id,city])=>row(city.name,'选择区域',()=>districtPicker(id),state.location.city===id)),
+      actions(backButton('完成')));
+  }
+  function catalogStore(value) {
+    const {id,request=''}=typeof value==='string'?{id:value}:value;
+    const store=window.wansoCatalog.find(item=>item.id===id);
+    if (!store) return;
+    const top=el('div','order-store');
+    const image=el('img');image.src=store.image;image.alt=store.dishZh+' · 菜品示意';image.width=64;image.height=64;
+    const info=el('div');info.append(el('strong','',store.name),el('span','',store.district+' · '+store.category));top.append(image,info);
+    const menu=el('div','sheet-catalog-menu');
+    menu.append(el('h3','', '推荐菜品与菜单'));
+    for (const dish of store.menu) menu.append(row(dish.name,currency(dish.price)),paragraph(dish.description));
+    const platforms=actions(...Object.keys(store.platforms).map(key=>{
+      const offer=window.wansoNative.offerFor(store,key,request);
+      return button(offer.name+' · '+currency(offer.total),()=>catalogOrder({id,platform:key,request}),'sheet-button '+key);
+    }));
+    show(store.name,top,paragraph(store.reason),details([['推荐菜品',store.dishZh],['评分与评价',store.rating+' · '+store.reviewCount+' 条'],['距离与送达',store.distance+' km · '+store.eta+' 分钟']]),platforms,menu,
+      note('演示店铺与价格，照片为菜品示意。平台按钮按本轮份数核算；菜单标价为单份价格。'),actions(backButton()));
+  }
+  function catalogOrder(value) {
+    const parts=typeof value==='string'?value.split('|'):[];
+    const {id,platform,request=''}=typeof value==='string'?{id:parts[0],platform:parts[1],request:decodeURIComponent(parts[2]||'')}:value;
+    const store=window.wansoCatalog.find(item=>item.id===id);
+    if (!store?.platforms[platform]) return;
+    const offer=window.wansoNative.offerFor(store,platform,request);
+    const saved=id+'|'+platform+'|'+encodeURIComponent(request);
+    state.recent=[saved,...state.recent.filter(key=>key!==saved)];
+    show('下单预览 · '+offer.name,paragraph(store.name+' · '+store.dishZh),
+      details([['份数',offer.quantity+' 份'],['餐品单价',currency(offer.unitPrice)],['餐品小计',currency(offer.price)],['配送费',currency(offer.fee)],['演示优惠','−'+currency(offer.discount)],['合计',currency(offer.total)],['位置',state.location.label]]),
+      note('演示费用明细。本页用于比较相同餐品和份量，付款前请以平台结算金额为准。'),
+      actions(button('返回菜单',()=>catalogStore({id,request})),button('换到 '+(platform==='grab'?'ShopeeFood':'GrabFood'),()=>catalogOrder({id,platform:platform==='grab'?'shopee':'grab',request}))));
+  }
+
+  const recommendation = '餐厅推荐 菜单 费用 配送 预算 越南盾 GrabFood ShopeeFood';
   function savedCount() {
     return Object.values(state.group).filter(Boolean).length;
   }
@@ -319,16 +375,21 @@ window.wansoControls = (() => {
 
   function recentOrders() {
     show('近期订单入口', paragraph('点过的店铺与平台会在这里保留，方便回到本次原型的下单预览。'),
-      ...state.recent.map(id => row(stores[orders[id].store].name, orders[id].platform, () => openOrder(id))),
-      ...(state.recent.length ? [] : [row('查看两家推荐', '在推荐卡片中选择 Order，查看对应餐品和平台费用。', () => go('recommend'))]),
+      ...state.recent.map(id => {
+        if (!id.includes('|')) return row(stores[orders[id].store].name, orders[id].platform, () => openOrder(id));
+        const [key,platform]=id.split('|');
+        const store=window.wansoCatalog.find(item=>item.id===key);
+        return row(store.name,store.platforms[platform].name,()=>catalogOrder(id));
+      }),
+      ...(state.recent.length ? [] : [row('查看五家推荐', '在推荐卡片中选择 Order，查看对应餐品和平台费用。', () => go('recommend'))]),
       actions(backButton()));
   }
 
   function historySearch() {
-    field('搜索会话历史', '按餐品、预算或店铺查找本次浏览的河内样本。', '', keyword => {
-      const terms = (query + ' ' + recommendation).toLocaleLowerCase();
+    field('搜索会话历史', '按餐品、预算或店铺查找本次浏览的会话。', '', keyword => {
+      const terms = (state.query + ' ' + recommendation).toLocaleLowerCase();
       const matches = state.history && terms.includes(keyword.toLocaleLowerCase());
-      show('搜索结果', matches ? row(query, '2 条消息 · 河内样本', () => go('recommend')) :
+      show('搜索结果', matches ? row(state.query, '多轮选餐记录', () => go('recommend')) :
         paragraph(state.history ? '没有找到包含「' + keyword + '」的会话。可以试试「河粉」或「越南盾」。' : '当前没有会话。重新体验首页搜索可添加一条记录。'),
         actions(button('重新搜索', historySearch), backButton()));
     }, {type:'search', submit:'搜索'});
@@ -410,13 +471,9 @@ window.wansoControls = (() => {
     chooseMenuLanguage,
     menuLanguage,
     search,
-    runSearch: () => {
-      if (state.query.trim() !== query) search();
-      else {
-        state.history = true;
-        go('generating', true);
-      }
-    },
+    runSearch,
+    catalogStore,
+    catalogOrder,
     clearQuery: () => {
       state.query = '';
       const input = activeLayer.querySelector('.native-home-query');
@@ -425,10 +482,8 @@ window.wansoControls = (() => {
         input.focus({preventScroll:true});
       }
     },
-    cities: () => show('选择城市', row('河内 · Hà Nội', '该城市包含本次预览的两家鸡腿河粉店。', () => sheet.close(), true),
-      note('推荐以相同的河内示例位置计算，便于对照两家店。'), actions(backButton('完成'))),
-    featured: () => show('万象精选', paragraph('根据本次河内菜单样本，查看店铺评分、菜品和配送选项。'),
-      ...Object.values(stores).map(store => row(store.name, store.rating, () => go(store.frame))), actions(backButton())),
+    cities: chooseLocation,
+    featured: () => window.wansoNative.refreshFeatured(),
     toggle,
     budget: value => choices('budget', ['5万以下', '10万以下', '不限'], value),
     mode: value => choices('mode', ['平衡', '距离优先', '价格优先'], value),

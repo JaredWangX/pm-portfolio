@@ -4,3 +4,6 @@ work/
 
 # The public portfolio is read online; keep PDF originals outside this repository.
 *.pdf
+
+# Local Python browser checks
+__pycache__/
