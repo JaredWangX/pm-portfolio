@@ -49,7 +49,10 @@ window.wansoStore = (() => {
     const body=el('div','native-store-body');scroll.append(body);
     const summary=el('section','native-store-summary');
     const spark=el('span','native-store-spark','✦'),summaryText=el('div');
-    summaryText.append(el('h2','','AI 推荐理由'),el('p','',`${store.reason} 本次按 ${quantity} 份${store.dishZh}比较，${winner[1].name} 含配送合计 ${money(winner[1].total)}。`));summary.append(spark,summaryText);body.append(summary);
+    const summaryOffer=el('div','native-store-summary-offer');
+    const summaryOfferLabel=el('div');summaryOfferLabel.append(el('span','',`${quantity} 份${store.dishZh}`),el('small','',winner[1].name+' · 含配送'));
+    summaryOffer.append(summaryOfferLabel,el('strong','',money(winner[1].total)));
+    summaryText.append(el('h2','','AI 推荐理由'),el('p','',store.reason),summaryOffer);summary.append(spark,summaryText);body.append(summary);
     const translate=el('div','native-store-translate');
     const choose=button('native-store-choose-language','选择菜单翻译语言',showLanguagePicker);
     const label=el('span'),languageValue=el('small');label.append(el('strong','','选择语言'),languageValue);choose.append(label,icon('chevron'));
@@ -63,10 +66,14 @@ window.wansoStore = (() => {
     const platforms=el('section','native-store-platforms');platforms.setAttribute('aria-label','双平台配送与价格');
     for(const [key,offer] of entries) {
       const card=el('article','native-store-platform');card.dataset.platform=key;
-      const header=el('div','native-store-platform-heading'),mark=el('span','native-store-platform-mark',key==='grab'?'GF':'SF'),copy=el('div');
-      copy.append(el('h2','',offer.name),el('p','',`★ ${(store.platforms[key].rating||store.rating).toFixed(1)} · ${store.platforms[key].reviewCount||store.reviewCount} 条评价`));header.append(mark,copy);
+      const header=el('div','native-store-platform-heading'),mark=el('span','native-store-platform-mark',key==='grab'?'GF':'SF');
+      const platformRating=el('p','native-store-platform-rating');platformRating.append(el('span','',`★ ${(store.platforms[key].rating||store.rating).toFixed(1)}`),el('span','',`${store.platforms[key].reviewCount||store.reviewCount} 条评价`));
+      header.append(mark,el('h2','',offer.name),platformRating);
       const detail=el('div','native-store-platform-body');
-      detail.append(el('p','native-store-delivery',`▧ 配送 ${money(offer.fee)}`),el('p','native-store-promo',offer.discount?`🎁 示例优惠 ${money(offer.discount)}`:'🎁 暂无示例优惠'),el('div','native-store-platform-total',`${quantity}份含配送 ${money(offer.total)}`));
+      const delivery=el('p','native-store-delivery');delivery.append(el('span','','配送费'),el('strong','',money(offer.fee)));
+      const promo=el('p','native-store-promo');promo.append(el('span','','示例优惠'),el('strong','',offer.discount?'−'+money(offer.discount):'暂无'));
+      const total=el('div','native-store-platform-total');total.append(el('span','',`${quantity} 份 · 含配送`),el('strong','',money(offer.total)));
+      detail.append(delivery,promo,total);
       const order=button('native-store-order','立即下单 · '+offer.name,()=>onAction?.('catalogOrder',{id:store.id,platform:key,request}));order.append(el('span','','立即下单'),icon('arrow'));
       card.append(header,detail,order);platforms.append(card);
     }
