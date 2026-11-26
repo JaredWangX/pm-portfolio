@@ -20,6 +20,26 @@ window.wansoStore = (() => {
   const button=(className,label,action)=>{
     const node=el('button',className);node.type='button';node.setAttribute('aria-label',label);node.addEventListener('click',action);return node;
   };
+  function appendReviews(container,store) {
+    const id=typeof store==='string'?store:store.id;
+    container.querySelector('.native-store-reviews')?.remove();
+    const reviews=window.wansoReviews?.forStore(store)||[];
+    if(!reviews.length)return;
+    const section=el('section','native-store-reviews');section.dataset.storeReviews=id;
+    const heading=el('div','native-store-reviews-heading');
+    heading.append(el('h2','native-store-section-heading','精彩评论'),el('span','native-store-review-example','评论示例'));
+    section.append(heading);
+    for(const review of reviews) {
+      const card=el('article','native-store-review');
+      const header=el('header','native-store-review-author');
+      const identity=el('div');identity.append(el('strong','',review.name),el('small','',review.platformLabel));
+      const rating=el('span','native-store-review-score','★ '+review.rating.toFixed(1));rating.setAttribute('aria-label',review.rating+' 分，满分 5 分');
+      header.append(el('span','native-store-review-avatar',review.initial),identity,rating);
+      card.append(header,el('p','native-store-review-dish','餐品 · '+review.dish),el('p','native-store-review-text',review.text));
+      section.append(card);
+    }
+    container.append(section);return section;
+  }
   function mount(parent,store,{request='',onClose,onAction,state={}}={}) {
     const root=el('section','native-store-view');root.dataset.storeId=store.id;root.setAttribute('aria-label',store.name+' · 餐厅详情');
     const scroll=el('div','native-store-scroll');scroll.tabIndex=0;scroll.setAttribute('aria-label','餐厅详情，可上下滑动');
@@ -73,9 +93,10 @@ window.wansoStore = (() => {
       const delivery=el('p','native-store-delivery');delivery.append(el('span','','配送费'),el('strong','',money(offer.fee)));
       const promo=el('p','native-store-promo');promo.append(el('span','','示例优惠'),el('strong','',offer.discount?'−'+money(offer.discount):'暂无'));
       const total=el('div','native-store-platform-total');total.append(el('span','',`${quantity} 份 · 含配送`),el('strong','',money(offer.total)));
-      detail.append(delivery,promo,total);
+      detail.append(delivery,promo);
       const order=button('native-store-order','立即下单 · '+offer.name,()=>onAction?.('catalogOrder',{id:store.id,platform:key,request}));order.append(el('span','','立即下单'),icon('arrow'));
-      card.append(header,detail,order);platforms.append(card);
+      const footer=el('div','native-store-platform-footer');footer.append(total,order);
+      card.append(header,detail,footer);platforms.append(card);
     }
     body.append(platforms);
     const compare=el('section','native-store-compare');
@@ -98,6 +119,7 @@ window.wansoStore = (() => {
     comparison.append(el('p','native-store-comparison-note',`以上为单份菜品标价。${quantity}份合并配送后的总价，请看上方平台卡片。`));
     compare.append(comparison);body.append(compare);
     const menu=el('section','native-store-menu');body.append(menu);renderMenu();
+    appendReviews(body,store);
     body.append(el('p','native-store-demo-note','演示店铺、菜单与费用 · 照片为菜品示意，实际可售情况以平台为准。'));
     refreshSaved();refreshLanguage();
 
@@ -179,5 +201,5 @@ window.wansoStore = (() => {
     root.addEventListener('touchcancel',()=>{gesture=null;},{passive:true});
     return {element:root,refreshSaved,destroy:()=>{gesture=null;languageSheet?.remove();root.remove();}};
   }
-  return {mount};
+  return {mount,appendReviews};
 })();

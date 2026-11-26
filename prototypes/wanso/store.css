@@ -1,5 +1,5 @@
 /* Native proportions from MerchantDetailView.swift, independent of the entry screen. */
-.native-store-view {position:absolute;inset:7.1% 0 0;z-index:30;overflow:hidden;border-radius:calc(32 * var(--ios)) calc(32 * var(--ios)) 0 0;background:#eff7ff;color:#13273e;isolation:isolate;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;}
+.native-store-view {position:absolute;inset:7.1% 0 0;z-index:30;overflow:hidden;border-radius:calc(32 * var(--ios)) calc(32 * var(--ios)) 0 0;background:#eff7ff;color:#13273e;isolation:isolate;container:store-detail / inline-size;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;}
 .native-store-view button {font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .native-store-view button:focus-visible {outline:2px solid #2e79d4;outline-offset:2px;}
 .native-store-scroll {height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;touch-action:auto;}
@@ -45,23 +45,24 @@
 .native-store-apply-translation {position:relative;justify-content:center;min-width:calc(130 * var(--ios));color:#266bb3;font-size:max(13px,calc(14 * var(--ios)));font-weight:600;}
 .native-store-apply-translation:before {content:'';position:absolute;left:0;top:calc(12 * var(--ios));bottom:calc(12 * var(--ios));width:1px;background:#e4edf7;}
 .native-store-apply-translation b {font-size:max(17px,calc(17 * var(--ios)));}
-.native-store-platforms {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:24px;}
+.native-store-platforms {display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:24px;}
 .native-store-platform {--platform:#008746;--platform-soft:#ecf9f1;display:flex;flex-direction:column;min-width:0;overflow:hidden;border:1px solid #ccebdc;border-radius:14px;background:#fff;}
 .native-store-platform[data-platform=shopee] {--platform:#c93a20;--platform-soft:#fff0eb;border-color:#f2d9d2;}
-.native-store-platform-heading {display:grid;grid-template-columns:22px minmax(0,1fr);align-items:center;gap:10px 6px;padding:14px 12px 12px;border-bottom:1px solid #e6edf5;}
-.native-store-platform-mark {display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:var(--platform);color:#fff;font-weight:700;font-size:10px;}
+.native-store-platform-heading {display:grid;grid-template-columns:28px minmax(0,1fr);align-items:center;gap:10px;padding:16px;border-bottom:1px solid #e6edf5;}
+.native-store-platform-mark {display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--platform);color:#fff;font-weight:700;font-size:11px;}
 
-.native-store-platform-heading h2 {margin:0;color:var(--platform);font-size:12px;font-weight:650;white-space:nowrap;}
-.native-store-platform-rating {grid-column:1/-1;display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin:0;font-size:11px;line-height:1.5;color:#526b80;}
+.native-store-platform-heading h2 {margin:0;color:var(--platform);font-size:14px;font-weight:650;white-space:nowrap;}
+.native-store-platform-rating {grid-column:1/-1;display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px;margin:0;font-size:12px;line-height:1.5;color:#526b80;}
 .native-store-platform-rating span {white-space:nowrap;}
-.native-store-platform-body {display:grid;gap:10px;padding:14px 12px 16px;flex:1;}
-.native-store-delivery,.native-store-promo {display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:3px 6px;font-size:11px;line-height:1.5;margin:0;color:#526b80;}
-.native-store-delivery strong,.native-store-promo strong {font-size:12px;font-weight:550;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.native-store-platform-body {display:grid;gap:12px;padding:16px;flex:1;}
+.native-store-delivery,.native-store-promo {display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:8px;font-size:13px;line-height:1.5;margin:0;color:#526b80;}
+.native-store-delivery strong,.native-store-promo strong {font-size:13px;font-weight:550;white-space:nowrap;font-variant-numeric:tabular-nums;}
 .native-store-promo {color:var(--platform);}
-.native-store-platform-total {display:grid;gap:6px;padding-top:12px;margin-top:2px;border-top:1px solid #edf2f7;color:#526b80;}
-.native-store-platform-total>span {font-size:11px;line-height:1.5;}
+.native-store-platform-footer {display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px;padding:16px;border-top:1px solid #e7eef6;background:var(--platform-soft);}
+.native-store-platform-total {min-width:0;display:grid;gap:7px;color:#526b80;}
+.native-store-platform-total>span {font-size:12px;line-height:1.5;}
 .native-store-platform-total>strong {font-size:20px;line-height:1.2;font-weight:650;color:#1d3b54;white-space:nowrap;font-variant-numeric:tabular-nums;}
-.native-store-order {display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:42px;padding:10px 6px;border:0;background:var(--platform);color:#fff;font-size:12px;font-weight:650;}
+.native-store-order {display:flex;align-items:center;justify-content:center;gap:6px;min-width:94px;min-height:44px;padding:10px 12px;border:0;border-radius:10px;background:var(--platform);color:#fff;font-size:12px;font-weight:650;}
 .native-store-order svg {width:calc(12 * var(--ios));height:calc(12 * var(--ios));}
 .native-store-section-heading {margin:28px 0 14px;font-size:17px;font-weight:650;color:#182f47;}
 .native-store-comparison-card {padding:14px;border:1px solid #dce7f3;border-radius:16px;background:#fff;}
@@ -109,3 +110,36 @@
 .native-store-compare-name>span[data-platform=shopee]{background:#fff0eb;color:#bb351e;}
 .native-store-comparison-note,.native-store-demo-note {font-size:max(13px,calc(12 * var(--ios)));}
 .native-store-platform[data-platform=grab] .native-store-promo {color:#176341;}
+
+/* The portfolio embeds the phone at different widths, independent of browser width. */
+@container store-detail (min-width:390px) {
+  .native-store-platforms {grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+  .native-store-platform-footer {grid-template-columns:minmax(0,1fr);gap:14px;}
+  .native-store-order {width:100%;}
+}
+@container store-detail (max-width:285px) {
+  .native-store-platform-heading,.native-store-platform-body,.native-store-platform-footer {padding:14px;}
+  .native-store-platform-footer {gap:8px;}
+  .native-store-platform-total>strong {font-size:18px;}
+  .native-store-order {min-width:84px;padding-inline:8px;}
+  .native-store-apply-translation {min-width:0;flex:0 0 40%;padding-inline:8px;}
+}
+@container store-detail (max-width:250px) {
+  .native-store-platform-footer {grid-template-columns:minmax(0,1fr);gap:12px;}
+  .native-store-order {width:100%;}
+}
+
+.native-store-reviews-heading {display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 14px;}
+.native-store-reviews-heading h2 {margin:0;}
+.native-store-review-example {flex:none;padding:4px 8px;border-radius:6px;background:#e1ecf8;color:#4b6580;font-size:11px;line-height:1.5;}
+.native-store-review {padding:16px;border:1px solid #dce7f3;border-radius:14px;background:#fff;}
+.native-store-review+.native-store-review {margin-top:12px;}
+.native-store-review-author {display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:10px;align-items:center;}
+.native-store-review-avatar {display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#e7f0fc;color:#3774b8;font-size:13px;font-weight:600;}
+.native-store-review-author>div {min-width:0;display:grid;gap:4px;}
+.native-store-review-author strong {font-size:13px;line-height:1.4;color:#23415b;}
+.native-store-review-author small {font-size:11px;color:#526b80;}
+.native-store-review-score {white-space:nowrap;font-size:12px;font-weight:650;color:#936013;}
+.native-store-review-dish {margin:14px 0 8px;font-size:12px;line-height:1.6;color:#3974b0;}
+.native-store-review-text {margin:0;font-size:13px;line-height:1.8;color:#354f68;text-wrap:pretty;}
+.phone-scroll>.native-store-reviews {margin:0 max(16px,calc(20 * var(--ios))) 28px;}

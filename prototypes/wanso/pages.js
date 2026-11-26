@@ -192,20 +192,36 @@ window.wansoPages = (() => {
     ask.append(el('strong','','还是选不出来？'),el('span','','把预算、忌口和想吃的告诉万象。'),el('b','','问问 AI →'));
     body.append(stats,picksHeading,picks,storyHead,stories,ask);root.append(hero,insight,body);
   }
+  function recentOrderCard(record, open) {
+    const card=el('article','ios-order-record');card.dataset.orderId=record.id;card.dataset.platform=record.platform;
+    const main=btn('',()=>open(record.detailAction,record.detailValue),'ios-order-record-main','查看订单店铺 · '+record.name);
+    const copy=el('span');copy.append(el('span','ios-order-record-platform',record.platformName),el('strong','',record.name));
+    main.append(photo(record.image),copy);
+    const dish=el('p','ios-order-record-dish',record.dish+' · '+record.quantity+' 份');
+    const costs=el('dl','ios-order-record-costs');
+    for(const [label,value] of [['餐品',money(record.price)],['配送',record.fee===null?'以平台为准':money(record.fee)],['优惠',record.discount?'−'+money(record.discount):'暂无']]){
+      const row=el('div');row.append(el('dt','',label),el('dd','',value));costs.append(row);
+    }
+    const total=el('div','ios-order-record-total');total.append(el('span','','含配送合计'),el('strong','',record.total===null?'待确认':money(record.total)));
+    card.append(main,dish,costs,total,btn('再次下单 ↗',()=>open(record.orderAction,record.id),'ios-order-record-reopen','再次下单 · '+record.name+' · '+record.platformName));
+    return card;
+  }
   function saved(root, data, state, route, open) {
     const header=el('div','ios-page-heading');
     header.append(el('h1','','♥ 已收藏'),btn('◷ 历史',()=>route('history'),'ios-page-link','会话历史'));
     data={...data,...Object.fromEntries(window.wansoCatalog.map(store=>[store.id,{...store,photo:store.image,review_count:store.reviewCount,dish:store.dishZh,sample:store.platforms.grab.price,platform:'GrabFood'}]))};
     const ids=Object.keys(data).filter(id=>state.group[id]);
     const intro=el('div','ios-saved-intro');
-    intro.append(el('strong','',`已收藏 ${ids.length} 家 · 万象精选`),el('span','','查看菜单、核对费用，把喜欢的店留在手边。'));
-    const recent=btn('',()=>open('recentOrders'),'ios-recent-orders','近期订单');
-    recent.append(el('strong','',state.recent.length?`最近查看 ${state.recent.length} 个下单入口`:'还没有订单'),
-      el('span','',state.recent.length?'查看已选店铺与平台，继续核对餐品和费用。':'选择店铺的 Order，可在手机内查看下单预览。'));
+    intro.append(el('strong','',`已收藏 ${ids.length} 家 · 万象精选`),el('span','','把喜欢的餐厅留在手边，按收藏夹整理。'));
+    const recentHeading=el('div','ios-group-heading');recentHeading.append(el('strong','','最近订单'),btn('查看全部 →',()=>open('recentOrders'),'ios-page-link','查看全部最近订单'));
+    const recent=el('div','ios-recent-order-rail');recent.setAttribute('aria-label','最近订单，可左右滑动');
+    for(const id of state.recent.slice(0,3)){const record=window.wansoControls.recentOrderData(id);if(record)recent.append(recentOrderCard(record,open));}
+    if(!recent.children.length)recent.append(el('p','ios-orders-empty','暂无记录。打开餐厅的下单预览后，会在这里保留。'));
+    const recentNote=el('p','ios-order-record-note','示例与本次浏览记录 · 未产生实际交易');
     const group=el('div','ios-group-heading');
     group.append(el('strong','','我的收藏夹'),btn('＋ 添加',()=>open('collections'),'ios-page-link','添加收藏夹'));
     const collection=btn(`❤️ 全部收藏 · ${ids.length} 家`,()=>open('collections'),'ios-collection-title','查看全部收藏');
-    root.append(header,intro,heading('最近订单'),recent,group,collection);
+    root.append(header,intro,recentHeading,recentNote,recent,group,collection);
     for (const id of ids.reverse()) {
       const store=data[id];
       const card=el('article','ios-saved-store');
@@ -215,11 +231,9 @@ window.wansoPages = (() => {
         el('small','',`${store.dish}  ${money(store.sample)}`));
       main.append(photo(store.id?store.image:asset('native/'+store.photo)),copy);
       const actions=el('div','ios-saved-actions');
-      const order=btn('在 '+store.platform+' 下单 →',()=>store.id?open('catalogOrder',{id,platform:'grab',request:''}):open('order',orderId(id)),'ios-saved-order',store.name+' · '+store.platform+' 下单');
-      order.dataset.platform=id==='moc'?'shopee':'grab';
-      actions.append(order,btn('▱',()=>open('moveSaved',id),'ios-saved-icon','移动 '+store.name+' 到收藏夹'),
-        btn('⌫',()=>open('removeSaved',id),'ios-saved-icon','移除 '+store.name+' 收藏'));
-      actions.querySelectorAll('.ios-saved-icon').forEach((item,i)=>item.replaceChildren(glyph(i?'trash':'folder')));
+      actions.append(btn('',()=>open('moveSaved',id),'ios-saved-icon','移动 '+store.name+' 到收藏夹'),
+        btn('',()=>open('removeSaved',id),'ios-saved-icon','移除 '+store.name+' 收藏'));
+      actions.querySelectorAll('.ios-saved-icon').forEach((item,i)=>item.append(glyph(i?'trash':'folder'),el('span','',i?'取消收藏':'移动收藏夹')));
       card.append(main,actions);root.append(card);
     }
     if(!ids.length) root.append(el('p','ios-empty-copy','喜欢的餐厅会保存在这里。先看看附近的推荐餐厅。'));
@@ -277,5 +291,5 @@ window.wansoPages = (() => {
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) document.querySelector('.ios-page-explore')?.updateTimeContent?.();
   });
-  return {mount, timeOfDay};
+  return {mount, timeOfDay, recentOrderCard};
 })();

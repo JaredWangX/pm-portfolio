@@ -7,7 +7,8 @@ Source of truth: WansoIOS/Features/MerchantDetail/MerchantDetailView.swift.
 The current source is a full scrolling page with a photo hero, merchant info,
 AI summary, explicit language selection/translation, two platform offers,
 cross-platform menu comparison and grouped menu. It does not render review
-or menu tabs, review filters, or a sort menu; the test does not invent them.
+or menu tabs, review filters, or a sort menu. The added illustrative review
+section was subsequently requested by the user and is checked separately.
 
 This suite checks the visitor-visible detail reached from actual home/chat
 cards. It does not invoke the detail renderer directly or replace backend data.
@@ -317,7 +318,7 @@ def run():
                 page.locator('.hotspot[aria-label="收藏"]').click()
                 saved = page.locator('.ios-page-saved')
                 expect(saved).to_be_visible()
-                saved.get_by_role('button', name='查看 ' + store['name'], exact=True).click()
+                saved.locator('.ios-saved-store').get_by_role('button', name='查看 ' + store['name'], exact=True).click()
                 view = detail(page, identifier)
                 expect(view.locator('.native-store-heart')).to_have_attribute('aria-pressed', 'true')
                 screenshot(page, label + '-saved-store-detail')
@@ -325,7 +326,7 @@ def run():
                 expect(view.locator('.native-store-heart')).to_have_attribute('aria-pressed', 'false')
                 view.locator('.native-store-back').click()
                 expect(saved).to_be_visible()
-                expect(saved.get_by_role('button', name='查看 ' + store['name'], exact=True)).to_have_count(0)
+                expect(saved.locator('.ios-saved-store').get_by_role('button', name='查看 ' + store['name'], exact=True)).to_have_count(0)
                 CHECKS.append(label + ': save through collection picker → saved list → same selected-store detail → unsave removes it without navigation errors')
                 check_profile_controls(page, label)
                 check_location_controls(page, label)

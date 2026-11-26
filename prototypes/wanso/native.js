@@ -53,6 +53,7 @@ window.wansoNative = (() => {
       menu.append(group);
     }
     container.append(menu);
+    if(container.classList.contains('phone-scroll')) window.wansoStore.appendReviews(container,key);
     return menu;
   }
 

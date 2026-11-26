@@ -58,7 +58,7 @@ window.wansoControls = (() => {
     start: '22:00', end: '08:00', email: 'demo@wanso.example',
     phone: '', birthday: '', gender: '', address: '', query
   };
-  const state = {...original, location: {city:'hanoi',label:'河内 · 还剑区',district:'还剑区'}, history: true, collections: ['全部收藏'], recent: [], tastes: ['清淡', '鸡肉', '不吃香菜'],
+  const state = {...original, location: {city:'hanoi',label:'河内 · 还剑区',district:'还剑区'}, history: true, collections: ['全部收藏'], recent: loadRecentOrders(), tastes: ['清淡', '鸡肉', '不吃香菜'],
     group: {moc: '全部收藏', quyen: '全部收藏'}, menuLanguage: {moc: 0, quyen: 0}, translated: {moc: 0, quyen: 0}};
   const currency = number => number.toLocaleString('en-US') + ' ₫';
   const el = (tag, className, value) => {
@@ -202,7 +202,7 @@ window.wansoControls = (() => {
   function openOrder(id) {
     const order = orders[id];
     const store = stores[order.store];
-    state.recent = [id, ...state.recent.filter(key => key !== id)];
+    recordRecentOrder(id);
     const top = el('div', 'order-store');
     const photo = el('img');
     photo.src = '../../assets/wanso/native/' + store.image;
@@ -368,7 +368,7 @@ window.wansoControls = (() => {
     if (!store?.platforms[platform]) return;
     const offer=window.wansoNative.offerFor(store,platform,request);
     const saved=id+'|'+platform+'|'+encodeURIComponent(request);
-    state.recent=[saved,...state.recent.filter(key=>key!==saved)];
+    recordRecentOrder(saved);
     show('下单预览 · '+offer.name,paragraph(store.name+' · '+store.dishZh),
       details([['份数',offer.quantity+' 份'],['餐品单价',currency(offer.unitPrice)],['餐品小计',currency(offer.price)],['配送费',currency(offer.fee)],['演示优惠','−'+currency(offer.discount)],['合计',currency(offer.total)],['位置',state.location.label]]),
       note('演示费用明细。本页用于比较相同餐品和份量，付款前请以平台结算金额为准。'),
@@ -402,16 +402,46 @@ window.wansoControls = (() => {
         }, {limit: 18}), 'sheet-button primary')));
   }
 
+  function recentOrderData(id) {
+    if (orders[id]) {
+      const order=orders[id],store=stores[order.store];
+      return {id,storeId:order.store,name:store.name,image:'../../assets/wanso/native/'+store.image,
+        dish:store.menu[0][0],platform:order.color,platformName:order.platform,quantity:1,
+        price:order.price,fee:order.fee,discount:0,total:order.fee===null?null:order.price+order.fee,
+        detailAction:'legacyStore',detailValue:store.frame,orderAction:'order'};
+    }
+    const [storeId,platform,encoded='']=id.split('|');
+    const store=window.wansoCatalog.find(item=>item.id===storeId);
+    if(!store?.platforms[platform])return null;
+    let request;try{request=decodeURIComponent(encoded);}catch{return null;}
+    const offer=window.wansoNative.offerFor(store,platform,request);
+    return {id,storeId,name:store.name,image:store.image,dish:store.dishZh,platform,platformName:offer.name,
+      quantity:offer.quantity,price:offer.price,fee:offer.fee,discount:offer.discount,total:offer.total,
+      detailAction:'catalogStore',detailValue:{id:storeId,request},orderAction:'catalogOrder'};
+  }
+  function loadRecentOrders() {
+    const examples=['demo-1|grab|','demo-3|shopee|','demo-6|grab|'];
+    try {
+      const raw=sessionStorage.getItem('wanso-recent-orders-v1');
+      if(raw!==null){const parsed=JSON.parse(raw);if(Array.isArray(parsed))return parsed.filter(id=>typeof id==='string'&&recentOrderData(id)).slice(0,50);}
+      sessionStorage.setItem('wanso-recent-orders-v1',JSON.stringify(examples));
+    } catch { /* Storage can be unavailable in an embedded preview. */ }
+    return examples;
+  }
+  function setRecentOrders(ids) {
+    state.recent=ids;
+    try{sessionStorage.setItem('wanso-recent-orders-v1',JSON.stringify(ids));}catch{}
+  }
+  function recordRecentOrder(id) {
+    const record=recentOrderData(id);if(!record)return;
+    setRecentOrders([id,...state.recent.filter(key=>recentOrderData(key)?.storeId!==record.storeId)].slice(0,50));
+  }
   function recentOrders() {
-    show('近期订单入口', paragraph('点过的店铺与平台会在这里保留，方便回到本次原型的下单预览。'),
-      ...state.recent.map(id => {
-        if (!id.includes('|')) return row(stores[orders[id].store].name, orders[id].platform, () => openOrder(id));
-        const [key,platform]=id.split('|');
-        const store=window.wansoCatalog.find(item=>item.id===key);
-        return row(store.name,store.platforms[platform].name,()=>catalogOrder(id));
-      }),
-      ...(state.recent.length ? [] : [row('查看五家推荐', '在推荐卡片中选择 Order，查看对应餐品和平台费用。', () => go('recommend'))]),
-      actions(backButton()));
+    const list=el('div','ios-order-list');
+    for(const id of state.recent){const record=recentOrderData(id);if(record)list.append(window.wansoPages.recentOrderCard(record,(action,value)=>actionHandlers[action](value)));}
+    show('最近订单',note('示例与本次浏览的下单入口记录，未产生实际交易。'),list,
+      ...(state.recent.length ? [] : [row('暂无记录', '从餐厅详情打开下单预览后，会在这里保留餐品与平台。')]),
+      actions(backButton('完成')));
   }
 
   function historySearch() {
@@ -431,7 +461,7 @@ window.wansoControls = (() => {
       state.history = false;
       if (all) {
         state.group = {};
-        state.recent = [];
+        setRecentOrders([]);
       }
       sheet.close();
     });
@@ -560,6 +590,7 @@ window.wansoControls = (() => {
       sheet.close();
     }),
     recentOrders,
+    legacyStore: frame=>go(frame),
     historySearch,
     historyClear: () => clearHistory(false),
     activityClear: () => clearHistory(true),
@@ -659,6 +690,7 @@ window.wansoControls = (() => {
 
   return {
     viewState: () => state,
+    recentOrderData,
     register,
     paint,
     menuLanguage: id => state.translated[id],
