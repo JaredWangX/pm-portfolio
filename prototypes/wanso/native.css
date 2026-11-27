@@ -22,7 +22,7 @@ body[data-capture="ios"] .screen { --ios: calc(100cqw / 402); }
   border-radius: calc(17 * var(--ios));
   background: linear-gradient(130deg,#3077e2,#2c5a98);
   color: #fff;
-  font-size: calc(13 * var(--ios));
+  font-size: max(13px,calc(13 * var(--ios)));
 }
 .ios-chat-reply {
   display: grid;
@@ -345,7 +345,7 @@ body[data-capture="ios"] .screen { touch-action: auto; }
 .ios-stat-values dt { font-size:calc(11 * var(--ios)); color:#5c7188; margin-top:calc(4 * var(--ios)); }
 .ios-section-title { margin:calc(22 * var(--ios)) 0 calc(12 * var(--ios)); }
 .ios-section-title h2 { font-size:calc(19 * var(--ios)); line-height:1.4; font-weight:700; }
-.ios-section-title p { color:#5c738d; margin-top:calc(3 * var(--ios)); font-size:calc(12 * var(--ios)); }
+.ios-section-title p { color:#526b83; margin-top:calc(3 * var(--ios)); font-size:calc(12 * var(--ios)); }
 .ios-explore-picks { margin-inline:calc(-2 * var(--ios)); padding:0 calc(2 * var(--ios)) calc(6 * var(--ios)); gap:calc(12 * var(--ios)); }
 .ios-explore-store { flex:0 0 76%; max-width:calc(250 * var(--ios)); overflow:hidden; border-radius:calc(16 * var(--ios)); background:#fff; color:#1d3551; padding:0; }
 .ios-explore-cover { position:relative; height:calc(133 * var(--ios)); }

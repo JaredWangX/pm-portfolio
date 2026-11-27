@@ -49,8 +49,6 @@
 .ios-data-page button:focus-visible {outline:calc(2 * var(--ios)) solid #3988e8;outline-offset:calc(3 * var(--ios));}
 .ios-page-home .native-home-query:focus-visible {outline:calc(2 * var(--ios)) solid #91b9ea;outline-offset:calc(3 * var(--ios));}
 @media(pointer:coarse){.ios-page-home .native-home-query:focus {font-size:16px;}}
-/* Mask the archived page text below the native bottom navigation. */
-.page-layer.native-page:has(.ios-page-home)::after {content:"";position:absolute;inset:97% 0 0;pointer-events:none;background:#edf5ff;}
 .ios-home-tip span {color:#526b83;}.ios-home-tip b {color:#275e9e;}
 /* Saved restaurants remain separate from platform-entry history. */
 .ios-page-saved .ios-saved-actions {display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:12px;margin-top:14px;}

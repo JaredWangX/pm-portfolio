@@ -13,10 +13,10 @@
 .native-store-nav-title strong {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;line-height:1.4;color:#18364e;}
 .native-store-nav-title small {font-size:11px;line-height:1.4;color:#526e86;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .native-store-nav-title small[data-state=open] {color:#187344;}
-.native-store-view.is-scrolled .native-store-toolbar {background:#f8fbfff5;border-bottom-color:#dbe7f2;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.native-store-view.is-scrolled .native-store-toolbar {background:#eff6ffdb;border-bottom-color:#ffffffb3;backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);}
 .native-store-view.is-scrolled .native-store-nav-title {opacity:1;visibility:visible;}
-.native-store-circle {display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid #dbe6f299;border-radius:50%;padding:11px;background:#fffffff0;color:#244c72;box-shadow:0 2px 8px #162f4520;}
-.native-store-view.is-scrolled .native-store-circle {background:#eaf3fe;border-color:#d9e8fa;box-shadow:none;}
+.native-store-circle {display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid #ffffff66;border-radius:50%;padding:11px;background:#0f1a2e66;color:#fff;box-shadow:0 2px 8px #162f4520;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.native-store-view.is-scrolled .native-store-circle {background:#ffffff66;border-color:#ffffffb3;color:#244c72;box-shadow:0 1px 4px #173a6310;backdrop-filter:none;-webkit-backdrop-filter:none;}
 .native-store-circle svg {display:block;width:100%;height:100%;}
 .native-store-heart[aria-pressed=true] {color:#ff4d6d;}
 .native-store-heart[aria-pressed=true] svg {fill:currentColor;}

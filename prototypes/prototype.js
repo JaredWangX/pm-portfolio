@@ -137,8 +137,9 @@ function openPhoneAction(hotspot) {
 }
 
 function phoneIcon(name){
-  const paths={home:'m3 10 9-7 9 7v10H3ZM9 20v-7h6v7',explore:'M12 3a9 9 0 1 0 .01 0ZM16 8l-2 6-6 2 2-6Z',saved:'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z',profile:'M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM4 21v-2a8 8 0 0 1 16 0v2',back:'m14 5-7 7 7 7'};
+  const paths={home:'M12 2 1 11l1.3 1.6L4 11.2V22h16V11.2l1.7 1.4L23 11 12 2ZM9 14h6v8H9v-8Z',explore:'M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21ZM17 7l-3 7-7 3 3-7 7-3Z',saved:'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z',profile:'M16 6a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM3 22v-2a9 9 0 0 1 18 0v2H3Z',back:'m14 5-7 7 7 7'};
   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.8');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');svg.setAttribute('aria-hidden','true');
+  if(name!=='back'){svg.setAttribute('fill','currentColor');svg.setAttribute('fill-rule','evenodd');svg.setAttribute('stroke','none');}
   const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[name]);svg.append(path);return svg;
 }
 function renderPhoneNav(){
