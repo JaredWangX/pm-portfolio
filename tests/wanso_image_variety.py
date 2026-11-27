@@ -10,7 +10,20 @@ OUT=ROOT/'work/wanso-image-variety';OUT.mkdir(parents=True,exist_ok=True)
 checks=[]
 
 def photos(locator):
-    return locator.evaluate_all('(nodes)=>nodes.map(n=>n.getAttribute("src"))')
+    return locator.evaluate_all('(nodes)=>nodes.map(n=>n.dataset.imageSource||n.getAttribute("src"))')
+
+def loaded_photos(locator):
+    """Scroll real rails: deferred cards must decode before their identity is checked."""
+    actual=[]
+    for image in locator.all():
+        image.scroll_into_view_if_needed()
+        expect(image).to_have_attribute("data-media-state","loaded")
+        assert image.evaluate("i=>i.naturalWidth>1&&i.complete")
+        source=image.get_attribute("src")
+        canonical=image.get_attribute("data-image-source")
+        assert Path(source).name==Path(canonical).name
+        actual.append(source)
+    return actual
 def hash_photo(src):
     with Image.open((ROOT/'prototypes/wanso'/src).resolve()) as image:
         return sha256(image.convert('RGB').resize((128,128)).tobytes()).hexdigest()
@@ -23,13 +36,18 @@ with sync_playwright() as p:
         page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
         page.goto(BASE+'prototypes/wanso/#home',wait_until='networkidle')
         home=photos(page.locator('.rich-home-card img'));assert len(home)==5
+        home_loaded=loaded_photos(page.locator('.rich-home-card img'))
         page.evaluate("location.hash='explore'");expect(page.locator('.ios-explore-picks')).to_be_visible()
         explore=photos(page.locator('.ios-explore-store img'));assert len(explore)==5
+        explore_loaded=loaded_photos(page.locator('.ios-explore-store img'))
         page.evaluate("location.hash='recommend'");expect(page.locator('.rich-chat-rail')).to_have_count(3)
         chat=photos(page.locator('.rich-chat-rail').first.locator('img'));assert len(chat)==5
+        chat_loaded=loaded_photos(page.locator('.rich-chat-rail').first.locator('img'))
         first15=home+explore+chat
         assert len(set(map(hash_photo,first15)))==15,'different URLs must not hide duplicate photo files'
         assert all(photo_meta(page,src)['kind']=='photo' for src in first15)
+        assert len(set(map(hash_photo,home_loaded+explore_loaded+chat_loaded)))==15,'loaded card variants must remain distinct'
+        assert all('/thumbs/' in src for src in home_loaded+explore_loaded+chat_loaded)
         if width==1440:
             montage=Image.new('RGB',(1100,450),'white')
             for i,src in enumerate(first15):
@@ -41,11 +59,13 @@ with sync_playwright() as p:
         for rail in [page.locator('.rich-chat-rail').nth(1),page.locator('.rich-chat-rail').nth(2)]:
             assert set(ids(rail))==set(first),'fee or narrowing follow-up silently replaced the candidate stores'
         chosen=page.locator('.rich-chat-rail').first.locator('.rich-recommendation').first
-        src=chosen.locator('img').get_attribute('src');identifier=chosen.get_attribute('data-store-id')
+        src=chosen.locator('img').get_attribute('data-image-source');identifier=chosen.get_attribute('data-store-id')
         chosen.locator('.ios-restaurant-main').click()
         expect(page.locator('.native-store-view')).to_have_attribute('data-store-id',identifier)
+        expect(page.locator('.native-store-hero>img')).to_have_attribute('data-image-source',src)
+        expect(page.locator('.native-store-hero>img')).to_have_attribute('data-media-state','loaded')
         expect(page.locator('.native-store-hero>img')).to_have_attribute('src',src)
-        page.get_by_role('button',name='返回上一页',exact=True).click()
+        page.get_by_role('button',name='Quay lại',exact=True).click()
         assert set(ids(page.locator('.rich-chat-rail').first))==set(first)
         page.evaluate("location.hash='home'");expect(page.locator('.ios-home-location')).to_be_visible()
         assert photos(page.locator('.rich-home-card img'))==home,'home reshuffled without an explicit refresh'
@@ -55,7 +75,7 @@ with sync_playwright() as p:
         page.evaluate("location.hash='home'");expect(page.locator('.rich-home-card')).to_have_count(5)
         refreshed=[]
         for i in range(7):
-            page.get_by_role('button',name='刷新万象精选',exact=True).click()
+            page.get_by_role('button',name='Đổi quán Wanso tuyển chọn',exact=True).click()
             batch=photos(page.locator('.rich-home-card img'));assert len(batch)==5
             assert len(set(batch))==5
             assert all(photo_meta(page,src)['kind']=='photo' for src in batch)
@@ -65,7 +85,7 @@ with sync_playwright() as p:
         checks.append(f'{width}: seven refreshes show 35 additional distinct photo files without reusing initial pages')
         # Constraints still apply even when a page has already shown many images.
         result=page.evaluate('''() => {
-          const tests=['想吃鸡肉热汤河粉，不吃香菜，含配送预算八万','想吃鸡肉米线，含配送预算八万','想吃干拌河粉，含配送预算八万','想吃素食，不吃鸡肉，含配送预算八万'];
+          const tests=['Muốn ăn phở gà nước nóng, không rau mùi, cả ship dưới 80.000đ','Muốn ăn bún gà, cả ship dưới 80.000đ','Muốn ăn phở trộn, cả ship dưới 80.000đ','Muốn ăn chay, không thịt gà, cả ship dưới 80.000đ'];
           const start=performance.now();
           const rows=tests.map(query=>window.wansoNative.selectedStores({query}).map(s=>({id:s.id,key:s.key,city:s.city,image:s.image,vegetarian:s.vegetarian,total:Math.min(s.platforms.grab.total,s.platforms.shopee.total)})));
           return {rows,ms:performance.now()-start};

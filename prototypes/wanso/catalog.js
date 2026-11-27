@@ -4,18 +4,18 @@
 // All prices, distances, review counts and availability below are demonstration data.
 window.wansoCatalog = (() => {
   const dishes = [
-    {key:'pho',name:'Phở Gà An Nhiên',dish:'Phở gà đùi',dishZh:'鸡腿汤河粉',category:'越南菜 · 汤河粉',image:'demo/pho.jpg',price:59000,tags:['鸡腿肉','热汤','辣椒另放','一人食'],description:'鸡腿肉搭配细河粉和鸡汤，豆芽、青柠和辣椒分装，适合想吃热食的一餐。',reason:'🍜 鸡腿汤河粉的主食和肉类都符合要求；套餐的汤、粉、配料分别包装，送达后再组合。想吃清淡可以备注少盐、辣椒另放。'},
-    {key:'mixed',name:'Phở Trộn Mộc',dish:'Phở trộn gà',dishZh:'鸡肉拌河粉',category:'越南菜 · 拌河粉',image:'native/order-quyen.webp',price:62000,tags:['鸡肉','拌河粉','酱汁另放','工作午餐'],description:'鸡肉与拌河粉配酸甜酱汁，酱汁和香草单独包装，适合偏好干拌口感的人。',reason:'🥢 这家的鸡肉拌河粉适合不想喝汤时选，酱汁单独加能控制浓淡。若对花生或鱼露过敏，需要先向店家核实配方。'},
-    {key:'rice',name:'Cơm Gà Nắng',dish:'Cơm gà luộc',dishZh:'白切鸡肉饭',category:'越南菜 · 鸡肉饭',image:'demo/chicken-rice.webp',price:54000,tags:['白切鸡','米饭','蔬菜配菜','午餐'],description:'白切鸡、米饭和腌蔬菜组成单人套餐，酱料另装，便于带回工位吃。',reason:'🍚 白切鸡肉饭把主食、肉和配菜装在同一餐盒，适合工作间隙吃。菜单的单人份价格较低，可以把预算留给配送。'},
-    {key:'banh',name:'Bánh Mì Sớm',dish:'Bánh mì gà',dishZh:'鸡肉越式法棍',category:'越南小吃 · 法棍',image:'demo/banh-mi.jpg',price:36000,tags:['法棍','鸡肉','早餐','方便携带'],description:'烤法棍夹鸡肉、黄瓜和腌菜，可备注不加辣椒，适合通勤早餐或轻量午餐。',reason:'🥖 鸡肉法棍方便携带，餐品价格留有较多预算空间。它比一份米饭套餐轻巧，特别饿的时候可以加配小食。'},
-    {key:'veggie',name:'Bếp Xanh',dish:'Cơm đậu hũ rau củ',dishZh:'豆腐时蔬炒饭',category:'素食 · 米饭',image:'demo/tofu-rice.webp',price:49000,tags:['豆腐','时蔬','清淡','植物食材'],vegetarian:true,description:'豆腐块、时蔬和米饭炒制的单人餐，可备注少油、酱汁另放。严格素食需再确认汤底和酱料。',reason:'🥬 豆腐时蔬炒饭以植物食材为主，适合想多吃蔬菜的一餐。若是严格素食，仍需向店家确认鱼露、汤底与共用厨具。'},
-    {key:'coffee',name:'Cà Phê Bình Minh',dish:'Cà phê sữa và bánh',dishZh:'越南炼乳咖啡与黄油小面包',category:'咖啡 · 轻食套餐',image:'demo/iced-coffee.webp',price:42000,tags:['咖啡','含乳','糖量可调','下午茶'],vegetarian:true,description:'一杯越南炼乳咖啡搭配一份黄油小面包，适合下午休息；咖啡冷热、冰量和甜度可备注。',reason:'☕ 咖啡与小面包组合同时照顾饮品和轻食，适合不想点正餐的下午。想少甜可备注炼乳减半；含乳与咖啡因，不适合乳制品过敏者。'},
-    {key:'tea',name:'Trà Mây',dish:'Trà chanh và bánh yến mạch',dishZh:'柠檬茶与燕麦小饼干',category:'茶饮 · 轻食套餐',image:'demo/lemon-tea.webp',price:45000,tags:['柠檬茶','少甜可选','下午茶','轻食'],vegetarian:true,description:'柠檬茶搭配一份燕麦饼干，适合想喝清爽茶饮的下午，可备注半糖、少冰。',reason:'🧋 柠檬茶偏清爽，搭配小饼干能兼顾一点饱腹感。可以先选半糖少冰；饼干可能含乳、蛋和麸质，有忌口需核实。'},
-    {key:'bun',name:'Bún Gà Bình Yên',dish:'Bún gà nấm',dishZh:'香菇鸡肉米线',category:'越南菜 · 米线',image:'demo/pho.jpg',price:57000,tags:['米线','鸡肉','香菇','热汤'],description:'细米线搭配鸡肉、香菇和清汤，配菜单独包装，可按口味加入青柠。',reason:'🍲 香菇鸡肉米线提供了河粉之外的主食选择，仍保留鸡肉与热汤。适合想换一种口感、又不想吃重口酱汁的时候。'}
+    {key:'pho',name:'Phở Gà An Nhiên',dish:'Phở gà đùi',dishZh:"Phở gà đùi",category:"Món Việt · Phở nước",image:'demo/pho.jpg',price:59000,tags:["Thịt đùi gà", "Nước dùng nóng", "Ớt để riêng", "Một người"],description:"Thịt đùi gà mềm ăn cùng bánh phở và nước dùng gà trong. Giá, chanh và ớt được để riêng để bạn tự nêm khi nhận món.",reason:"🍜 Phở gà đùi phù hợp khi bạn muốn một bữa nóng, có đủ thịt và tinh bột. Nước dùng, bánh phở và rau được đóng riêng; nếu thích thanh đạm, hãy ghi ít muối và để ớt riêng."},
+    {key:'mixed',name:'Phở Trộn Mộc',dish:'Phở trộn gà',dishZh:"Phở trộn gà",category:"Món Việt · Phở trộn",image:'native/order-quyen.webp',price:62000,tags:["Thịt gà", "Phở trộn", "Sốt để riêng", "Bữa trưa"],description:"Thịt gà và bánh phở trộn cùng sốt chua ngọt; sốt và rau thơm đóng riêng, hợp với người thích món khô thay vì nước dùng.",reason:"🥢 Phở trộn gà là lựa chọn khi bạn không muốn ăn món nước. Rưới sốt từng ít một để giữ vị vừa miệng; nếu dị ứng lạc, nước mắm hoặc hải sản, cần xác nhận thành phần với quán."},
+    {key:'rice',name:'Cơm Gà Nắng',dish:'Cơm gà luộc',dishZh:"Cơm gà luộc",category:"Món Việt · Cơm gà",image:'demo/chicken-rice.webp',price:54000,tags:["Gà luộc", "Cơm", "Rau ăn kèm", "Bữa trưa"],description:"Cơm gà luộc một phần gồm thịt gà, cơm và rau củ muối, kèm sốt riêng; dễ mang về bàn làm việc.",reason:"🍚 Cơm gà luộc có cơm, thịt và rau trong cùng một hộp, phù hợp cho bữa trưa giữa giờ làm. Giá món vừa phải giúp bạn giữ thêm ngân sách cho phí giao hàng."},
+    {key:'banh',name:'Bánh Mì Sớm',dish:'Bánh mì gà',dishZh:"Bánh mì gà",category:"Món Việt · Bánh mì",image:'demo/banh-mi.jpg',price:36000,tags:["Bánh mì", "Thịt gà", "Bữa sáng", "Dễ mang theo"],description:"Bánh mì giòn kẹp thịt gà, dưa leo và đồ chua; có thể ghi không ớt, phù hợp bữa sáng hoặc bữa trưa nhẹ.",reason:"🥖 Bánh mì gà dễ mang theo và để lại khoảng ngân sách khá thoải mái. Khẩu phần nhẹ hơn một suất cơm; nếu đang đói nhiều, bạn có thể xem thêm món phụ rồi so lại tổng tiền."},
+    {key:'veggie',name:'Bếp Xanh',dish:'Cơm đậu hũ rau củ',dishZh:"Cơm đậu hũ rau củ",category:"Món chay · Cơm",image:'demo/tofu-rice.webp',price:49000,tags:["Đậu hũ", "Rau củ", "Thanh đạm", "Nguyên liệu thực vật"],vegetarian:true,description:"Cơm một phần với đậu hũ và rau củ; có thể ghi ít dầu, sốt để riêng. Người ăn chay nghiêm ngặt nên hỏi lại về nước dùng và gia vị.",reason:"🥬 Cơm đậu hũ rau củ hợp với bữa ăn muốn tăng nguyên liệu thực vật. Nếu ăn chay nghiêm ngặt, vẫn cần xác nhận nước mắm, nước dùng và dụng cụ dùng chung với quán."},
+    {key:'coffee',name:'Cà Phê Bình Minh',dish:'Cà phê sữa và bánh',dishZh:"Cà phê sữa và bánh",category:"Cà phê · Ăn nhẹ",image:'demo/iced-coffee.webp',price:42000,tags:["Cà phê", "Có sữa", "Tùy chỉnh độ ngọt", "Buổi chiều"],vegetarian:true,description:"Cà phê sữa Việt Nam kèm bánh mì bơ, phù hợp giờ nghỉ chiều; có thể ghi nóng hoặc lạnh, lượng đá và độ ngọt.",reason:"☕ Cà phê cùng bánh mì bơ vừa có thức uống vừa có món nhẹ cho giờ nghỉ. Muốn bớt ngọt có thể yêu cầu giảm nửa lượng sữa đặc; món có sữa và caffeine, cần cân nhắc nếu bạn dị ứng sữa."},
+    {key:'tea',name:'Trà Mây',dish:'Trà chanh và bánh yến mạch',dishZh:"Trà chanh và bánh yến mạch",category:"Trà · Ăn nhẹ",image:'demo/lemon-tea.webp',price:45000,tags:["Trà chanh", "Có thể ít đường", "Buổi chiều", "Ăn nhẹ"],vegetarian:true,description:"Trà chanh kèm bánh quy yến mạch, vị thanh mát cho buổi chiều; có thể ghi nửa đường, ít đá.",reason:"🧋 Trà chanh thanh mát kèm bánh quy tạo một bữa ăn nhẹ vừa đủ. Bạn có thể chọn nửa đường, ít đá; bánh có thể chứa sữa, trứng và gluten, nên kiểm tra nếu có dị ứng."},
+    {key:'bun',name:'Bún Gà Bình Yên',dish:'Bún gà nấm',dishZh:"Bún gà nấm",category:"Món Việt · Bún nước",image:'demo/pho.jpg',price:57000,tags:["Bún", "Thịt gà", "Nấm", "Nước dùng nóng"],description:"Bún sợi nhỏ ăn cùng thịt gà, nấm và nước dùng trong; rau ăn kèm đóng riêng, có thể thêm chanh theo khẩu vị.",reason:"🍲 Bún gà nấm đổi kết cấu sợi so với phở nhưng vẫn giữ thịt gà và nước dùng nóng. Hợp khi muốn đổi món mà không cần sốt đậm vị."}
   ];
   const locations = [
-    ['hanoi','还剑区','Hoàn Kiếm'],['hanoi','巴亭区','Ba Đình'],['hanoi','栋多区','Đống Đa'],['hanoi','纸桥区','Cầu Giấy'],['hanoi','二征夫人区','Hai Bà Trưng'],
-    ['hcm','第一郡','Quận 1'],['hcm','第三郡','Quận 3'],['hcm','平盛郡','Bình Thạnh'],['hcm','第七郡','Quận 7'],['hcm','守德市','Thủ Đức']
+    ['hanoi','Hoàn Kiếm','Hoàn Kiếm'],['hanoi','Ba Đình','Ba Đình'],['hanoi','Đống Đa','Đống Đa'],['hanoi','Cầu Giấy','Cầu Giấy'],['hanoi','Hai Bà Trưng','Hai Bà Trưng'],
+    ['hcm','Quận 1','Quận 1'],['hcm','Quận 3','Quận 3'],['hcm','Bình Thạnh','Bình Thạnh'],['hcm','Quận 7','Quận 7'],['hcm','Thủ Đức','Thủ Đức']
   ];
   const shopNames={
     pho:['Phở Gà An Nhiên','Phở Gà Bình Minh','Phở Ngõ Nhỏ','Phở Gà Hương Quê','Phở Nhà Mình'],
@@ -27,11 +27,23 @@ window.wansoCatalog = (() => {
     tea:['Trà Mây','Trà Góc Vườn','Trà An Nhiên','Trà Nắng Nhẹ','Trà Phố Xanh'],
     bun:['Bún Gà Bình Yên','Bún Nhà Mộc','Bún Gà Hương Sớm','Bún Phố Nhỏ','Bún Gà An']
   };
-  const mealNotes=['配菜另装，吃的时候可以自己决定加多少。','菜单可选酱料另放，适合偏好清淡口味的人。','单人份包含主食和配菜，不需要另外拼配一餐。','喜欢原味可以在备注中少盐、少酱，店家是否接受需确认。','餐盒与配料分开包装，方便带回工位再吃。'];
+  const mealNotes=["Rau và gia vị để riêng, bạn tự điều chỉnh lượng khi ăn.", "Có thể yêu cầu sốt riêng để dễ điều chỉnh theo khẩu vị.", "Một phần có món chính và rau ăn kèm, thuận tiện cho bữa ăn một người.", "Nếu thích vị nhẹ, hãy ghi ít muối, ít sốt và xác nhận quán có thể đáp ứng.", "Hộp món chính và gia vị tách riêng, tiện mang về bàn làm việc."];
   const drinkNotes={
-    coffee:['炼乳可以减半，黄油面包独立包装。','喜欢咖啡香更明显可以少加炼乳，冷热都可备注。','咖啡配黄油小面包，适合短暂休息时慢慢吃。','不想太甜可选少炼乳；它仍然含乳制品和咖啡因。','两人同店点单可以合并配送，记得分别写清冰量与甜度。'],
-    tea:['柠檬茶的糖量与冰量可备注，燕麦饼干独立包装。','可以先选半糖，保留茶香与柠檬的清酸口感。','一杯柠檬茶配一份燕麦饼干，适合下午短暂休息。','喜欢清爽口味可选少糖少冰，不额外添加小料。','两人同店点单可以合并配送，分别备注茶饮甜度和冰量。']
-  };
+    "coffee": [
+        "Có thể giảm nửa lượng sữa đặc; bánh mì bơ được gói riêng.",
+        "Muốn vị cà phê rõ hơn có thể giảm sữa đặc, đồng thời ghi nóng hoặc lạnh.",
+        "Cà phê và bánh mì bơ phù hợp cho một khoảng nghỉ ngắn.",
+        "Ít sữa đặc giúp giảm độ ngọt; thức uống vẫn chứa sữa và caffeine.",
+        "Đặt chung hai phần có thể gộp phí giao hàng; hãy ghi riêng lượng đá và độ ngọt cho từng ly."
+    ],
+    "tea": [
+        "Lượng đường và đá có thể ghi trong lưu ý; bánh yến mạch được gói riêng.",
+        "Có thể chọn nửa đường để giữ hương trà và vị chua nhẹ của chanh.",
+        "Một ly trà chanh cùng bánh yến mạch phù hợp cho giờ nghỉ chiều.",
+        "Thích vị thanh mát có thể chọn ít đường, ít đá và không thêm topping.",
+        "Đặt chung hai phần có thể gộp phí giao hàng; hãy ghi độ ngọt và lượng đá của từng ly."
+    ]
+};
   const secondNames={
     pho:['Phở Gà Lá Chanh','Phở Gà Tre Xanh','Bếp Phở Hoa','Phở Gà Thảo','Phở Hương Sáng'],
     mixed:['Phở Trộn Sen','Phở Trộn Bếp Nhỏ','Phở Trộn An Bình','Phở Mộc Lan','Phở Trộn Hạ'],
@@ -47,14 +59,14 @@ window.wansoCatalog = (() => {
   const fixed=(id,name,minSpend,amount)=>({id,name,type:'fixed',minSpend,amount});
   const rate=(id,name,minSpend,rateBps,cap)=>({id,name,type:'rate',minSpend,rateBps,cap});
   const promotionBundles=[
-      {merchant:merchant(1000,40000,12000),coupons:[fixed('lunch8','午餐满减券',50000,8000),rate('group15','多人餐折扣券',75000,1500,18000)],delivery:{minSpend:60000,amount:12000}},
-      {coupons:[fixed('meal6','单人餐券',35000,6000),fixed('group16','同店合点券',100000,16000)],delivery:{minSpend:70000,amount:null}},
-      {merchant:merchant(1200,0,16000),coupons:[fixed('save10','餐品满减券',70000,10000)]},
-      {coupons:[rate('save12','轻食折扣券',30000,1200,10000)],delivery:{minSpend:35000,amount:null}},
-      {merchant:merchant(500,50000,10000),coupons:[fixed('meal5','日常餐券',45000,5000)],delivery:{minSpend:90000,amount:10000}},
-      {coupons:[rate('meal15','餐品折扣券',40000,1500,15000),fixed('group20','多人餐满减券',120000,20000)],delivery:{minSpend:50000,amount:null}},
-      {merchant:merchant(1500,60000,20000),coupons:[fixed('group12','合点满减券',80000,12000)],delivery:{minSpend:100000,amount:12000}},
-      {coupons:[fixed('high15','高门槛餐券',100000,15000)]}
+      {merchant:merchant(1000,40000,12000),coupons:[fixed('lunch8','Mã giảm bữa trưa',50000,8000),rate('group15','Mã ưu đãi nhóm',75000,1500,18000)],delivery:{minSpend:60000,amount:12000}},
+      {coupons:[fixed('meal6','Mã bữa ăn một người',35000,6000),fixed('group16','Mã đặt chung',100000,16000)],delivery:{minSpend:70000,amount:null}},
+      {merchant:merchant(1200,0,16000),coupons:[fixed('save10','Mã giảm tiền món',70000,10000)]},
+      {coupons:[rate('save12','Mã ưu đãi ăn nhẹ',30000,1200,10000)],delivery:{minSpend:35000,amount:null}},
+      {merchant:merchant(500,50000,10000),coupons:[fixed('meal5','Mã ưu đãi hằng ngày',45000,5000)],delivery:{minSpend:90000,amount:10000}},
+      {coupons:[rate('meal15','Mã giảm món ăn',40000,1500,15000),fixed('group20','Mã giảm đơn nhóm',120000,20000)],delivery:{minSpend:50000,amount:null}},
+      {merchant:merchant(1500,60000,20000),coupons:[fixed('group12','Mã giảm đặt chung',80000,12000)],delivery:{minSpend:100000,amount:12000}},
+      {coupons:[fixed('high15','Mã đơn giá trị cao',100000,15000)]}
   ];
   function promotion(index,platform) {
     if(index%11===10)return {}; // Some merchants have no available offer on either platform.
@@ -76,7 +88,7 @@ window.wansoCatalog = (() => {
       const grab={name:'GrabFood',price,fee:grabFee,promotion:promotion(index,'grab')};
       const shopee={name:'ShopeeFood',price:price+2000,fee:shopeeFee,promotion:promotion(index,'shopee')};
       const store={
-        ...dish,id:'demo-'+(index+1),name:(edition%2?secondNames:shopNames)[dish.key][variation]+' · '+branch+(edition<2?'':' '+String(Math.floor(edition/2)+1).padStart(3,'0')+'店'),city,district,description,reason:dish.reason+' '+detail,
+        ...dish,id:'demo-'+(index+1),name:(edition%2?secondNames:shopNames)[dish.key][variation]+' · '+branch+(edition<2?'':' '+String(Math.floor(edition/2)+1).padStart(3,'0')),city,district,description,reason:dish.reason,
         image:'../../assets/wanso/'+dish.image,
         rating:Number((4.1+(index%9)/10).toFixed(1)),reviewCount:96+(index*137)%4200,distance:Number((0.5+(index%(edition<2?11:27))*0.3).toFixed(1)),eta:18+(index%(edition<2?7:13))*3,
         vegetarian:Boolean(dish.vegetarian),spicy:false,platforms:{grab,shopee},sample:true

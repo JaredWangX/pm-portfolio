@@ -142,7 +142,7 @@
       if (index === 0) translations.zh = store.dishZh;
       const descriptionKey = store.key === 'coffee' && categoryKey === 'side' ? 'coffeeExtra' : categoryKey === 'main' ? store.key : categoryKey;
       const translatedDescriptions = {...descriptions[descriptionKey]};
-      if (index === 0) translatedDescriptions.zh = store.description;
+      if (index === 0) translatedDescriptions.vi = store.description;
       const grab = index === 0 ? store.platforms.grab.price : row[5] + (categoryKey === 'main' ? offset : 0);
       const shopee = index === 0 ? store.platforms.shopee.price : grab + (index % 3 === 0 ? 0 : index % 2 ? 1000 : 2000);
       return {
@@ -150,14 +150,14 @@
         category: categories[categoryKey].vi,
         categoryTranslations: categories[categoryKey],
         prices: {grab, shopee}, price: grab,
-        description: translatedDescriptions.zh, descriptions: translatedDescriptions,
+        description: translatedDescriptions.vi, descriptions: translatedDescriptions,
         sample: true
       };
     });
       Object.defineProperty(store,'menu',{value:menu,writable:true,configurable:true,enumerable:true});
       return menu;
     }});
-    const city = store.city === 'hanoi' ? '河内' : '胡志明市';
+    const city = store.city === 'hanoi' ? 'Hà Nội' : 'TP. Hồ Chí Minh';
     store.address = store.district + ' · ' + city + '';
     store.hours = ['coffee', 'tea'].includes(store.key) ? '07:00–22:00' : '06:00–22:00';
     store.platforms.grab.rating = Number(Math.max(4, store.rating - .1).toFixed(1));

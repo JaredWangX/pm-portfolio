@@ -1,10 +1,10 @@
 'use strict';
 
 window.wansoControls = (() => {
-  const query = '想吃鸡肉河粉，清淡一点，含配送不超过八万越南盾，推荐五家';
+  const query = 'Muốn ăn phở gà thanh đạm, tổng tiền cả giao hàng không quá 80.000đ, gợi ý 5 quán.';
   const stores = {
     moc: {
-      name: 'Phở Gà Hương Vị Mộc - Thái Thịnh', frame: 'store-first', rating: '4.6 · 1,000 条评价',
+      name: 'Phở Gà Hương Vị Mộc - Thái Thịnh', frame: 'store-first', rating: '4,6 · 1.000 đánh giá',
       image: 'order-moc.webp', address: '110C2 Tập Thể Vĩnh Hồ, P. Thịnh Quang, Đống Đa, Hà Nội',
       menu: [
         ['Phở gà đùi', 'Chicken thigh pho', '鸡腿汤河粉', '鶏もも肉のフォー', '닭다리살 쌀국수', 'ShopeeFood 73,000 ₫ · GrabFood 68,000 ₫'],
@@ -12,7 +12,7 @@ window.wansoControls = (() => {
       ]
     },
     quyen: {
-      name: 'Phở Quyên - Phở gà trộn đặc biệt', frame: 'store-second', rating: '4.4 · 741 条评价',
+      name: 'Phở Quyên - Phở gà trộn đặc biệt', frame: 'store-second', rating: '4,4 · 741 đánh giá',
       image: 'order-quyen.webp',
       menu: [
         ['Phở gà đùi nước', 'Chicken thigh pho soup', '鸡腿汤河粉', '鶏もも肉のスープフォー', '닭다리살 국물 쌀국수', 'GrabFood 59,000 ₫']
@@ -45,13 +45,13 @@ window.wansoControls = (() => {
       grab:{name:'GrabFood',price:59000,fee:24000,promotion:{delivery:{minSpend:0,amount:12000}}},
       shopee:{name:'ShopeeFood',price:61000,fee:10000}
     };
-    const store={id,name:source.name,key:'pho',city:'hanoi',district:id==='moc'?'栋多区':'还剑区',
-      image:'../../assets/wanso/native/'+source.photo,imageAlt:'历史餐厅餐品配图',
-      dish:source.dish,dishZh:known.menu.find(item=>item[0]===source.dish)?.[2]||source.dish,
-      rating:source.rating,reviewCount:source.review_count,distance:source.distance,category:'越南菜 · 汤河粉',
-      tags:['鸡肉','热汤','菜单样本'],address:id==='moc'?'Thái Thịnh · Đống Đa · Hà Nội':'Hoàn Kiếm · Hà Nội',
-      description:'鸡肉与汤河粉搭配，菜单保留历史档案中收录的菜品。',
-      reason:'🍜 鸡肉汤河粉适合想吃热食的一餐，可以按口味备注香草、辣椒另放。保留原菜单供比较，并按相同菜品、相同份量核算两平台费用，优惠条件可以展开查看。',
+    const store={id,name:source.name,key:'pho',city:'hanoi',district:id==='moc'?'Đống Đa':'Hoàn Kiếm',
+      image:'../../assets/wanso/native/'+source.photo,imageAlt:'Món ăn tại quán',
+      dish:source.dish,dishZh:source.dish,
+      rating:source.rating,reviewCount:source.review_count,distance:source.distance,category:'Món Việt · Phở nước',
+      tags:['Thịt gà','Món nước nóng','Thực đơn'],address:id==='moc'?'Thái Thịnh · Đống Đa · Hà Nội':'Hoàn Kiếm · Hà Nội',
+      description:'Phở gà với nước dùng nóng, thịt gà và rau thơm; có thể xem từng món trong thực đơn để chọn đúng khẩu vị.',
+      reason:'🍜 Một tô phở gà nóng phù hợp khi bạn muốn ăn thanh nhẹ. Có thể ghi chú để riêng rau thơm và ớt. So sánh hai nền tảng theo cùng món, cùng số phần; mở chi tiết để xem điều kiện ưu đãi trước khi chọn.',
       menu,platforms,sample:true};
     if(menu[0])menu[0].prices={grab:platforms.grab.price,shopee:platforms.shopee.price};
     for(const key of Object.keys(platforms))Object.assign(platforms[key],window.wansoOffers.calculate(store,key,1));
@@ -63,42 +63,48 @@ window.wansoControls = (() => {
     'moc-grab': {store: 'moc', platform: 'GrabFood', price: 68000, fee: 40000, color: 'grab'},
     'quyen-grab': {store: 'quyen', platform: 'GrabFood', price: 59000, fee: 12000, oldFee: 24000, color: 'grab'}
   };
-  const menuLanguages = ['原文', 'English', 'Tiếng Việt', '中文', '日本語', '한국어'];
+  const menuLanguages = ['Bản gốc', 'Tiếng Anh', 'Tiếng Việt', 'Tiếng Trung', 'Tiếng Nhật', 'Tiếng Hàn'];
   const appLanguages = ['跟随系统', 'English', 'Tiếng Việt', '中文'];
+  const displayLabels = {
+    森林:'Rừng', 海洋:'Đại dương', 薰衣草:'Oải hương', 日落:'Hoàng hôn', 午夜:'Đêm', 赛博:'Cyber',
+    平衡:'Cân bằng', 距离优先:'Gần nhất', 价格优先:'Tiết kiệm',
+    '5万以下':'Dưới 50.000đ', '10万以下':'Dưới 100.000đ', 不限:'Không giới hạn', 跟随系统:'Theo hệ thống', 中文:'Tiếng Trung', English:'Tiếng Anh', 日本語:'Tiếng Nhật', 한국어:'Tiếng Hàn'
+  };
+  const displayValue = value => displayLabels[value] || value;
   const themes = {
-    森林: ['深绿与草木色', '#15463a', '#43b789', '#e4f3e9'],
-    海洋: ['清爽蓝与柔和浅蓝', '#193e78', '#4179da', '#e8f2ff'],
-    薰衣草: ['柔紫与浅薰衣草色', '#50337c', '#9773e8', '#f1e9fa'],
-    日落: ['暖橙与淡杏色', '#85401e', '#e89148', '#fff1e4'],
-    午夜: ['深色底配薄荷绿', '#163d42', '#5bc2a7', '#d7eee8'],
-    赛博: ['深色底配荧光绿', '#12392b', '#51e881', '#e0ffe7']
+    森林: ['Xanh lá đậm và sắc cây cỏ', '#15463a', '#43b789', '#e4f3e9'],
+    海洋: ['Xanh biển tươi và xanh nhạt dịu', '#193e78', '#4179da', '#e8f2ff'],
+    薰衣草: ['Tím dịu và sắc oải hương', '#50337c', '#9773e8', '#f1e9fa'],
+    日落: ['Cam ấm và màu mơ nhạt', '#85401e', '#e89148', '#fff1e4'],
+    午夜: ['Nền tối cùng xanh bạc hà', '#163d42', '#5bc2a7', '#d7eee8'],
+    赛博: ['Nền tối cùng xanh neon', '#12392b', '#51e881', '#e0ffe7']
   };
   const preferences = {
-    grab: ['GrabUnlimited', '原版设置展示约 49,000 ₫／月。可将 GrabFood 会员配送优惠纳入推荐。'],
-    shopee: ['ShopeeFood+', '原版设置展示约 39,000 ₫／月。可将 ShopeeFood 会员配送券纳入比较。'],
-    budget: ['默认预算', '这是给下一次推荐的常用预算。搜索里明确写出的本次预算优先。'],
-    mode: ['AI 决策模式', '平衡模式综合价格与距离。距离优先按近远排序，价格优先关注餐品标价和已知运费。'],
-    haptics: ['触感反馈', '在支持触感的手机上，选项切换时会有轻微振动。'],
-    analytics: ['共享匿名数据', '此选项在 App 中用于控制是否共享帮助改进产品的匿名数据。'],
-    push: ['所有推送', '控制是否接收万象的提醒。'],
-    offers: ['优惠提醒', '限时秒杀和优惠消息。'],
-    priceDrop: ['降价', '已收藏餐厅降价时提醒。'],
-    newPlaces: ['附近新餐厅', '你的区域新增餐厅时提醒。'],
-    delivery: ['配送状态', '展示已下单、配送中与已送达的提醒类型。'],
-    digest: ['每周 AI 摘要', '万象每周一早晨的总结。'],
-    quiet: ['勿扰', '开启后在设定时间段内暂停推送提醒。'],
-    compareAll: ['全平台比较', '开启后推荐可以同时考虑 GrabFood 和 ShopeeFood 的餐厅。']
+    grab: ['GrabUnlimited', 'Gói khoảng 49.000đ/tháng. Tính ưu đãi giao hàng của hội viên GrabFood khi so sánh.'],
+    shopee: ['ShopeeFood+', 'Gói khoảng 39.000đ/tháng. Tính mã miễn giảm phí giao của hội viên ShopeeFood khi so sánh.'],
+    budget: ['Ngân sách mặc định', 'Ngân sách thường dùng cho lần gợi ý tiếp theo. Nếu yêu cầu tìm kiếm nêu ngân sách riêng, mức đó được ưu tiên.'],
+    mode: ['Cách AI gợi ý', 'Cân bằng giá và khoảng cách; ưu tiên quán gần hoặc tổng tiền thấp tùy nhu cầu của bạn.'],
+    haptics: ['Phản hồi rung', 'Rung nhẹ khi chuyển lựa chọn trên thiết bị hỗ trợ.'],
+    analytics: ['Chia sẻ dữ liệu ẩn danh', 'Cho phép chia sẻ dữ liệu ẩn danh để cải thiện trải nghiệm ứng dụng.'],
+    push: ['Thông báo', 'Bật hoặc tắt thông báo từ Wanso.'],
+    offers: ['Ưu đãi mới', 'Thông báo chương trình giảm giá và ưu đãi có thời hạn.'],
+    priceDrop: ['Giảm giá', 'Nhận tin khi quán đã lưu có giá tốt hơn.'],
+    newPlaces: ['Quán mới gần bạn', 'Nhận tin khi có quán mới trong khu vực.'],
+    delivery: ['Trạng thái giao hàng', 'Các thông báo xác nhận đơn, đang giao và đã giao.'],
+    digest: ['Tổng hợp AI hằng tuần', 'Tổng hợp từ Wanso vào sáng thứ Hai hằng tuần.'],
+    quiet: ['Không làm phiền', 'Tạm dừng thông báo trong khoảng thời gian đã chọn.'],
+    compareAll: ['So sánh các nền tảng', 'Cân nhắc cả GrabFood và ShopeeFood khi tìm quán phù hợp.']
   };
   const original = {
-    name: 'Wanso 体验账号', avatar: '🧑', appLanguage: '中文', theme: '海洋',
+    name: 'Bạn của Wanso', avatar: '🧑', appLanguage: 'Tiếng Việt', theme: '海洋',
     grab: false, shopee: false, budget: '10万以下', mode: '平衡',
     haptics: true, analytics: true, push: true, offers: true, priceDrop: true,
     newPlaces: false, delivery: true, digest: false, quiet: false, compareAll: true,
     start: '22:00', end: '08:00', email: 'demo@wanso.example',
     phone: '', birthday: '', gender: '', address: '', query
   };
-  const state = {...original, location: window.wansoLocation.restore() || {city:'hanoi',label:'河内 · 还剑区',district:'还剑区'}, history: true, collections: ['全部收藏'], recent: loadRecentOrders(), tastes: ['清淡', '鸡肉', '不吃香菜'],
-    group: {moc: '全部收藏', quyen: '全部收藏'}, menuLanguage: {moc: 0, quyen: 0}, translated: {moc: 0, quyen: 0}};
+  const state = {...original, location: window.wansoLocation.restore() || {city:'hanoi',label:'Hà Nội · Hoàn Kiếm',district:'Hoàn Kiếm'}, history: true, collections: ['Tất cả'], recent: loadRecentOrders(), tastes: ['Thanh đạm', 'Thịt gà', 'Không rau mùi'],
+    group: {moc: 'Tất cả', quyen: 'Tất cả'}, menuLanguage: {moc: 0, quyen: 0}, translated: {moc: 0, quyen: 0}};
   window.wansoNative.setLocation(state.location);
   const currency = number => number.toLocaleString('vi-VN') + 'đ';
   const el = (tag, className, value) => {
@@ -115,7 +121,7 @@ window.wansoControls = (() => {
   title.id = 'wanso-sheet-title';
   const closeButton = el('button', 'sheet-close', '×');
   closeButton.type = 'button';
-  closeButton.setAttribute('aria-label', '关闭');
+  closeButton.setAttribute('aria-label', 'Đóng');
   closeButton.addEventListener('click', () => sheet.close());
   header.append(title, closeButton);
   const content = el('div', 'sheet-content');
@@ -212,10 +218,10 @@ window.wansoControls = (() => {
 
   function paragraph(value) { return el('p', 'sheet-text', value); }
   function note(value) { return el('p', 'sheet-note', value); }
-  function backButton(label = '返回') { return button(label, () => sheet.close()); }
+  function backButton(label = 'Quay lại') { return button(label, () => sheet.close()); }
 
   function confirmation(heading, message, label, accept) {
-    show(heading, paragraph(message), actions(backButton('取消'), button(label, accept, 'sheet-button danger')));
+    show(heading, paragraph(message), actions(backButton('Hủy'), button(label, accept, 'sheet-button danger')));
   }
 
   function field(heading, description, value, save, options = {}) {
@@ -227,9 +233,9 @@ window.wansoControls = (() => {
     input.required = options.required !== false;
     input.maxLength = options.limit || 160;
     label.append(input);
-    const submit = el('button', 'sheet-button primary', options.submit || '保存');
+    const submit = el('button', 'sheet-button primary', options.submit || 'Lưu');
     submit.type = 'submit';
-    form.append(label, actions(backButton('取消'), submit));
+    form.append(label, actions(backButton('Hủy'), submit));
     form.addEventListener('submit', event => {
       event.preventDefault();
       if (input.required && !input.value.trim()) {
@@ -269,13 +275,13 @@ window.wansoControls = (() => {
     window.wansoNative.appendMenu(scroll, id, state.translated[id]);
     scroll.scrollTop = position;
     scroll.querySelector('.native-live-message')?.remove();
-    const announcement = el('span','native-live-message','菜单已更新，未收录译文的菜品显示原名。');
+    const announcement = el('span','native-live-message','Đã cập nhật thực đơn. Món chưa có bản dịch giữ nguyên tên gốc.');
     announcement.setAttribute('role','status');
     scroll.append(announcement);
   }
 
   function chooseMenuLanguage(id) {
-    show('翻译为', ...menuLanguages.map((language, index) => row(language, '', () => {
+    show('Dịch sang', ...menuLanguages.map((language, index) => row(language, '', () => {
       state.menuLanguage[id] = index;
       if (!index) translate(id);
       sheet.close();
@@ -291,12 +297,12 @@ window.wansoControls = (() => {
   }
 
   function search() {
-    field('这次想吃什么？', '告诉万象这次的预算、口味和人数，推荐后还可以继续追问。', state.query,
-      value => { state.query = value; runSearch(); }, {submit:'开始选餐'});
+    field('Lần này bạn muốn ăn gì?', 'Cho Wanso biết ngân sách, khẩu vị và số người. Bạn có thể hỏi tiếp để điều chỉnh gợi ý.', state.query,
+      value => { state.query = value; runSearch(); }, {submit:'Tìm món phù hợp'});
   }
 
   function chooseLocation() {
-    show('选择位置');
+    show('Chọn vị trí');
     sheet.classList.add('native-location-sheet');
     locationCleanup=window.wansoLocation.mount(content,state.location,value=>{
       state.location=value;
@@ -356,7 +362,7 @@ window.wansoControls = (() => {
   }
   function catalogSave({id}) {
     if(state.group[id]) {delete state.group[id];storeSession?.controller.refreshSaved();return;}
-    show('保存到收藏夹',...state.collections.map((name,index)=>{
+    show('Lưu vào bộ sưu tập',...state.collections.map((name,index)=>{
       const choice=button('',()=>{state.group[id]=name;sheet.close();},'native-collection-row');
       choice.append(el('span','',index?'📁':'❤️'),el('strong','',name),el('span','','›'));
       return choice;
@@ -366,11 +372,11 @@ window.wansoControls = (() => {
   function catalogShare({id}) {
     const store=storeFor(id);
     const text=store.name+'\n'+store.dishZh+'\n'+store.description;
-    const copy=button('复制餐厅信息',async()=>{
-      try{await navigator.clipboard.writeText(text);copy.textContent='已复制';}
-      catch{copy.textContent='长按上方文字可复制';}
+    const copy=button('Sao chép thông tin quán',async()=>{
+      try{await navigator.clipboard.writeText(text);copy.textContent='Đã sao chép';}
+      catch{copy.textContent='Nhấn giữ nội dung phía trên để sao chép';}
     },'sheet-button primary');
-    show('分享餐厅',el('p','sheet-copy',text),actions(backButton('取消'),copy));
+    show('Chia sẻ quán',el('p','sheet-copy',text),actions(backButton('Hủy'),copy));
   }
   function catalogOrder(value) {
     if(typeof value==='string'&&orders[value])return openOrder(value);
@@ -381,41 +387,41 @@ window.wansoControls = (() => {
     const offer=window.wansoNative.offerFor(store,platform,request);
     const saved=id+'|'+platform+'|'+encodeURIComponent(request);
     recordRecentOrder(saved);
-    show('下单预览 · '+offer.name,paragraph(store.name+' · '+store.dishZh),
-      details([['份数',offer.quantity+' 份'],['餐品单价',currency(offer.unitPrice)],['餐品小计',currency(offer.price)],['商家折扣',(offer.merchantDiscount?'−':'')+currency(offer.merchantDiscount)],['平台券',(offer.couponDiscount?'−':'')+currency(offer.couponDiscount)],['配送费',currency(offer.originalFee)],['运费减免',(offer.deliveryDiscount?'−':'')+currency(offer.deliveryDiscount)],['合计',currency(offer.total)],['位置',state.location.label]]),
-      paragraph(offer.couponName?'本单采用：'+offer.couponName+' · '+offer.couponTerms:'本单未使用平台优惠券。'),
+    show('Chi tiết đơn · '+offer.name,paragraph(store.name+' · '+store.dishZh),
+      details([['Số phần',offer.quantity+' phần'],['Đơn giá món',currency(offer.unitPrice)],['Tạm tính món',currency(offer.price)],['Quán giảm',(offer.merchantDiscount?'−':'')+currency(offer.merchantDiscount)],['Mã nền tảng',(offer.couponDiscount?'−':'')+currency(offer.couponDiscount)],['Phí giao hàng',currency(offer.originalFee)],['Giảm phí giao',(offer.deliveryDiscount?'−':'')+currency(offer.deliveryDiscount)],['Tổng cộng',currency(offer.total)],['Vị trí',state.location.label]]),
+      paragraph(offer.couponName?'Đã áp dụng: '+offer.couponName+' · '+offer.couponTerms:'Đơn này chưa áp dụng mã giảm giá của nền tảng.'),
       note(offer.qualification),
       ...offer.terms.map(term=>paragraph(term)),
       ...offer.unavailable.map(term=>note(term)),
-      note('按所列优惠规则估算，非平台实时报价。比较相同餐品与份量，实际金额以平台结算页为准。'),
-      actions(button('返回菜单',()=>catalogStore({id,request})),button('换到 '+(platform==='grab'?'ShopeeFood':'GrabFood'),()=>catalogOrder({id,platform:platform==='grab'?'shopee':'grab',request}))));
+      note('Chi phí được tính theo các điều kiện ưu đãi đang hiển thị, chưa phải báo giá trực tiếp. So sánh cùng món và số phần; số tiền cuối cùng được xác nhận tại trang thanh toán của nền tảng.'),
+      actions(button('Về thực đơn',()=>catalogStore({id,request})),button('Chuyển sang '+(platform==='grab'?'ShopeeFood':'GrabFood'),()=>catalogOrder({id,platform:platform==='grab'?'shopee':'grab',request}))));
   }
 
-  const recommendation = '餐厅推荐 菜单 费用 配送 预算 越南盾 GrabFood ShopeeFood';
+  const recommendation = 'gợi ý quán phở gà thực đơn chi phí giao hàng ngân sách đồng GrabFood ShopeeFood';
   function savedCount() {
     return Object.values(state.group).filter(Boolean).length;
   }
 
   function collections(id) {
-    const heading = id ? '移到收藏夹' : '收藏夹';
+    const heading = id ? 'Chuyển vào bộ sưu tập' : 'Bộ sưu tập';
     const select = name => {
       if (id) {
         state.group[id] = name;
         sheet.close();
         return;
       }
-      const entries=Object.keys(state.group).filter(key=>state.group[key]&&(name==='全部收藏'||state.group[key]===name)).map(key=>[key,storeFor(key)]).filter(([,store])=>store);
+      const entries=Object.keys(state.group).filter(key=>state.group[key]&&(name==='Tất cả'||state.group[key]===name)).map(key=>[key,storeFor(key)]).filter(([,store])=>store);
       show(name, ...entries.map(([key, store]) => row(store.name, String(store.rating), () => catalogStore(key))),
-        ...(entries.length ? [] : [paragraph('这个收藏夹还没有餐厅。可以从店铺详情收藏，或在收藏页移动已有餐厅。')]),
-        actions(backButton('完成'), button('查看收藏夹', () => collections(), 'sheet-button primary')));
+        ...(entries.length ? [] : [paragraph('Bộ sưu tập chưa có quán. Lưu quán từ trang chi tiết hoặc chuyển quán đã lưu vào đây.')]),
+        actions(backButton('Xong'), button('Xem bộ sưu tập', () => collections(), 'sheet-button primary')));
     };
-    show(heading, paragraph(id ? storeFor(id).name : '按收藏夹整理已保存的餐厅，之后可直接查看菜单。'),
-      ...state.collections.map(name => row(name, id ? '' : (name === '全部收藏' ? savedCount() : Object.values(state.group).filter(g => g === name).length) + ' 家餐厅',
-        () => select(name), id && state.group[id] === name)), actions(backButton(), button('新建收藏夹', () => field(
-        '新建收藏夹', '给收藏夹起一个容易找到的名字，例如「工作日午餐」。', '', value => {
+    show(heading, paragraph(id ? storeFor(id).name : 'Sắp xếp quán đã lưu thành bộ sưu tập để lần sau mở thực đơn nhanh hơn.'),
+      ...state.collections.map(name => row(name, id ? '' : (name === 'Tất cả' ? savedCount() : Object.values(state.group).filter(g => g === name).length) + ' quán',
+        () => select(name), id && state.group[id] === name)), actions(backButton(), button('Tạo bộ sưu tập', () => field(
+        'Tạo bộ sưu tập', 'Đặt tên dễ nhớ, chẳng hạn “Bữa trưa đi làm”.', '', value => {
           if (!state.collections.includes(value)) state.collections.push(value);
           collections(id);
-        }, {limit: 18}), 'sheet-button primary')));
+        }, {limit: 36}), 'sheet-button primary')));
   }
 
   function recentOrderData(id) {
@@ -449,25 +455,26 @@ window.wansoControls = (() => {
   function recentOrders() {
     const list=el('div','ios-order-list');
     for(const id of state.recent){const record=recentOrderData(id);if(record)list.append(window.wansoPages.recentOrderCard(record,(action,value)=>actionHandlers[action](value)));}
-    show('最近订单',note('保留餐品、平台与费用记录，便于再次查看；这里不会产生付款或实际订单。'),list,
-      ...(state.recent.length ? [] : [row('暂无记录', '从餐厅详情打开下单预览后，会在这里保留餐品与平台。')]),
-      actions(backButton('完成')));
+    show('Đơn gần đây',note('Lưu món, nền tảng và chi phí để xem lại thuận tiện. Thao tác này không thanh toán hoặc tạo đơn thực tế.'),list,
+      ...(state.recent.length ? [] : [row('Chưa có lịch sử', 'Mở chi tiết đơn tại trang quán để lưu món và nền tảng tại đây.')]),
+      actions(backButton('Xong')));
   }
 
   function historySearch() {
-    field('搜索会话历史', '按餐品、预算或店铺查找本次浏览的会话。', '', keyword => {
-      const terms = (state.query + ' ' + recommendation).toLocaleLowerCase();
-      const matches = state.history && terms.includes(keyword.toLocaleLowerCase());
-      show('搜索结果', matches ? row(state.query, '多轮选餐记录', () => go('recommend')) :
-        paragraph(state.history ? '没有找到包含「' + keyword + '」的会话。可以试试「河粉」或「越南盾」。' : '当前没有会话。重新体验首页搜索可添加一条记录。'),
-        actions(button('重新搜索', historySearch), backButton()));
-    }, {type:'search', submit:'搜索'});
+    field('Tìm cuộc trò chuyện', 'Tìm cuộc trò chuyện theo món, ngân sách hoặc tên quán.', '', keyword => {
+      const normalize = text => text.toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
+      const terms = normalize(state.query + ' ' + recommendation);
+      const matches = state.history && terms.includes(normalize(keyword));
+      show('Kết quả tìm kiếm', matches ? row(state.query, 'Cuộc trò chuyện chọn món', () => go('recommend')) :
+        paragraph(state.history ? 'Không tìm thấy cuộc trò chuyện chứa “' + keyword + '”. Thử tìm “phở” hoặc “đồng”.' : 'Chưa có cuộc trò chuyện. Tìm món ở trang chủ để bắt đầu.'),
+        actions(button('Tìm lại', historySearch), backButton()));
+    }, {type:'search', submit:'Tìm kiếm'});
   }
 
   function clearHistory(all) {
-    confirmation(all ? '清除活动历史' : '删除会话', all ?
-      '清除本次预览的搜索、收藏、近期订单入口和 AI 对话。此操作无法恢复。' : '删除这条预览会话及其对话记录。此操作无法恢复。',
-    '确认清除', () => {
+    confirmation(all ? 'Xóa lịch sử hoạt động' : 'Xóa cuộc trò chuyện', all ?
+      'Xóa lịch sử tìm kiếm, quán đã lưu, đơn gần đây và cuộc trò chuyện AI trên thiết bị này. Không thể khôi phục thao tác này.' : 'Xóa cuộc trò chuyện này cùng toàn bộ nội dung. Không thể khôi phục thao tác này.',
+    'Xác nhận xóa', () => {
       state.history = false;
       if (all) {
         state.group = {};
@@ -481,15 +488,15 @@ window.wansoControls = (() => {
     const store = stores[value];
     const label = store ? store.name : query;
     const summary = store ? [store.rating, store.address, ...store.menu.map(item => item[0] + ' · ' + item[5])].filter(Boolean).join('\n') : recommendation;
-    const copy = button('复制内容', async () => {
+    const copy = button('Sao chép nội dung', async () => {
       try {
         await navigator.clipboard.writeText(label + '\n' + summary);
-        copy.textContent = '已复制';
+        copy.textContent = 'Đã sao chép';
       } catch {
-        copy.textContent = '长按上方文字可复制';
+        copy.textContent = 'Nhấn giữ nội dung phía trên để sao chép';
       }
     }, 'sheet-button primary');
-    show('分享' + (store ? '店铺' : '推荐'), paragraph(label), el('p', 'sheet-copy', summary), actions(backButton(), copy));
+    show('Chia sẻ ' + (store ? 'quán' : 'gợi ý'), paragraph(label), el('p', 'sheet-copy', summary), actions(backButton(), copy));
   }
 
   function chooseTheme(value) {
@@ -500,30 +507,30 @@ window.wansoControls = (() => {
       block.style.background = color;
       swatch.append(block);
     }
-    show(value + '主题', paragraph(description), swatch, note('选中的主题会更新到设置预览。'),
-      actions(backButton('再看一款'), button('应用主题', () => {
+    show('Giao diện ' + displayValue(value), paragraph(description), swatch, note('Giao diện đã chọn sẽ được áp dụng trong cài đặt.'),
+      actions(backButton('Xem kiểu khác'), button('Áp dụng giao diện', () => {
         state.theme = value;
         go('settings', false, 'back');
       }, 'sheet-button primary')));
   }
 
   function changeLanguage(value = state.appLanguage) {
-    show('应用语言', paragraph('选择万象中菜单和设置的显示语言。'), ...appLanguages.map(option =>
-      row(option, value === option ? '当前选项' : '', () => changeLanguage(option), value === option)),
-    actions(backButton('取消'), button('完成', () => {
+    show('Ngôn ngữ ứng dụng', paragraph('Chọn ngôn ngữ hiển thị cho thực đơn và cài đặt Wanso.'), ...appLanguages.map(option =>
+      row(displayValue(option), value === option ? 'Đang chọn' : '', () => changeLanguage(option), value === option)),
+    actions(backButton('Hủy'), button('Xong', () => {
       state.appLanguage = value;
       go('settings', false, 'back');
     }, 'sheet-button primary')));
   }
 
   const accountFields = {
-    name: ['昵称', '设置个人资料中显示的称呼。', 'text'],
-    email: ['联系邮箱', '正式 App 的邮箱用于身份识别与验证。此处展示本地体验资料。', 'email'],
-    phone: ['电话号码', '正式 App 的电话号码用于身份验证。这里仅保留在本次浏览中。', 'tel'],
-    birthday: ['生日', '在个人信息中保存生日。', 'date'],
-    address: ['送货地址', '常用送货地址影响附近餐厅和配送费用。可填写你的常用地址。', 'text'],
-    start: ['开始免打扰', '选择暂停推送的开始时间。', 'time'],
-    end: ['结束免打扰', '选择恢复推送的时间。', 'time']
+    name: ['Tên hiển thị', 'Tên bạn muốn hiển thị trong hồ sơ.', 'text'],
+    email: ['Email liên hệ', 'Email dùng để nhận diện và xác minh tài khoản. Thay đổi ở đây được lưu cho phiên sử dụng hiện tại.', 'email'],
+    phone: ['Số điện thoại', 'Số điện thoại dùng để xác minh tài khoản. Thay đổi ở đây được lưu cho phiên sử dụng hiện tại.', 'tel'],
+    birthday: ['Ngày sinh', 'Lưu ngày sinh trong thông tin cá nhân.', 'date'],
+    address: ['Địa chỉ giao hàng', 'Nhập địa chỉ thường dùng để tham khảo khi tìm quán và so sánh phí giao.', 'text'],
+    start: ['Bắt đầu không làm phiền', 'Chọn giờ bắt đầu tạm dừng thông báo.', 'time'],
+    end: ['Kết thúc không làm phiền', 'Chọn giờ nhận thông báo trở lại.', 'time']
   };
   function editAccount(key) {
     const [heading, description, type] = accountFields[key];
@@ -531,7 +538,7 @@ window.wansoControls = (() => {
       state[key] = value;
       if (type === 'time') state.quiet = true;
       sheet.close();
-    }, {type, required: type === 'time' || key === 'name', limit: key === 'name' ? 20 : 100});
+    }, {type, required: type === 'time' || key === 'name', limit: key === 'name' ? 40 : 100});
   }
 
   function chooseAvatar() {
@@ -540,29 +547,29 @@ window.wansoControls = (() => {
     for(const [emoji,from,to] of presets){
       const choice=button(emoji,()=>{if(state.avatarUrl)URL.revokeObjectURL(state.avatarUrl);state.avatarUrl='';state.avatar=emoji;sheet.close();});
       choice.style.background=`linear-gradient(135deg,${from},${to})`;
-      choice.setAttribute('aria-label','头像 '+emoji);choice.setAttribute('aria-pressed',String(state.avatar===emoji&&!state.avatarUrl));grid.append(choice);
+      choice.setAttribute('aria-label','Ảnh đại diện '+emoji);choice.setAttribute('aria-pressed',String(state.avatar===emoji&&!state.avatarUrl));grid.append(choice);
     }
     const input=el('input');input.type='file';input.accept='image/*';input.hidden=true;
-    const upload=button('从相册选择',()=>input.click());
+    const upload=button('Chọn từ thư viện',()=>input.click());
     input.addEventListener('change',()=>{
       const file=input.files?.[0];if(!file)return;
-      if(!file.type.startsWith('image/')){upload.textContent='请选择图片文件';return;}
+      if(!file.type.startsWith('image/')){upload.textContent='Vui lòng chọn tệp hình ảnh';return;}
       const url=URL.createObjectURL(file),image=new Image();
       image.onload=()=>{if(state.avatarUrl)URL.revokeObjectURL(state.avatarUrl);state.avatarUrl=url;sheet.close();};
-      image.onerror=()=>{URL.revokeObjectURL(url);upload.textContent='无法读取这张照片，请换一张';};image.src=url;
+      image.onerror=()=>{URL.revokeObjectURL(url);upload.textContent='Không thể mở ảnh này. Hãy chọn ảnh khác.';};image.src=url;
     });
-    show('选择头像',upload,input,grid);sheet.classList.add('native-avatar-sheet');
+    show('Chọn ảnh đại diện',upload,input,grid);sheet.classList.add('native-avatar-sheet');
   }
   function addTaste() {
     const emojis=['🌶️','🧂','🍯','🍋','💪','🥗','🍜','🍣','🍕','🍛','🌮','🍝','🍗','🥩','🥘','🍦','🧁','☕','🌙','⚡','💰','🔥','🥬','🌿'];
     const grid=el('div','native-taste-grid'),form=el('form','sheet-form');let selected='';
-    const label=el('label','sheet-field','标签名称');const input=el('input');input.maxLength=18;input.required=true;input.placeholder='例如：少油、不吃香菜';label.append(input);
-    const submit=el('button','sheet-button primary','添加');submit.type='submit';submit.disabled=true;
+    const label=el('label','sheet-field','Tên sở thích');const input=el('input');input.maxLength=36;input.required=true;input.placeholder='Ví dụ: Ít dầu, không rau mùi';label.append(input);
+    const submit=el('button','sheet-button primary','Thêm');submit.type='submit';submit.disabled=true;
     const validate=()=>{submit.disabled=!selected||!input.value.trim()||state.tastes.length>=9;};input.addEventListener('input',validate);
-    for(const emoji of emojis){const choice=button(emoji,()=>{selected=emoji;for(const item of grid.children)item.setAttribute('aria-pressed',String(item===choice));validate();});choice.setAttribute('aria-pressed','false');choice.setAttribute('aria-label','标签图标 '+emoji);grid.append(choice);}
-    form.append(paragraph('选择图标'),grid,label,actions(backButton('取消'),submit));
+    for(const emoji of emojis){const choice=button(emoji,()=>{selected=emoji;for(const item of grid.children)item.setAttribute('aria-pressed',String(item===choice));validate();});choice.setAttribute('aria-pressed','false');choice.setAttribute('aria-label','Biểu tượng sở thích '+emoji);grid.append(choice);}
+    form.append(paragraph('Chọn biểu tượng'),grid,label,actions(backButton('Hủy'),submit));
     form.addEventListener('submit',event=>{event.preventDefault();const value=input.value.trim();if(!selected||!value||state.tastes.length>=9)return;if(!state.tastes.includes(value))state.tastes.push(value);state.tasteEmojis??={};state.tasteEmojis[value]=selected;sheet.close();});
-    show('添加口味标签',paragraph('选择一个图标，并写下你的饮食偏好。最多保存 9 个标签。'),form);sheet.classList.add('native-taste-sheet');
+    show('Thêm khẩu vị',paragraph('Chọn biểu tượng và ghi sở thích ăn uống của bạn. Lưu tối đa 9 sở thích.'),form);sheet.classList.add('native-taste-sheet');
   }
 
   const actionHandlers = {
@@ -585,24 +592,24 @@ window.wansoControls = (() => {
       }
     },
     cities: chooseLocation,
-    dataInfo: () => show('数据与价格说明',
-      paragraph('这里保留了 Wanso 的选餐、推荐、比价与菜单交互。为便于完整体验，餐厅库、优惠、口味参考和对话内容包含预置样本，不代表平台实时商家覆盖或真实用户评价。'),
-      row('营业状态', '营业中或休息中根据页面预置营业时段和越南当地时间判断，不是平台实时接单状态。实际营业、临时休息或配送情况请以平台为准。'),
-      row('价格怎样计算', '同一菜品、同一份量，依次核算店铺折扣、平台券与配送优惠。券门槛、减免上限与不可叠加项均可在费用详情中查看。'),
-      row('位置怎样使用', '地图使用 OpenStreetMap。可选择常用地标、地图点位或设备位置；确认后保存在当前浏览器，用于选择城市内容，暂不实时重算商家距离和运费。地图浏览会向地图服务请求当前位置附近的图块。'),
-      row('下单与照片', 'Order 展示费用与入口，不产生付款或实际订单。照片展示对应餐品类型，具体菜品、库存、配送与支付金额以平台结算页为准。'),
-      actions(backButton('知道了'))),
+    dataInfo: () => show('Thông tin dữ liệu và giá',
+      paragraph('Bạn có thể tìm món, xem gợi ý, so sánh chi phí và khám phá thực đơn trong Wanso. Kho quán, ưu đãi, nhận xét khẩu vị và hội thoại có nội dung được chuẩn bị sẵn; không phản ánh số quán trực tiếp của nền tảng hay đánh giá từ khách thực tế.'),
+      row('Giờ hoạt động', 'Trạng thái mở cửa dựa trên khung giờ của quán trong trang và giờ Việt Nam. Vui lòng xác nhận khả năng nhận đơn, tạm nghỉ và giao hàng trên nền tảng.'),
+      row('Cách tính chi phí', 'Với cùng món và số phần, lần lượt tính giảm giá của quán, mã nền tảng và ưu đãi giao hàng. Chi tiết chi phí nêu mức đơn tối thiểu, trần giảm và các ưu đãi không được cộng dồn.'),
+      row('Cách sử dụng vị trí', 'Bản đồ sử dụng OpenStreetMap. Chọn địa điểm, ghim trên bản đồ hoặc dùng vị trí thiết bị. Vị trí được lưu trong trình duyệt để chọn nội dung thành phố; khoảng cách và phí giao chưa được tính lại trực tiếp. Dịch vụ bản đồ nhận yêu cầu tải các ô bản đồ gần vị trí đang xem.'),
+      row('Đơn hàng và ảnh món', 'Order hiển thị chi phí và lựa chọn nền tảng, không thanh toán hoặc tạo đơn thực tế. Ảnh minh họa loại món; món cụ thể, tồn kho, giao hàng và số tiền được xác nhận tại trang thanh toán.'),
+      actions(backButton('Đã hiểu'))),
     featured: () => window.wansoNative.refreshFeatured(),
     toggle,
     budget: value => {state.budget=value;},
     mode: value => {state.mode=value;},
     share,
-    favorite: id => show('收藏餐厅', paragraph(stores[id].name), state.group[id] ?
-      row('已收藏', state.group[id], () => collections(id), true) : row('加入收藏夹', '按常用场景整理餐厅', () => collections(id)),
-    actions(backButton(), ...(state.group[id] ? [button('取消收藏', () => actionHandlers.removeSaved(id))] : []))),
+    favorite: id => show('Lưu quán', paragraph(stores[id].name), state.group[id] ?
+      row('Đã lưu', state.group[id], () => collections(id), true) : row('Thêm vào bộ sưu tập', 'Sắp xếp quán theo nhu cầu thường dùng', () => collections(id)),
+    actions(backButton(), ...(state.group[id] ? [button('Bỏ lưu', () => actionHandlers.removeSaved(id))] : []))),
     collections: () => collections(),
     moveSaved: collections,
-    removeSaved: id => confirmation('移除收藏', '从收藏中移除 ' + storeFor(id).name + '？', '确认移除', () => {
+    removeSaved: id => confirmation('Bỏ lưu quán', 'Bỏ lưu ' + storeFor(id).name + '?', 'Xác nhận bỏ lưu', () => {
       delete state.group[id];
       sheet.close();
     }),
@@ -615,20 +622,20 @@ window.wansoControls = (() => {
     theme: chooseTheme,
     language: changeLanguage,
     account: editAccount,
-    gender: () => show('性别', ...['男', '女', '其他', '不愿透露'].map(value =>
-      row(value, state.gender === value ? '当前选项' : '', () => {state.gender = value; sheet.close();}, state.gender === value)), actions(backButton())),
+    gender: () => show('Giới tính', ...['Nam', 'Nữ', 'Khác', 'Không muốn chia sẻ'].map(value =>
+      row(value, state.gender === value ? 'Đang chọn' : '', () => {state.gender = value; sheet.close();}, state.gender === value)), actions(backButton())),
     avatar: chooseAvatar,
     tastes: addTaste,
-    feedback: () => field('发送反馈', '说说遇到的问题，例如推荐不符合预算、菜品标价异常或店铺信息缺失。', '', value =>
-      show('反馈预览', paragraph(value), note('反馈保留在本次浏览中。'), actions(backButton('完成'))), {multiline: true, limit: 500, submit: '预览反馈'}),
-    terms: () => show('万象 App 服务条款', paragraph('原版 v1.0 条款摘要。万象提供 AI 生活服务推荐、跨平台比较、推荐理由和第三方平台跳转。'),
-      row('交易与售后', '餐品、配送、支付、退款和售后由相应第三方负责。'), actions(backButton('完成'))),
-    privacy: () => show('万象 App 隐私政策', paragraph('原版 v1.0 政策摘要。万象会依据输入、偏好、使用历史、位置及公开或授权信息提供推荐。'),
-      row('你的信息', '典型信息包括登录资料、搜索内容、饮食偏好与反馈。可在账户与安全中查看个人信息，在应用设置管理匿名数据选项。'),
-      actions(backButton('完成'))),
-    removeAccount: () => show('删除账号', paragraph('正式 App 的删除操作会永久删除你的万象账号及数据。此处是体验账号，保留账户供后续浏览。'),
-      actions(backButton('返回账户'))),
-    logout: () => confirmation('退出登录', '结束本轮体验，返回万象首页。', '退出体验', () => go('home', false, 'reset'))
+    feedback: () => field('Gửi góp ý', 'Chia sẻ vấn đề bạn gặp: gợi ý vượt ngân sách, giá món bất thường hoặc thông tin quán chưa đầy đủ.', '', value =>
+      show('Xem lại góp ý', paragraph(value), note('Góp ý được giữ trong phiên sử dụng này.'), actions(backButton('Xong'))), {multiline: true, limit: 500, submit: 'Xem góp ý'}),
+    terms: () => show('Điều khoản Wanso', paragraph('Tóm tắt điều khoản v1.0: Wanso hỗ trợ gợi ý bằng AI, so sánh nền tảng, giải thích lựa chọn và truy cập dịch vụ bên thứ ba.'),
+      row('Giao dịch và hỗ trợ', 'Món ăn, giao hàng, thanh toán, hoàn tiền và hỗ trợ sau mua do bên cung cấp tương ứng phụ trách.'), actions(backButton('Xong'))),
+    privacy: () => show('Chính sách riêng tư Wanso', paragraph('Tóm tắt chính sách v1.0: Wanso dựa vào yêu cầu, sở thích, lịch sử, vị trí và thông tin công khai hoặc được cấp phép để đưa ra gợi ý.'),
+      row('Thông tin của bạn', 'Thông tin gồm hồ sơ tài khoản, yêu cầu tìm kiếm, sở thích ăn uống và góp ý. Xem thông tin cá nhân trong Tài khoản và bảo mật; quản lý chia sẻ dữ liệu ẩn danh trong Cài đặt.'),
+      actions(backButton('Xong'))),
+    removeAccount: () => show('Xóa tài khoản', paragraph('Xóa tài khoản trong ứng dụng sẽ xóa vĩnh viễn tài khoản Wanso và dữ liệu liên quan. Tài khoản trong trang này được giữ lại để bạn tiếp tục khám phá.'),
+      actions(backButton('Về tài khoản'))),
+    logout: () => confirmation('Đăng xuất', 'Kết thúc phiên hiện tại và trở về trang chủ Wanso.', 'Kết thúc phiên', () => go('home', false, 'reset'))
   };
 
   function register(control, hotspot) {
@@ -643,7 +650,7 @@ window.wansoControls = (() => {
       if (h.action==='budget'||h.action==='mode') {
         control.classList.add('native-choice-chip');control.dataset.choice=h.value;
         control.setAttribute('aria-pressed',String(state[h.action]===h.value));
-        control.textContent=h.value;
+        control.textContent=displayValue(h.value);
       }
       if (h.action === 'toggle') {
         control.setAttribute('aria-pressed', String(state[h.value]));
@@ -668,7 +675,7 @@ window.wansoControls = (() => {
       }
       const subtitle = state[h.subtitle];
       if (subtitle !== undefined && subtitle !== original[h.subtitle]) {
-        const value = el('span', 'native-value', subtitle || '未设置');
+        const value = el('span', 'native-value', displayValue(subtitle) || 'Chưa đặt');
         if (h.subtitle === 'start' || h.subtitle === 'end') value.classList.add('native-time');
         if (h.subtitle === 'name') value.classList.add('native-name');
         control.append(value);
@@ -686,17 +693,17 @@ window.wansoControls = (() => {
     layer.querySelector('.native-list-state')?.remove();
     if (frame.id === 'history' && !state.history) {
       const empty = el('div', 'native-list-state history-state');
-      empty.append(el('strong', null, '暂无会话'), paragraph('从首页开始一次新的选餐搜索。'),
-        button('返回首页', () => navigate('home', false, 'reset'), 'sheet-button primary'));
+      empty.append(el('strong', null, 'Chưa có trò chuyện'), paragraph('Bắt đầu tìm món mới từ trang chủ.'),
+        button('Về trang chủ', () => navigate('home', false, 'reset'), 'sheet-button primary'));
       layer.append(empty);
     }
     if (frame.id === 'saved' && savedCount() < 2) {
       const current = el('div', 'native-list-state saved-state');
       const entries=Object.keys(state.group).filter(key=>state.group[key]).map(key=>[key,storeFor(key)]).filter(([,store])=>store);
-      current.append(el('strong', null, '全部收藏 · ' + entries.length + ' 家'));
+      current.append(el('strong', null, 'Tất cả · ' + entries.length + ' quán'));
       for (const [id,store] of entries)current.append(row(store.name,String(store.rating),()=>catalogStore(id)));
-      if (!entries.length) current.append(paragraph('喜欢的餐厅会保存到这里。'));
-      current.append(button('浏览收藏夹', () => {
+      if (!entries.length) current.append(paragraph('Quán bạn yêu thích sẽ được lưu ở đây.'));
+      current.append(button('Xem bộ sưu tập', () => {
         activeFrame = frame;
         anchor = document.activeElement;
         collections();
@@ -707,6 +714,7 @@ window.wansoControls = (() => {
 
   return {
     viewState: () => state,
+    displayValue,
     storeFor,
     dismissAll,
     recentOrderData,
@@ -716,7 +724,7 @@ window.wansoControls = (() => {
     createSearchInput(submit) {
       const input = el('input','native-home-query');
       input.value = state.query;
-      input.placeholder = '说说你今天想吃什么';
+      input.placeholder = 'Hôm nay bạn muốn ăn gì?';
       input.maxLength = 160;
       input.addEventListener('input',() => {state.query = input.value;});
       input.addEventListener('keydown',event => {

@@ -166,802 +166,802 @@ window.wansoImages = {
 window.wansoImageInfo = {
   "demo-1": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-2": {
     "kind": "photo",
-    "alt": "鸡肉拌粉餐饮场景示意图",
+    "alt": "Phở gà trộn — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-3": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-4": {
     "kind": "photo",
-    "alt": "越式法棍餐饮场景示意图",
+    "alt": "Bánh mì Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-5": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-6": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-7": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-8": {
     "kind": "photo",
-    "alt": "鸡肉米线餐饮场景示意图",
+    "alt": "Bún gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-9": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-10": {
     "kind": "photo",
-    "alt": "鸡肉拌粉餐饮场景示意图",
+    "alt": "Phở gà trộn — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-11": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-12": {
     "kind": "photo",
-    "alt": "越式法棍餐饮场景示意图",
+    "alt": "Bánh mì Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-13": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-14": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-15": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-16": {
     "kind": "photo",
-    "alt": "鸡肉汤粉餐饮场景配图",
+    "alt": "Bún gà nước — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-17": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-18": {
     "kind": "photo",
-    "alt": "鸡肉拌粉餐饮场景配图",
+    "alt": "Phở gà trộn — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-19": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-20": {
     "kind": "photo",
-    "alt": "越式法棍餐饮场景示意图",
+    "alt": "Bánh mì Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-21": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-22": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-23": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-24": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-25": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-26": {
     "kind": "photo",
-    "alt": "鸡肉拌粉餐饮场景配图",
+    "alt": "Phở gà trộn — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-27": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-28": {
     "kind": "photo",
-    "alt": "越式法棍餐饮场景示意图",
+    "alt": "Bánh mì Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-29": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-30": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-31": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-32": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-33": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-34": {
     "kind": "photo",
-    "alt": "鸡肉拌粉餐饮场景配图",
+    "alt": "Phở gà trộn — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-35": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-36": {
     "kind": "photo",
-    "alt": "越式法棍餐饮场景示意图",
+    "alt": "Bánh mì Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-37": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-38": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-39": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-40": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-41": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-42": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-43": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-44": {
     "kind": "photo",
-    "alt": "越式法棍餐饮场景示意图",
+    "alt": "Bánh mì Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-45": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-46": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-47": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-48": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-49": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-50": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-51": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-52": {
     "kind": "photo",
-    "alt": "越式法棍餐饮场景示意图",
+    "alt": "Bánh mì Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-53": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-54": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-55": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-56": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-57": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-58": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-59": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-60": {
     "kind": "photo",
-    "alt": "越式法棍餐饮场景示意图",
+    "alt": "Bánh mì Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-61": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-62": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-63": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-64": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-65": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-66": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-67": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-68": {
     "kind": "photo",
-    "alt": "越式法棍餐饮场景示意图",
+    "alt": "Bánh mì Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-69": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-70": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-71": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-72": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-73": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-74": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-75": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-76": {
     "kind": "photo",
-    "alt": "越式法棍餐饮场景示意图",
+    "alt": "Bánh mì Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-77": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-78": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-79": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-80": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-81": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-82": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-83": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-84": {
     "kind": "photo",
-    "alt": "越式法棍餐饮场景示意图",
+    "alt": "Bánh mì Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-85": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-86": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-87": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-88": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-89": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-90": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-91": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-92": {
     "kind": "illustration",
-    "alt": "越式法棍餐饮场景插画",
+    "alt": "Bánh mì Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-93": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-94": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-95": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-96": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-97": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-98": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-99": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-100": {
     "kind": "illustration",
-    "alt": "越式法棍餐饮场景插画",
+    "alt": "Bánh mì Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-101": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-102": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-103": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-104": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-105": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-106": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-107": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-108": {
     "kind": "illustration",
-    "alt": "越式法棍餐饮场景插画",
+    "alt": "Bánh mì Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-109": {
     "kind": "photo",
-    "alt": "豆腐时蔬餐饮场景示意图",
+    "alt": "Đậu phụ và rau củ — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-110": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-111": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-112": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-113": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-114": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-115": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-116": {
     "kind": "illustration",
-    "alt": "越式法棍餐饮场景插画",
+    "alt": "Bánh mì Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-117": {
     "kind": "illustration",
-    "alt": "豆腐时蔬餐饮场景插画",
+    "alt": "Đậu phụ và rau củ — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-118": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-119": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-120": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-121": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-122": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-123": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-124": {
     "kind": "illustration",
-    "alt": "越式法棍餐饮场景插画",
+    "alt": "Bánh mì Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-125": {
     "kind": "illustration",
-    "alt": "豆腐时蔬餐饮场景插画",
+    "alt": "Đậu phụ và rau củ — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-126": {
     "kind": "photo",
-    "alt": "越南咖啡饮品场景示意图",
+    "alt": "Cà phê Việt Nam — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-127": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-128": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-129": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-130": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-131": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-132": {
     "kind": "illustration",
-    "alt": "越式法棍餐饮场景插画",
+    "alt": "Bánh mì Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-133": {
     "kind": "illustration",
-    "alt": "豆腐时蔬餐饮场景插画",
+    "alt": "Đậu phụ và rau củ — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-134": {
     "kind": "illustration",
-    "alt": "越南咖啡饮品场景插画",
+    "alt": "Cà phê Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-135": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-136": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-137": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景示意图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-138": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-139": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-140": {
     "kind": "illustration",
-    "alt": "越式法棍餐饮场景插画",
+    "alt": "Bánh mì Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-141": {
     "kind": "illustration",
-    "alt": "豆腐时蔬餐饮场景插画",
+    "alt": "Đậu phụ và rau củ — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-142": {
     "kind": "illustration",
-    "alt": "越南咖啡饮品场景插画",
+    "alt": "Cà phê Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-143": {
     "kind": "photo",
-    "alt": "柠檬茶饮品场景示意图",
+    "alt": "Trà chanh — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-144": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-145": {
     "kind": "photo",
-    "alt": "鸡肉河粉餐饮场景配图",
+    "alt": "Phở gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-146": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-147": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-148": {
     "kind": "illustration",
-    "alt": "越式法棍餐饮场景插画",
+    "alt": "Bánh mì Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-149": {
     "kind": "illustration",
-    "alt": "豆腐时蔬餐饮场景插画",
+    "alt": "Đậu phụ và rau củ — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-150": {
     "kind": "illustration",
-    "alt": "越南咖啡饮品场景插画",
+    "alt": "Cà phê Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-151": {
     "kind": "illustration",
-    "alt": "柠檬茶饮品场景插画",
+    "alt": "Trà chanh — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-152": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-153": {
     "kind": "illustration",
-    "alt": "鸡肉河粉餐饮场景插画",
+    "alt": "Phở gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-154": {
     "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "alt": "Phở gà trộn — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-155": {
     "kind": "photo",
-    "alt": "鸡肉饭餐饮场景示意图",
+    "alt": "Cơm gà — ảnh món ăn",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-156": {
     "kind": "illustration",
-    "alt": "越式法棍餐饮场景插画",
+    "alt": "Bánh mì Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-157": {
     "kind": "illustration",
-    "alt": "豆腐时蔬餐饮场景插画",
+    "alt": "Đậu phụ và rau củ — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-158": {
     "kind": "illustration",
-    "alt": "越南咖啡饮品场景插画",
+    "alt": "Cà phê Việt Nam — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-159": {
     "kind": "illustration",
-    "alt": "柠檬茶饮品场景插画",
+    "alt": "Trà chanh — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-160": {
     "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "alt": "Bún gà — tranh minh họa",
     "credit": "../../assets/wanso/catalog/credits.html"
   }
 };

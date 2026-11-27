@@ -66,8 +66,8 @@ function updatePlayback() {
   const play = $('.autoplay');
   play.setAttribute('aria-pressed', String(playing));
   play.textContent = playing ? 'Ⅱ 暂停' : '▶ 继续播放';
-  if (phone) play.textContent = playing ? 'Ⅱ 暂停' : '▶ 播放';
-  $('.play-status').textContent = playing ? '自动演示' : '已暂停，可自由查看';
+  if (phone) play.textContent = playing ? 'Ⅱ Tạm dừng' : '▶ Phát';
+  $('.play-status').textContent = capturedPhone ? (playing?'Tự động chuyển trang':'Đã tạm dừng') : (playing ? '自动演示' : '已暂停，可自由查看');
   $('.play-progress').classList.toggle('paused', !canPlay());
 }
 function animate(now) {
@@ -135,20 +135,35 @@ function openPhoneAction(hotspot) {
   window.wansoControls.open(hotspot, frames[current], screen, (id, runSearch = false, navigation = 'forward') =>
     navigation === 'back' ? goBack(id) : selectFrame(id, false, runSearch, navigation));
 }
+
+function phoneIcon(name){
+  const paths={home:'m3 10 9-7 9 7v10H3ZM9 20v-7h6v7',explore:'M12 3a9 9 0 1 0 .01 0ZM16 8l-2 6-6 2 2-6Z',saved:'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z',profile:'M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM4 21v-2a8 8 0 0 1 16 0v2',back:'m14 5-7 7 7 7'};
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.8');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');svg.setAttribute('aria-hidden','true');
+  const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[name]);svg.append(path);return svg;
+}
+function renderPhoneNav(){
+  const nav=document.createElement('nav');nav.className='phone-nav';nav.setAttribute('aria-label','Điều hướng chính');
+  for(const [id,label] of [['home','Trang chủ'],['explore','Khám phá'],['saved','Đã lưu'],['profile','Cá nhân']]){
+    const b=makeButton('',()=>selectFrame(id,false,false,'tab'));b.setAttribute('aria-label',label);b.dataset.target=id;
+    if(id===phoneTab)b.setAttribute('aria-current','page');
+    const text=document.createElement('span');text.textContent=label;b.append(phoneIcon(id),text);nav.append(b);
+  }activeLayer.append(nav);
+}
+
 function renderFrame(buildHotspots = true) {
   const f = frames[current], position = stepIndex(), step = activeStep();
   screen.toggleAttribute('data-swipeable', Boolean(f.swipeLeft || f.swipeRight));
   $('.page-title').textContent = f.title;
   $('.page-counter').textContent = position >= 0 ? `${position+1} / ${steps().length}` : `${current+1} / ${frames.length}`;
-  $('.step-eyebrow').textContent = position >= 0 ? `${flows[flow].title} · ${String(position+1).padStart(2,'0')}` : '自由浏览 · ' + f.group;
+  $('.step-eyebrow').textContent = position >= 0 ? `${flows[flow].title} · ${String(position+1).padStart(2,'0')}` : (capturedPhone?'Tự do khám phá · ':'自由浏览 · ') + f.group;
   $('.step-caption').textContent = step?.caption || f.note;
   $('.page-description').textContent = step?.reason || f.note;
   $('.source-page')?.replaceChildren(document.createTextNode(
-    capturedPhone ? 'iOS 版布局与界面 · 历史菜单样本' : '公开工作台截图'
+    capturedPhone ? 'Giao diện iOS · Thực đơn và so sánh chi phí' : '公开工作台截图'
   ));
   const liveLink = $('.live-link');
   if (liveLink && !phone && /^#[a-z0-9/-]+$/.test(f.route || '')) liveLink.hash = f.route;
-  $('.continue').textContent = position < 0 ? '回到流程 →' : position === steps().length-1 ? '重新体验 ↺' : '继续 →';
+  $('.continue').textContent = capturedPhone ? (position<0?'Về đầu →':position===steps().length-1?'Xem lại ↺':'Tiếp tục →') : (position < 0 ? '回到流程 →' : position === steps().length-1 ? '重新体验 ↺' : '继续 →');
   $('.previous').disabled = !(capturedPhone && screenHistory.length) && (position < 0 ? current === 0 : position === 0);
   $('.next').disabled = false;
   for (const b of document.querySelectorAll('[data-screen],[data-step],[data-shortcut]')) {
@@ -157,8 +172,8 @@ function renderFrame(buildHotspots = true) {
     else b.removeAttribute('aria-current');
   }
   const nextId = steps()[(position+1) % steps().length]?.id;
-  const hits = f.hotspots.filter(h => !f.livePage || !h.scroll);
-  if (activeLayer.classList.contains('ios-store-push')) {
+  const hits = f.hotspots.filter(h => (!f.livePage || !h.scroll) && (!capturedPhone || !h.nav));
+  if (!capturedPhone && activeLayer.classList.contains('ios-store-push')) {
     hits.push(...frames.find(entry => entry.chat).hotspots.filter(h => h.nav));
   }
   for (const h of buildHotspots ? hits : []) {
@@ -171,12 +186,15 @@ function renderFrame(buildHotspots = true) {
     const b = f.id === 'home' && h.action === 'search'
       ? window.wansoControls.createSearchInput(() => openPhoneAction({action:'runSearch'}))
       : makeButton('', select, 'hotspot');
-    b.setAttribute('aria-label',h.label); if(h.target) b.dataset.target = h.target;
+    b.setAttribute('aria-label',capturedPhone && h.back ? 'Quay lại' : h.label);
+    if(capturedPhone && h.back){b.classList.add('phone-back');b.append(phoneIcon('back'));}
+    if(h.target) b.dataset.target = h.target;
     if (h.nav && !h.scroll && h.target === (capturedPhone ? phoneTab : f.id)) b.setAttribute('aria-current', 'page');
     Object.assign(b.style,{left:h.x+'%',top:h.y+'%',width:h.w+'%',height:h.h+'%'});
     if (b.tagName === 'BUTTON') window.wansoControls?.register(b, h, f);
     activeLayer.querySelector(h.scroll ? '.scroll-content .hotspots' : ':scope > .hotspots').append(b);
   }
+  if (buildHotspots && capturedPhone && f.phoneNav) renderPhoneNav();
   if (buildHotspots) window.wansoControls?.paint(activeLayer, f);
   if (buildHotspots) fit();
   if (location.hash !== '#' + f.id) history.replaceState(null, '', '#' + f.id);
@@ -247,7 +265,7 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
     activeLayer.classList.toggle('ios-store-push', Boolean(pushedStore));
     image.className = 'original-screen';
     image.draggable = false;
-    image.alt = `${document.body.dataset.product.toUpperCase()} · ${frame.title}`;
+    image.alt = capturedPhone ? '' : `${document.body.dataset.product.toUpperCase()} · ${frame.title}`;
     activeLayer.append(image);
     for (const metric of frame.metrics || []) {
       const label = document.createElement('span');
@@ -303,6 +321,11 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
         swipe.className = 'ios-sheet-swipe';
         activeLayer.append(swipe);
       }
+    }
+    if (frame.settingsPage) {
+      window.wansoSettings.mount(activeLayer,frame.id,
+        (target,runSearch=false,mode='forward')=>selectFrame(target,false,runSearch,mode),
+        (action,value)=>openPhoneAction({action,value}));
     }
     if (frame.livePage) {
       window.wansoPages.mount(activeLayer, frame.id,
@@ -421,7 +444,7 @@ $('.autoplay').addEventListener('click',()=>{
 $('.zoom-toggle').addEventListener('click',event=>{
   zoomed=!zoomed;
   document.body.classList.toggle('zoomed',zoomed);
-  event.currentTarget.textContent=zoomed?'适应':'放大';
+  event.currentTarget.textContent=capturedPhone?(zoomed?'Vừa màn hình':'Phóng to'):(zoomed?'适应':'放大');
   event.currentTarget.setAttribute('aria-pressed',String(zoomed));
   setPlaying(false);fit();
   if (flowDialog?.open) flowDialog.close();
@@ -530,9 +553,9 @@ if (phone) {
   const heading = document.createElement('div');
   heading.className = 'flow-dialog-heading';
   const title = document.createElement('h2');
-  title.id = 'flow-title'; title.textContent = '场景与页面';
+  title.id = 'flow-title'; title.textContent = capturedPhone?'Trang và tình huống':'场景与页面';
   const close = makeButton('×', () => flowDialog.close(), 'flow-close');
-  close.setAttribute('aria-label', '关闭场景选择');
+  close.setAttribute('aria-label', capturedPhone?'Đóng chọn trang':'关闭场景选择');
   heading.append(title, close);
   const pages = $('.review-side');
   const tools = $('.viewer-tools');
@@ -550,7 +573,7 @@ if (phone) {
   document.body.append(flowDialog);
   wideReview.addEventListener('change', placeGuide);
   placeGuide();
-  const choose = makeButton('全部页面', () => {
+  const choose = makeButton(capturedPhone?'Tất cả trang':'全部页面', () => {
     setPlaying(false);
     $('.catalog').open = true;
     if (document.body.classList.contains('wide-phone-review')) {
@@ -572,7 +595,7 @@ if (phone) {
     const box = flowDialog.getBoundingClientRect();
     if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) flowDialog.close();
   });
-  $('.expand').textContent = '展开 ↗';
+  $('.expand').textContent = capturedPhone?'Mở rộng ↗':'展开 ↗';
   $('.expand').addEventListener('click', event => {
     if (embed && parent !== window) {
       event.preventDefault();setPlaying(false);parent.postMessage({type:'portfolio-open-phone',frame:frames[current]?.id || ''}, location.origin);
@@ -585,14 +608,20 @@ async function loadManifest() {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
   try {
-    const response = await fetch(capturedPhone ? 'screens.json?v=wanso-complete1' : 'screens.json?v=prototype5', {signal: controller.signal});
+    const response = await fetch(capturedPhone ? 'screens.json?v=wanso-vi1' : 'screens.json?v=prototype5', {signal: controller.signal});
     if (!response.ok) throw Error('screens');
     const data = await response.json();
     if (capturedPhone) await window.wansoNative.load(controller.signal);
     frames = data.frames;
     if(capturedPhone)for(const frame of frames){
+      // All phone content is live text; a shared vector replaces Chinese raster backdrops.
+      frame.src='phone-shell.svg?v=wanso-vi1';delete frame.scroll;delete frame.metrics;
+      frame.phoneNav=frame.hotspots.some(h=>h.nav);
+      frame.settingsPage=window.wansoSettings.has(frame.id);
+      if(frame.settingsPage)frame.hotspots=[];
+      else if(frame.livePage)frame.hotspots=frame.hotspots.filter(h=>h.nav);
       if(frame.id.startsWith('translate-'))frame.store=frame.id.endsWith('second')?'quyen':'moc';
-      if(frame.store){frame.unifiedStore=true;frame.src=frames.find(item=>item.id==='home').src;delete frame.scroll;delete frame.metrics;frame.hotspots=[];}
+      if(frame.store){frame.unifiedStore=true;frame.hotspots=[];frame.phoneNav=false;}
     }
     flows = data.flows;
     if (!frames.length || !flows.length) throw Error('empty');
@@ -617,7 +646,7 @@ async function loadManifest() {
         catalog.append(button);
       }
     }
-    $('.catalog-count').textContent = frames.length + ' 页';
+    $('.catalog-count').textContent = frames.length + (capturedPhone?' trang':' 页');
     const requested = location.hash.slice(1);
     const start = frames.some(f => f.id === requested) ? requested : data.default;
     const matching = flows.findIndex(f => f.steps.some(s => s.id === start));
@@ -628,7 +657,7 @@ async function loadManifest() {
     if (phone && !device) {
       const shortcuts = document.createElement('nav');
       shortcuts.className = 'phone-shortcuts';
-      shortcuts.setAttribute('aria-label', '常用场景');
+      shortcuts.setAttribute('aria-label', capturedPhone?'Lối tắt':'常用场景');
       for (const [id, label] of data.shortcuts) {
         const button = makeButton(label, () => selectFrame(id, false, id === 'generating'));
         button.dataset.shortcut = id;

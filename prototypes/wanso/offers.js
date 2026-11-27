@@ -8,12 +8,12 @@ window.wansoOffers = (() => {
     if (!Number.isSafeInteger(value) || value < 0) throw new TypeError(field + ' must be a non-negative integer');
     return value;
   };
-  const percentage = rate => (rate / 100).toLocaleString('zh-CN') + '%';
+  const percentage = rate => (rate / 100).toLocaleString('vi-VN') + '%';
   const couponRule = coupon => {
     const benefit = coupon.type === 'rate'
-      ? '减 ' + percentage(coupon.rateBps) + '，最高减 ' + money(coupon.cap)
-      : '减 ' + money(coupon.amount);
-    return '折后餐品满 ' + money(coupon.minSpend) + ' ' + benefit;
+      ? 'giảm ' + percentage(coupon.rateBps) + ', tối đa ' + money(coupon.cap)
+      : 'giảm ' + money(coupon.amount);
+    return 'Tiền món sau giảm của quán từ ' + money(coupon.minSpend) + ': ' + benefit;
   };
   const reduction = (base, rule) => Math.min(base,
     rule.type === 'rate' ? Math.min(Math.floor(base * rule.rateBps / 10000), rule.cap) : rule.amount);
@@ -58,10 +58,10 @@ window.wansoOffers = (() => {
     const applied = [], unavailable = [], terms = [];
     if (rules.merchant) {
       const rule = rules.merchant;
-      const text = '餐品原价满 ' + money(rule.minSpend) + ' 减 ' + percentage(rule.rateBps) + '，最高减 ' + money(rule.cap);
-      terms.push('商家折扣：' + text + '。');
-      if (merchantDiscount) applied.push({kind:'merchant', label:'商家折扣', amount:merchantDiscount, terms:text});
-      else if (subtotal < rule.minSpend) unavailable.push('商家折扣还差 ' + money(rule.minSpend - subtotal) + ' 餐品金额。');
+      const text = 'Tiền món niêm yết từ ' + money(rule.minSpend) + ': giảm ' + percentage(rule.rateBps) + ', tối đa ' + money(rule.cap);
+      terms.push('Ưu đãi từ quán: ' + text + '.');
+      if (merchantDiscount) applied.push({kind:'merchant', label:'Giảm từ quán', amount:merchantDiscount, terms:text});
+      else if (subtotal < rule.minSpend) unavailable.push('Cần thêm ' + money(rule.minSpend - subtotal) + ' tiền món để dùng ưu đãi từ quán.');
     }
     const couponOptions = (rules.coupons || []).map(coupon => {
       const eligible = eligibleSubtotal >= coupon.minSpend;
@@ -71,25 +71,25 @@ window.wansoOffers = (() => {
     const selected = couponOptions.find(coupon => coupon.selected);
     if (selected) applied.push({kind:'coupon', label:selected.name, amount:couponDiscount, terms:selected.terms});
     for (const coupon of couponOptions) {
-      terms.push(coupon.name + '：' + coupon.terms + '。');
-      if (!coupon.eligible) unavailable.push(coupon.name + '还差 ' + money(coupon.gap) + ' 折后餐品金额。');
-      else if (selected && coupon.id !== selected.id) unavailable.push(coupon.name + '可减 ' + money(coupon.saving) + '；与已选券互斥，本单采用' + selected.name + '。');
+      terms.push(coupon.name + ': ' + coupon.terms + '.');
+      if (!coupon.eligible) unavailable.push(coupon.name + ': còn thiếu ' + money(coupon.gap) + ' tiền món sau giảm của quán.');
+      else if (selected && coupon.id !== selected.id) unavailable.push(coupon.name + ' có thể giảm ' + money(coupon.saving) + ', nhưng không dùng đồng thời với mã đã chọn. Đơn này dùng ' + selected.name + '.');
     }
     if (rules.delivery) {
       const rule = rules.delivery;
-      const text = '折后餐品满 ' + money(rule.minSpend) + (rule.amount === null ? ' 免配送费' : ' 减配送费，最高 ' + money(rule.amount));
-      terms.push('配送优惠：' + text + '。');
-      if (deliveryDiscount) applied.push({kind:'delivery', label:'配送优惠', amount:deliveryDiscount, terms:text});
-      else if (eligibleSubtotal < rule.minSpend) unavailable.push('配送优惠还差 ' + money(rule.minSpend - eligibleSubtotal) + ' 折后餐品金额。');
+      const text = 'Tiền món sau giảm của quán từ ' + money(rule.minSpend) + (rule.amount === null ? ': miễn phí giao hàng' : ': giảm phí giao hàng tối đa ' + money(rule.amount));
+      terms.push('Ưu đãi giao hàng: ' + text + '.');
+      if (deliveryDiscount) applied.push({kind:'delivery', label:'Ưu đãi giao hàng', amount:deliveryDiscount, terms:text});
+      else if (eligibleSubtotal < rule.minSpend) unavailable.push('Cần thêm ' + money(rule.minSpend - eligibleSubtotal) + ' tiền món sau giảm của quán để dùng ưu đãi giao hàng.');
     }
     const couponName = selected?.name || '';
-    const couponTerms = selected?.terms || (couponOptions.length ? '本单未达到平台券门槛' : '本店无平台券');
-    const qualification = '平台券与配送优惠按商家折扣后的餐品金额核算门槛；平台券择优用一张，可与商家折扣和配送优惠叠加。';
+    const couponTerms = selected?.terms || (couponOptions.length ? 'Đơn chưa đạt mức tối thiểu của mã' : 'Quán chưa có mã nền tảng');
+    const qualification = 'Mức tối thiểu của mã nền tảng và ưu đãi giao hàng tính trên tiền món sau giảm của quán. Chọn một mã có lợi nhất; có thể cộng với ưu đãi từ quán và giao hàng.';
     return {...offer, ...amounts, couponName, couponTerms,
       couponOptions, applied, unavailable, terms, qualification,
-      lines:[{label:'餐品小计',amount:subtotal},{label:'配送费',amount:originalFee},
-        {label:'商家折扣',amount:-merchantDiscount},{label:couponName || '平台券',amount:-couponDiscount},
-        {label:'配送优惠',amount:-deliveryDiscount},{label:'合计',amount:total}]
+      lines:[{label:'Tiền món',amount:subtotal},{label:'Phí giao hàng',amount:originalFee},
+        {label:'Giảm từ quán',amount:-merchantDiscount},{label:couponName || 'Mã nền tảng',amount:-couponDiscount},
+        {label:'Ưu đãi giao hàng',amount:-deliveryDiscount},{label:'Tổng cộng',amount:total}]
     };
   }
   return {calculate, summary};

@@ -4,30 +4,30 @@
   "shortcuts": [
     [
       "home",
-      "首页"
+      "Trang chủ"
     ],
     [
       "generating",
-      "生成过程"
+      "Tìm món"
     ],
     [
       "recommend",
-      "五家推荐"
+      "Gợi ý"
     ],
     [
       "compare",
-      "同店比价"
+      "So sánh giá"
     ]
   ],
   "frames": [
     {
       "id": "home",
-      "title": "首页",
-      "group": "AI 选餐",
+      "title": "Trang chủ",
+      "group": "Chọn món với AI",
       "src": "../../assets/wanso/native/home.webp?v=native-scroll",
       "width": 804,
       "height": 1748,
-      "note": "从河内发起选餐。输入预算与餐品后可同时比较 GrabFood 和 ShopeeFood，也可以从万象精选直接查看店铺。",
+      "note": "Chọn vị trí và nhập món, ngân sách hoặc khẩu vị. So sánh GrabFood với ShopeeFood, hoặc mở một trong năm quán được gợi ý trên trang chủ.",
       "hotspots": [
         {
           "label": "搜索",
@@ -157,12 +157,12 @@
     },
     {
       "id": "generating",
-      "title": "处理选餐需求",
-      "group": "AI 选餐",
+      "title": "Đang tìm món",
+      "group": "Chọn món với AI",
       "src": "../../assets/wanso/native/generating.webp",
       "width": 804,
       "height": 1748,
-      "note": "原生搜索阶段显示需求理解、选取数据源、查找平台、排序和整理答案。",
+      "note": "Xem từng bước: hiểu yêu cầu, tìm quán, kiểm tra món, so sánh chi phí và sắp xếp gợi ý.",
       "hotspots": [
         {
           "label": "返回",
@@ -214,12 +214,12 @@
     },
     {
       "id": "writing",
-      "title": "整理推荐理由",
-      "group": "AI 选餐",
+      "title": "Đang tổng hợp gợi ý",
+      "group": "Chọn món với AI",
       "src": "../../assets/wanso/native/writing.webp",
       "width": 804,
       "height": 1748,
-      "note": "查找并排序后，客户端显示正在整理答案。",
+      "note": "Kiểm tra món, tổng tiền và lý do phù hợp trước khi trình bày câu trả lời.",
       "hotspots": [
         {
           "label": "返回",
@@ -272,12 +272,12 @@
     },
     {
       "id": "recommend",
-      "title": "五家餐厅与连续追问",
-      "group": "AI 选餐",
+      "title": "Gợi ý và trò chuyện",
+      "group": "Chọn món với AI",
       "src": "../../assets/wanso/native/recommend.webp",
       "width": 804,
       "height": 1748,
-      "note": "先推荐五家符合本餐要求的店铺，再按口味、预算和配送继续比较。",
+      "note": "Xem năm quán phù hợp rồi tiếp tục hỏi về khẩu vị, ngân sách và giao hàng.",
       "hotspots": [
         {
           "label": "返回",
@@ -329,12 +329,12 @@
     },
     {
       "id": "recommend-2",
-      "title": "五家餐厅与连续追问",
-      "group": "AI 选餐",
+      "title": "Tiếp tục trò chuyện",
+      "group": "Chọn món với AI",
       "src": "../../assets/wanso/native/recommend-2.webp",
       "width": 804,
       "height": 1748,
-      "note": "先推荐五家符合本餐要求的店铺，再按口味、预算和配送继续比较。",
+      "note": "Giữ ngữ cảnh khi thay đổi ngân sách, khẩu vị hoặc số người ăn; cập nhật quán và lý do gợi ý.",
       "hotspots": [
         {
           "label": "返回",
@@ -387,9 +387,9 @@
     },
     {
       "id": "store-first",
-      "title": "Hương Vị Mộc 店铺详情",
-      "group": "店铺与菜单",
-      "note": "上滑经过两平台报价和同店比价，再按原有分类查看该店完整历史菜单。",
+      "title": "Quán Hương Vị Mộc",
+      "group": "Quán và thực đơn",
+      "note": "Cuộn xem thông tin quán, giá trên hai nền tảng, điều kiện ưu đãi và thực đơn theo nhóm món.",
       "src": "../../assets/wanso/native/store-first.webp?v=devices3",
       "width": 804,
       "height": 1748,
@@ -486,9 +486,9 @@
     },
     {
       "id": "compare",
-      "title": "同店菜品比价",
-      "group": "店铺与菜单",
-      "note": "先匹配同店同菜，再看两平台的单价。鸡腿汤河粉在 GrabFood 少 5,000 ₫，拌河粉少 8,000 ₫。配送费用单独核对。",
+      "title": "So sánh cùng quán",
+      "group": "Quán và thực đơn",
+      "note": "Đối chiếu cùng món và khẩu phần; xem riêng tiền món, giảm từ quán, mã ưu đãi và phí giao hàng để hiểu tổng thanh toán.",
       "src": "../../assets/wanso/native/store-first.webp?v=devices3",
       "width": 804,
       "height": 1748,
@@ -586,9 +586,9 @@
     },
     {
       "id": "store-second",
-      "title": "Phở Quyên 店铺详情",
-      "group": "店铺与菜单",
-      "note": "从店铺详情上滑，可依次查看 GrabFood 配送信息及这家店的完整历史菜单。",
+      "title": "Quán Phở Quyên",
+      "group": "Quán và thực đơn",
+      "note": "Xem món phở, thông tin giao hàng và thực đơn của Phở Quyên trên cùng một trang.",
       "src": "../../assets/wanso/native/store-second.webp?v=devices3",
       "width": 804,
       "height": 1748,
@@ -675,9 +675,9 @@
     },
     {
       "id": "explore",
-      "title": "探索",
-      "group": "应用页面",
-      "note": "按越南当地时段切换场景，结合所选位置查看双平台餐厅。",
+      "title": "Khám phá",
+      "group": "Khám phá và tài khoản",
+      "note": "Gợi ý thay đổi theo vị trí và buổi sáng, trưa, chiều hoặc tối tại Việt Nam. Chọn một tình huống để bắt đầu tìm món.",
       "src": "../../assets/wanso/native/explore.webp?v=native-scroll",
       "width": 804,
       "height": 1748,
@@ -776,9 +776,9 @@
     },
     {
       "id": "saved",
-      "title": "收藏",
-      "group": "应用页面",
-      "note": "查看原版收藏中的餐厅照片和评分，也可以向下滑动发现新餐厅。",
+      "title": "Đã lưu",
+      "group": "Khám phá và tài khoản",
+      "note": "Mở quán đã lưu, quản lý bộ sưu tập và tìm thêm những món muốn thử.",
       "src": "../../assets/wanso/native/saved.webp?v=native-scroll",
       "width": 804,
       "height": 1748,
@@ -944,9 +944,9 @@
     },
     {
       "id": "profile",
-      "title": "我的",
-      "group": "应用页面",
-      "note": "在同一页向下滑动查看偏好、通知、应用设置、账户信息和反馈。返回会保留原有位置。",
+      "title": "Cá nhân",
+      "group": "Khám phá và tài khoản",
+      "note": "Quản lý khẩu vị, tùy chọn, thông báo và thông tin cá nhân. Vị trí cuộn được giữ khi quay lại.",
       "src": "../../assets/wanso/native/profile.webp?v=native-scroll",
       "width": 804,
       "height": 1748,
@@ -1071,12 +1071,12 @@
     },
     {
       "id": "settings",
-      "title": "应用设置",
-      "group": "探索与账户",
+      "title": "Cài đặt",
+      "group": "Khám phá và tài khoản",
       "src": "../../assets/wanso/native/settings.webp?v=routes4",
       "width": 804,
       "height": 1748,
-      "note": "切换主题和显示语言，管理触感与匿名数据。清除活动会同时清除本次浏览的搜索、收藏和订单入口。",
+      "note": "Quản lý giao diện, ngôn ngữ, phản hồi rung và dữ liệu. Xóa hoạt động sẽ xóa lịch sử tìm kiếm, quán đã lưu và các lần mở đặt món trong phiên này.",
       "hotspots": [
         {
           "label": "返回",
@@ -1153,9 +1153,9 @@
     },
     {
       "id": "preferences",
-      "title": "订单偏好",
-      "group": "应用页面",
-      "note": "将常用预算、会员和比较方式设为默认值。本轮对话中明确提出的条件优先。",
+      "title": "Tùy chọn tìm kiếm",
+      "group": "Khám phá và tài khoản",
+      "note": "Đặt ngân sách, hội viên và cách so sánh thường dùng. Yêu cầu cụ thể trong cuộc trò chuyện được ưu tiên.",
       "src": "../../assets/wanso/native/preferences.webp?v=devices3",
       "width": 804,
       "height": 1748,
@@ -1245,9 +1245,9 @@
     },
     {
       "id": "history",
-      "title": "会话历史",
-      "group": "应用页面",
-      "note": "可打开之前的鸡腿河粉搜索，也可以按菜品或店铺搜索和删除本次浏览中的会话。",
+      "title": "Lịch sử trò chuyện",
+      "group": "Khám phá và tài khoản",
+      "note": "Mở lại cuộc trò chuyện đã lưu, tìm theo món hoặc quán, và xóa những nội dung không còn cần.",
       "src": "../../assets/wanso/native/history.webp?v=devices3",
       "width": 804,
       "height": 1748,
@@ -1333,12 +1333,12 @@
     },
     {
       "id": "notifications",
-      "title": "通知设置",
-      "group": "探索与账户",
+      "title": "Thông báo",
+      "group": "Khám phá và tài khoản",
       "src": "../../assets/wanso/native/notifications.webp?v=routes4",
       "width": 804,
       "height": 1748,
-      "note": "可以单独查看优惠、降价及配送提醒，或通过免打扰时段管理晚上收到的推送。",
+      "note": "Chọn thông báo ưu đãi, giảm giá, quán mới hoặc giao hàng; thiết lập giờ không làm phiền.",
       "hotspots": [
         {
           "label": "返回",
@@ -1443,12 +1443,12 @@
     },
     {
       "id": "account",
-      "title": "账户与安全",
-      "group": "探索与账户",
+      "title": "Thông tin cá nhân",
+      "group": "Khám phá và tài khoản",
       "src": "../../assets/wanso/native/account.webp?v=routes4",
       "width": 804,
       "height": 1748,
-      "note": "查看体验账号的个人资料，编辑昵称、生日、送货地址等内容并检查原版的账号相关入口。",
+      "note": "Cập nhật email, số điện thoại, ngày sinh, giới tính và địa chỉ giao hàng.",
       "hotspots": [
         {
           "label": "返回",
@@ -1520,12 +1520,12 @@
     },
     {
       "id": "theme",
-      "title": "主题选择",
-      "group": "探索与账户",
+      "title": "Giao diện",
+      "group": "Khám phá và tài khoản",
       "src": "../../assets/wanso/native/theme.webp?v=routes4",
       "width": 804,
       "height": 1748,
-      "note": "浏览 Wanso 的配色选项，当前示例使用海洋主题。",
+      "note": "Xem các bảng màu của Wanso. Giao diện hiện tại dùng sắc xanh Đại dương.",
       "hotspots": [
         {
           "label": "返回",
@@ -1594,12 +1594,12 @@
     },
     {
       "id": "language",
-      "title": "语言选择",
-      "group": "探索与账户",
+      "title": "Ngôn ngữ",
+      "group": "Khám phá và tài khoản",
       "src": "../../assets/wanso/native/language.webp?v=routes4",
       "width": 804,
       "height": 1748,
-      "note": "查看应用支持的语言，当前示例使用简体中文。",
+      "note": "Xem các ngôn ngữ trong cài đặt. Nội dung hiện tại được trình bày bằng tiếng Việt.",
       "hotspots": [
         {
           "label": "关闭语言选择",
@@ -1658,12 +1658,12 @@
     },
     {
       "id": "summary-first",
-      "title": "Hương Vị Mộc 的店铺总结",
-      "group": "店铺与菜单",
+      "title": "Gợi ý tại Hương Vị Mộc",
+      "group": "Quán và thực đơn",
       "src": "../../assets/wanso/native/summary-first.webp?v=routes4",
       "width": 804,
       "height": 1748,
-      "note": "查看这家店的菜品、预算判断和配送费说明。可以继续滚动看菜单。",
+      "note": "Xem món phù hợp, tổng tiền và lý do chênh lệch phí giao hàng. Cuộn tiếp để xem thực đơn.",
       "hotspots": [
         {
           "label": "返回",
@@ -1747,12 +1747,12 @@
     },
     {
       "id": "summary-second",
-      "title": "Phở Quyên 的店铺总结",
-      "group": "店铺与菜单",
+      "title": "Gợi ý tại Phở Quyên",
+      "group": "Quán và thực đơn",
       "src": "../../assets/wanso/native/summary-second.webp?v=routes4",
       "width": 804,
       "height": 1748,
-      "note": "查看鸡腿汤河粉的推荐信息，向上滑动浏览菜单。",
+      "note": "Xem gợi ý phở gà và so sánh tổng tiền, sau đó cuộn để xem thực đơn.",
       "hotspots": [
         {
           "label": "返回",
@@ -1826,12 +1826,12 @@
     },
     {
       "id": "translate-first",
-      "title": "Hương Vị Mộc 的菜单翻译选项",
-      "group": "店铺与菜单",
+      "title": "Thực đơn Hương Vị Mộc",
+      "group": "Khám phá và tài khoản",
       "src": "../../assets/wanso/native/translate-first.webp?v=routes4",
       "width": 804,
       "height": 1748,
-      "note": "查看店铺的菜单语言选择。当前回放使用菜单原文。",
+      "note": "Chọn ngôn ngữ và xem bản dịch thực đơn. Mặc định là tên món tiếng Việt.",
       "hotspots": [
         {
           "label": "关闭菜单语言选项",
@@ -1901,12 +1901,12 @@
     },
     {
       "id": "translate-second",
-      "title": "Phở Quyên 的菜单翻译选项",
-      "group": "店铺与菜单",
+      "title": "Thực đơn Phở Quyên",
+      "group": "Khám phá và tài khoản",
       "src": "../../assets/wanso/native/translate-second.webp?v=routes4",
       "width": 804,
       "height": 1748,
-      "note": "查看店铺的菜单语言选择。当前回放使用菜单原文。",
+      "note": "Chọn ngôn ngữ và xem bản dịch thực đơn. Mặc định là tên món tiếng Việt.",
       "hotspots": [
         {
           "label": "关闭菜单语言选项",
@@ -1977,128 +1977,128 @@
   ],
   "flows": [
     {
-      "title": "选餐与推荐",
-      "summary": "按用餐位置、预算与口味查看五家双平台店铺，再继续追问费用与菜品。",
+      "title": "Chọn món và gợi ý",
+      "summary": "Tìm năm quán theo vị trí, ngân sách và khẩu vị; tiếp tục hỏi để chọn món phù hợp.",
       "steps": [
         {
           "id": "home",
-          "label": "提交用餐需求",
-          "caption": "点击搜索",
-          "reason": "选择位置并输入用餐要求。首页每批展示五家店，刷新可继续换一批。"
+          "label": "Trang chủ",
+          "caption": "Trang chủ",
+          "reason": "Chọn vị trí và nhập món, ngân sách hoặc khẩu vị. So sánh GrabFood với ShopeeFood, hoặc mở một trong năm quán được gợi ý trên trang chủ."
         },
         {
           "id": "generating",
-          "label": "理解需求",
-          "caption": "根据这次搜索选择数据源",
-          "reason": "原生搜索阶段显示需求理解、选取数据源、查找平台、排序和整理答案。"
+          "label": "Đang tìm món",
+          "caption": "Đang tìm món",
+          "reason": "Xem từng bước: hiểu yêu cầu, tìm quán, kiểm tra món, so sánh chi phí và sắp xếp gợi ý."
         },
         {
           "id": "writing",
-          "label": "整理答案",
-          "caption": "核对菜品、总价与推荐依据",
-          "reason": "逐步展示条件整理、平台筛选、费用比较与答案检查。"
+          "label": "Đang tổng hợp gợi ý",
+          "caption": "Đang tổng hợp gợi ý",
+          "reason": "Kiểm tra món, tổng tiền và lý do phù hợp trước khi trình bày câu trả lời."
         },
         {
           "id": "recommend",
-          "label": "五家推荐",
-          "caption": "查看具体菜品与双平台费用",
-          "reason": "上下浏览三轮对话，左右比较五家餐厅。点店铺看菜单，点平台看餐费、配送和优惠。"
+          "label": "Gợi ý và trò chuyện",
+          "caption": "Gợi ý và trò chuyện",
+          "reason": "Xem năm quán phù hợp rồi tiếp tục hỏi về khẩu vị, ngân sách và giao hàng."
         },
         {
           "id": "recommend-2",
-          "label": "继续追问",
-          "caption": "改预算、口味或人数",
-          "reason": "输入新的要求后保留会话上下文，重新筛选符合条件的店铺，并更新推荐理由。"
+          "label": "Tiếp tục trò chuyện",
+          "caption": "Tiếp tục trò chuyện",
+          "reason": "Giữ ngữ cảnh khi thay đổi ngân sách, khẩu vị hoặc số người ăn; cập nhật quán và lý do gợi ý."
         }
       ]
     },
     {
-      "title": "店铺、订单与比价",
-      "summary": "点开店铺看菜单和平台入口，同一分店可以按菜品比较。",
+      "title": "Quán và so sánh giá",
+      "summary": "Xem thực đơn và so sánh cùng món trên hai nền tảng.",
       "steps": [
         {
           "id": "store-first",
-          "label": "Hương Vị Mộc 店铺详情",
-          "caption": "上下滚动查看菜单与下单入口",
-          "reason": "上滑经过两平台报价和同店比价，再按原有分类查看该店完整历史菜单。"
+          "label": "Quán Hương Vị Mộc",
+          "caption": "Quán Hương Vị Mộc",
+          "reason": "Cuộn xem thông tin quán, giá trên hai nền tảng, điều kiện ưu đãi và thực đơn theo nhóm món."
         },
         {
           "id": "compare",
-          "label": "同店菜品比价",
-          "caption": "查看同一分店的两个平台标价",
-          "reason": "先匹配同店同菜，再看两平台的单价。鸡腿汤河粉在 GrabFood 少 5,000 ₫，拌河粉少 8,000 ₫。配送费用单独核对。"
+          "label": "So sánh cùng quán",
+          "caption": "So sánh cùng quán",
+          "reason": "Đối chiếu cùng món và khẩu phần; xem riêng tiền món, giảm từ quán, mã ưu đãi và phí giao hàng để hiểu tổng thanh toán."
         },
         {
           "id": "store-second",
-          "label": "Phở Quyên 店铺详情",
-          "caption": "上滑看 Phở Quyên 的菜单",
-          "reason": "从店铺详情上滑，可依次查看 GrabFood 配送信息及这家店的完整历史菜单。"
+          "label": "Quán Phở Quyên",
+          "caption": "Quán Phở Quyên",
+          "reason": "Xem món phở, thông tin giao hàng và thực đơn của Phở Quyên trên cùng một trang."
         }
       ]
     },
     {
-      "title": "探索与账户",
-      "summary": "从底部导航进入探索、收藏、个人页面和设置。",
+      "title": "Khám phá và tài khoản",
+      "summary": "Mở khám phá, quán đã lưu, trang cá nhân và cài đặt từ thanh điều hướng.",
       "steps": [
         {
           "id": "explore",
-          "label": "探索",
-          "caption": "查看附近餐厅和推荐场景",
-          "reason": "查看当前城市的平台概览和五家精选；场景随越南当地早晨、午间、下午和夜间变化，点场景即可开始选餐。"
+          "label": "Khám phá",
+          "caption": "Khám phá",
+          "reason": "Gợi ý thay đổi theo vị trí và buổi sáng, trưa, chiều hoặc tối tại Việt Nam. Chọn một tình huống để bắt đầu tìm món."
         },
         {
           "id": "saved",
-          "label": "收藏",
-          "caption": "打开收藏页",
-          "reason": "查看原版收藏中的餐厅照片和评分，也可以向下滑动发现新餐厅。"
+          "label": "Đã lưu",
+          "caption": "Đã lưu",
+          "reason": "Mở quán đã lưu, quản lý bộ sưu tập và tìm thêm những món muốn thử."
         },
         {
           "id": "profile",
-          "label": "我的",
-          "caption": "打开我的页面",
-          "reason": "在同一页向下滑动查看偏好、通知、应用设置、账户信息和反馈。返回会保留原有位置。"
+          "label": "Cá nhân",
+          "caption": "Cá nhân",
+          "reason": "Quản lý khẩu vị, tùy chọn, thông báo và thông tin cá nhân. Vị trí cuộn được giữ khi quay lại."
         },
         {
           "id": "preferences",
-          "label": "订单偏好",
-          "caption": "查看订单偏好",
-          "reason": "将常用预算、会员和比较方式设为默认值。本轮对话中明确提出的条件优先。"
+          "label": "Tùy chọn tìm kiếm",
+          "caption": "Tùy chọn tìm kiếm",
+          "reason": "Đặt ngân sách, hội viên và cách so sánh thường dùng. Yêu cầu cụ thể trong cuộc trò chuyện được ưu tiên."
         },
         {
           "id": "settings",
-          "label": "应用设置",
-          "caption": "查看应用设置",
-          "reason": "切换主题和显示语言，管理触感与匿名数据。清除活动会同时清除本次浏览的搜索、收藏和订单入口。"
+          "label": "Cài đặt",
+          "caption": "Cài đặt",
+          "reason": "Quản lý giao diện, ngôn ngữ, phản hồi rung và dữ liệu. Xóa hoạt động sẽ xóa lịch sử tìm kiếm, quán đã lưu và các lần mở đặt món trong phiên này."
         },
         {
           "id": "history",
-          "label": "会话历史",
-          "caption": "回看一条已保存的搜餐记录",
-          "reason": "可打开之前的鸡腿河粉搜索，也可以按菜品或店铺搜索和删除本次浏览中的会话。"
+          "label": "Lịch sử trò chuyện",
+          "caption": "Lịch sử trò chuyện",
+          "reason": "Mở lại cuộc trò chuyện đã lưu, tìm theo món hoặc quán, và xóa những nội dung không còn cần."
         },
         {
           "id": "notifications",
-          "label": "通知设置",
-          "caption": "查看通知设置",
-          "reason": "可以单独查看优惠、降价及配送提醒，或通过免打扰时段管理晚上收到的推送。"
+          "label": "Thông báo",
+          "caption": "Thông báo",
+          "reason": "Chọn thông báo ưu đãi, giảm giá, quán mới hoặc giao hàng; thiết lập giờ không làm phiền."
         },
         {
           "id": "account",
-          "label": "账户与安全",
-          "caption": "查看账户安全入口",
-          "reason": "查看体验账号的个人资料，编辑昵称、生日、送货地址等内容并检查原版的账号相关入口。"
+          "label": "Thông tin cá nhân",
+          "caption": "Thông tin cá nhân",
+          "reason": "Cập nhật email, số điện thoại, ngày sinh, giới tính và địa chỉ giao hàng."
         },
         {
           "id": "theme",
-          "label": "主题选择",
-          "caption": "查看实际应用主题",
-          "reason": "浏览 Wanso 的配色选项，当前示例使用海洋主题。"
+          "label": "Giao diện",
+          "caption": "Giao diện",
+          "reason": "Xem các bảng màu của Wanso. Giao diện hiện tại dùng sắc xanh Đại dương."
         },
         {
           "id": "language",
-          "label": "语言选择",
-          "caption": "查看语言选项",
-          "reason": "查看应用支持的语言，当前示例使用简体中文。"
+          "label": "Ngôn ngữ",
+          "caption": "Ngôn ngữ",
+          "reason": "Xem các ngôn ngữ trong cài đặt. Nội dung hiện tại được trình bày bằng tiếng Việt."
         }
       ]
     }

@@ -9,7 +9,7 @@ window.wansoStore = (() => {
     return node;
   };
   const money=value=>new Intl.NumberFormat('vi-VN').format(value)+'đ';
-  const languages=[['original','◎','原文'],['en','A','English'],['vi','V','Tiếng Việt'],['zh','中','中文'],['ja','あ','日本語'],['ko','한','한국어']];
+  const languages=[['original','◎','Bản gốc'],['en','A','Tiếng Anh'],['vi','V','Tiếng Việt'],['zh','ZH','Tiếng Trung'],['ja','JA','Tiếng Nhật'],['ko','KO','Tiếng Hàn']];
   const legacyLanguages=['original','en','vi','zh','ja','ko'];
   const icons={walk:'M13 3a1.5 1.5 0 1 0 .01 0M10 8l3-2 2 5 4 2M13 7l-1 6 4 8M12 13l-5 7M10 8l-3 5',back:'M14 5 7 12l7 7',share:'M12 15V3m-4 4 4-4 4 4M7 11H4v10h16V11h-3',heart:'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z',pin:'M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0ZM9 10a3 3 0 1 0 6 0 3 3 0 0 0-6 0',chevron:'m9 5 7 7-7 7',close:'m6 6 12 12M18 6 6 18',arrow:'M7 17 17 7M7 7h10v10'};
   const icon=name=>{
@@ -27,22 +27,22 @@ window.wansoStore = (() => {
     if(!reviews.length)return;
     const section=el('section','native-store-reviews');section.dataset.storeReviews=id;
     const heading=el('div','native-store-reviews-heading');
-    const source=el('a','native-store-review-example','内容说明 ↗');source.href='../../assets/wanso/catalog/credits.html';source.target='_blank';source.rel='noopener';
-    heading.append(el('h2','native-store-section-heading','口味参考'),source);
+    const source=el('a','native-store-review-example','Về nội dung ↗');source.href='../../assets/wanso/catalog/credits.html';source.target='_blank';source.rel='noopener';
+    heading.append(el('h2','native-store-section-heading','Gợi ý thưởng thức'),source);
     section.append(heading);
     for(const review of reviews) {
       const card=el('article','native-store-review');
       const header=el('header','native-store-review-author');
-      const identity=el('div');identity.append(el('strong','',(review.tags||[])[0]||'餐品搭配'),el('small','',(review.tags||[])[1]||'口味与食用建议'));
+      const identity=el('div');identity.append(el('strong','',(review.tags||[])[0]||'Kết hợp món ăn'),el('small','',(review.tags||[])[1]||'Hương vị và cách thưởng thức'));
       const mark=el('span','native-store-review-avatar');mark.append(icon('heart'));header.append(mark,identity);
-      card.append(header,el('p','native-store-review-dish','餐品 · '+review.dish),el('p','native-store-review-text',review.text));
+      card.append(header,el('p','native-store-review-dish','Món ăn · '+review.dish),el('p','native-store-review-text',review.text));
       section.append(card);
     }
     container.append(section);return section;
   }
   function mount(parent,store,{request='',onClose,onAction,state={}}={}) {
-    const root=el('section','native-store-view');root.dataset.storeId=store.id;root.setAttribute('aria-label',store.name+' · 餐厅详情');
-    const scroll=el('div','native-store-scroll');scroll.tabIndex=0;scroll.setAttribute('aria-label','餐厅详情，可上下滑动');
+    const root=el('section','native-store-view');root.dataset.storeId=store.id;root.setAttribute('aria-label',store.name+' · Chi tiết quán');
+    const scroll=el('div','native-store-scroll');scroll.tabIndex=0;scroll.setAttribute('aria-label','Chi tiết quán, cuộn để xem thêm');
     root.append(scroll);parent.append(root);
     let languageSheet,previousFocus,selectedLanguage=legacyLanguages[state.menuLanguage?.[store.id]]||'original',appliedLanguage=legacyLanguages[state.translated?.[store.id]]||'original';
     const offers=Object.fromEntries(Object.keys(store.platforms).map(key=>[key,window.wansoNative.offerFor(store,key,request)]));
@@ -50,13 +50,13 @@ window.wansoStore = (() => {
     const quantity=winner[1].quantity;
     const result=window.wansoNative.comparisonFor(store,request);
     const hero=el('div','native-store-hero');
-    const image=el('img');image.src=store.image;image.alt=store.imageAlt||store.dishZh+' · 菜品示意';image.width=402;image.height=240;image.draggable=false;image.decoding='async';
-    const toolbar=el('nav','native-store-toolbar');toolbar.setAttribute('aria-label','餐厅操作');
+    const image=window.wansoMedia.image(store.image,{detail:true,eager:true,alt:store.imageAlt||store.dishZh,width:402,height:240});
+    const toolbar=el('nav','native-store-toolbar');toolbar.setAttribute('aria-label','Thao tác với quán');
     const navTitle=el('div','native-store-nav-title');navTitle.setAttribute('aria-hidden','true');
     const navStatus=el('small');navTitle.append(el('strong','',store.name),navStatus);
-    const back=button('native-store-circle native-store-back','返回上一页',()=>onClose?.());back.append(icon('back'));
-    const share=button('native-store-circle','分享餐厅',()=>onAction?.('catalogShare',{id:store.id}));share.append(icon('share'));
-    const heart=button('native-store-circle native-store-heart','收藏餐厅',()=>{
+    const back=button('native-store-circle native-store-back','Quay lại',()=>onClose?.());back.append(icon('back'));
+    const share=button('native-store-circle','Chia sẻ quán',()=>onAction?.('catalogShare',{id:store.id}));share.append(icon('share'));
+    const heart=button('native-store-circle native-store-heart','Lưu quán',()=>{
       if(state.group?.[store.id]) {delete state.group[store.id];refreshSaved();}
       else onAction?.('catalogSave',{id:store.id});
     });heart.append(icon('heart'));
@@ -68,14 +68,14 @@ window.wansoStore = (() => {
     const title=el('h1','',store.name);
     const rating=el('div','native-store-rating');rating.append(el('span','native-store-star','★'),el('strong','',store.rating.toFixed(1)),el('span','',`(${new Intl.NumberFormat('en-US').format(store.reviewCount)})`),el('span','','·'),icon('walk'),el('span','',`${store.distance.toFixed(1)} km`));
     const tags=el('div','native-store-tags');for(const tag of [store.category.split(' · ')[0],...store.tags].slice(0,8))tags.append(el('span','',tag));
-    const address=el('div','native-store-address');address.append(icon('pin'),el('span','',store.address||`${store.district} · ${store.city==='hcm'?'胡志明市':'河内'}`));
+    const address=el('div','native-store-address');address.append(icon('pin'),el('span','',store.address||`${store.district} · ${store.city==='hcm'?'TP. Hồ Chí Minh':'Hà Nội'}`));
     const hours=el('div','native-store-hours');const hoursText=el('span');hours.append(el('span','','◷'),hoursText);
     info.append(title,rating,tags,address,hours);scroll.append(info);
     function refreshHours() {
       const current=window.wansoHours.status(store);
       open.dataset.state=current.state;openLabel.textContent=current.label;
-      open.title=current.detail+' · 按越南当地营业时间判断，实际接单状态以平台为准';
-      hoursText.textContent=current.schedule?'营业时间 '+current.schedule+' · 越南时间':current.detail;
+      open.title=current.detail+' · Theo giờ Việt Nam; kiểm tra tình trạng nhận đơn trên nền tảng';
+      hoursText.textContent=current.schedule?'Giờ mở cửa '+current.schedule+' · Giờ Việt Nam':current.detail;
       navStatus.textContent=current.label+' · '+current.detail;navStatus.dataset.state=current.state;
     }
     refreshHours();const hoursTimer=setInterval(refreshHours,60000);
@@ -86,94 +86,94 @@ window.wansoStore = (() => {
     const summary=el('section','native-store-summary');
     const spark=el('span','native-store-spark','✦'),summaryText=el('div');
     const summaryOffer=el('div','native-store-summary-offer');
-    const summaryOfferLabel=el('div');summaryOfferLabel.append(el('span','',`${quantity} 份${store.dishZh}`),el('small','',winner[1].name+' · 含配送'));
+    const summaryOfferLabel=el('div');summaryOfferLabel.append(el('span','',`${quantity} phần ${store.dishZh}`),el('small','',winner[1].name+' · Đã gồm giao hàng'));
     summaryOffer.append(summaryOfferLabel,el('strong','',money(winner[1].total)));
-    const priceLink=button('native-store-price-link','查看本单比价',()=>scroll.scrollTo({top:overview.getBoundingClientRect().top-scroll.getBoundingClientRect().top+scroll.scrollTop-toolbar.offsetHeight-12,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));priceLink.textContent=result.saving?'为什么 '+result.winner.name+' 能省 '+money(result.saving)+'？ →':'查看两平台完整费用 →';
-    summaryText.append(el('h2','','AI 推荐理由'),el('p','',store.reason),summaryOffer,priceLink);summary.append(spark,summaryText);body.append(summary);
+    const priceLink=button('native-store-price-link','Xem so sánh giá',()=>scroll.scrollTo({top:overview.getBoundingClientRect().top-scroll.getBoundingClientRect().top+scroll.scrollTop-toolbar.offsetHeight-12,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));priceLink.textContent=result.saving?'Vì sao '+result.winner.name+' tiết kiệm '+money(result.saving)+'? →':'Xem đầy đủ chi phí hai nền tảng →';
+    summaryText.append(el('h2','','Vì sao AI gợi ý quán này'),el('p','',store.reason),summaryOffer,priceLink);summary.append(spark,summaryText);body.append(summary);
     const translate=el('div','native-store-translate');
-    const choose=button('native-store-choose-language','选择菜单翻译语言',showLanguagePicker);
-    const label=el('span'),languageValue=el('small');label.append(el('strong','','选择语言'),languageValue);choose.append(label,icon('chevron'));
-    const apply=button('native-store-apply-translation','翻译菜单',()=>{
+    const choose=button('native-store-choose-language','Chọn ngôn ngữ thực đơn',showLanguagePicker);
+    const label=el('span'),languageValue=el('small');label.append(el('strong','','Ngôn ngữ'),languageValue);choose.append(label,icon('chevron'));
+    const apply=button('native-store-apply-translation','Dịch thực đơn',()=>{
       if(selectedLanguage==='original'){showLanguagePicker();return;}
       appliedLanguage=selectedLanguage;
       state.translated??={};state.translated[store.id]=legacyLanguages.indexOf(appliedLanguage);
-      renderMenu();apply.querySelector('span').textContent='已翻译';
-    });apply.dataset.action='translate';apply.append(el('b','','文A'),el('span','','翻译'));
+      renderMenu();apply.querySelector('span').textContent='Đã dịch';
+    });apply.dataset.action='translate';apply.append(el('b','','A↔'),el('span','','Dịch'));
     translate.append(choose,apply);body.append(translate);
     const overview=el('section','native-store-price-overview');
-    overview.append(el('p','native-store-order-context',`${quantity} 份${store.dishZh} · 同店同规格 · 含配送`));
+    overview.append(el('p','native-store-order-context',`${quantity} phần ${store.dishZh} · Cùng quán, cùng khẩu phần · Đã gồm giao hàng`));
     const overviewHeading=el('div','native-store-price-heading');
-    overviewHeading.append(el('h2','',result.saving?`${result.winner.name} 更实惠`:'两平台本单同价'),el('strong','',result.saving?'省 '+money(result.saving):money(result.winner.total)));
+    overviewHeading.append(el('h2','',result.saving?`${result.winner.name} tiết kiệm hơn`:'Hai nền tảng có cùng tổng tiền'),el('strong','',result.saving?'Tiết kiệm '+money(result.saving):money(result.winner.total)));
     overview.append(overviewHeading);
     const strongest=result.differences.filter(item=>item.amount>0).sort((a,b)=>b.amount-a.amount)[0];
     const advantage={
-      '餐品标价':`${result.winner.name} 餐品标价 ${money(result.winner.price)}，比 ${result.other.name} 低 ${money(strongest?.amount||0)}`,
-      '店铺折扣':`${result.winner.name} 店铺折扣减 ${money(result.winner.merchantDiscount)}，比 ${result.other.name} 多减 ${money(strongest?.amount||0)}`,
-      '优惠券':`${result.winner.name} 用「${result.winner.couponName}」减 ${money(result.winner.couponDiscount)}，比 ${result.other.name} 多减 ${money(strongest?.amount||0)}`,
-      '配送费':`${result.winner.name} ${result.winner.netDeliveryFee?'优惠后配送费 '+money(result.winner.netDeliveryFee):'本单免配送'}，${result.other.name} 配送仍需 ${money(result.other.netDeliveryFee)}`
+      'price':`${result.winner.name} có giá món ${money(result.winner.price)}, thấp hơn ${result.other.name} ${money(strongest?.amount||0)}`,
+      'merchant':`${result.winner.name} giảm từ quán ${money(result.winner.merchantDiscount)}, nhiều hơn ${result.other.name} ${money(strongest?.amount||0)}`,
+      'coupon':`${result.winner.name} dùng mã “${result.winner.couponName}” giảm ${money(result.winner.couponDiscount)}, nhiều hơn ${result.other.name} ${money(strongest?.amount||0)}`,
+      'delivery':`${result.winner.name} ${result.winner.netDeliveryFee?'có phí giao hàng sau ưu đãi '+money(result.winner.netDeliveryFee):'miễn phí giao hàng cho đơn này'}; phí giao hàng trên ${result.other.name} là ${money(result.other.netDeliveryFee)}`
     };
-    overview.append(el('p','native-store-price-reason',result.saving>0&&strongest?advantage[strongest.label]+'。其余折扣一起算完，本单最终少付 '+money(result.saving)+'。':'两平台含配送的实付金额相同。可以按常用平台选择，优惠明细仍可逐项核对。'));
+    overview.append(el('p','native-store-price-reason',result.saving>0&&strongest?advantage[strongest.key]+'. Sau khi tính toàn bộ ưu đãi, bạn tiết kiệm '+money(result.saving)+'.':'Tổng tiền đã gồm giao hàng bằng nhau. Bạn có thể chọn nền tảng quen dùng và đối chiếu từng ưu đãi bên dưới.'));
     const totals=el('div','native-store-quote-pair');
     for(const [key,offer] of entries) {
       const total=el('div');total.dataset.platform=key;total.classList.toggle('is-lowest',offer.total===result.winner.total);
-      total.append(el('span','',offer.name+' 实付'),el('strong','',money(offer.total)));totals.append(total);
+      total.append(el('span','',offer.name+' · Tổng tiền'),el('strong','',money(offer.total)));totals.append(total);
     }
     overview.append(totals);body.append(overview);
-    const platforms=el('section','native-store-platforms');platforms.setAttribute('aria-label','双平台配送与价格');
+    const platforms=el('section','native-store-platforms');platforms.setAttribute('aria-label','Giá và phí giao hàng trên hai nền tảng');
     const offerRules=el('div','native-store-rules-list');
     for(const [key,offer] of entries) {
       const card=el('article','native-store-platform');card.dataset.platform=key;card.classList.toggle('is-lowest',result.saving>0&&key===result.winnerKey);
       const header=el('div','native-store-platform-heading'),mark=el('span','native-store-platform-mark',key==='grab'?'GF':'SF');
-      const platformRating=el('p','native-store-platform-rating');platformRating.append(el('span','',`★ ${(store.platforms[key].rating||store.rating).toFixed(1)}`),el('span','',`${store.platforms[key].reviewCount||store.reviewCount} 条评价`));
+      const platformRating=el('p','native-store-platform-rating');platformRating.append(el('span','',`★ ${(store.platforms[key].rating||store.rating).toFixed(1)}`),el('span','',`${store.platforms[key].reviewCount||store.reviewCount} đánh giá`));
       header.append(mark,el('h2','',offer.name),platformRating);
       const detail=el('div','native-store-platform-body');
       for(const [label,amount,isDiscount] of [
-        ['餐品金额',offer.price,false],['店铺折扣',offer.merchantDiscount,true],
-        ['平台优惠券',offer.couponDiscount,true],['配送费',offer.originalFee,false],
-        ['运费减免',offer.deliveryDiscount,true]
+        ['Tiền món',offer.price,false],['Quán giảm',offer.merchantDiscount,true],
+        ['Mã giảm giá',offer.couponDiscount,true],['Phí giao hàng',offer.originalFee,false],
+        ['Giảm phí giao',offer.deliveryDiscount,true]
       ]) {
         const row=el('p',isDiscount&&amount?'native-store-promo':'native-store-delivery');
         row.append(el('span','',label),el('strong','',(isDiscount&&amount?'−':'')+money(amount)));detail.append(row);
       }
-      const rules=el('details','native-store-offer-rules');rules.dataset.platform=key;rules.append(el('summary','',offer.name+' · 优惠规则与适用条件'));
+      const rules=el('details','native-store-offer-rules');rules.dataset.platform=key;rules.append(el('summary','',offer.name+' · Điều kiện ưu đãi'));
       rules.append(el('p','',offer.qualification));
       for(const term of offer.terms)rules.append(el('p','',term));
       for(const term of offer.unavailable)rules.append(el('p','native-store-ineligible',term));
-      if(!offer.terms.length)rules.append(el('p','','本店本单暂无可用活动，按餐品标价与配送费计算。'));
+      if(!offer.terms.length)rules.append(el('p','','Đơn này chưa có ưu đãi phù hợp; tổng tiền gồm giá món và phí giao hàng.'));
       offerRules.append(rules);
-      const total=el('div','native-store-platform-total');total.append(el('span','',`${quantity} 份 · 含配送`),el('strong','',money(offer.total)));
-      const order=button('native-store-order','立即下单 · '+offer.name,()=>onAction?.('catalogOrder',{id:store.id,platform:key,request}));order.append(el('span','','立即下单'),icon('arrow'));
+      const total=el('div','native-store-platform-total');total.append(el('span','',`${quantity} phần · Gồm giao hàng`),el('strong','',money(offer.total)));
+      const order=button('native-store-order','Đặt ngay · '+offer.name,()=>onAction?.('catalogOrder',{id:store.id,platform:key,request}));order.append(el('span','','Đặt ngay'),icon('arrow'));
       const footer=el('div','native-store-platform-footer');footer.append(total,order);
       const coupon=el('div','native-store-applied-coupon');coupon.dataset.platform=key;
-      coupon.append(el('strong','',offer.name+' · '+(offer.couponDiscount?'已用 '+offer.couponName:'未使用平台券')),el('span','',offer.couponDiscount?offer.couponTerms:offer.couponTerms+'，未计入任何未达门槛的券。'));
+      coupon.append(el('strong','',offer.name+' · '+(offer.couponDiscount?'Đã dùng '+offer.couponName:'Chưa dùng mã giảm giá')),el('span','',offer.couponDiscount?offer.couponTerms:offer.couponTerms+'. Không tính các mã chưa đủ điều kiện.'));
       card.append(header,detail,footer);platforms.append(card);offerRules.insertBefore(coupon,rules);
     }
     body.append(platforms);
     const compare=el('section','native-store-compare');
-    compare.append(el('h2','native-store-section-heading','差价是这样算出来的'));
+    compare.append(el('h2','native-store-section-heading','Vì sao có chênh lệch giá?'));
     const comparison=el('div','native-store-comparison-card');
     const verdict=el('div','native-store-verdict');
-    verdict.append(el('small','','同店同份量 · 已计入符合门槛的优惠'),
-      el('strong','',result.saving?`${result.winner.name} 本单省 ${money(result.saving)}`:'两平台本单到手价相同'),
-      el('span','',`${quantity} 份${store.dishZh}，含配送 ${money(result.winner.total)}`));comparison.append(verdict);
+    verdict.append(el('small','','Cùng quán, cùng khẩu phần · Chỉ tính ưu đãi đủ điều kiện'),
+      el('strong','',result.saving?`${result.winner.name} tiết kiệm ${money(result.saving)}`:'Hai nền tảng có cùng tổng thanh toán'),
+      el('span','',`${quantity} phần ${store.dishZh}, gồm giao hàng ${money(result.winner.total)}`));comparison.append(verdict);
     const breakdown=el('div','native-store-saving-breakdown');
-    const start=el('p','native-store-price-start');start.append(el('span','',result.other.name+' 实付作为起点'),el('strong','',money(result.other.total)));breakdown.append(start);
+    const start=el('p','native-store-price-start');start.append(el('span','',result.other.name+' · Tổng tiền ban đầu'),el('strong','',money(result.other.total)));breakdown.append(start);
     for(const difference of result.differences) {
       const row=el('p');row.dataset.effect=difference.amount>0?'saving':difference.amount<0?'extra':'same';
-      const label={餐品标价:'餐品价格差',店铺折扣:'店铺折扣差',优惠券:'平台券差额',配送费:'配送实付差'}[difference.label];
+      const label={price:'Chênh lệch giá món',merchant:'Chênh lệch giảm từ quán',coupon:'Chênh lệch mã giảm giá',delivery:'Chênh lệch phí giao hàng'}[difference.key];
       row.append(el('span','',label),el('strong','',(difference.amount>0?'−':difference.amount<0?'+':'')+money(Math.abs(difference.amount))));breakdown.append(row);
     }
-    const end=el('p','native-store-price-end');end.append(el('span','',result.winner.name+' 最终实付'),el('strong','',money(result.winner.total)));breakdown.append(end);
-    comparison.append(breakdown,el('p','native-store-comparison-note',`从 ${result.other.name} 换到 ${result.winner.name}，减号代表少花的钱，加号代表多花的钱。四项合并，最终${result.saving?'省 '+money(result.saving):'同价'}。`));
-    const couponHeading=el('h3','native-store-coupon-heading','本单用了什么优惠');
+    const end=el('p','native-store-price-end');end.append(el('span','',result.winner.name+' · Tổng thanh toán'),el('strong','',money(result.winner.total)));breakdown.append(end);
+    comparison.append(breakdown,el('p','native-store-comparison-note',`So với ${result.other.name}, trên ${result.winner.name} dấu trừ là khoản tiết kiệm, dấu cộng là khoản tăng thêm. Cộng bốn khoản, kết quả ${result.saving?'Tiết kiệm '+money(result.saving):'bằng nhau'}.`));
+    const couponHeading=el('h3','native-store-coupon-heading','Ưu đãi được áp dụng cho đơn này');
     comparison.append(couponHeading,offerRules);
     const menuPrices=el('details','native-store-menu-comparison');
-    menuPrices.append(el('summary','',`查看 ${store.menu.length} 道菜的标价对比`));
-    const legend=el('p','native-store-comparison-note','左侧 GrabFood · 右侧 ShopeeFood；以下为单份餐品标价，尚未计算优惠及配送。');menuPrices.append(legend);
+    menuPrices.append(el('summary','',`So sánh giá niêm yết của ${store.menu.length} món`));
+    const legend=el('p','native-store-comparison-note','GrabFood bên trái · ShopeeFood bên phải. Giá dưới đây tính cho một phần, chưa gồm ưu đãi và giao hàng.');menuPrices.append(legend);
     for(const [index,item] of store.menu.entries()) {
       const prices=itemPrices(item,index);
       const row=el('div','native-store-compare-row');
-      const heading=el('div','native-store-compare-name');heading.append(el('strong','',nameFor(item,'zh')),el('span','',prices.grab===prices.shopee?'同价':`差 ${money(Math.abs(prices.grab-prices.shopee))}`));
+      const heading=el('div','native-store-compare-name');heading.append(el('strong','',nameFor(item,'vi')),el('span','',prices.grab===prices.shopee?'Bằng giá':`Chênh ${money(Math.abs(prices.grab-prices.shopee))}`));
       heading.lastElementChild.dataset.platform=prices.grab<=prices.shopee?'grab':'shopee';
       const priceRow=el('div','native-store-price-pair');
       for(const key of ['grab','shopee']) {const cell=el('span','',money(prices[key]));cell.dataset.platform=key;cell.classList.toggle('is-cheaper',prices[key]<=prices[key==='grab'?'shopee':'grab']);cell.prepend(el('i'));priceRow.append(cell);}
@@ -182,9 +182,9 @@ window.wansoStore = (() => {
     comparison.append(menuPrices);compare.append(comparison);body.append(compare);
     const menu=el('section','native-store-menu');body.append(menu);renderMenu();
     appendReviews(body,store);
-    body.append(el('p','native-store-demo-note','费用按页面所列条件估算。实际可售情况、券资格与结算金额以平台为准。'));
-    const dataInfo=button('native-store-image-credit','数据与价格说明',()=>onAction?.('dataInfo'));dataInfo.textContent='数据与价格说明';body.append(dataInfo);
-    const imageCredit=el('a','native-store-image-credit','配图来源 ↗');imageCredit.href='../../assets/wanso/catalog/credits.html';imageCredit.target='_blank';imageCredit.rel='noopener';body.append(imageCredit);
+    body.append(el('p','native-store-demo-note','Chi phí được tính theo điều kiện trên trang. Món còn bán, điều kiện mã và số tiền thanh toán cần xác nhận trên nền tảng.'));
+    const dataInfo=button('native-store-image-credit','Thông tin dữ liệu và giá',()=>onAction?.('dataInfo'));dataInfo.textContent='Thông tin dữ liệu và giá';body.append(dataInfo);
+    const imageCredit=el('a','native-store-image-credit','Nguồn ảnh ↗');imageCredit.href='../../assets/wanso/catalog/credits.html';imageCredit.target='_blank';imageCredit.rel='noopener';body.append(imageCredit);
     refreshSaved();refreshLanguage();
 
     function itemPrices(item,index) {
@@ -198,10 +198,10 @@ window.wansoStore = (() => {
       return original;
     }
     function renderMenu() {
-      menu.replaceChildren(el('h2','native-store-section-heading','菜单'));
+      menu.replaceChildren(el('h2','native-store-section-heading','Thực đơn'));
       const grouped=new Map();
       for(const item of store.menu) {
-        const category=item.categoryTranslations?.[appliedLanguage==='original'?'vi':appliedLanguage]||item.category||(item===store.menu[0]?'推荐餐品':'饮品与加配');
+        const category=item.categoryTranslations?.[appliedLanguage==='original'?'vi':appliedLanguage]||item.category||(item===store.menu[0]?'Món nên thử':'Đồ uống và món thêm');
         if(!grouped.has(category))grouped.set(category,[]);
         grouped.get(category).push(item);
       }
@@ -220,15 +220,15 @@ window.wansoStore = (() => {
         group.append(list);menu.append(group);
       }
     }
-    function refreshSaved() {const saved=Boolean(state.group?.[store.id]);heart.setAttribute('aria-pressed',String(saved));heart.setAttribute('aria-label',saved?'取消收藏餐厅':'收藏餐厅');}
-    function refreshLanguage() {languageValue.textContent=languages.find(item=>item[0]===selectedLanguage)[2];apply.querySelector('span').textContent=appliedLanguage!=='original'&&appliedLanguage===selectedLanguage?'已翻译':'翻译';}
+    function refreshSaved() {const saved=Boolean(state.group?.[store.id]);heart.setAttribute('aria-pressed',String(saved));heart.setAttribute('aria-label',saved?'Bỏ lưu quán':'Lưu quán');}
+    function refreshLanguage() {languageValue.textContent=languages.find(item=>item[0]===selectedLanguage)[2];apply.querySelector('span').textContent=appliedLanguage!=='original'&&appliedLanguage===selectedLanguage?'Đã dịch':'Dịch';}
     function closeLanguagePicker() {languageSheet?.remove();languageSheet=null;scroll.inert=false;toolbar.inert=false;previousFocus?.focus({preventScroll:true});}
     function showLanguagePicker() {
       if(languageSheet)return;
       previousFocus=document.activeElement;scroll.inert=true;toolbar.inert=true;
       languageSheet=el('div','native-store-language-overlay');
-      const dialog=el('section','native-store-language-sheet');dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label','翻译菜单语言');
-      const heading=el('header');heading.append(el('h2','','翻译为'));const close=button('native-store-language-close','关闭语言选择',closeLanguagePicker);close.append(icon('close'));heading.append(close);dialog.append(heading);
+      const dialog=el('section','native-store-language-sheet');dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label','Ngôn ngữ dịch thực đơn');
+      const heading=el('header');heading.append(el('h2','','Dịch sang'));const close=button('native-store-language-close','Đóng chọn ngôn ngữ',closeLanguagePicker);close.append(icon('close'));heading.append(close);dialog.append(heading);
       for(const [code,glyph,label] of languages) {
         const choice=button('native-store-language-choice',label,()=>{selectedLanguage=code;state.menuLanguage??={};state.menuLanguage[store.id]=legacyLanguages.indexOf(code);if(code==='original'){appliedLanguage='original';state.translated??={};state.translated[store.id]=0;renderMenu();}refreshLanguage();closeLanguagePicker();});
         choice.dataset.language=code;choice.setAttribute('aria-pressed',String(selectedLanguage===code));choice.append(el('span','native-store-language-glyph',glyph),el('strong','',label),el('span','native-store-language-check',selectedLanguage===code?'✓':''));dialog.append(choice);

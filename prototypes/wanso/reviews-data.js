@@ -1,88 +1,83 @@
 'use strict';
 
-// Illustrative reviews for the portfolio, not reviews submitted by real customers.
-// The native MockReview shape provides the author/rating/dish/text hierarchy.
+// Illustrative tasting notes, not reviews submitted by real customers.
+// Keep the native author/rating/dish/text shape for the shared store component.
 window.wansoReviews = (() => {
   const people = [
-    ['小禾', '禾'], ['阿越', '越'], ['小满', '满'], ['安安', '安'],
-    ['木木', '木'], ['小林', '林'], ['阿青', '青'], ['小圆', '圆'],
-    ['北北', '北'], ['小夏', '夏'], ['米粒', '米'], ['阿宁', '宁']
+    ['Minh Anh', 'M'], ['Quốc Việt', 'V'], ['Thanh Hà', 'H'], ['An Nhiên', 'A'],
+    ['Mai Linh', 'L'], ['Bảo Ngọc', 'N'], ['Thu Trang', 'T'], ['Đức Huy', 'H'],
+    ['Khánh An', 'A'], ['Hạ Vy', 'V'], ['Gia Bảo', 'B'], ['Hoài Nam', 'N']
   ];
-  // The three entries refer to the first three actual dishes in each fixture menu.
+  // Each entry refers to one of the first three dishes in the restaurant menu.
   const stories = {
     pho: [
-      [d => `🍜 ${d}以鸡肉、河粉和热汤为主。喜欢清爽口味，可以先不加辣椒和酱汁，再按口味补青柠；如果需要香草分装，最好在备注中写清楚。`, ['汤底清爽', '辣椒另放']],
-      [d => `工作午餐选择${d}，可以把鸡肉、主食和蔬菜一起考虑。饭量较大时先核对分量和加配价格；汤粉久放容易变软，建议取餐后及时食用。`, ['工作午餐', '建议及时食用']],
-      [d => `${d}适合想吃热汤、又不想加太多酱汁的一餐。偏好扎实口感可以考虑鸡胸，偏好柔嫩口感可以看看鸡腿款；具体部位以菜单和店家确认为准。`, ['口味偏清淡', '按口感选肉']]
+      [d => `🍜 ${d} kết hợp thịt gà, bánh phở và nước dùng nóng. Muốn vị thanh, hãy nếm nước dùng trước rồi mới thêm chanh hoặc ớt. Nếu cần rau thơm riêng, nên ghi rõ thay vì chỉ viết “ăn nhạt”.`, ['Nước dùng thanh', 'Ớt để riêng']],
+      [d => `${d} phù hợp cho bữa trưa có cả thịt và tinh bột. Nếu ăn khỏe, hãy xem khẩu phần và giá món thêm trước khi đặt; bánh phở để lâu dễ mềm nên ăn sớm sau khi nhận.`, ['Bữa trưa tiện lợi', 'Nên ăn khi còn nóng']],
+      [d => `${d} hợp với người muốn một bữa nóng mà không dùng nhiều sốt. Thịt ức có kết cấu chắc hơn đùi; hãy đối chiếu phần thịt trong tên món và xác nhận với quán nếu bạn có sở thích cụ thể.`, ['Vị nhẹ', 'Chọn phần thịt phù hợp']]
     ],
     mixed: [
-      [d => `🥢 ${d}把鸡肉、河粉与酸甜酱汁组合在一起。建议先加一部分酱，拌匀后再调整；香草与辣椒可按口味单独备注，避免一句“清淡”产生歧义。`, ['酱汁分次加', '干拌口感']],
-      [d => `不想喝汤时可以考虑${d}。干拌河粉需要把酱汁充分拌开；对花生、鱼露或海鲜有忌口的人，应先确认配料和酱汁，再决定是否选择。`, ['鸡腿搭配', '注意配料']],
-      [d => `${d}适合想吃鸡肉又偏好干拌口感的一餐。更在意原味时可以备注少酱；需要更完整的搭配，可以查看同店蔬菜或小菜，并把加配费用一起比较。`, ['肉质扎实', '可备注少酱']]
+      [d => `🥢 ${d} có thịt gà, bánh phở và sốt chua ngọt. Nên rưới một phần sốt, trộn đều rồi mới thêm; ghi riêng yêu cầu về ớt và rau thơm giúp quán hiểu đúng khẩu vị hơn.`, ['Thêm sốt từng ít', 'Phở trộn']],
+      [d => `${d} là lựa chọn khi không muốn dùng món nước. Trộn đều để sốt phủ lên sợi phở; người dị ứng lạc, nước mắm hoặc hải sản cần hỏi thành phần của cả món lẫn sốt trước khi chọn.`, ['Thịt đùi gà', 'Kiểm tra thành phần']],
+      [d => `${d} phù hợp khi thích gà cùng sợi phở khô. Có thể ghi ít sốt để giữ vị món; nếu muốn thêm rau hoặc món phụ, nên cộng cả phần đó khi so tổng tiền hai nền tảng.`, ['Thịt chắc', 'Có thể ít sốt']]
     ],
     rice: [
-      [d => `🍚 ${d}把米饭、鸡肉和配菜组合成一餐，适合工作间隙取餐。先确认酱料能否分装；平时蔬菜需求较多，可以核对配菜份量后再决定是否加青菜。`, ['一人食搭配', '酱料分开']],
-      [d => `${d}适合偏好米饭和鸡肉的日常午餐。比较平台时要核对是否都是相同份量、相同配菜；饭量较大，可以同时查看加饭价格，避免低估整餐费用。`, ['家常午餐', '可按饭量加配']],
-      [d => `想吃更明显的烤香风味，可以考虑${d}；偏好清淡则可对照白切款。酱汁用量和辣度最好分别备注，餐品名称本身不能保证满足所有口味要求。`, ['烤香风味', '按口味选择']]
+      [d => `🍚 ${d} gộp cơm, thịt gà và rau trong một bữa, thuận tiện ăn giữa giờ làm. Hãy xem sốt có được để riêng không; nếu thường ăn nhiều rau, kiểm tra phần rau kèm trước khi quyết định gọi thêm.`, ['Một phần đủ món', 'Sốt để riêng']],
+      [d => `${d} phù hợp bữa trưa hằng ngày khi bạn thích cơm với thịt gà. So giá phải cùng khẩu phần và món kèm; nếu cần thêm cơm, hãy tính giá phần thêm để không đánh giá thấp tổng chi phí.`, ['Bữa trưa quen thuộc', 'Có thể thêm cơm']],
+      [d => `${d} dành cho người thích hương gà nướng rõ hơn; muốn vị thanh có thể đối chiếu món gà luộc. Nên ghi riêng lượng sốt và mức cay vì tên món không thể hiện hết cách nêm nếm.`, ['Hương gà nướng', 'Chọn theo khẩu vị']]
     ],
     banh: [
-      [d => `🥖 ${d}适合需要方便携带的早餐。鸡肉、黄瓜与酸菜提供不同口感；法棍建议及时食用，若需要留到稍晚，可以先询问配料能否分装。`, ['方便携带', '趁早吃更合适']],
-      [d => `${d}可以作为烤鸡口味的面包选择。备注时把“不加辣椒”和“少酸菜”分开写更清楚；对乳制品或鸡蛋有忌口，还要核对酱料成分。`, ['烤鸡夹馅', '备注写具体']],
-      [d => `${d}适合轻量早餐，也可以搭配饮品。若作为一顿午餐，建议按饭量核对面包大小和馅料，必要时加一份小食，再重新比较含配送总价。`, ['轻量早餐', '按食量加配']]
+      [d => `🥖 ${d} dễ mang theo cho bữa sáng. Thịt gà, dưa leo và đồ chua tạo nhiều kết cấu; nên ăn sớm khi bánh còn giòn. Nếu để ăn muộn, có thể hỏi quán về việc gói riêng phần nhân.`, ['Dễ mang theo', 'Ăn sớm để giữ độ giòn']],
+      [d => `${d} là một lựa chọn bánh mì với hương gà nướng. Ghi “không ớt” và “ít đồ chua” thành từng ý sẽ rõ hơn; nếu tránh sữa hoặc trứng, cần kiểm tra cả thành phần sốt.`, ['Nhân gà nướng', 'Ghi chú cụ thể']],
+      [d => `${d} hợp bữa sáng nhẹ và có thể đi cùng đồ uống. Nếu dùng cho bữa trưa, hãy kiểm tra kích thước bánh và lượng nhân theo sức ăn; thêm món phụ rồi so lại tổng đã gồm giao hàng.`, ['Bữa sáng nhẹ', 'Tùy chỉnh theo sức ăn']]
     ],
     veggie: [
-      [d => `🥬 ${d}以豆腐和蔬菜搭配主食，适合想增加植物食材的一餐。炒饭仍会使用调味料；严格素食或有食物过敏时，需要进一步确认酱料和制作方式。`, ['植物食材', '调味需确认']],
-      [d => `${d}适合喜欢香菇与蔬菜组合的口味。可以先看豆腐、蔬菜和主食的比例，饭量较大时再选择加配；不要只凭“蔬菜”标签判断是否足够饱腹。`, ['香菇风味', '可加份豆腐']],
-      [d => `${d}偏向番茄酸甜风味，适合配米饭。偏好原味时可比较时蔬款；番茄酱或调味汁的糖、盐与过敏原信息，需要以店家确认为准。`, ['番茄酸甜', '有不同口味可选']]
+      [d => `🥬 ${d} có đậu hũ, rau và tinh bột, phù hợp khi muốn thêm nguyên liệu thực vật. Món vẫn có gia vị; nếu ăn chay nghiêm ngặt hoặc có dị ứng, hãy xác nhận sốt và cách chế biến với quán.`, ['Nguyên liệu thực vật', 'Xác nhận gia vị']],
+      [d => `${d} hợp với người thích vị nấm và rau. Xem tỷ lệ món chính, rau và đậu hũ trước khi chọn phần thêm; chỉ có nhãn “rau củ” chưa đủ để biết bữa ăn có đáp ứng sức ăn của mình hay không.`, ['Hương nấm', 'Có thể thêm đậu hũ']],
+      [d => `${d} có vị cà chua chua ngọt dễ ăn với cơm. Thích vị nguyên bản hơn có thể xem món rau củ; lượng đường, muối và chất gây dị ứng trong sốt cần được quán xác nhận.`, ['Cà chua chua ngọt', 'Nhiều cách chọn vị']]
     ],
     coffee: [
-      [d => `☕ ${d}适合下午咖啡配小食的场景。炼乳会带来甜味和奶香，喜欢清爽口感可以先确认是否支持少炼乳；避免乳制品的人应核对配料或换其他饮品。`, ['咖啡配小食', '甜度可备注']],
-      [d => `${d}更偏向咖啡本身的苦香，可搭配面包或小点心。点单前确认杯型与冰量；若需要久放，可以考虑少冰，避免融冰后口感与预期差距过大。`, ['黑咖啡风味', '适合配小食']],
-      [d => `${d}适合偏好奶香与咖啡搭配的选择。甜度、奶量与杯型是不同选项，备注时分别说明更明确；是否能调整仍需查看店铺提供的规格。`, ['先搅拌再喝', '留意含乳配料']]
+      [d => `☕ ${d} thích hợp cho giờ nghỉ chiều có cà phê và món nhẹ. Sữa đặc tạo độ ngọt và béo; muốn nhẹ hơn có thể hỏi giảm sữa. Nếu tránh sữa, cần kiểm tra nguyên liệu hoặc đổi thức uống.`, ['Cà phê kèm bánh', 'Có thể ghi độ ngọt']],
+      [d => `${d} thiên về vị đắng và hương cà phê, hợp ăn cùng bánh. Nên xác nhận dung tích ly và lượng đá; nếu để lâu, có thể chọn ít đá để hạn chế vị bị loãng khi đá tan.`, ['Vị cà phê đen', 'Hợp ăn cùng bánh']],
+      [d => `${d} hợp người thích cà phê có vị sữa. Độ ngọt, lượng sữa và kích thước ly là các yêu cầu khác nhau, nên ghi riêng; khả năng điều chỉnh còn phụ thuộc lựa chọn quán cung cấp.`, ['Khuấy đều trước khi uống', 'Có thành phần sữa']]
     ],
     tea: [
-      [d => `🍋 ${d}适合下午休息时搭配一点小食。柠檬茶和饼干更接近下午茶，而非完整正餐；可以按偏好选择甜度与冰量，再核对组合总价。`, ['下午茶搭配', '少糖更合口味']],
-      [d => `${d}偏向柠檬酸香的清爽口味。少糖不代表完全无糖，需要避免糖分时应询问是否能做无糖；不喜欢明显酸味，可以对照其他茶饮。`, ['柠檬酸香', '按口味调甜度']],
-      [d => `${d}适合想换成果香茶饮的下午。更在意茶味时，先确认茶底和果味配料；少冰、半糖等要求应分别说明，避免只写“清爽”却得到不同理解。`, ['果香茶饮', '可备注冰量']]
+      [d => `🍋 ${d} hợp một khoảng nghỉ chiều cùng món nhẹ. Trà và bánh không thay thế một bữa chính đầy đủ; hãy chọn độ ngọt, lượng đá rồi đối chiếu giá của cả combo.`, ['Trà chiều', 'Tùy chọn ít đường']],
+      [d => `${d} có vị chanh thanh và hơi chua. Ít đường không có nghĩa hoàn toàn không đường; nếu cần tránh đường, hãy hỏi quán có thể làm không đường không. Thích vị ít chua có thể xem các loại trà khác.`, ['Vị chanh thanh', 'Điều chỉnh độ ngọt']],
+      [d => `${d} phù hợp khi muốn đổi sang trà hương trái cây. Nếu thích vị trà rõ, hỏi thêm về trà nền và nguyên liệu tạo vị; nên ghi riêng ít đá, nửa đường thay vì chỉ nói “thanh mát”.`, ['Hương trái cây', 'Có thể ít đá']]
     ],
     bun: [
-      [d => `🍲 ${d}用细米线搭配鸡肉和热汤，适合想换一种主食口感的一餐。香草和调料可按偏好备注；米线建议及时食用，久放后的口感可能变化。`, ['细米线口感', '香草最后加']],
-      [d => `${d}可以作为鸡腿与热汤的搭配。先核对肉量与主食份量，再决定是否加菜；偏好清淡时可以少加酱汁和辣椒，实际调味方式需与店家确认。`, ['鸡腿搭配', '先尝汤再调味']],
-      [d => `${d}适合偏好鸡胸和清汤的选择。想增加口感变化可查看香菇加配；更在意肉的柔嫩程度，可以比较同店鸡腿款，价格和份量也要一起核对。`, ['清汤搭配', '口感各有侧重']]
+      [d => `🍲 ${d} có bún sợi nhỏ, thịt gà và nước dùng nóng, phù hợp đổi kết cấu món chính. Có thể ghi riêng rau thơm và gia vị; nên ăn sớm vì sợi bún có thể mềm thêm khi ngâm lâu.`, ['Bún sợi nhỏ', 'Thêm rau sau cùng']],
+      [d => `${d} kết hợp thịt đùi và nước dùng. Kiểm tra lượng thịt, bún rồi mới thêm món; thích thanh đạm có thể giảm sốt và ớt, đồng thời xác nhận cách nêm của quán.`, ['Thịt đùi gà', 'Nếm trước khi nêm']],
+      [d => `${d} phù hợp với người thích thịt ức và nước dùng trong. Có thể xem phần nấm thêm để đa dạng kết cấu; nếu thích thịt mềm hơn, đối chiếu món đùi cùng quán về giá và khẩu phần.`, ['Nước dùng trong', 'Chọn theo kết cấu']]
     ]
   };
   const archivedExamples={
     moc:[
-      ['Phở gà đùi','鸡腿汤河粉','🍜 鸡腿汤河粉适合想吃热汤的一餐。可以先尝原汤，再按口味加青柠或辣椒；需要香菜、辣椒分装时，请明确备注并向店家确认。'],
-      ['Phở trộn gà đùi','鸡腿拌河粉','不想喝汤时可以考虑鸡腿拌河粉。酱汁建议先加一部分，拌匀后再调整；偏好清淡时，写明“少酱、辣椒另放”比只写“清淡”更明确。'],
-      ['Cháo gà thường','鸡肉粥','鸡肉粥适合偏好软糯口感和热食的一餐。饭量较大时，可以核对粥的份量并查看小食；需要少盐或不加香草，最好分别写明备注。']
+      ['Phở gà đùi','🍜 Một lựa chọn nóng với thịt đùi gà. Nếm nước dùng trước rồi thêm chanh hoặc ớt theo khẩu vị; nếu cần rau mùi và ớt riêng, ghi rõ và xác nhận quán có thể đáp ứng.'],
+      ['Phở trộn gà đùi','Hợp khi muốn ăn phở mà không dùng nước. Thêm sốt từng ít, trộn đều rồi điều chỉnh; ghi “ít sốt, ớt để riêng” rõ hơn một ghi chú chung là “thanh đạm”.'],
+      ['Cháo gà thường','Cháo gà phù hợp người thích món nóng và kết cấu mềm. Nếu ăn nhiều, hãy xem lượng cháo và món kèm; yêu cầu ít muối hay không rau thơm nên ghi thành từng ý.']
     ],
     quyen:[
-      ['Phở gà đùi nước','鸡腿汤河粉','🍜 鸡腿汤河粉是这份菜单中的热汤选择。喜欢自己调味，可以先确认调料是否能分装；汤粉久放容易变软，取餐后建议及时食用。'],
-      ['Bún gà nước','鸡肉汤米线','想换一种主食口感时，可以考虑鸡肉汤米线。细米线与宽河粉的口感不同；更在意嚼劲或粗细时，可以对照同店其他主食，再核对是否能按偏好更换。'],
-      ['Nộm gà','凉拌鸡肉','凉拌鸡肉适合与热汤主食搭配，酸甜风味可以增加变化。它更接近配菜，作为正餐时要核对是否需要搭配主食；对花生、鱼露或香草有忌口，需要先向店家确认。']
+      ['Phở gà đùi nước','🍜 Món nước với thịt đùi gà trong thực đơn. Muốn tự nêm, hãy hỏi quán có thể gói gia vị riêng không; phở để lâu dễ mềm nên ăn sớm sau khi nhận.'],
+      ['Bún gà nước','Có thể chọn khi muốn đổi loại sợi. Bún nhỏ và phở rộng có kết cấu khác nhau; nếu quan tâm độ dai hay kích thước, đối chiếu các món cùng quán và hỏi khả năng đổi sợi.'],
+      ['Nộm gà','Vị chua ngọt tạo sự tương phản khi dùng cùng món nước nóng. Đây gần với món ăn kèm; nếu muốn thành bữa chính cần thêm tinh bột. Người tránh lạc, nước mắm hoặc rau thơm nên hỏi thành phần trước.']
     ]
   };
   function forStore(value) {
     const archiveId=typeof value==='string'?value:value?.id;
     const archive=archivedExamples[archiveId];
-    if(archive)return archive.map(([dishName,dish,text],index)=>({id:archiveId+'-review-'+index,name:people[index*3][0],initial:people[index*3][1],rating:index===1?5:4,platform:archiveId==='moc'&&index===1?'shopee':'grab',platformLabel:archiveId==='moc'&&index===1?'ShopeeFood':'GrabFood',dish: dish+' · '+dishName,text,tags:[],sample:true}));
-    const store = typeof value === 'string'
-      ? window.wansoCatalog?.find(item => item.id === value)
-      : value;
+    if(archive)return archive.map(([dish,text],index)=>({id:archiveId+'-review-'+index,name:people[index*3][0],initial:people[index*3][1],rating:index===1?5:4,platform:archiveId==='moc'&&index===1?'shopee':'grab',platformLabel:archiveId==='moc'&&index===1?'ShopeeFood':'GrabFood',dish,text,tags:[],sample:true}));
+    const store = typeof value === 'string' ? window.wansoCatalog?.find(item => item.id === value) : value;
     if (!store || !stories[store.key]) return [];
     const seed = [...store.id].reduce((sum, char) => sum + char.charCodeAt(0), 0);
     return stories[store.key].map(([story, tags], index) => {
       const menuItem = store.menu?.[index];
-      const dish = menuItem?.translations?.zh || menuItem?.name?.split(' · ')[1] || store.dishZh;
+      const dish = menuItem?.translations?.vi || menuItem?.name || store.dish;
       const [name, initial] = people[(seed + index * 3) % people.length];
       const platform = (seed + index) % 2 ? 'grab' : 'shopee';
-      return {
-        id:store.id + '-review-' + (index + 1), name, initial, rating:index === 1 ? 5 : 4,
-        platform, platformLabel:platform === 'grab' ? 'GrabFood' : 'ShopeeFood', dish,
-        text:story(dish), tags:[...tags], sample:true
-      };
+      return {id:store.id + '-review-' + (index + 1),name,initial,rating:index===1?5:4,
+        platform,platformLabel:platform==='grab'?'GrabFood':'ShopeeFood',dish,text:story(dish),tags:[...tags],sample:true};
     });
   }
-  return {forStore, label:'口味参考'};
+  return {forStore,label:'Gợi ý khẩu vị'};
 })();
