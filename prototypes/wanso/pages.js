@@ -147,12 +147,12 @@ window.wansoPages = (() => {
     nextInsight(false);
     const body=el('div','ios-page-content');const stats=el('section','ios-explore-stats');
     const statsHeader=el('div','ios-stats-heading');
-    statsHeader.append(el('strong','','🟢 🟠 双平台'),el('span','','当前城市 · 演示店铺库'));
+    statsHeader.append(el('strong','','🟢 🟠 双平台'),el('span','','当前城市 · 选餐参考库'));
     const catalog=window.wansoNative.catalogForLocation();const values=el('dl','ios-stat-values');
     const quotes=catalog.map(store=>Object.values(store.platforms));
     const promoCount=quotes.filter(offers=>offers.some(p=>p.discount>0)).length;
     const freeCount=quotes.filter(offers=>offers.some(p=>p.netDeliveryFee===0)).length;
-    for(const [value,text] of [[catalog.length,'示例店铺'],[promoCount,'单份享优惠'],[freeCount,'单份免配送']]){
+    for(const [value,text] of [[catalog.length,'餐厅条目'],[promoCount,'单份享优惠'],[freeCount,'单份免配送']]){
       const pair=el('div');pair.append(el('dd','',number(value)),el('dt','',text));values.append(pair);
     }
     stats.append(statsHeader,values);const picksHeading=heading('');
@@ -217,7 +217,7 @@ window.wansoPages = (() => {
     const recent=el('div','ios-recent-order-rail');recent.setAttribute('aria-label','最近订单，可左右滑动');
     for(const id of state.recent.slice(0,3)){const record=window.wansoControls.recentOrderData(id);if(record)recent.append(recentOrderCard(record,open));}
     if(!recent.children.length)recent.append(el('p','ios-orders-empty','暂无记录。打开餐厅的下单预览后，会在这里保留。'));
-    const recentNote=el('p','ios-order-record-note','示例与本次浏览记录 · 未产生实际交易');
+    const recentNote=el('p','ios-order-record-note','费用预览记录 · 不会创建实际订单');
     const group=el('div','ios-group-heading');
     group.append(el('strong','','我的收藏夹'),btn('＋ 添加',()=>open('collections'),'ios-page-link','添加收藏夹'));
     const collection=btn(`❤️ 全部收藏 · ${ids.length} 家`,()=>open('collections'),'ios-collection-title','查看全部收藏');
@@ -264,7 +264,8 @@ window.wansoPages = (() => {
       ['bell','通知','推送 · 优惠 · 免打扰','notifications'],
       ['palette','应用设置',state.theme+'主题 · '+state.appLanguage,'settings'],
       ['shield','账户与安全','邮箱 · 电话 · 个人信息','account'],
-      ['heart','发送反馈','记录推荐、价格或使用中的问题',null,'feedback']
+      ['heart','发送反馈','记录推荐、价格或使用中的问题',null,'feedback'],
+      ['shield','数据与价格说明','内容来源 · 优惠规则 · 结算依据',null,'dataInfo']
     ]) {
       const row=btn('',()=>target?route(target):open(action),'ios-profile-setting',label);
       const text=el('span');text.append(el('strong','',label),el('small','',detail));

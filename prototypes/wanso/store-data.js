@@ -158,8 +158,8 @@
       return menu;
     }});
     const city = store.city === 'hanoi' ? '河内' : '胡志明市';
-    store.address = store.district + ' · ' + city + '（演示位置）';
-    store.hours = ['coffee', 'tea'].includes(store.key) ? '07:00–22:00（演示营业时间）' : '06:00–22:00（演示营业时间）';
+    store.address = store.district + ' · ' + city + '';
+    store.hours = ['coffee', 'tea'].includes(store.key) ? '07:00–22:00' : '06:00–22:00';
     store.platforms.grab.rating = Number(Math.max(4, store.rating - .1).toFixed(1));
     store.platforms.shopee.rating = Number(Math.min(4.9, store.rating + .1).toFixed(1));
     store.platforms.grab.reviewCount = Math.round(store.reviewCount * .58);

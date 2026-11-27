@@ -27,14 +27,14 @@ window.wansoStore = (() => {
     if(!reviews.length)return;
     const section=el('section','native-store-reviews');section.dataset.storeReviews=id;
     const heading=el('div','native-store-reviews-heading');
-    heading.append(el('h2','native-store-section-heading','精彩评论'),el('span','native-store-review-example','评论示例'));
+    const source=el('a','native-store-review-example','内容说明 ↗');source.href='../../assets/wanso/catalog/credits.html';source.target='_blank';source.rel='noopener';
+    heading.append(el('h2','native-store-section-heading','口味参考'),source);
     section.append(heading);
     for(const review of reviews) {
       const card=el('article','native-store-review');
       const header=el('header','native-store-review-author');
-      const identity=el('div');identity.append(el('strong','',review.name),el('small','',review.platformLabel));
-      const rating=el('span','native-store-review-score','★ '+review.rating.toFixed(1));rating.setAttribute('aria-label',review.rating+' 分，满分 5 分');
-      header.append(el('span','native-store-review-avatar',review.initial),identity,rating);
+      const identity=el('div');identity.append(el('strong','',(review.tags||[])[0]||'餐品搭配'),el('small','',(review.tags||[])[1]||'口味与食用建议'));
+      const mark=el('span','native-store-review-avatar');mark.append(icon('heart'));header.append(mark,identity);
       card.append(header,el('p','native-store-review-dish','餐品 · '+review.dish),el('p','native-store-review-text',review.text));
       section.append(card);
     }
@@ -59,7 +59,7 @@ window.wansoStore = (() => {
       else onAction?.('catalogSave',{id:store.id});
     });heart.append(icon('heart'));
     const right=el('div');right.append(share,heart);toolbar.append(back,right);
-    const open=el('span','native-store-open','示例营业中');open.prepend(el('i'));
+    const open=el('span','native-store-open','可查看菜单');open.prepend(el('i'));
     hero.append(image,toolbar,open);scroll.append(hero);
     const info=el('section','native-store-info');
     const title=el('h1','',store.name);
@@ -167,8 +167,9 @@ window.wansoStore = (() => {
     comparison.append(menuPrices);compare.append(comparison);body.append(compare);
     const menu=el('section','native-store-menu');body.append(menu);renderMenu();
     appendReviews(body,store);
-    body.append(el('p','native-store-demo-note','店铺、菜单与优惠均为演示数据；照片为菜品示意。实际可售情况、券资格与结算金额以平台为准。'));
-    const imageCredit=el('a','native-store-image-credit','查看配图来源 ↗');imageCredit.href='../../assets/wanso/catalog/credits.html';imageCredit.target='_blank';imageCredit.rel='noopener';body.append(imageCredit);
+    body.append(el('p','native-store-demo-note','费用按页面所列条件估算。实际可售情况、券资格与结算金额以平台为准。'));
+    const dataInfo=button('native-store-image-credit','数据与价格说明',()=>onAction?.('dataInfo'));dataInfo.textContent='数据与价格说明';body.append(dataInfo);
+    const imageCredit=el('a','native-store-image-credit','配图来源 ↗');imageCredit.href='../../assets/wanso/catalog/credits.html';imageCredit.target='_blank';imageCredit.rel='noopener';body.append(imageCredit);
     refreshSaved();refreshLanguage();
 
     function itemPrices(item,index) {

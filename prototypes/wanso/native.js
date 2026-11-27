@@ -166,7 +166,7 @@ window.wansoNative = (() => {
   }
   function picture(store,className='') {
     const image=element('img',className);
-    image.src=store.image; image.alt=store.imageAlt||store.dishZh+' · 示例餐品配图'; image.draggable=false;
+    image.src=store.image; image.alt=store.imageAlt||store.dishZh+' · 餐品配图'; image.draggable=false;
     image.decoding='async'; image.width=220;image.height=112;
     return image;
   }
@@ -240,7 +240,7 @@ window.wansoNative = (() => {
       row.append(platformBadge(key),element('span','',offer.name),element('strong','',money(offer.total)),element('b','','→'));
       offers.append(row);
     }
-    card.append(main,element('small','rich-total-label',`${criteria(request).quantity}份餐品 · 含配送及示例优惠`),offers);
+    card.append(main,element('small','rich-total-label',`${criteria(request).quantity}份餐品 · 含配送及可用优惠`),offers);
     const reason=element('div','ios-card-reason rich-card-reason');
     const comparison=comparisonFor(store,request);
     reason.append(element('span','','✨'),element('p','',store.reason+`\n\n💰 ${cheapest[1].name} 到手 ${money(cheapest[1].total)}。`+(comparison.saving?`${comparison.differences.filter(item=>item.amount).map(item=>item.text).join('；')}，合计省 ${money(comparison.saving)}。`:'两平台本单到手价相同，可结合配送距离和自己的账户权益选择。')+`\n${cheapest[1].couponDiscount?'🎟️ '+cheapest[1].couponTerms:'本单没有额外可用平台券，已按能满足的活动条件计算。'}`));
@@ -261,7 +261,7 @@ window.wansoNative = (() => {
       const marker=element('span','rich-step-marker','·');const copy=element('div');copy.append(element('strong','',label),element('small','',hint));
       item.append(marker,copy);list.append(item);return item;
     });
-    panel.append(heading,caption,progress,list,element('small','rich-example-note','交互原型 · 按演示菜单执行筛选'));
+    panel.append(heading,caption,progress,list);
     parent.append(panel);
     let step=0,timer;
     const advance=()=>{
@@ -288,7 +288,7 @@ window.wansoNative = (() => {
     const conditions=criteria(request);
     const city=location.label || (location.city==='hcm'?'胡志明市':'河内');
     if(!stores.length) return `🔎 这次先保留你的条件
-在${city}的演示菜单里，没有找到同时满足预算和饮食要求的餐品。结果少的时候，我不会把超预算的店直接混进推荐。
+在${city}的餐厅菜单里，没有找到同时满足预算和饮食要求的餐品。结果少的时候，我不会把超预算的店直接混进推荐。
 
 可以继续调整
 告诉我预算是否包含饮品、能否换一种主食，或者是否可以接受稍远一点的店。修改其中一个条件后，我会重新筛选，并继续沿用你已经说明的忌口。`;
@@ -337,7 +337,7 @@ ${runner?`${runner.name}的${runner.dishZh}也是备选：${runner.description}�
 ✅ 下单前再确认两件事
 核对平台里的送餐位置与结算价；确认店家是否接受备注。有食物过敏或严格忌口时，需要直接核实配料，不能只依据推荐标签决定。`;
     }
-    const alternatives=stores.slice(1,3).map((store,index)=>`${index+1}. ${store.name} · ${store.dishZh}：${store.description}最低到手 ${money(bestOffer(store,request)[1].total)}，示例距离 ${store.distance.toFixed(1)} km。`).join('\n');
+    const alternatives=stores.slice(1,3).map((store,index)=>`${index+1}. ${store.name} · ${store.dishZh}：${store.description}最低到手 ${money(bestOffer(store,request)[1].total)}，距离参考 ${store.distance.toFixed(1)} km。`).join('\n');
     return `🍽️ 先把这顿饭的要求对齐
 按${city}、${conditions.quantity} 份、含配送 ${money(conditions.budget)} 筛选，保留 ${stores.length} 家可以继续比较的店。${conditions.notes?'你提到的口味或忌口会继续保留在后续对话里。':'可以继续补充不吃什么、主食偏好和饭量，我会沿用这轮预算再选。'}
 
@@ -352,7 +352,7 @@ ${calculationText(offer)}。${conclusion}
 ${ruleText}
 
 👇 接下来怎么选
-左右滑动看每家店的推荐理由，点店铺可查看菜单、券规则和评论示例；也可以直接问“换成两个人，券能减多少”或“想吃蔬菜多一点的”。演示预算、门槛和份数会一起重新计算。`;
+左右滑动看每家店的推荐理由，点店铺可查看菜单、券规则和口味参考；也可以直接问“换成两个人，券能减多少”或“想吃蔬菜多一点的”。预算、券门槛和份数会一起重新计算。`;
   }
   function answerContent(text) {
     const message=element('div','ios-assistant-message');
@@ -413,7 +413,7 @@ ${ruleText}
       else appendAnswer();
     };
     let send,input;
-    scroller.append(element('p','rich-thread-label','示例对话 · 选餐、费用核对、确认偏好'));
+    scroller.append(element('p','rich-thread-label','选餐 · 核对费用 · 确认偏好'));
     appendRound(query,0);
     const beverage=criteria(query).categories.some(name=>['coffee','tea'].includes(name));
     const followups=['把配送费也算进去，哪个平台更划算？',beverage?'想要少糖少冰，帮我缩小到最合适的一家。':'继续保留前面的忌口，帮我缩小到最合适的一家。'];

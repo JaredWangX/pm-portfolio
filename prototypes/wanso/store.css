@@ -131,11 +131,12 @@
 
 .native-store-reviews-heading {display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 14px;}
 .native-store-reviews-heading h2 {margin:0;}
-.native-store-review-example {flex:none;padding:4px 8px;border-radius:6px;background:#e1ecf8;color:#4b6580;font-size:11px;line-height:1.5;}
+.native-store-review-example {flex:none;text-decoration:none;padding:4px 8px;border-radius:6px;background:#e1ecf8;color:#4b6580;font-size:11px;line-height:1.5;}
 .native-store-review {padding:16px;border:1px solid #dce7f3;border-radius:14px;background:#fff;}
 .native-store-review+.native-store-review {margin-top:12px;}
-.native-store-review-author {display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:10px;align-items:center;}
+.native-store-review-author {display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;align-items:center;}
 .native-store-review-avatar {display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#e7f0fc;color:#3774b8;font-size:13px;font-weight:600;}
+.native-store-review-avatar svg {width:16px;height:16px;}
 .native-store-review-author>div {min-width:0;display:grid;gap:4px;}
 .native-store-review-author strong {font-size:13px;line-height:1.4;color:#23415b;}
 .native-store-review-author small {font-size:11px;color:#526b80;}
@@ -170,7 +171,7 @@
 .native-store-rules-list {display:grid;gap:10px;margin-top:14px;}
 .native-store-rules-list .native-store-offer-rules {margin:0;padding:14px 16px;border:1px solid #dce7f3;border-radius:12px;background:#ffffffb5;font-size:13px;}
 .native-store-rules-list .native-store-offer-rules summary {font-size:12px;}
-.native-store-image-credit {display:inline-block;margin-top:8px;color:#3c6b9e;font-size:12px;text-underline-offset:3px;}
+.native-store-image-credit {display:inline-block;margin:8px 16px 0 0;padding:0;border:0;background:none;font-family:inherit;cursor:pointer;text-decoration:underline;color:#3c6b9e;font-size:12px;text-underline-offset:3px;}
 .image-credits-link {font-size:12px;line-height:1.6;}
 .image-credits-link a {color:#3c6b9e;text-underline-offset:3px;}
 

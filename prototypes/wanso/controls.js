@@ -51,7 +51,7 @@ window.wansoControls = (() => {
       rating:source.rating,reviewCount:source.review_count,distance:source.distance,category:'越南菜 · 汤河粉',
       tags:['鸡肉','热汤','菜单样本'],address:id==='moc'?'Thái Thịnh · Đống Đa · Hà Nội':'Hoàn Kiếm · Hà Nội',
       description:'鸡肉与汤河粉搭配，菜单保留历史档案中收录的菜品。',
-      reason:'🍜 鸡肉汤河粉适合想吃热食的一餐，可以按口味备注香草、辣椒另放。下方保留原菜单供比较。档案未完整收录的跨平台费用已补充为演示报价，用于说明同菜同份量的计算方法。',
+      reason:'🍜 鸡肉汤河粉适合想吃热食的一餐，可以按口味备注香草、辣椒另放。保留原菜单供比较，并按相同菜品、相同份量核算两平台费用，优惠条件可以展开查看。',
       menu,platforms,sample:true};
     if(menu[0])menu[0].prices={grab:platforms.grab.price,shopee:platforms.shopee.price};
     for(const key of Object.keys(platforms))Object.assign(platforms[key],window.wansoOffers.calculate(store,key,1));
@@ -97,8 +97,9 @@ window.wansoControls = (() => {
     start: '22:00', end: '08:00', email: 'demo@wanso.example',
     phone: '', birthday: '', gender: '', address: '', query
   };
-  const state = {...original, location: {city:'hanoi',label:'河内 · 还剑区',district:'还剑区'}, history: true, collections: ['全部收藏'], recent: loadRecentOrders(), tastes: ['清淡', '鸡肉', '不吃香菜'],
+  const state = {...original, location: window.wansoLocation.restore() || {city:'hanoi',label:'河内 · 还剑区',district:'还剑区'}, history: true, collections: ['全部收藏'], recent: loadRecentOrders(), tastes: ['清淡', '鸡肉', '不吃香菜'],
     group: {moc: '全部收藏', quyen: '全部收藏'}, menuLanguage: {moc: 0, quyen: 0}, translated: {moc: 0, quyen: 0}};
+  window.wansoNative.setLocation(state.location);
   const currency = number => number.toLocaleString('vi-VN') + 'đ';
   const el = (tag, className, value) => {
     const node = document.createElement(tag);
@@ -120,7 +121,7 @@ window.wansoControls = (() => {
   const content = el('div', 'sheet-content');
   sheet.append(header, content);
   document.body.append(sheet);
-  let activeScreen, activeFrame, activeLayer, anchor, navigate, storeSession, locationRequest=0, suppressClose=false;
+  let activeScreen, activeFrame, activeLayer, anchor, navigate, storeSession, suppressClose=false, locationCleanup;
   const controls = new WeakMap();
 
   function placeSheet() {
@@ -128,8 +129,8 @@ window.wansoControls = (() => {
     const box = activeScreen.getBoundingClientRect();
     const frameBox = window.frameElement?.getBoundingClientRect();
     const parentHeader = frameBox && parent.document.querySelector('body > header')?.getBoundingClientRect().bottom;
-    const visibleTop = frameBox ? Math.max(0, (parentHeader || 0) - frameBox.top) : 0;
-    const visibleBottom = frameBox ? Math.min(innerHeight, parent.innerHeight - frameBox.top) : innerHeight;
+    const visibleTop = frameBox ? Math.max(0, (parentHeader || 0) - frameBox.top) : (window.visualViewport?.offsetTop || 0);
+    const visibleBottom = frameBox ? Math.min(innerHeight, parent.innerHeight - frameBox.top) : Math.min(innerHeight,visibleTop+(window.visualViewport?.height || innerHeight));
     const top = Math.max(visibleTop + 6, box.top + 45);
     const bottom = Math.min(visibleBottom - 6, box.bottom - 10);
     sheet.style.left = (box.left + 6) + 'px';
@@ -138,7 +139,9 @@ window.wansoControls = (() => {
     sheet.style.maxHeight = Math.max(130, bottom - top) + 'px';
   }
 
-  window.addEventListener('resize', placeSheet);
+  const sheetResize=new ResizeObserver(placeSheet);
+  window.addEventListener('resize', () => requestAnimationFrame(placeSheet));
+  window.visualViewport?.addEventListener('resize', placeSheet);
   window.addEventListener('scroll', placeSheet, {passive: true});
   sheet.addEventListener('click', event => {
     if (event.target !== sheet) return;
@@ -146,10 +149,11 @@ window.wansoControls = (() => {
     if (event.clientX < box.left || event.clientX > box.right ||
       event.clientY < box.top || event.clientY > box.bottom) sheet.close();
   });
+  function clearLocation() { locationCleanup?.();locationCleanup=null;sheet.classList.remove('native-location-sheet'); }
   sheet.addEventListener('close', () => {
     if(suppressClose){suppressClose=false;return;}
     if(sheet.open)return;
-    locationRequest++;
+    clearLocation();sheetResize.disconnect();
     if (window.frameElement) parent.removeEventListener('scroll', placeSheet);
     sheet.classList.remove('native-city-sheet','native-collection-sheet','native-avatar-sheet','native-taste-sheet');
     if (storeSession) storeSession.controller.refreshSaved();
@@ -158,11 +162,13 @@ window.wansoControls = (() => {
   });
 
   function show(heading, ...nodes) {
+    clearLocation();
     title.textContent = heading;
     content.replaceChildren(...nodes);
     content.scrollTop = 0;
     if (!sheet.open) {
       sheet.showModal();
+      sheetResize.observe(activeScreen);
       placeSheet();
       if (window.frameElement) parent.addEventListener('scroll', placeSheet, {passive: true});
     }
@@ -289,34 +295,15 @@ window.wansoControls = (() => {
       value => { state.query = value; runSearch(); }, {submit:'开始选餐'});
   }
 
-  const locations={hanoi:{name:'河内',district:'还剑区'},hcm:{name:'胡志明市',district:'第一郡'}};
-  function saveLocation(city, mode='city') {
-    locationRequest++;
-    state.location={city,district:locations[city].district,label:mode==='current'?'当前位置 · '+locations[city].name:locations[city].name,mode};
-    window.wansoNative.setLocation(state.location);sheet.close();
-  }
-  function chooseLocation(message='') {
-    const request=++locationRequest;
-    const introduction=el('div','native-city-intro');
-    introduction.append(el('span','native-city-mark','➤'),el('h3','','你在哪里？'),paragraph('选择你的城市，发现附近的美食与优惠。'));
-    const gps=cityRow('当前位置','⌖',state.location.mode==='current',()=>{
-      if(!navigator.geolocation){chooseLocation('当前浏览器不支持定位，请手动选择城市。');return;}
-      gps.disabled=true;gps.querySelector('strong').textContent='正在获取位置…';
-      navigator.geolocation.getCurrentPosition(position=>{
-        if(request!==locationRequest||!sheet.open)return;
-        const {latitude:lat,longitude:lng}=position.coords;
-        const city=lat>=20.5&&lat<=21.4&&lng>=105.25&&lng<=106.1?'hanoi':lat>=10.3&&lat<=11.2&&lng>=106.2&&lng<=107.1?'hcm':null;
-        if(city)saveLocation(city,'current');else chooseLocation('当前位置不在覆盖范围内。请选择河内或胡志明市继续体验。');
-      },error=>{if(request===locationRequest&&sheet.open)chooseLocation(error.code===1?'定位权限未开启。你仍可以手动选择城市。':'暂时无法获取位置，请手动选择城市。');},{timeout:8000,maximumAge:60000});
+  function chooseLocation() {
+    show('选择位置');
+    sheet.classList.add('native-location-sheet');
+    locationCleanup=window.wansoLocation.mount(content,state.location,value=>{
+      state.location=value;
+      window.wansoNative.setLocation(value);
+      sheet.close();
     });
-    show('选择城市',introduction,...(message?[paragraph(message)]:[]),gps,
-      cityRow('胡志明市','▦',state.location.city==='hcm'&&state.location.mode!=='current',()=>saveLocation('hcm')),
-      cityRow('河内','▤',state.location.city==='hanoi'&&state.location.mode!=='current',()=>saveLocation('hanoi')));
-    sheet.classList.add('native-city-sheet');
-  }
-  function cityRow(name,symbol,selected,action) {
-    const choice=button('',action,'native-city-row');choice.setAttribute('aria-pressed',String(selected));
-    choice.append(el('span','',symbol),el('strong','',name),el('span','native-choice-check',selected?'✓':''));return choice;
+    placeSheet();
   }
   function dismissStore() {
     if (!storeSession) return;
@@ -329,7 +316,7 @@ window.wansoControls = (() => {
     if (activeFrame?.id==='saved' && activeLayer?.isConnected) paint(activeLayer,activeFrame);
   }
   function dismissAll() {
-    locationRequest++;
+    clearLocation();sheetResize.disconnect();
     if(sheet.open){suppressClose=true;sheet.close();}
     if(window.frameElement)parent.removeEventListener('scroll',placeSheet);
     sheet.classList.remove('native-city-sheet','native-collection-sheet','native-avatar-sheet','native-taste-sheet');
@@ -400,7 +387,7 @@ window.wansoControls = (() => {
       note(offer.qualification),
       ...offer.terms.map(term=>paragraph(term)),
       ...offer.unavailable.map(term=>note(term)),
-      note('演示费用明细。本页用于比较相同餐品和份量，付款前请以平台结算金额为准。'),
+      note('按所列优惠规则估算，非平台实时报价。比较相同餐品与份量，实际金额以平台结算页为准。'),
       actions(button('返回菜单',()=>catalogStore({id,request})),button('换到 '+(platform==='grab'?'ShopeeFood':'GrabFood'),()=>catalogOrder({id,platform:platform==='grab'?'shopee':'grab',request}))));
   }
 
@@ -462,7 +449,7 @@ window.wansoControls = (() => {
   function recentOrders() {
     const list=el('div','ios-order-list');
     for(const id of state.recent){const record=recentOrderData(id);if(record)list.append(window.wansoPages.recentOrderCard(record,(action,value)=>actionHandlers[action](value)));}
-    show('最近订单',note('示例与本次浏览的下单入口记录，未产生实际交易。'),list,
+    show('最近订单',note('保留餐品、平台与费用记录，便于再次查看；这里不会产生付款或实际订单。'),list,
       ...(state.recent.length ? [] : [row('暂无记录', '从餐厅详情打开下单预览后，会在这里保留餐品与平台。')]),
       actions(backButton('完成')));
   }
@@ -532,9 +519,9 @@ window.wansoControls = (() => {
   const accountFields = {
     name: ['昵称', '设置个人资料中显示的称呼。', 'text'],
     email: ['联系邮箱', '正式 App 的邮箱用于身份识别与验证。此处展示本地体验资料。', 'email'],
-    phone: ['电话号码', '正式 App 的电话号码用于身份验证。此处仅保存本次预览的示例值。', 'tel'],
+    phone: ['电话号码', '正式 App 的电话号码用于身份验证。这里仅保留在本次浏览中。', 'tel'],
     birthday: ['生日', '在个人信息中保存生日。', 'date'],
-    address: ['送货地址', '常用送货地址影响附近餐厅和配送费用。可填写一个示例地址。', 'text'],
+    address: ['送货地址', '常用送货地址影响附近餐厅和配送费用。可填写你的常用地址。', 'text'],
     start: ['开始免打扰', '选择暂停推送的开始时间。', 'time'],
     end: ['结束免打扰', '选择恢复推送的时间。', 'time']
   };
@@ -598,6 +585,12 @@ window.wansoControls = (() => {
       }
     },
     cities: chooseLocation,
+    dataInfo: () => show('数据与价格说明',
+      paragraph('这里保留了 Wanso 的选餐、推荐、比价与菜单交互。为便于完整体验，餐厅库、优惠、口味参考和对话内容包含预置样本，不代表平台实时商家覆盖或真实用户评价。'),
+      row('价格怎样计算', '同一菜品、同一份量，依次核算店铺折扣、平台券与配送优惠。券门槛、减免上限与不可叠加项均可在费用详情中查看。'),
+      row('位置怎样使用', '地图使用 OpenStreetMap。可选择常用地标、地图点位或设备位置；确认后保存在当前浏览器，用于选择城市内容，暂不实时重算商家距离和运费。地图浏览会向地图服务请求当前位置附近的图块。'),
+      row('下单与照片', 'Order 展示费用与入口，不产生付款或实际订单。照片展示对应餐品类型，具体菜品、库存、配送与支付金额以平台结算页为准。'),
+      actions(backButton('知道了'))),
     featured: () => window.wansoNative.refreshFeatured(),
     toggle,
     budget: value => {state.budget=value;},
