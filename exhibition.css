@@ -1,8 +1,8 @@
-/* Both complete devices fit below the sticky navigation on a laptop display. */
-.home-page .device-exhibition { --device-height: min(560px, calc(100svh - 394px)); padding-bottom: 32px; }
+/* Give the phone a readable width without distorting the captured app layout. */
+.home-page .device-exhibition { --device-height: 874px; padding-bottom: 32px; }
 .home-page .exhibition-heading { margin-bottom: 16px; }
 .home-page .exhibition-heading h2 { font-size: 30px; line-height: 1.4; }
-.home-page .device-pair { grid-template-columns: minmax(0,1fr) minmax(290px, 30%); gap: 22px; max-width: none; }
+.home-page .device-pair { grid-template-columns: minmax(0,1fr) 448px; gap: 22px; max-width: none; }
 .home-page .device-project { display: grid; grid-template-columns:minmax(0,1fr); grid-template-rows: 50px 46px var(--device-height) 44px; gap: 12px; padding: 18px 22px; border-radius: 25px; align-items: stretch; }
 .home-page .phone-project { grid-row: auto; }
 .home-page .device-title { min-height: 0; margin: 0; }
@@ -21,7 +21,7 @@
 .home-page .laptop-base { height: 18px; margin-inline: -3%; border-radius: 2px 2px 45% 45%/2px 2px 70% 70%; }
 .home-page .laptop-base:before { top: 0; bottom: auto; left: 40%; width: 20%; height: 4px; }
 .home-page .laptop-keys { display: none; }
-.home-page .phone-stage { height: 100%; width: auto; aspect-ratio: 402/874; max-width: 100%; padding: 0; margin: 0 auto; }
+.home-page .phone-stage { width: min(402px, 100%); height: auto; aspect-ratio: 402/874; max-width: 100%; padding: 0; margin: 0 auto; }
 .home-page .phone-stage:after { display: none; }
 .home-page .phone-stage .device-frame { width: 100%; height: 100%; max-height: none; aspect-ratio: auto; }
 .home-page .device-footer { display: flex; min-height: 44px; height: 44px; margin: 0; padding: 0; gap: 12px; align-items: center; border-top: 1px solid #bed5ee80; }
@@ -38,7 +38,6 @@
 .workbench-deliverables span { padding: 3px 9px; border: 1px solid #cadef5; border-radius: 6px; background: #eaf3ff; color: #245caa; font-size: 12px; line-height: 1.6; font-weight: 600; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (min-width: 951px) and (max-height: 800px) {
- .home-page .device-exhibition { --device-height: calc(100svh - 360px); }
  .home-page .device-project { grid-template-rows: 44px 44px var(--device-height) 40px; padding: 14px 18px; gap: 10px; }
  .home-page .device-title h3 { font-size: 24px; }
  .home-page .exhibition-heading { margin-bottom: 12px; }
@@ -48,22 +47,24 @@
  .workbench-story p { margin-block: 3px 7px; font-size: 13px; }
  .home-page .computer-project .laptop { width: min(100%, calc((var(--device-height) - 145px) * 1.7778)); }
 }
-@media (max-width: 950px) {
+@media (max-width: 1100px) {
  .home-page .device-pair { grid-template-columns: 1fr; max-width: 760px; margin-inline: auto; }
  .home-page .device-project { grid-template-rows: 54px 46px auto 44px; padding: 20px; }
  .home-page .phone-project { grid-row: 1; }
- .home-page .phone-stage { height: min(620px, calc(100svh - 300px)); max-height: none; }
+ .home-page .phone-stage { height: auto; max-height: none; }
  .home-page .computer-project .laptop { width: 100%; }
  .home-page .computer-project .device-surface { grid-template-rows: auto auto; gap: 20px; }
  .home-page .computer-project .laptop-workbench { height: auto; min-height: 0; aspect-ratio: 16/9; }
 }
 @media (max-width: 540px) {
  .home-page .device-project { padding: 16px 12px; gap: 12px; }
+ .home-page .phone-project { width: calc(100% + 16px); margin-inline: -8px; }
  .home-page .device-title h3 { font-size: 24px; }
  .home-page .device-title h3 span { font-size: 13px; }
  .home-page .device-controls button { font-size: 12px; }
  .home-page .device-case { font-size: 13px; }
- .home-page .phone-stage { height: min(580px, calc(100svh - 374px)); }
+ .home-page .phone-project .device-surface { margin-inline: -8px; }
+ .home-page .phone-stage { height: auto; }
  .home-page .device-actions a { font-size: 13px; }
  .workbench-story-heading>span { display: none; }
  .workbench-story-heading strong { font-size: 16px; }

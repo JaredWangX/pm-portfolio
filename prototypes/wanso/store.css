@@ -112,7 +112,7 @@
 .native-store-platform[data-platform=grab] .native-store-promo {color:#176341;}
 
 /* The portfolio embeds the phone at different widths, independent of browser width. */
-@container store-detail (min-width:390px) {
+@container store-detail (min-width:360px) {
   .native-store-platforms {grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
   .native-store-platform-footer {grid-template-columns:minmax(0,1fr);gap:14px;}
   .native-store-order {width:100%;}
@@ -143,3 +143,33 @@
 .native-store-review-dish {margin:14px 0 8px;font-size:12px;line-height:1.6;color:#3974b0;}
 .native-store-review-text {margin:0;font-size:13px;line-height:1.8;color:#354f68;text-wrap:pretty;}
 .phone-scroll>.native-store-reviews {margin:0 max(16px,calc(20 * var(--ios))) 28px;}
+
+/* The same settlement rows line up across platforms; eligibility stays one click away. */
+.native-store-platform-body {display:flex;flex-direction:column;gap:12px;}
+.native-store-offer-rules {margin-top:auto;padding-top:4px;font-size:12px;color:#526b80;}
+.native-store-offer-rules summary,.native-store-menu-comparison summary {cursor:pointer;color:#2b6199;font-size:12px;font-weight:600;line-height:1.6;}
+.native-store-offer-rules p {margin:12px 0 0;line-height:1.8;overflow-wrap:anywhere;}
+.native-store-offer-rules .native-store-ineligible {color:#6f5a42;}
+.native-store-saving-breakdown {display:grid;gap:12px;padding:18px 0 4px;}
+.native-store-saving-breakdown p {display:flex;align-items:center;gap:10px;margin:0;color:#3b536a;font-size:13px;line-height:1.65;}
+.native-store-difference-mark {display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:7px;background:#eff3f8;color:#6a7a8a;font-size:13px;}
+[data-effect=saving] .native-store-difference-mark {background:#e9f6ef;color:#177247;}
+[data-effect=extra] .native-store-difference-mark {background:#fff1e9;color:#a05b35;}
+.native-store-menu-comparison {margin-top:18px;padding-top:16px;border-top:1px solid #e4edf6;}
+.native-store-menu-comparison summary {font-size:13px;}
+@container store-detail (min-width:360px) {
+  .native-store-platform-heading {gap:8px;padding:14px 12px;grid-template-columns:24px minmax(0,1fr);}
+  .native-store-platform-mark {width:24px;height:24px;font-size:10px;border-radius:7px;}
+  .native-store-platform-heading h2 {font-size:13px;}
+  .native-store-platform-body {padding:16px 12px;}
+  .native-store-platform-footer {padding:16px 12px;}
+  .native-store-delivery,.native-store-promo {gap:4px;font-size:12px;}
+  .native-store-delivery strong,.native-store-promo strong {font-size:12px;}
+}
+
+.native-store-rules-list {display:grid;gap:10px;margin-top:14px;}
+.native-store-rules-list .native-store-offer-rules {margin:0;padding:14px 16px;border:1px solid #dce7f3;border-radius:12px;background:#ffffffb5;font-size:13px;}
+.native-store-rules-list .native-store-offer-rules summary {font-size:12px;}
+.native-store-image-credit {display:inline-block;margin-top:8px;color:#3c6b9e;font-size:12px;text-underline-offset:3px;}
+.image-credits-link {font-size:12px;line-height:1.6;}
+.image-credits-link a {color:#3c6b9e;text-underline-offset:3px;}

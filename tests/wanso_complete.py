@@ -210,8 +210,11 @@ with sync_playwright() as playwright:
     first_reply.locator('.rich-offer[data-platform="grab"]').first.click()
     sheet = page.locator('.wanso-sheet')
     expect(sheet.locator('.sheet-details > div').filter(has=page.locator('dt', has_text='份数'))).to_contain_text('2')
-    total = store['platforms']['grab']['price'] * 2 + store['platforms']['grab']['fee'] - store['platforms']['grab']['discount']
-    expect(sheet.locator('.sheet-details > div').filter(has=page.locator('dt', has_text='合计'))).to_contain_text(f'{total:,}')
+    # Quantity can cross coupon/delivery thresholds, so the one-person discount
+    # must not be reused for a two-person basket. Arithmetic is independently
+    # boundary-tested in wanso_offers.mjs; this checks the preview integration.
+    total = page.evaluate('(id) => window.wansoOffers.calculate(window.wansoCatalog.find(s => s.id === id), "grab", 2).total', store['id'])
+    expect(sheet.locator('.sheet-details > div').filter(has=page.locator('dt', has_text='合计'))).to_contain_text(f'{total:,}'.replace(',', '.') + 'đ')
     screenshot(page, 'two-person-order')
     inspect_page(page, errors, responses)
     checks.append('Two-person Chinese budget: 十五万 parses as 150,000; two portions share one delivery fee in cards and Order preview')

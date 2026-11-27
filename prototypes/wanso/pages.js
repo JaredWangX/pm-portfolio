@@ -147,11 +147,12 @@ window.wansoPages = (() => {
     nextInsight(false);
     const body=el('div','ios-page-content');const stats=el('section','ios-explore-stats');
     const statsHeader=el('div','ios-stats-heading');
-    statsHeader.append(el('strong','','🟢 🟠 双平台'),el('span','','当前城市 · 示例店铺'));
+    statsHeader.append(el('strong','','🟢 🟠 双平台'),el('span','','当前城市 · 按单份餐计算'));
     const catalog=window.wansoNative.catalogForLocation();const values=el('dl','ios-stat-values');
-    const promoCount=catalog.filter(store=>Object.values(store.platforms).some(p=>p.discount>0)).length;
-    const freeCount=catalog.filter(store=>Object.values(store.platforms).some(p=>p.fee===0)).length;
-    for(const [value,text] of [[catalog.length,'店铺'],[promoCount,'有优惠'],[freeCount,'免配送费']]){
+    const quotes=catalog.map(store=>Object.keys(store.platforms).map(key=>window.wansoOffers.calculate(store,key,1)));
+    const promoCount=quotes.filter(offers=>offers.some(p=>p.discount>0)).length;
+    const freeCount=quotes.filter(offers=>offers.some(p=>p.netDeliveryFee===0)).length;
+    for(const [value,text] of [[catalog.length,'示例店铺'],[promoCount,'本单有优惠'],[freeCount,'本单免配送']]){
       const pair=el('div');pair.append(el('dd','',number(value)),el('dt','',text));values.append(pair);
     }
     stats.append(statsHeader,values);const picksHeading=heading('');

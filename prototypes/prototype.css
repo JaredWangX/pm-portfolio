@@ -205,8 +205,8 @@ body[data-product=wanso].phone-player.wide-phone-review .review {
   padding-block: 18px;
 }
 body[data-product=wanso].phone-player.wide-phone-review .viewer {
-  height: max(680px, calc(100svh - 90px));
-  max-height: 1020px;
+  height: auto;
+  max-height: none;
   aspect-ratio: auto;
 }
 .wide-phone-review .review-side {
@@ -230,10 +230,19 @@ body[data-product=wanso].phone-player.wide-phone-review .viewer {
 @media (max-width: 849px) {
   body[data-product=wanso].phone-player:not(.embed) .review { width: min(100% - 12px, 430px); }
   body[data-product=wanso].phone-player:not(.embed) .viewer {
-    height: calc(100svh - 48px);
+    height: auto;
     aspect-ratio: auto;
   }
 }
+/* Width controls readability; the original phone proportions remain unchanged. */
+body[data-product=wanso].phone-player:not(.device-embed) .viewer {
+  height: auto;
+  max-height: none;
+  aspect-ratio: auto;
+  grid-template-rows: 48px auto 48px 3px;
+}
+body[data-product=wanso].phone-player.embed:not(.device-embed) .review { height: auto; min-height: 100dvh; }
+body[data-product=wanso].phone-player.device-embed .viewport { overflow-y: auto; align-items: flex-start; scrollbar-width: none; }
 .screen-metric[data-tone="meal-price"] {
   color: #204874;
   font-weight: 700;

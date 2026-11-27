@@ -1,0 +1,2328 @@
+{
+  "purpose": "Cuisine and beverage scene illustrations for fictional demo stores, not merchant photos or exact product promises.",
+  "processing": "Local WebP conversion; aspect ratio preserved; longest side at most 640 pixels. CSS may crop the displayed frame.",
+  "photos": [
+    {
+      "category": "pho",
+      "file": "pho-01.webp",
+      "title": "File:Chicken Noodle Soup (Pho Ga), Tây Hồ (7069116563).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Chicken_Noodle_Soup_(Pho_Ga),_T%C3%A2y_H%E1%BB%93_(7069116563).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Chicken_Noodle_Soup_%28Pho_Ga%29%2C_T%C3%A2y_H%E1%BB%93_%287069116563%29.jpg/960px-Chicken_Noodle_Soup_%28Pho_Ga%29%2C_T%C3%A2y_H%E1%BB%93_%287069116563%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "David McKelvey from Brisbane, Australia",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 360,
+      "bytes": 31008,
+      "sha256": "ace3ca617785dc70549dbb646e836685ab491345197130561e56e172c3b12898",
+      "stores": [
+        "demo-41"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-02.webp",
+      "title": "File:Chicken Pho, Pho 21, Montparnasse, Paris 001.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Chicken_Pho,_Pho_21,_Montparnasse,_Paris_001.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/Chicken_Pho%2C_Pho_21%2C_Montparnasse%2C_Paris_001.jpg/960px-Chicken_Pho%2C_Pho_21%2C_Montparnasse%2C_Paris_001.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Guilhem Vellut from Paris, France",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 427,
+      "bytes": 38832,
+      "sha256": "edc6af082e35ca5967eaf1dfa22ac7dda3f5cdfebc61146608943ce1b2195e4a",
+      "stores": [
+        "demo-17"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-03.webp",
+      "title": "File:Chicken-pho-vietnamese-soup.JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:Chicken-pho-vietnamese-soup.JPG",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/Chicken-pho-vietnamese-soup.JPG/960px-Chicken-pho-vietnamese-soup.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Anonymous Cow",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 60952,
+      "sha256": "64882b631527297122efc1bf2b658fdac95545deac54a5f7003b0a3e93153933",
+      "stores": [
+        "demo-1"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-05.webp",
+      "title": "File:Homemade \"Phở gà\" by A.jpeg",
+      "source": "https://commons.wikimedia.org/wiki/File:Homemade_%22Ph%E1%BB%9F_g%C3%A0%22_by_A.jpeg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Homemade_%22Ph%E1%BB%9F_g%C3%A0%22_by_A.jpeg/960px-Homemade_%22Ph%E1%BB%9F_g%C3%A0%22_by_A.jpeg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "李媖子",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 640,
+      "bytes": 86810,
+      "sha256": "e67b63e4d5367e500d6e0946ca60ebf0560f264ba07ee2025caf90b5f4ba9962",
+      "stores": [
+        "demo-33"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-06.webp",
+      "title": "File:Pho ga (29741913464).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Pho_ga_(29741913464).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/be/Pho_ga_%2829741913464%29.jpg/960px-Pho_ga_%2829741913464%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "T.Tseng",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 41250,
+      "sha256": "092d9705ec0b27e03b083278fe7bbb16a522b60f73daabfd430727c12de77a1f",
+      "stores": [
+        "demo-49"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-07.webp",
+      "title": "File:Pho ga (Mary's chicken) (25735388134).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Pho_ga_(Mary%27s_chicken)_(25735388134).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Pho_ga_%28Mary%27s_chicken%29_%2825735388134%29.jpg/960px-Pho_ga_%28Mary%27s_chicken%29_%2825735388134%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "T.Tseng",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 45322,
+      "sha256": "4bd43124160e748f1f2763f1c1f9b93ba3d6ad14404e6ed3a05e2668404b83a0",
+      "stores": [
+        "demo-57"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-08.webp",
+      "title": "File:Pho ga (noodle soup with chicken), Hanoi (6945821707).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Pho_ga_(noodle_soup_with_chicken),_Hanoi_(6945821707).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Pho_ga_%28noodle_soup_with_chicken%29%2C_Hanoi_%286945821707%29.jpg/960px-Pho_ga_%28noodle_soup_with_chicken%29%2C_Hanoi_%286945821707%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "David McKelvey from Brisbane, Australia",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 361,
+      "bytes": 25564,
+      "sha256": "bf22f765736c4704076e49097287113501ff93e82c03223d18c074e723824c13",
+      "stores": [
+        "demo-9"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-09.webp",
+      "title": "File:Pho's Saigon SSF Pho Ga contents.JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:Pho%27s_Saigon_SSF_Pho_Ga_contents.JPG",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Pho%27s_Saigon_SSF_Pho_Ga_contents.JPG/960px-Pho%27s_Saigon_SSF_Pho_Ga_contents.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "BrokenSphere",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 26858,
+      "sha256": "fd9aacd8c9c64f0d57d8c98be505fb986cd10da54e7dd94b1d0d09f60b4e8517",
+      "stores": [
+        "demo-65"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-10.webp",
+      "title": "File:Pho-ga-ha-noi.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Pho-ga-ha-noi.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Pho-ga-ha-noi.jpg/960px-Pho-ga-ha-noi.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Fransiscatatumnc095",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 38664,
+      "sha256": "c69e662be4e71d09675d0bb1608fe7062b69f653a67b7ad3649ecbd0b1cca13d",
+      "stores": [
+        "demo-73"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-11.webp",
+      "title": "File:Phở gà and Vietnamese Sprill Roll Taipei.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Ph%E1%BB%9F_g%C3%A0_and_Vietnamese_Sprill_Roll_Taipei.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Ph%E1%BB%9F_g%C3%A0_and_Vietnamese_Sprill_Roll_Taipei.jpg/960px-Ph%E1%BB%9F_g%C3%A0_and_Vietnamese_Sprill_Roll_Taipei.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Allervous",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 482,
+      "bytes": 44142,
+      "sha256": "dcb936f0ae2fb8221759c4f035dfeed7e3c85a9cb493de59c1f435fd604db5bb",
+      "stores": [
+        "demo-81"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-12.webp",
+      "title": "File:Saigon style chicken phở.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Saigon_style_chicken_ph%E1%BB%9F.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Saigon_style_chicken_ph%E1%BB%9F.jpg/960px-Saigon_style_chicken_ph%E1%BB%9F.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Do An Ngon Qua",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 78272,
+      "sha256": "36eaee3118a0e0807a54e61db1924aa9d290cc7681e184fc8005e5120a35d709",
+      "stores": [
+        "demo-89"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-13.webp",
+      "title": "File:Vietnamese Pho.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Vietnamese_Pho.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Vietnamese_Pho.jpg/960px-Vietnamese_Pho.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Nowforever",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 640,
+      "bytes": 46142,
+      "sha256": "5c0dc1d7261a9e3dafb8116b82fd5fc22a6acf3f002e1cb162db6dfbc624379c",
+      "stores": [
+        "demo-25"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-14.webp",
+      "title": "File:Vietnamská kuřecí polévka “phở gà“ se širokými rýžovými nudlemi 01.JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:Vietnamsk%C3%A1_ku%C5%99ec%C3%AD_pol%C3%A9vka_%E2%80%9Cph%E1%BB%9F_g%C3%A0%E2%80%9C_se_%C5%A1irok%C3%BDmi_r%C3%BD%C5%BEov%C3%BDmi_nudlemi_01.JPG",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Vietnamsk%C3%A1_ku%C5%99ec%C3%AD_pol%C3%A9vka_%E2%80%9Cph%E1%BB%9F_g%C3%A0%E2%80%9C_se_%C5%A1irok%C3%BDmi_r%C3%BD%C5%BEov%C3%BDmi_nudlemi_01.JPG/960px-Vietnamsk%C3%A1_ku%C5%99ec%C3%AD_pol%C3%A9vka_%E2%80%9Cph%E1%BB%9F_g%C3%A0%E2%80%9C_se_%C5%A1irok%C3%BDmi_r%C3%BD%C5%BEov%C3%BDmi_nudlemi_01.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Horakvlado",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 426,
+      "bytes": 28702,
+      "sha256": "6d5dce18d3d314033e4414b9cbcc275914ff33ea10e390d7ca343fdc13687ae1",
+      "stores": [
+        "demo-97"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-16.webp",
+      "title": "File:アオサンズの鶏のフォー(20211114).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BC(20211114).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BC%2820211114%29.jpg/960px-%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BC%2820211114%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "経済特区",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 360,
+      "bytes": 44540,
+      "sha256": "5f9653e6c19914fc58f762e83024d3fa22b45fd6ea0162054b5f1e83de0ec3e5",
+      "stores": [
+        "demo-105"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-17.webp",
+      "title": "File:アオサンズの鶏のフォー.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BC.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BC.jpg/960px-%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "経済特区",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 360,
+      "bytes": 42296,
+      "sha256": "3573639ba7f626438abbf8901482f0eeb3b36b061496630bd5fbdadd55187dac",
+      "stores": [
+        "demo-113"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-18.webp",
+      "title": "File:アオサンズの鶏のフォーIMG 20211118 151400.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BCIMG_20211118_151400.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b7/%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BCIMG_20211118_151400.jpg/960px-%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BCIMG_20211118_151400.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "経済特区",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 360,
+      "bytes": 39340,
+      "sha256": "f42955822a0df139a5d8756dcc86986ff60b51945920e112d9bed46bde3faeb2",
+      "stores": [
+        "demo-121"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-19.webp",
+      "title": "File:アオサンズの鶏肉のフォーIMG 20220828 120958 HDR 03.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E8%82%89%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BCIMG_20220828_120958_HDR_03.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E8%82%89%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BCIMG_20220828_120958_HDR_03.jpg/960px-%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E8%82%89%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BCIMG_20220828_120958_HDR_03.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "経済特区",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 365,
+      "bytes": 40018,
+      "sha256": "9ac8c541cc3b33afa2ba32a59e6e0b34035b33bbb4ff511b2d1cbe884835ae81",
+      "stores": [
+        "demo-129"
+      ]
+    },
+    {
+      "category": "pho",
+      "file": "pho-20.webp",
+      "title": "File:アオサンズの鶏肉のフォーIMG 20220925 142154 HDR.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E8%82%89%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BCIMG_20220925_142154_HDR.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E8%82%89%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BCIMG_20220925_142154_HDR.jpg/960px-%E3%82%A2%E3%82%AA%E3%82%B5%E3%83%B3%E3%82%BA%E3%81%AE%E9%B6%8F%E8%82%89%E3%81%AE%E3%83%95%E3%82%A9%E3%83%BCIMG_20220925_142154_HDR.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "経済特区",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 640,
+      "bytes": 54152,
+      "sha256": "22adee7632020aca57df73667d7e58ab8a163971002f50fe22447950b1ec1d99",
+      "stores": [
+        "demo-137"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-01.webp",
+      "title": "File:(So-called?) Hainan-style Chicken Rice in Bangkok (48881306971).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:(So-called%3F)_Hainan-style_Chicken_Rice_in_Bangkok_(48881306971).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/%28So-called%3F%29_Hainan-style_Chicken_Rice_in_Bangkok_%2848881306971%29.jpg/960px-%28So-called%3F%29_Hainan-style_Chicken_Rice_in_Bangkok_%2848881306971%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Vee Satayamas from Bangkok, Thailand",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 427,
+      "bytes": 24338,
+      "sha256": "e5e7223cde0d0518b249a482e0041f5911e7d3a21306b0535a3c6bc27551d977",
+      "stores": [
+        "demo-43"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-02.webp",
+      "title": "File:Chickenjf1552.JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:Chickenjf1552.JPG",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Chickenjf1552.JPG/960px-Chickenjf1552.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Ramon FVelasquez",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 51270,
+      "sha256": "7f821340568fefd5a2f068f93fbc483d5b41acc1286672c4a57e63398b7ac774",
+      "stores": [
+        "demo-51"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-03.webp",
+      "title": "File:Food 海南雞飯, Mamak檔, 星馬料理, 台北 (24234958253).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Food_%E6%B5%B7%E5%8D%97%E9%9B%9E%E9%A3%AF,_Mamak%E6%AA%94,_%E6%98%9F%E9%A6%AC%E6%96%99%E7%90%86,_%E5%8F%B0%E5%8C%97_(24234958253).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Food_%E6%B5%B7%E5%8D%97%E9%9B%9E%E9%A3%AF%2C_Mamak%E6%AA%94%2C_%E6%98%9F%E9%A6%AC%E6%96%99%E7%90%86%2C_%E5%8F%B0%E5%8C%97_%2824234958253%29.jpg/960px-Food_%E6%B5%B7%E5%8D%97%E9%9B%9E%E9%A3%AF%2C_Mamak%E6%AA%94%2C_%E6%98%9F%E9%A6%AC%E6%96%99%E7%90%86%2C_%E5%8F%B0%E5%8C%97_%2824234958253%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "bryan... from Taipei, Taiwan",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 43666,
+      "sha256": "c1a909d835e6f418bdc07e28199a41c1f5845145976d88f796b805f3e315a9eb",
+      "stores": [
+        "demo-59"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-04.webp",
+      "title": "File:Hainan chicken rice (28737695012).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainan_chicken_rice_(28737695012).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8a/Hainan_chicken_rice_%2828737695012%29.jpg/960px-Hainan_chicken_rice_%2828737695012%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "T.Tseng",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 30378,
+      "sha256": "3dc8cc5fa28697378cc7e2818103099b9dfe425630238dd4d917a2fb694a54a1",
+      "stores": [
+        "demo-67"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-05.webp",
+      "title": "File:Hainan Chicken Rice at Pappa Rich Malaysian Delights, GR Mall Beijing (20230716104217).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainan_Chicken_Rice_at_Pappa_Rich_Malaysian_Delights,_GR_Mall_Beijing_(20230716104217).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Hainan_Chicken_Rice_at_Pappa_Rich_Malaysian_Delights%2C_GR_Mall_Beijing_%2820230716104217%29.jpg/960px-Hainan_Chicken_Rice_at_Pappa_Rich_Malaysian_Delights%2C_GR_Mall_Beijing_%2820230716104217%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "N509FZ",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 427,
+      "bytes": 46796,
+      "sha256": "601550b2900c25f952bb1814e02e98d69ad397fe4d771a0513faf618669f858d",
+      "stores": [
+        "demo-75"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-06.webp",
+      "title": "File:Hainan Chicken, garlic rice, pickles, ginger scallion sauce, seasoned soy, chili sauce (31740963840).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainan_Chicken,_garlic_rice,_pickles,_ginger_scallion_sauce,_seasoned_soy,_chili_sauce_(31740963840).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/Hainan_Chicken%2C_garlic_rice%2C_pickles%2C_ginger_scallion_sauce%2C_seasoned_soy%2C_chili_sauce_%2831740963840%29.jpg/960px-Hainan_Chicken%2C_garlic_rice%2C_pickles%2C_ginger_scallion_sauce%2C_seasoned_soy%2C_chili_sauce_%2831740963840%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "T.Tseng",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 40286,
+      "sha256": "3cdca8f7cdf9cc159654ee3e801fa6ada27ca3faafa3d10e1f0367e8c5c069b9",
+      "stores": [
+        "demo-83"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-07.webp",
+      "title": "File:Hainanese Chicken from Thai Restaurant from Public Food Court in Olympian City.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainanese_Chicken_from_Thai_Restaurant_from_Public_Food_Court_in_Olympian_City.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Hainanese_Chicken_from_Thai_Restaurant_from_Public_Food_Court_in_Olympian_City.jpg/960px-Hainanese_Chicken_from_Thai_Restaurant_from_Public_Food_Court_in_Olympian_City.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Peachyeung316",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 34262,
+      "sha256": "2b08a42d2738388fd1d81b4d1a239adac07efce8616f30ef59f3ba7e6ebdd363",
+      "stores": [
+        "demo-35"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-08.webp",
+      "title": "File:Hainanese chicken rice (in Macau).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainanese_chicken_rice_(in_Macau).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Hainanese_chicken_rice_%28in_Macau%29.jpg/960px-Hainanese_chicken_rice_%28in_Macau%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Pauloleong2002",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 384,
+      "bytes": 29006,
+      "sha256": "8bbaf12a11fde345a01675da7412aecf28ee6e87135362ed8671efcda2436eab",
+      "stores": [
+        "demo-91"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-09.webp",
+      "title": "File:Hainanese Chicken Rice - Kotaraya AUD8.90 (4449024879).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainanese_Chicken_Rice_-_Kotaraya_AUD8.90_(4449024879).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Hainanese_Chicken_Rice_-_Kotaraya_AUD8.90_%284449024879%29.jpg/960px-Hainanese_Chicken_Rice_-_Kotaraya_AUD8.90_%284449024879%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Alpha from Melbourne, Australia",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 429,
+      "bytes": 26220,
+      "sha256": "98e4fe4027b9e0c425565e9aa4a6c65c0130bceb31d4530a7f5d9cdf799ba113",
+      "stores": [
+        "demo-99"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-10.webp",
+      "title": "File:Hainanese Chicken Rice - Singapore Chom Chom (256158484).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainanese_Chicken_Rice_-_Singapore_Chom_Chom_(256158484).jpg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/0/04/Hainanese_Chicken_Rice_-_Singapore_Chom_Chom_%28256158484%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "artist": "Alpha from Melbourne, Australia",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 29310,
+      "sha256": "da4d86cd34fc76aa27ccf666ae21995e13255e97d4d991dd5149eb0e597dd6e2",
+      "stores": [
+        "demo-3"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-11.webp",
+      "title": "File:Hainanese chicken rice 20230510.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainanese_chicken_rice_20230510.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/Hainanese_chicken_rice_20230510.jpg/960px-Hainanese_chicken_rice_20230510.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Fumikas Sagisavas",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 45496,
+      "sha256": "6c0a84ee440db94f4539ea3d3feefd889ee3301de78e04c81956cd05aa6e648c",
+      "stores": [
+        "demo-107"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-12.webp",
+      "title": "File:Hainanese chicken rice at Thai Ten.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainanese_chicken_rice_at_Thai_Ten.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/Hainanese_chicken_rice_at_Thai_Ten.jpg/960px-Hainanese_chicken_rice_at_Thai_Ten.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Peachyeung316",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 30654,
+      "sha256": "dabf1f381569be1936ff98608177a1cf287c70ab589f15a3b4003b1f29dfcbab",
+      "stores": [
+        "demo-19"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-13.webp",
+      "title": "File:Hainanese Chicken rice from Cafe 100.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainanese_Chicken_rice_from_Cafe_100.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Hainanese_Chicken_rice_from_Cafe_100.jpg/960px-Hainanese_Chicken_rice_from_Cafe_100.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Peachyeung316",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 32140,
+      "sha256": "4d0acafd3513c45b5ae4e0d8124d7af2fb82cfa043aaa80427565c289ab32701",
+      "stores": [
+        "demo-11"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-14.webp",
+      "title": "File:Hainanese chicken rice in hk.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainanese_chicken_rice_in_hk.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Hainanese_chicken_rice_in_hk.jpg/960px-Hainanese_chicken_rice_in_hk.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Peachyeung316",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 32488,
+      "sha256": "d782838508d8a4668df8a590d1eb9f7a19ad68172d1a80f32fa05640f410b1fa",
+      "stores": [
+        "demo-27"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-15.webp",
+      "title": "File:Hainanese chicken rice in Killiney Kopitiam at Palo Alto, California.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainanese_chicken_rice_in_Killiney_Kopitiam_at_Palo_Alto,_California.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Hainanese_chicken_rice_in_Killiney_Kopitiam_at_Palo_Alto%2C_California.jpg/960px-Hainanese_chicken_rice_in_Killiney_Kopitiam_at_Palo_Alto%2C_California.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Suiren2022",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 40108,
+      "sha256": "485bbcb3eea167b5a62da4fa8b30c9302d5fdf4fd4cba9a1f6650f635ef1c7a7",
+      "stores": [
+        "demo-115"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-16.webp",
+      "title": "File:Hainanese Chicken Rice, with asparagus.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainanese_Chicken_Rice,_with_asparagus.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/Hainanese_Chicken_Rice%2C_with_asparagus.jpg/960px-Hainanese_Chicken_Rice%2C_with_asparagus.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "T.Tseng",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 31372,
+      "sha256": "f83116d0a0a2963b5c52fbc9012bc806fae5bee324525fbf8d8d9da03768ffff",
+      "stores": [
+        "demo-123"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-17.webp",
+      "title": "File:Hainanese Chicken rice.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainanese_Chicken_rice.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Hainanese_Chicken_rice.jpg/960px-Hainanese_Chicken_rice.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Tyler Bayley",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 37068,
+      "sha256": "18021284b9e0cdaee065cb238e94097f9e42606569e6cf0003e53a4aa1fd9cf5",
+      "stores": [
+        "demo-131"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-18.webp",
+      "title": "File:Hainanese Chicken.JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:Hainanese_Chicken.JPG",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b4/Hainanese_Chicken.JPG/960px-Hainanese_Chicken.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "No machine-readable author provided. Underbar dk assumed (based on copyright claims).",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 34012,
+      "sha256": "de34eca007abe18d50a2b6d7bde925000382a4a609530f998682bf40f8e4a2a7",
+      "stores": [
+        "demo-139"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-19.webp",
+      "title": "File:Hoinanese chicken rice in Hong Kong.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hoinanese_chicken_rice_in_Hong_Kong.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Hoinanese_chicken_rice_in_Hong_Kong.jpg/960px-Hoinanese_chicken_rice_in_Hong_Kong.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Peachyeung316",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 64004,
+      "sha256": "49b34552259f721af86995ed69c85db3f5d983937eae96fc3fe70bcd049369d5",
+      "stores": [
+        "demo-147"
+      ]
+    },
+    {
+      "category": "rice",
+      "file": "rice-20.webp",
+      "title": "File:Home-cooked Hainanese chicken rice.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Home-cooked_Hainanese_chicken_rice.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Home-cooked_Hainanese_chicken_rice.jpg/960px-Home-cooked_Hainanese_chicken_rice.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "David",
+      "license": "Public domain",
+      "licenseUrl": "",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 52936,
+      "sha256": "365d7a68b78d71ee2a37380f957a523549b30d08302387a45facafeeebb23437",
+      "stores": [
+        "demo-155"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-01.webp",
+      "title": "File:2023-12-10 Coffee and bánh mì in Saigon.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:2023-12-10_Coffee_and_b%C3%A1nh_m%C3%AC_in_Saigon.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/2023-12-10_Coffee_and_b%C3%A1nh_m%C3%AC_in_Saigon.jpg/960px-2023-12-10_Coffee_and_b%C3%A1nh_m%C3%AC_in_Saigon.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "源義信",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 26514,
+      "sha256": "7dc56fc5b064e5cb793e87f4fade34f594a1bb5ecccf6993d29c86d6b44dea1a",
+      "stores": [
+        "demo-46"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-02.webp",
+      "title": "File:Ca Phe Sua Da.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Ca_Phe_Sua_Da.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Ca_Phe_Sua_Da.jpg/960px-Ca_Phe_Sua_Da.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Clarin",
+      "license": "CC BY 2.5",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.5",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 34050,
+      "sha256": "50d54e02960846d3fd3ed6c10a8340c04458bba9116eb71d9d43bf0b90eaec96",
+      "stores": [
+        "demo-6"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-03.webp",
+      "title": "File:CÀ PHÊ SỮA PHA PHIN.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:C%C3%80_PH%C3%8A_S%E1%BB%AEA_PHA_PHIN.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/C%C3%80_PH%C3%8A_S%E1%BB%AEA_PHA_PHIN.jpg/960px-C%C3%80_PH%C3%8A_S%E1%BB%AEA_PHA_PHIN.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Souradeep.Dasgupta",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 491,
+      "height": 640,
+      "bytes": 61890,
+      "sha256": "6d431ce1e3150db322cf9d21cfe9bc373175d6eef54a95d4cc325d0bb608e7ca",
+      "stores": [
+        "demo-22"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-04.webp",
+      "title": "File:Cà Phê Sữa Đá - Đặc trưng của Việt Nam.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:C%C3%A0_Ph%C3%AA_S%E1%BB%AFa_%C4%90%C3%A1_-_%C4%90%E1%BA%B7c_tr%C6%B0ng_c%E1%BB%A7a_Vi%E1%BB%87t_Nam.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/C%C3%A0_Ph%C3%AA_S%E1%BB%AFa_%C4%90%C3%A1_-_%C4%90%E1%BA%B7c_tr%C6%B0ng_c%E1%BB%A7a_Vi%E1%BB%87t_Nam.jpg/960px-C%C3%A0_Ph%C3%AA_S%E1%BB%AFa_%C4%90%C3%A1_-_%C4%90%E1%BA%B7c_tr%C6%B0ng_c%E1%BB%A7a_Vi%E1%BB%87t_Nam.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Capheongbi",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 36116,
+      "sha256": "3eb3265ef24f502e15984535b36fc0f776d29d96a37474deb0e6aa3bc0bece6d",
+      "stores": [
+        "demo-30"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-06.webp",
+      "title": "File:Ly pặc xỉu sữa đá ở Q1 ng18th8n2022.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Ly_p%E1%BA%B7c_x%E1%BB%89u_s%E1%BB%AFa_%C4%91%C3%A1_%E1%BB%9F_Q1_ng18th8n2022.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Ly_p%E1%BA%B7c_x%E1%BB%89u_s%E1%BB%AFa_%C4%91%C3%A1_%E1%BB%9F_Q1_ng18th8n2022.jpg/960px-Ly_p%E1%BA%B7c_x%E1%BB%89u_s%E1%BB%AFa_%C4%91%C3%A1_%E1%BB%9F_Q1_ng18th8n2022.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Phương Huy",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 452,
+      "height": 640,
+      "bytes": 21160,
+      "sha256": "2c6197c0e0d48016f263b5c31c5f2eb016ebef6604bde9eac6df5c17c8885936",
+      "stores": [
+        "demo-14"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-08.webp",
+      "title": "File:Vietnamese iced coffee - Jan 31, 2018.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Vietnamese_iced_coffee_-_Jan_31,_2018.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/Vietnamese_iced_coffee_-_Jan_31%2C_2018.jpg/960px-Vietnamese_iced_coffee_-_Jan_31%2C_2018.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Vinnie Cartabiano",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 512,
+      "height": 640,
+      "bytes": 36570,
+      "sha256": "e4daa3c77beb30e56bf28294427e2eff7f388c2e2299a70f5ec99c3cf8fca7ba",
+      "stores": [
+        "demo-38"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-09.webp",
+      "title": "File:Vietnamese iced coffee and a crepe, Lào Cai, Vietnam - 20131027.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Vietnamese_iced_coffee_and_a_crepe,_L%C3%A0o_Cai,_Vietnam_-_20131027.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/Vietnamese_iced_coffee_and_a_crepe%2C_L%C3%A0o_Cai%2C_Vietnam_-_20131027.jpg/960px-Vietnamese_iced_coffee_and_a_crepe%2C_L%C3%A0o_Cai%2C_Vietnam_-_20131027.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Smuconlaw",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 42662,
+      "sha256": "f29557c72d27ad8691f3f64c6f7a8eb634e1cb9bcabd0956db40cb3ca2da7e69",
+      "stores": [
+        "demo-54"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-10.webp",
+      "title": "File:Vietnamese Iced Coffee Ba Chi Canteen.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Vietnamese_Iced_Coffee_Ba_Chi_Canteen.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Vietnamese_Iced_Coffee_Ba_Chi_Canteen.jpg/960px-Vietnamese_Iced_Coffee_Ba_Chi_Canteen.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Infrogmation of New Orleans",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 22762,
+      "sha256": "cf20a59026372d3d18e0ebc4b0af7325ccd4692daf97d93ac846689900caea66",
+      "stores": [
+        "demo-62"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-11.webp",
+      "title": "File:VN drip coffee on table.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:VN_drip_coffee_on_table.jpg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/5/52/VN_drip_coffee_on_table.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "artist": "Dragfyre",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 565,
+      "height": 391,
+      "bytes": 26958,
+      "sha256": "2da8c9f50f8c4f466d99a17028c8456723638509fc2c19dfc78ea5eca87bde37",
+      "stores": [
+        "demo-70"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-12.webp",
+      "title": "File:An Nam, Vietnamese French Coffee (5914403283).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:An_Nam,_Vietnamese_French_Coffee_(5914403283).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/An_Nam%2C_Vietnamese_French_Coffee_%285914403283%29.jpg/960px-An_Nam%2C_Vietnamese_French_Coffee_%285914403283%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Kenny Louie from Vancouver, Canada",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 640,
+      "bytes": 31206,
+      "sha256": "cc5a0ee21894c6da09ac4a6e3f4e7ea6f9414bcc5f827dbbebaeb71ac0355f2e",
+      "stores": [
+        "demo-78"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-13.webp",
+      "title": "File:Brewing pour over coffee with kettle and scale.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Brewing_pour_over_coffee_with_kettle_and_scale.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Brewing_pour_over_coffee_with_kettle_and_scale.jpg/960px-Brewing_pour_over_coffee_with_kettle_and_scale.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "HungryHuy",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 427,
+      "height": 640,
+      "bytes": 11186,
+      "sha256": "8a2d4979443301928ecac4b8ef8ffe686966e82a5c0e93797d3100de271baf61",
+      "stores": [
+        "demo-86"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-14.webp",
+      "title": "File:Ca phe Nha Trang.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Ca_phe_Nha_Trang.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Ca_phe_Nha_Trang.jpg/960px-Ca_phe_Nha_Trang.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "(in search for a new country of residence)",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 33542,
+      "sha256": "25d9bf06d36c3a9bc90dff739ee14e6be990a5b068573ffb0bdd9279295ded2a",
+      "stores": [
+        "demo-94"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-16.webp",
+      "title": "File:Cà phê Khe Sanh ở Đông Hà 20201110.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:C%C3%A0_ph%C3%AA_Khe_Sanh_%E1%BB%9F_%C4%90%C3%B4ng_H%C3%A0_20201110.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/C%C3%A0_ph%C3%AA_Khe_Sanh_%E1%BB%9F_%C4%90%C3%B4ng_H%C3%A0_20201110.jpg/960px-C%C3%A0_ph%C3%AA_Khe_Sanh_%E1%BB%9F_%C4%90%C3%B4ng_H%C3%A0_20201110.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Phương Huy",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 37626,
+      "sha256": "99727dc4928a360db812ac854f4cfe295eef3199e9122b3e8497d321a89dbf7a",
+      "stores": [
+        "demo-102"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-18.webp",
+      "title": "File:Cà phê sữa nóng ở quán Hoa sim tím tại Bình Tân.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:C%C3%A0_ph%C3%AA_s%E1%BB%AFa_n%C3%B3ng_%E1%BB%9F_qu%C3%A1n_Hoa_sim_t%C3%ADm_t%E1%BA%A1i_B%C3%ACnh_T%C3%A2n.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/C%C3%A0_ph%C3%AA_s%E1%BB%AFa_n%C3%B3ng_%E1%BB%9F_qu%C3%A1n_Hoa_sim_t%C3%ADm_t%E1%BA%A1i_B%C3%ACnh_T%C3%A2n.jpg/960px-C%C3%A0_ph%C3%AA_s%E1%BB%AFa_n%C3%B3ng_%E1%BB%9F_qu%C3%A1n_Hoa_sim_t%C3%ADm_t%E1%BA%A1i_B%C3%ACnh_T%C3%A2n.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Phương Huy (thảo luận)",
+      "license": "Public domain",
+      "licenseUrl": "",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 40160,
+      "sha256": "2b97e3d98b370de9e4cc4dc4323290de51d108084a86c3b1cb44fffe4179061a",
+      "stores": [
+        "demo-110"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-19.webp",
+      "title": "File:Highlands Coffee drip filter and cup.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Highlands_Coffee_drip_filter_and_cup.jpg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Highlands_Coffee_drip_filter_and_cup.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "artist": "Dragfyre",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 36386,
+      "sha256": "df4a783ab980584d9af9542355eb69fb40cb15d2540113bce8d53fa14928d1e7",
+      "stores": [
+        "demo-118"
+      ]
+    },
+    {
+      "category": "coffee",
+      "file": "coffee-20.webp",
+      "title": "File:HK SSP 深水埗 Sham Shui Po 元州街 133 Un Chau Street 龍鳳大廈 Lung Fung Building 越式越好味 Pho Lotus Vietnamese Cuisine Restaurant food June 2021 SS2 04.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:HK_SSP_%E6%B7%B1%E6%B0%B4%E5%9F%97_Sham_Shui_Po_%E5%85%83%E5%B7%9E%E8%A1%97_133_Un_Chau_Street_%E9%BE%8D%E9%B3%B3%E5%A4%A7%E5%BB%88_Lung_Fung_Building_%E8%B6%8A%E5%BC%8F%E8%B6%8A%E5%A5%BD%E5%91%B3_Pho_Lotus_Vietnamese_Cuisine_Restaurant_food_June_2021_SS2_04.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/HK_SSP_%E6%B7%B1%E6%B0%B4%E5%9F%97_Sham_Shui_Po_%E5%85%83%E5%B7%9E%E8%A1%97_133_Un_Chau_Street_%E9%BE%8D%E9%B3%B3%E5%A4%A7%E5%BB%88_Lung_Fung_Building_%E8%B6%8A%E5%BC%8F%E8%B6%8A%E5%A5%BD%E5%91%B3_Pho_Lotus_Vietnamese_Cuisine_Restaurant_food_June_2021_SS2_04.jpg/960px-thumbnail.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Mawenag Lauengia 2336",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 42460,
+      "sha256": "e315d3d0d8517bf8f46658f57b88fd8bc327b2de15cb6cebafd00da4d2ead00d",
+      "stores": [
+        "demo-126"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-01.webp",
+      "title": "File:A Iced Black Tea with Lemon from The Spaghetti House.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:A_Iced_Black_Tea_with_Lemon_from_The_Spaghetti_House.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/A_Iced_Black_Tea_with_Lemon_from_The_Spaghetti_House.jpg/960px-A_Iced_Black_Tea_with_Lemon_from_The_Spaghetti_House.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Peachyeung316",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 22750,
+      "sha256": "a2b855833afa20efe680bbd7b7a17be58bf2cfcc1ef17b2c3a5f17e862b89c4b",
+      "stores": [
+        "demo-47"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-02.webp",
+      "title": "File:A lemon tea from flower years.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:A_lemon_tea_from_flower_years.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/63/A_lemon_tea_from_flower_years.jpg/960px-A_lemon_tea_from_flower_years.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Peachyeung316",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 27060,
+      "sha256": "b0e345674d4081cef7cb0ccf5751d3db4e000f97f0acfee9a97f96bbe46be288",
+      "stores": [
+        "demo-55"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-03.webp",
+      "title": "File:An Iced Lemon Black Tea from The Phoenix Steak House.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:An_Iced_Lemon_Black_Tea_from_The_Phoenix_Steak_House.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/An_Iced_Lemon_Black_Tea_from_The_Phoenix_Steak_House.jpg/960px-An_Iced_Lemon_Black_Tea_from_The_Phoenix_Steak_House.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Peachyeung316",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 13662,
+      "sha256": "44dac7c38b4ebe6299fefbfb3297b6b68bf80b8f9bd03064365fb00e218e6cc9",
+      "stores": [
+        "demo-63"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-04.webp",
+      "title": "File:HK style Ice Lemon Tea in Tuen Mun.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:HK_style_Ice_Lemon_Tea_in_Tuen_Mun.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/HK_style_Ice_Lemon_Tea_in_Tuen_Mun.jpg/960px-HK_style_Ice_Lemon_Tea_in_Tuen_Mun.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Peachyeung316",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 28002,
+      "sha256": "495d752a55059c954ea1f7368d4019fe0a71c3824b1b81e463c3a46fde0f71b3",
+      "stores": [
+        "demo-71"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-05.webp",
+      "title": "File:Ice LemonTea.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Ice_LemonTea.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Ice_LemonTea.jpg/960px-Ice_LemonTea.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Saisumanth532",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 47672,
+      "sha256": "45b96d2b7d5a5006bcaeae3913fb5bb48d866a35fc876161bf61a44400d8e76b",
+      "stores": [
+        "demo-79"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-06.webp",
+      "title": "File:Ice Tea (2571858493).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Ice_Tea_(2571858493).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Ice_Tea_%282571858493%29.jpg/960px-Ice_Tea_%282571858493%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "MzScarlett / A.K.A. Michelle from Missouri",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 30796,
+      "sha256": "b1480cb615508a979060e3c21d4228b9f77459cdfb371778ae8e098074693ded",
+      "stores": [
+        "demo-7"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-07.webp",
+      "title": "File:Iced lemon tea (2015-08-20).JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:Iced_lemon_tea_(2015-08-20).JPG",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Iced_lemon_tea_%282015-08-20%29.JPG/960px-Iced_lemon_tea_%282015-08-20%29.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Lombroso",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 24830,
+      "sha256": "bef0d2169f7510c11fb15f1806f05502b3fab2121d19adef701205ad2c7ce7dd",
+      "stores": [
+        "demo-31"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-08.webp",
+      "title": "File:Iced Lemon Tea - MOGUMOGU 2024-08-16.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Iced_Lemon_Tea_-_MOGUMOGU_2024-08-16.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Iced_Lemon_Tea_-_MOGUMOGU_2024-08-16.jpg/960px-Iced_Lemon_Tea_-_MOGUMOGU_2024-08-16.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Andy Li",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 46796,
+      "sha256": "129021fb8d6ba2ec832e52c19965a680a47abb52b6670eef8c8ca15e6a239ae9",
+      "stores": [
+        "demo-87"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-09.webp",
+      "title": "File:Iced lemon tea - Rawlab Juice & Tea.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Iced_lemon_tea_-_Rawlab_Juice_%26_Tea.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a1/Iced_lemon_tea_-_Rawlab_Juice_%26_Tea.jpg/960px-Iced_lemon_tea_-_Rawlab_Juice_%26_Tea.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Andy Li",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 48856,
+      "sha256": "f3bd5696d4b7e343e5144243647bc0fc21240aa927e3361b4a1259e81b829b7c",
+      "stores": [
+        "demo-95"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-10.webp",
+      "title": "File:Iced Lemon Tea DoughnDolce.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Iced_Lemon_Tea_DoughnDolce.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/Iced_Lemon_Tea_DoughnDolce.jpg/960px-Iced_Lemon_Tea_DoughnDolce.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Vincent60030",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 50378,
+      "sha256": "ff0f9185c71f3b1cccd422575aad04fa00e7a74cc0ce1039cdf230538fa8a5e3",
+      "stores": [
+        "demo-103"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-11.webp",
+      "title": "File:Iced lemon tea in olive delicious in yuen long.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Iced_lemon_tea_in_olive_delicious_in_yuen_long.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Iced_lemon_tea_in_olive_delicious_in_yuen_long.jpg/960px-Iced_lemon_tea_in_olive_delicious_in_yuen_long.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Peachyeung316",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 18650,
+      "sha256": "5e3a906e6c3b390203fb40fceba6dc1ebc18a6c52529a1b9a67399c7591ffcd0",
+      "stores": [
+        "demo-111"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-13.webp",
+      "title": "File:Iced Lemon tea with mint leaves in bakery and coffee house.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Iced_Lemon_tea_with_mint_leaves_in_bakery_and_coffee_house.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Iced_Lemon_tea_with_mint_leaves_in_bakery_and_coffee_house.jpg/960px-Iced_Lemon_tea_with_mint_leaves_in_bakery_and_coffee_house.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Peachyeung316",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 24784,
+      "sha256": "7ea63539473cd17a760c6f74dcdd47cf2317a30ab1d2ce9ed083d0fbe6f1563e",
+      "stores": [
+        "demo-119"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-14.webp",
+      "title": "File:Iced lemon tea.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Iced_lemon_tea.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ef/Iced_lemon_tea.jpg/960px-Iced_lemon_tea.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "karendotcom127",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 23886,
+      "sha256": "6064512eb3cab55208523eac0bd8926000ff663370a5864eede848ffc136291c",
+      "stores": [
+        "demo-127"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-15.webp",
+      "title": "File:Icy Lemon Tea.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Icy_Lemon_Tea.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/30/Icy_Lemon_Tea.jpg/960px-Icy_Lemon_Tea.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Saisumanth532",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 38100,
+      "sha256": "610a0f4c9676782e94b0020adbc1de08d20bbf9373c1601fe48a0a81984e6f71",
+      "stores": [
+        "demo-39"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-16.webp",
+      "title": "File:Lced lemon tea from itamomo.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Lced_lemon_tea_from_itamomo.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/Lced_lemon_tea_from_itamomo.jpg/960px-Lced_lemon_tea_from_itamomo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Peachyeung316",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 23824,
+      "sha256": "bc50b99bc22a142922075c0edd039a90cb755b5a07edf101a7569a540e97efb0",
+      "stores": [
+        "demo-135"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-18.webp",
+      "title": "File:Lemon tea-01.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Lemon_tea-01.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Lemon_tea-01.jpg/960px-Lemon_tea-01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "TheCulinaryGeek, nina-marta edycja",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 481,
+      "bytes": 21614,
+      "sha256": "8a52ffb4c399a136eb469543446200d2a99f34b65ac5c31dc449193c01702893",
+      "stores": [
+        "demo-23"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-19.webp",
+      "title": "File:Molopper Cafe, iced tea with lemon (5057850333).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Molopper_Cafe,_iced_tea_with_lemon_(5057850333).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/54/Molopper_Cafe%2C_iced_tea_with_lemon_%285057850333%29.jpg/960px-Molopper_Cafe%2C_iced_tea_with_lemon_%285057850333%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "@felixtriller from Cologne, Germany",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 47706,
+      "sha256": "2c2afd6fcd32c293d7858d7e7e4d9567e34b52d1f0f5cefe66d2188ad3859ccc",
+      "stores": [
+        "demo-143"
+      ]
+    },
+    {
+      "category": "tea",
+      "file": "tea-20.webp",
+      "title": "File:NCI iced tea.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:NCI_iced_tea.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/NCI_iced_tea.jpg/960px-NCI_iced_tea.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Renee Comet (photographer)",
+      "license": "Public domain",
+      "licenseUrl": "",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 373,
+      "height": 640,
+      "bytes": 17136,
+      "sha256": "99e5b36a5b2939523f90d536dabaea5b0907d2c4c8c5dc6b60fb6055f4abb795",
+      "stores": [
+        "demo-15"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-01.webp",
+      "title": "File:Baked Tofu with Asparagus and Rice.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Baked_Tofu_with_Asparagus_and_Rice.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Baked_Tofu_with_Asparagus_and_Rice.jpg/960px-Baked_Tofu_with_Asparagus_and_Rice.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Miscellaneous contributor",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 630,
+      "bytes": 63636,
+      "sha256": "e503b18c8f6d407333142c6ae0ebc5066cc012240ff91199493ff4f516608444",
+      "stores": [
+        "demo-5"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-02.webp",
+      "title": "File:Baked Tofu with Broccoli and Rice.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Baked_Tofu_with_Broccoli_and_Rice.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Baked_Tofu_with_Broccoli_and_Rice.jpg/960px-Baked_Tofu_with_Broccoli_and_Rice.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Miscellaneous contributor",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 631,
+      "height": 640,
+      "bytes": 62200,
+      "sha256": "1da8de1226b86105b07297bcc6a8580cc030bdb8d5ec371d78daff9d1c172fcd",
+      "stores": [
+        "demo-13"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-03.webp",
+      "title": "File:Crispy Tofu with Green Beans and Congee (5215984707).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Crispy_Tofu_with_Green_Beans_and_Congee_(5215984707).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Crispy_Tofu_with_Green_Beans_and_Congee_%285215984707%29.jpg/960px-Crispy_Tofu_with_Green_Beans_and_Congee_%285215984707%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Geoff Peters from Vancouver, BC, Canada",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 427,
+      "height": 640,
+      "bytes": 31154,
+      "sha256": "a030e432c708c119019338dc4a7401410476973a7e59bf69a42e7d21c4376c1e",
+      "stores": [
+        "demo-45"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-04.webp",
+      "title": "File:Stir fried Vegetable Tofu broken with rice for dinner.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Stir_fried_Vegetable_Tofu_broken_with_rice_for_dinner.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Stir_fried_Vegetable_Tofu_broken_with_rice_for_dinner.jpg/960px-Stir_fried_Vegetable_Tofu_broken_with_rice_for_dinner.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Pradeepraajkumar1981",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 360,
+      "bytes": 53304,
+      "sha256": "f6c6d10151a612670239fd6649b59a742f636688eefa9a2809d1b1739b5d97a9",
+      "stores": [
+        "demo-53"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-05.webp",
+      "title": "File:Spicy Tofu Bento Bowl (4210037392).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Spicy_Tofu_Bento_Bowl_(4210037392).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Spicy_Tofu_Bento_Bowl_%284210037392%29.jpg/960px-Spicy_Tofu_Bento_Bowl_%284210037392%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Karen and Brad Emerson",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 52434,
+      "sha256": "d320c93c0aa731398ccd548f3481dec8444bf4c532481adc67fe2acb5d29b873",
+      "stores": [
+        "demo-21"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-06.webp",
+      "title": "File:Tofu curry with rice.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Tofu_curry_with_rice.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fb/Tofu_curry_with_rice.jpg/960px-Tofu_curry_with_rice.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Anna Korcheva",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 54780,
+      "sha256": "e4dc56dfe8de760da55e2359b5a0bf808dc829b557ef129cfdca3e161c1f67e0",
+      "stores": [
+        "demo-61"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-07.webp",
+      "title": "File:Tofu and Broccoli 1.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Tofu_and_Broccoli_1.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Tofu_and_Broccoli_1.jpg/960px-Tofu_and_Broccoli_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Miscellaneous contributor",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 632,
+      "bytes": 99766,
+      "sha256": "0b4753af9032d06e5afac04091cab4c6adb3f7a2301b2352afd72f455675c26e",
+      "stores": [
+        "demo-69"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-08.webp",
+      "title": "File:Tofu Vegetables 1 2021-08-27.jpeg",
+      "source": "https://commons.wikimedia.org/wiki/File:Tofu_Vegetables_1_2021-08-27.jpeg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/Tofu_Vegetables_1_2021-08-27.jpeg/960px-Tofu_Vegetables_1_2021-08-27.jpeg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "FASTILY",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 46058,
+      "sha256": "bdc9afa3739f25e6213822823ba9dfceb8f3a4b4830f31c29ea2a7f9d099be89",
+      "stores": [
+        "demo-37"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-10.webp",
+      "title": "File:Saigon Vegetarian food.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Saigon_Vegetarian_food.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Saigon_Vegetarian_food.jpg/960px-Saigon_Vegetarian_food.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Takeaway",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 424,
+      "bytes": 26670,
+      "sha256": "615b02125e3f212a23db4d4a1622ae88ace167e694f0ce507778d10412bd7676",
+      "stores": [
+        "demo-77"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-11.webp",
+      "title": "File:Tomato-sauced tofu.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Tomato-sauced_tofu.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f1/Tomato-sauced_tofu.jpg/960px-Tomato-sauced_tofu.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Mickey Đại Phát",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 42386,
+      "sha256": "9c5716ecd249e794953313f2fef324b42ea072de2f063c2b41ee2ec6fb288422",
+      "stores": [
+        "demo-85"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-12.webp",
+      "title": "File:Crudites et tofu - salade végétalienne.JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:Crudites_et_tofu_-_salade_v%C3%A9g%C3%A9talienne.JPG",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Crudites_et_tofu_-_salade_v%C3%A9g%C3%A9talienne.JPG/960px-Crudites_et_tofu_-_salade_v%C3%A9g%C3%A9talienne.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Migmoug",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 640,
+      "bytes": 64586,
+      "sha256": "5cec00f10a7da53562400d6623275f2f4ed59a56634fa6daba21ae8514579684",
+      "stores": [
+        "demo-93"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-13.webp",
+      "title": "File:Food at Hua Hin Vegan Cafe.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Food_at_Hua_Hin_Vegan_Cafe.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/Food_at_Hua_Hin_Vegan_Cafe.jpg/960px-Food_at_Hua_Hin_Vegan_Cafe.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Mx. Granger",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 39378,
+      "sha256": "6dd31f16e8f8b9f2bd63d7509d9a24fe8537c8b9bf1848fe7604e8dd6e8b3d01",
+      "stores": [
+        "demo-101"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-14.webp",
+      "title": "File:Grilled tofu with steamed chard and spicy mango sauce (3252903983).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Grilled_tofu_with_steamed_chard_and_spicy_mango_sauce_(3252903983).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/be/Grilled_tofu_with_steamed_chard_and_spicy_mango_sauce_%283252903983%29.jpg/960px-Grilled_tofu_with_steamed_chard_and_spicy_mango_sauce_%283252903983%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Karen and Brad Emerson",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 434,
+      "bytes": 35558,
+      "sha256": "cd3855b117228a5a7ad5d8faa3430f51d859b4bf30362a081f7ba96b0c87741e",
+      "stores": [
+        "demo-109"
+      ]
+    },
+    {
+      "category": "veggie",
+      "file": "veggie-15.webp",
+      "title": "File:Spicy tofu bento (4880286653).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Spicy_tofu_bento_(4880286653).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Spicy_tofu_bento_%284880286653%29.jpg/960px-Spicy_tofu_bento_%284880286653%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Karen and Brad Emerson",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 32100,
+      "sha256": "1e9d284741e2bec29689c7d9d57c1504d9a882c47017bae1c7059cc4a23a8509",
+      "stores": [
+        "demo-29"
+      ]
+    },
+    {
+      "category": "banh",
+      "file": "banh-01.webp",
+      "title": "File:Bánh mì Việt ngày 08 tháng 12 năm 2020 (1).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:B%C3%A1nh_m%C3%AC_Vi%E1%BB%87t_ng%C3%A0y_08_th%C3%A1ng_12_n%C4%83m_2020_(1).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/B%C3%A1nh_m%C3%AC_Vi%E1%BB%87t_ng%C3%A0y_08_th%C3%A1ng_12_n%C4%83m_2020_%281%29.jpg/960px-B%C3%A1nh_m%C3%AC_Vi%E1%BB%87t_ng%C3%A0y_08_th%C3%A1ng_12_n%C4%83m_2020_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Phương Huy",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 41666,
+      "sha256": "c993a717defe997b0edb7a4a040ba263b9a80643ba7dff99352708f2614a7c6f",
+      "stores": [
+        "demo-44"
+      ]
+    },
+    {
+      "category": "banh",
+      "file": "banh-02.webp",
+      "title": "File:Bánh mì đặc trưng Sàigòn.JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:B%C3%A1nh_m%C3%AC_%C4%91%E1%BA%B7c_tr%C6%B0ng_S%C3%A0ig%C3%B2n.JPG",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/B%C3%A1nh_m%C3%AC_%C4%91%E1%BA%B7c_tr%C6%B0ng_S%C3%A0ig%C3%B2n.JPG/960px-B%C3%A1nh_m%C3%AC_%C4%91%E1%BA%B7c_tr%C6%B0ng_S%C3%A0ig%C3%B2n.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Namsaigon1",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 67694,
+      "sha256": "19957977d0160a5a22dcadfaff05638b83f238de4f3a7c433dd4a8b50923faeb",
+      "stores": [
+        "demo-52"
+      ]
+    },
+    {
+      "category": "banh",
+      "file": "banh-03.webp",
+      "title": "File:Bánh mì.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:B%C3%A1nh_m%C3%AC.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/B%C3%A1nh_m%C3%AC.jpg/960px-B%C3%A1nh_m%C3%AC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Stu Spivack",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 49240,
+      "sha256": "a91bbeb6bb3d9150587129e4558dde0c43e0662c29ce43502fd5b6baa122009b",
+      "stores": [
+        "demo-28"
+      ]
+    },
+    {
+      "category": "banh",
+      "file": "banh-04.webp",
+      "title": "File:Chicken Schnitzel Roll.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Chicken_Schnitzel_Roll.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Chicken_Schnitzel_Roll.jpg/960px-Chicken_Schnitzel_Roll.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Alpha from Melbourne, Australia",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 428,
+      "height": 640,
+      "bytes": 21698,
+      "sha256": "b1506f638fa820d9c3eea703727e1a48bb091eeb1945ac40328171b64cd91edf",
+      "stores": [
+        "demo-36"
+      ]
+    },
+    {
+      "category": "banh",
+      "file": "banh-05.webp",
+      "title": "File:Dong Phuong Bread.JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:Dong_Phuong_Bread.JPG",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Dong_Phuong_Bread.JPG/960px-Dong_Phuong_Bread.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Infrogmation of New Orleans",
+      "license": "CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 37206,
+      "sha256": "87b6124b066e841189566b34abfa6abee73ab75748e14f87c046629ecbd6135a",
+      "stores": [
+        "demo-60"
+      ]
+    },
+    {
+      "category": "banh",
+      "file": "banh-06.webp",
+      "title": "File:Grilled Lemongrass Chicken Bánh Mì with Sate Sauce, Viet Sub, Vancouver, BC.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Grilled_Lemongrass_Chicken_B%C3%A1nh_M%C3%AC_with_Sate_Sauce,_Viet_Sub,_Vancouver,_BC.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Grilled_Lemongrass_Chicken_B%C3%A1nh_M%C3%AC_with_Sate_Sauce%2C_Viet_Sub%2C_Vancouver%2C_BC.jpg/960px-Grilled_Lemongrass_Chicken_B%C3%A1nh_M%C3%AC_with_Sate_Sauce%2C_Viet_Sub%2C_Vancouver%2C_BC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "StoppedTime",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 626,
+      "height": 640,
+      "bytes": 82354,
+      "sha256": "2e4425b8af6e7684ca971df2abd83dea3bdafc61e6b97c4202d9e028656355ab",
+      "stores": [
+        "demo-12"
+      ]
+    },
+    {
+      "category": "banh",
+      "file": "banh-07.webp",
+      "title": "File:Hai ổ bánh mì.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Hai_%E1%BB%95_b%C3%A1nh_m%C3%AC.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Hai_%E1%BB%95_b%C3%A1nh_m%C3%AC.jpg/960px-Hai_%E1%BB%95_b%C3%A1nh_m%C3%AC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Baoothersks",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 480,
+      "bytes": 40572,
+      "sha256": "232a4994575b1223f0872578bf1ca36ccefaa19836cd403ea01a95508b3f0103",
+      "stores": [
+        "demo-4"
+      ]
+    },
+    {
+      "category": "banh",
+      "file": "banh-08.webp",
+      "title": "File:Khu nghỉ dưỡng ở Cái Bè (Đồ ăn, tiệc đứng, bánh mì tươi).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Khu_ngh%E1%BB%89_d%C6%B0%E1%BB%A1ng_%E1%BB%9F_C%C3%A1i_B%C3%A8_(%C4%90%E1%BB%93_%C4%83n,_ti%E1%BB%87c_%C4%91%E1%BB%A9ng,_b%C3%A1nh_m%C3%AC_t%C6%B0%C6%A1i).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/Khu_ngh%E1%BB%89_d%C6%B0%E1%BB%A1ng_%E1%BB%9F_C%C3%A1i_B%C3%A8_%28%C4%90%E1%BB%93_%C4%83n%2C_ti%E1%BB%87c_%C4%91%E1%BB%A9ng%2C_b%C3%A1nh_m%C3%AC_t%C6%B0%C6%A1i%29.jpg/960px-Khu_ngh%E1%BB%89_d%C6%B0%E1%BB%A1ng_%E1%BB%9F_C%C3%A1i_B%C3%A8_%28%C4%90%E1%BB%93_%C4%83n%2C_ti%E1%BB%87c_%C4%91%E1%BB%A9ng%2C_b%C3%A1nh_m%C3%AC_t%C6%B0%C6%A1i%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Phương Huy",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 49018,
+      "sha256": "ae1d7d3ca87e254ba21e94a0eeaa80bc3e76162c09b26a279b27f4c4c718350e",
+      "stores": [
+        "demo-68"
+      ]
+    },
+    {
+      "category": "banh",
+      "file": "banh-09.webp",
+      "title": "File:Two toasted Vietnamese baguettes.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Two_toasted_Vietnamese_baguettes.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Two_toasted_Vietnamese_baguettes.jpg/960px-Two_toasted_Vietnamese_baguettes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "HungryHuy",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 427,
+      "bytes": 14658,
+      "sha256": "c5982b3864fa854bad81ae7cc4305f52a021827ee2c264c35dcecaae9a53fe44",
+      "stores": [
+        "demo-76"
+      ]
+    },
+    {
+      "category": "banh",
+      "file": "banh-10.webp",
+      "title": "File:Vietnamese Baguette.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Vietnamese_Baguette.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Vietnamese_Baguette.jpg/960px-Vietnamese_Baguette.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Khanh Ha, Tran",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 479,
+      "bytes": 46992,
+      "sha256": "38a509434cc4c21bffcc6698ab9e9d9fd3fcd07287b5b6a18b2b7a176da52b44",
+      "stores": [
+        "demo-20"
+      ]
+    },
+    {
+      "category": "banh",
+      "file": "banh-11.webp",
+      "title": "File:Vietnamese Chicken breast sandwich NOLA.JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:Vietnamese_Chicken_breast_sandwich_NOLA.JPG",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/63/Vietnamese_Chicken_breast_sandwich_NOLA.JPG/960px-Vietnamese_Chicken_breast_sandwich_NOLA.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Infrogmation of New Orleans",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 423,
+      "bytes": 23110,
+      "sha256": "a3a0f4d693796bf017757ea2a091c6f6930d836eac7ab4e7051a44ee2094b09f",
+      "stores": [
+        "demo-84"
+      ]
+    },
+    {
+      "category": "mixed",
+      "file": "mixed-01.webp",
+      "title": "File:Bun Bo Nam Bo Kureci Maso Zlaty Klas 2025.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Bun_Bo_Nam_Bo_Kureci_Maso_Zlaty_Klas_2025.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Bun_Bo_Nam_Bo_Kureci_Maso_Zlaty_Klas_2025.jpg/960px-Bun_Bo_Nam_Bo_Kureci_Maso_Zlaty_Klas_2025.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Mojmir Churavy",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 68376,
+      "sha256": "661425ced5932d80cae996e7ce8396417c3acb3f27a173e4b41d9c3eb6bd24d8",
+      "stores": [
+        "demo-10"
+      ]
+    },
+    {
+      "category": "mixed",
+      "file": "mixed-02.webp",
+      "title": "File:Chicken Bo Bun @ Take out @ Bahn Mi's @ Annecy (27453828377).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Chicken_Bo_Bun_@_Take_out_@_Bahn_Mi%27s_@_Annecy_(27453828377).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Chicken_Bo_Bun_%40_Take_out_%40_Bahn_Mi%27s_%40_Annecy_%2827453828377%29.jpg/960px-Chicken_Bo_Bun_%40_Take_out_%40_Bahn_Mi%27s_%40_Annecy_%2827453828377%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Guilhem Vellut from Annecy, France",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 640,
+      "height": 427,
+      "bytes": 50324,
+      "sha256": "2a179eca2c61e544b60c97b49d4a91902e6e5b2ed88ea29f166b70ed1aa37993",
+      "stores": [
+        "demo-2"
+      ]
+    },
+    {
+      "category": "bun",
+      "file": "bun-02.webp",
+      "title": "File:Vùng Cùa ở Cam Lộ th5n2023-Phương Gia Trang (tô miến gà) (1).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:V%C3%B9ng_C%C3%B9a_%E1%BB%9F_Cam_L%E1%BB%99_th5n2023-Ph%C6%B0%C6%A1ng_Gia_Trang_(t%C3%B4_mi%E1%BA%BFn_g%C3%A0)_(1).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/V%C3%B9ng_C%C3%B9a_%E1%BB%9F_Cam_L%E1%BB%99_th5n2023-Ph%C6%B0%C6%A1ng_Gia_Trang_%28t%C3%B4_mi%E1%BA%BFn_g%C3%A0%29_%281%29.jpg/960px-V%C3%B9ng_C%C3%B9a_%E1%BB%9F_Cam_L%E1%BB%99_th5n2023-Ph%C6%B0%C6%A1ng_Gia_Trang_%28t%C3%B4_mi%E1%BA%BFn_g%C3%A0%29_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Phương Huy",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceWidth": null,
+      "sourceHeight": null,
+      "width": 480,
+      "height": 640,
+      "bytes": 59818,
+      "sha256": "f58bb94f91660e9939ce3fffb487003c28cf12039b6b0ac9e04946dcff7919e4",
+      "stores": [
+        "demo-8"
+      ]
+    }
+  ],
+  "illustrations": [
+    {
+      "file": "illustration-016.svg",
+      "category": "bun",
+      "store": "demo-16",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-018.svg",
+      "category": "mixed",
+      "store": "demo-18",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-024.svg",
+      "category": "bun",
+      "store": "demo-24",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-026.svg",
+      "category": "mixed",
+      "store": "demo-26",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-032.svg",
+      "category": "bun",
+      "store": "demo-32",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-034.svg",
+      "category": "mixed",
+      "store": "demo-34",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-040.svg",
+      "category": "bun",
+      "store": "demo-40",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-042.svg",
+      "category": "mixed",
+      "store": "demo-42",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-048.svg",
+      "category": "bun",
+      "store": "demo-48",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-050.svg",
+      "category": "mixed",
+      "store": "demo-50",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-056.svg",
+      "category": "bun",
+      "store": "demo-56",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-058.svg",
+      "category": "mixed",
+      "store": "demo-58",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-064.svg",
+      "category": "bun",
+      "store": "demo-64",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-066.svg",
+      "category": "mixed",
+      "store": "demo-66",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-072.svg",
+      "category": "bun",
+      "store": "demo-72",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-074.svg",
+      "category": "mixed",
+      "store": "demo-74",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-080.svg",
+      "category": "bun",
+      "store": "demo-80",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-082.svg",
+      "category": "mixed",
+      "store": "demo-82",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-088.svg",
+      "category": "bun",
+      "store": "demo-88",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-090.svg",
+      "category": "mixed",
+      "store": "demo-90",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-092.svg",
+      "category": "banh",
+      "store": "demo-92",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-096.svg",
+      "category": "bun",
+      "store": "demo-96",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-098.svg",
+      "category": "mixed",
+      "store": "demo-98",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-100.svg",
+      "category": "banh",
+      "store": "demo-100",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-104.svg",
+      "category": "bun",
+      "store": "demo-104",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-106.svg",
+      "category": "mixed",
+      "store": "demo-106",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-108.svg",
+      "category": "banh",
+      "store": "demo-108",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-112.svg",
+      "category": "bun",
+      "store": "demo-112",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-114.svg",
+      "category": "mixed",
+      "store": "demo-114",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-116.svg",
+      "category": "banh",
+      "store": "demo-116",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-117.svg",
+      "category": "veggie",
+      "store": "demo-117",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-120.svg",
+      "category": "bun",
+      "store": "demo-120",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-122.svg",
+      "category": "mixed",
+      "store": "demo-122",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-124.svg",
+      "category": "banh",
+      "store": "demo-124",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-125.svg",
+      "category": "veggie",
+      "store": "demo-125",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-128.svg",
+      "category": "bun",
+      "store": "demo-128",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-130.svg",
+      "category": "mixed",
+      "store": "demo-130",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-132.svg",
+      "category": "banh",
+      "store": "demo-132",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-133.svg",
+      "category": "veggie",
+      "store": "demo-133",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-134.svg",
+      "category": "coffee",
+      "store": "demo-134",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-136.svg",
+      "category": "bun",
+      "store": "demo-136",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-138.svg",
+      "category": "mixed",
+      "store": "demo-138",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-140.svg",
+      "category": "banh",
+      "store": "demo-140",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-141.svg",
+      "category": "veggie",
+      "store": "demo-141",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-142.svg",
+      "category": "coffee",
+      "store": "demo-142",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-144.svg",
+      "category": "bun",
+      "store": "demo-144",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-145.svg",
+      "category": "pho",
+      "store": "demo-145",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-146.svg",
+      "category": "mixed",
+      "store": "demo-146",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-148.svg",
+      "category": "banh",
+      "store": "demo-148",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-149.svg",
+      "category": "veggie",
+      "store": "demo-149",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-150.svg",
+      "category": "coffee",
+      "store": "demo-150",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-151.svg",
+      "category": "tea",
+      "store": "demo-151",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-152.svg",
+      "category": "bun",
+      "store": "demo-152",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-153.svg",
+      "category": "pho",
+      "store": "demo-153",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-154.svg",
+      "category": "mixed",
+      "store": "demo-154",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-156.svg",
+      "category": "banh",
+      "store": "demo-156",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-157.svg",
+      "category": "veggie",
+      "store": "demo-157",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-158.svg",
+      "category": "coffee",
+      "store": "demo-158",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-159.svg",
+      "category": "tea",
+      "store": "demo-159",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    },
+    {
+      "file": "illustration-160.svg",
+      "category": "bun",
+      "store": "demo-160",
+      "license": "CC0-1.0",
+      "creator": "Portfolio project — original SVG illustration"
+    }
+  ]
+}

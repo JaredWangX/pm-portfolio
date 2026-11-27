@@ -67,7 +67,7 @@ with sync_playwright() as p:
     phone.get_by_role('button',name='收藏',exact=True).click()
     expect(phone.locator('.ios-saved-store')).to_have_count(2)
     phone.get_by_role('button',name='Phở Quyên · GrabFood 下单',exact=True).click()
-    expect(phone.get_by_role('dialog',name='下单预览')).to_contain_text('71,000 ₫')
+    expect(phone.get_by_role('dialog',name='下单预览')).to_contain_text('71.000đ')
     phone.get_by_role('button',name='关闭',exact=True).click()
     expect(phone.locator('.ios-recent-orders')).to_contain_text('1 个下单入口')
     phone.get_by_role('button',name='移除 Phở Quyên 收藏',exact=True).click()

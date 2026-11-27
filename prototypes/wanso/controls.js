@@ -60,7 +60,7 @@ window.wansoControls = (() => {
   };
   const state = {...original, location: {city:'hanoi',label:'河内 · 还剑区',district:'还剑区'}, history: true, collections: ['全部收藏'], recent: loadRecentOrders(), tastes: ['清淡', '鸡肉', '不吃香菜'],
     group: {moc: '全部收藏', quyen: '全部收藏'}, menuLanguage: {moc: 0, quyen: 0}, translated: {moc: 0, quyen: 0}};
-  const currency = number => number.toLocaleString('en-US') + ' ₫';
+  const currency = number => number.toLocaleString('vi-VN') + 'đ';
   const el = (tag, className, value) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -370,7 +370,11 @@ window.wansoControls = (() => {
     const saved=id+'|'+platform+'|'+encodeURIComponent(request);
     recordRecentOrder(saved);
     show('下单预览 · '+offer.name,paragraph(store.name+' · '+store.dishZh),
-      details([['份数',offer.quantity+' 份'],['餐品单价',currency(offer.unitPrice)],['餐品小计',currency(offer.price)],['配送费',currency(offer.fee)],['演示优惠','−'+currency(offer.discount)],['合计',currency(offer.total)],['位置',state.location.label]]),
+      details([['份数',offer.quantity+' 份'],['餐品单价',currency(offer.unitPrice)],['餐品小计',currency(offer.price)],['商家折扣',(offer.merchantDiscount?'−':'')+currency(offer.merchantDiscount)],['平台券',(offer.couponDiscount?'−':'')+currency(offer.couponDiscount)],['配送费',currency(offer.originalFee)],['运费减免',(offer.deliveryDiscount?'−':'')+currency(offer.deliveryDiscount)],['合计',currency(offer.total)],['位置',state.location.label]]),
+      paragraph(offer.couponName?'本单采用：'+offer.couponName+' · '+offer.couponTerms:'本单未使用平台优惠券。'),
+      note(offer.qualification),
+      ...offer.terms.map(term=>paragraph(term)),
+      ...offer.unavailable.map(term=>note(term)),
       note('演示费用明细。本页用于比较相同餐品和份量，付款前请以平台结算金额为准。'),
       actions(button('返回菜单',()=>catalogStore({id,request})),button('换到 '+(platform==='grab'?'ShopeeFood':'GrabFood'),()=>catalogOrder({id,platform:platform==='grab'?'shopee':'grab',request}))));
   }

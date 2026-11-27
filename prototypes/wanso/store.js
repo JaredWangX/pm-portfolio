@@ -49,7 +49,7 @@ window.wansoStore = (() => {
     const entries=Object.entries(offers),winner=entries.reduce((a,b)=>a[1].total<=b[1].total?a:b);
     const quantity=winner[1].quantity;
     const hero=el('div','native-store-hero');
-    const image=el('img');image.src=store.image;image.alt=store.dishZh+' · 菜品示意';image.width=402;image.height=240;image.draggable=false;image.decoding='async';
+    const image=el('img');image.src=store.image;image.alt=store.imageAlt||store.dishZh+' · 菜品示意';image.width=402;image.height=240;image.draggable=false;image.decoding='async';
     const toolbar=el('div','native-store-toolbar');
     const back=button('native-store-circle native-store-back','返回上一页',()=>onClose?.());back.append(icon('back'));
     const share=button('native-store-circle','分享餐厅',()=>onAction?.('catalogShare',{id:store.id}));share.append(icon('share'));
@@ -84,43 +84,64 @@ window.wansoStore = (() => {
     });apply.dataset.action='translate';apply.append(el('b','','文A'),el('span','','翻译'));
     translate.append(choose,apply);body.append(translate);
     const platforms=el('section','native-store-platforms');platforms.setAttribute('aria-label','双平台配送与价格');
+    const offerRules=el('div','native-store-rules-list');
     for(const [key,offer] of entries) {
       const card=el('article','native-store-platform');card.dataset.platform=key;
       const header=el('div','native-store-platform-heading'),mark=el('span','native-store-platform-mark',key==='grab'?'GF':'SF');
       const platformRating=el('p','native-store-platform-rating');platformRating.append(el('span','',`★ ${(store.platforms[key].rating||store.rating).toFixed(1)}`),el('span','',`${store.platforms[key].reviewCount||store.reviewCount} 条评价`));
       header.append(mark,el('h2','',offer.name),platformRating);
       const detail=el('div','native-store-platform-body');
-      const delivery=el('p','native-store-delivery');delivery.append(el('span','','配送费'),el('strong','',money(offer.fee)));
-      const promo=el('p','native-store-promo');promo.append(el('span','','示例优惠'),el('strong','',offer.discount?'−'+money(offer.discount):'暂无'));
+      for(const [label,amount,isDiscount] of [
+        ['餐品金额',offer.price,false],['店铺折扣',offer.merchantDiscount,true],
+        ['平台优惠券',offer.couponDiscount,true],['配送费',offer.originalFee,false],
+        ['运费减免',offer.deliveryDiscount,true]
+      ]) {
+        const row=el('p',isDiscount&&amount?'native-store-promo':'native-store-delivery');
+        row.append(el('span','',label),el('strong','',(isDiscount&&amount?'−':'')+money(amount)));detail.append(row);
+      }
+      const rules=el('details','native-store-offer-rules');rules.dataset.platform=key;rules.append(el('summary','',offer.name+' · 优惠规则与适用条件'));
+      rules.append(el('p','',offer.qualification));
+      for(const term of offer.terms)rules.append(el('p','',term));
+      for(const term of offer.unavailable)rules.append(el('p','native-store-ineligible',term));
+      if(!offer.terms.length)rules.append(el('p','','本店本单暂无可用活动，按餐品标价与配送费计算。'));
+      offerRules.append(rules);
       const total=el('div','native-store-platform-total');total.append(el('span','',`${quantity} 份 · 含配送`),el('strong','',money(offer.total)));
-      detail.append(delivery,promo);
       const order=button('native-store-order','立即下单 · '+offer.name,()=>onAction?.('catalogOrder',{id:store.id,platform:key,request}));order.append(el('span','','立即下单'),icon('arrow'));
       const footer=el('div','native-store-platform-footer');footer.append(total,order);
       card.append(header,detail,footer);platforms.append(card);
     }
-    body.append(platforms);
+    body.append(platforms,offerRules);
     const compare=el('section','native-store-compare');
-    compare.append(el('h2','native-store-section-heading','菜品比价'));
+    compare.append(el('h2','native-store-section-heading','为什么更划算'));
     const comparison=el('div','native-store-comparison-card');
-    const differing=store.menu.filter((item,index)=>itemPrices(item,index).grab!==itemPrices(item,index).shopee);
-    const unitTotals=differing.reduce((sum,item)=>{const prices=itemPrices(item,store.menu.indexOf(item));sum.grab+=prices.grab;sum.shopee+=prices.shopee;return sum;},{grab:0,shopee:0});
-    const cheaper=unitTotals.grab<=unitTotals.shopee?'grab':'shopee';
+    const result=window.wansoNative.comparisonFor(store,request);
     const verdict=el('div','native-store-verdict');
-    verdict.append(el('small','','✦ 万象判断'),el('strong','',differing.length?`🏆 ${offers[cheaper].name} 菜品更省`:'两边菜品标价相同'),el('span','',`相同规格的 ${differing.length} 道菜，标价共差 ${money(Math.abs(unitTotals.grab-unitTotals.shopee))}`));comparison.append(verdict);
+    verdict.append(el('small','','✦ 同菜同份量 · 本单比价'),
+      el('strong','',result.saving?`${result.winner.name} 本单省 ${money(result.saving)}`:'两平台本单到手价相同'),
+      el('span','',`${quantity} 份${store.dishZh}，含配送 ${money(result.winner.total)}`));comparison.append(verdict);
+    const breakdown=el('div','native-store-saving-breakdown');
+    for(const difference of result.differences) {
+      const row=el('p');row.dataset.effect=difference.amount>0?'saving':difference.amount<0?'extra':'same';
+      row.append(el('span','native-store-difference-mark',difference.amount>0?'↓':difference.amount<0?'↑':'＝'),el('span','',difference.text));breakdown.append(row);
+    }
+    comparison.append(breakdown,el('p','native-store-comparison-note',`${result.winner.name} 相比 ${result.other.name}：四项差额合计 ${money(result.saving)}。改变份数后，券门槛与最省平台可能改变。`));
+    const menuPrices=el('details','native-store-menu-comparison');
+    menuPrices.append(el('summary','',`查看 ${store.menu.length} 道菜的标价对比`));
+    const legend=el('p','native-store-comparison-note','左侧 GrabFood · 右侧 ShopeeFood；以下为单份餐品标价，尚未计算优惠及配送。');menuPrices.append(legend);
     for(const [index,item] of store.menu.entries()) {
-      const prices=itemPrices(item,index);if(prices.grab===prices.shopee&&differing.length)continue;
+      const prices=itemPrices(item,index);
       const row=el('div','native-store-compare-row');
-      const heading=el('div','native-store-compare-name');heading.append(el('strong','',nameFor(item,'zh')),el('span','',prices.grab===prices.shopee?'同价':`−${money(Math.abs(prices.grab-prices.shopee))}`));
+      const heading=el('div','native-store-compare-name');heading.append(el('strong','',nameFor(item,'zh')),el('span','',prices.grab===prices.shopee?'同价':`差 ${money(Math.abs(prices.grab-prices.shopee))}`));
       heading.lastElementChild.dataset.platform=prices.grab<=prices.shopee?'grab':'shopee';
       const priceRow=el('div','native-store-price-pair');
       for(const key of ['grab','shopee']) {const cell=el('span','',money(prices[key]));cell.dataset.platform=key;cell.classList.toggle('is-cheaper',prices[key]<=prices[key==='grab'?'shopee':'grab']);cell.prepend(el('i'));priceRow.append(cell);}
-      row.append(heading,priceRow);comparison.append(row);
+      row.append(heading,priceRow);menuPrices.append(row);
     }
-    comparison.append(el('p','native-store-comparison-note',`以上为单份菜品标价。${quantity}份合并配送后的总价，请看上方平台卡片。`));
-    compare.append(comparison);body.append(compare);
+    comparison.append(menuPrices);compare.append(comparison);body.append(compare);
     const menu=el('section','native-store-menu');body.append(menu);renderMenu();
     appendReviews(body,store);
-    body.append(el('p','native-store-demo-note','演示店铺、菜单与费用 · 照片为菜品示意，实际可售情况以平台为准。'));
+    body.append(el('p','native-store-demo-note','店铺、菜单与优惠均为演示数据；照片为菜品示意。实际可售情况、券资格与结算金额以平台为准。'));
+    const imageCredit=el('a','native-store-image-credit','查看配图来源 ↗');imageCredit.href='../../assets/wanso/catalog/credits.html';imageCredit.target='_blank';imageCredit.rel='noopener';body.append(imageCredit);
     refreshSaved();refreshLanguage();
 
     function itemPrices(item,index) {

@@ -35,9 +35,11 @@ function fit() {
   const nativeWidth = phone ? 402 : 1440;
   const height = stageHeight(f);
   const inset = device ? 0 : phone ? 4 : 20;
-  const scale = zoomed ? nativeWidth / f.width : Math.min((viewport.clientWidth - inset) / f.width, (viewport.clientHeight - inset) / height, nativeWidth / f.width);
+  // Keep the captured phone legible; preserve its original chrome and hotspot proportions.
+  const scale = zoomed ? nativeWidth / f.width : Math.min((viewport.clientWidth - inset) / f.width, phone ? Infinity : (viewport.clientHeight - inset) / height, nativeWidth / f.width);
   screen.style.width = Math.max(1, f.width * scale) + 'px';
   screen.style.height = Math.max(1, height * scale) + 'px';
+  if (phone && !device) viewport.style.minHeight = Math.max(1, height * scale + inset) + 'px';
 }
 function decoded(f) {
   if (!cached.has(f.id)) {

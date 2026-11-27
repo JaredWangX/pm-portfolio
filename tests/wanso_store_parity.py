@@ -98,7 +98,7 @@ def check_layout(page, view, store, label):
     assert walking_icon and 0 < walking_icon['width'] <= 20 and 0 < walking_icon['height'] <= 20, walking_icon
     note_sizes = view.locator('.native-store-comparison-note,.native-store-demo-note').evaluate_all(
         '(nodes) => nodes.map(node => parseFloat(getComputedStyle(node).fontSize))')
-    assert len(note_sizes) == 2 and min(note_sizes) >= 13, note_sizes
+    assert len(note_sizes) >= 2 and min(note_sizes) >= 13, note_sizes
     screenshot(page, label + '-detail-top')
     # A wheel gesture inside the phone scrolls its content, without losing the selected store.
     scroll.hover()
@@ -149,7 +149,7 @@ def check_order(page, view, store, label):
     expect(sheet).to_contain_text('餐品单价')
     expect(sheet).to_contain_text('配送费')
     total = store['platforms']['grab']['total']
-    expect(sheet.locator('.sheet-details > div').filter(has=page.locator('dt', has_text='合计'))).to_contain_text(f'{total:,}')
+    expect(sheet.locator('.sheet-details > div').filter(has=page.locator('dt', has_text='合计'))).to_contain_text(f'{total:,}'.replace(',', '.') + 'đ')
     sheet.get_by_role('button', name='换到 ShopeeFood', exact=True).click()
     expect(sheet.locator('h2')).to_have_text('下单预览 · ShopeeFood')
     expect(sheet).to_contain_text(store['name'])

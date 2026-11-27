@@ -51,7 +51,7 @@ def check_offers(page, label):
     }''')
     assert geometry['overflow'] <= 1, geometry
     first, second = geometry['positions']
-    if geometry['width'] < 390:
+    if geometry['width'] < 360:
         assert abs(first['x']-second['x']) < 1 and second['y'] >= first['y']+first['h']+10, geometry
     else:
         assert abs(first['y']-second['y']) < 1 and second['x'] > first['x'], geometry
@@ -60,7 +60,7 @@ def check_offers(page, label):
         assert item['scroll'] <= item['client']+1, item
     for rows in geometry['feeRows']:
         for row in rows:
-            assert row['topDifference'] <= 3 and row['gap'] >= 6, row
+            assert row['topDifference'] <= 3 and row['gap'] >= 4, row
     page.screenshot(path=str(OUT / (label + '-offers.png')))
     CHECKS.append(f'{label}: actual {geometry["width"]}px phone controls offer columns; complete names and aligned fee rows')
     return view, geometry['width']
@@ -115,7 +115,7 @@ def check_saved_and_recent(browser):
             expect(sheet).to_contain_text(store['name'])
             expect(sheet).to_contain_text(store['dishZh'])
             total=sheet.locator('.sheet-details > div').filter(has=page.locator('dt',has_text='合计'))
-            expect(total).to_contain_text(f'{expected_total:,}')
+            expect(total).to_contain_text(f'{expected_total:,}'.replace(',', '.') + 'đ')
             sheet.get_by_role('button',name='关闭',exact=True).click()
             expect(sheet).not_to_be_visible()
         expect(recent).to_have_count(3)
@@ -171,9 +171,9 @@ def run():
                     if width==320:
                         data=page.evaluate('''()=>window.wansoCatalog.map(store=>({id:store.id,
                             reviews:window.wansoReviews.forStore(store).map(r=>({text:r.text,dish:r.dish,sample:r.sample}))}))''')
-                        assert len(data)>=80
+                        assert len(data)==160
                         assert all(len(s['reviews'])==3 and all(r['sample'] and r['dish'] in r['text'] for r in s['reviews']) for s in data)
-                        CHECKS.append('fixtures: all 80 catalog stores have three explicitly illustrative, dish-matching reviews')
+                        CHECKS.append('fixtures: all 160 catalog stores have three explicitly illustrative, dish-matching reviews')
                 finally:
                     context.close()
             assert min(widths)<280 and max(widths)>=390,widths

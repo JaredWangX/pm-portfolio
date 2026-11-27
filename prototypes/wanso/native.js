@@ -92,7 +92,10 @@ window.wansoNative = (() => {
         else desired.push(name);
       }
       if(/不要汤|不喝汤/.test(clause)) rejected.push('soup');
-      if(desired.some(name=>['soup','mixed'].includes(name))) {const genericNoodles=desired.indexOf('noodles');if(genericNoodles>=0)desired.splice(genericNoodles,1);}
+      if(desired.includes('soup')&&desired.includes('noodles')&&!/米线|bún/i.test(clause)&&!desired.includes('mixed')) {
+        desired.splice(desired.indexOf('soup'),1);desired.splice(desired.indexOf('noodles'),1);desired.push('pho');
+      } else if(desired.some(name=>['soup','mixed'].includes(name))) {const genericNoodles=desired.indexOf('noodles');if(genericNoodles>=0)desired.splice(genericNoodles,1);}
+      if(desired.includes('soup')&&/米线|bún/i.test(clause)&&!/河粉|pho|phở/i.test(clause)) {desired.splice(desired.indexOf('soup'),1);desired.push('bun');}
       if(desired.includes('coffee')&&!/或|或者|都可以/.test(clause)) {const genericTea=desired.indexOf('tea');if(genericTea>=0)desired.splice(genericTea,1);}
       if(desired.length) {categories=desired;excluded=excluded.filter(name=>!desired.includes(name));}
       excluded=[...new Set([...excluded,...rejected])];
@@ -104,12 +107,25 @@ window.wansoNative = (() => {
       fullMeal:/午餐|晚餐|夜宵|正餐/.test(text)&&!categories.some(name=>['coffee','tea'].includes(name)),vegetables:/蔬菜|时蔬/.test(text),
       cheap:/便宜|最低|省钱|划算|总价/i.test(text),close:/近|快|赶时间|near/i.test(text),notes:/香菜|辣椒|忌口|过敏|allerg/i.test(text)};
   }
-  const categoryKeys={noodles:['pho','mixed'],soup:['pho','bun'],mixed:['mixed'],rice:['rice','veggie'],bread:['banh'],coffee:['coffee'],tea:['tea'],veggie:['veggie']};
+  const categoryKeys={pho:['pho'],bun:['bun'],noodles:['pho','mixed'],soup:['pho','bun'],mixed:['mixed'],rice:['rice','veggie'],bread:['banh'],coffee:['coffee'],tea:['tea'],veggie:['veggie']};
   function offerFor(store,key,request=activeRequest) {
-    const quantity=criteria(request).quantity,offer=store.platforms[key];
-    return {...offer,quantity,unitPrice:offer.price,price:offer.price*quantity,total:offer.price*quantity+offer.fee-offer.discount};
+    return window.wansoOffers.calculate(store,key,criteria(request).quantity);
   }
   const bestOffer = (store,request='') => Object.keys(store.platforms).map(key=>[key,offerFor(store,key,request)]).sort((a,b)=>a[1].total-b[1].total)[0];
+  function comparisonFor(store,request='') {
+    const ranked=Object.keys(store.platforms).map(key=>[key,offerFor(store,key,request)]).sort((a,b)=>a[1].total-b[1].total);
+    const [winnerKey,winner]=ranked[0],other=ranked[1][1];
+    const differences=[
+      ['餐品标价',other.price-winner.price,'便宜','贵'],
+      ['店铺折扣',winner.merchantDiscount-other.merchantDiscount,'多减','少减'],
+      ['优惠券',winner.couponDiscount-other.couponDiscount,'多减','少减'],
+      ['配送费',other.netDeliveryFee-winner.netDeliveryFee,'少付','多付']
+    ].map(([label,amount,positive,negative])=>({label,amount,text:amount?`${label}${amount>0?positive:negative} ${money(Math.abs(amount))}`:`${label}相同`}));
+    return {winnerKey,winner,other,differences,saving:other.total-winner.total};
+  }
+  function calculationText(offer) {
+    return [`餐品 ${money(offer.price)}`,...(offer.merchantDiscount?[`− 店铺折扣 ${money(offer.merchantDiscount)}`]:[]),...(offer.couponDiscount?[`− 优惠券 ${money(offer.couponDiscount)}`]:[]),`＋ 配送 ${money(offer.originalFee)}`,...(offer.deliveryDiscount?[`− 运费减免 ${money(offer.deliveryDiscount)}`]:[]),`＝ ${money(offer.total)}`].join(' ');
+  }
   function selectedStores({limit=5,query:request=query}={}) {
     const conditions=criteria(request);
     const candidates=catalogForLocation().filter(store=>{
@@ -124,6 +140,7 @@ window.wansoNative = (() => {
     return candidates.sort((a,b)=> {
       const vegScore=Number(conditions.vegetables&&['rice','veggie'].includes(b.key))-Number(conditions.vegetables&&['rice','veggie'].includes(a.key));
       if(vegScore)return vegScore;
+      if(conditions.cheap)return bestOffer(a,request)[1].total-bestOffer(b,request)[1].total || a.distance-b.distance;
       const local=Number(b.district===location.district)-Number(a.district===location.district);
       if(local) return local;
       if(conditions.close) return a.eta-b.eta || a.distance-b.distance;
@@ -132,7 +149,7 @@ window.wansoNative = (() => {
   }
   function picture(store,className='') {
     const image=element('img',className);
-    image.src=store.image; image.alt=store.dishZh+' · 示例餐品配图'; image.draggable=false;
+    image.src=store.image; image.alt=store.imageAlt||store.dishZh+' · 示例餐品配图'; image.draggable=false;
     image.decoding='async'; image.width=220;image.height=112;
     return image;
   }
@@ -155,7 +172,7 @@ window.wansoNative = (() => {
     platforms.append(platformBadge('grab'),platformBadge('shopee'),element('span','','双平台'));
     details.append(element('strong','',store.name),element('span','rich-category',store.category),tags,
       element('span','rich-pick-stats',`★ ${store.rating.toFixed(1)} (${store.reviewCount}) · ${store.distance.toFixed(1)} km`),
-      element('span','rich-delivery',`🛵 配送 ${money(offer.fee)} · 约 ${store.eta} 分钟`),platforms);
+      element('span','rich-delivery',`🛵 ${offer.netDeliveryFee?'配送 '+money(offer.netDeliveryFee):'本单免配送'} · 约 ${store.eta} 分钟`),platforms);
     card.append(cover,details);
     return card;
   }
@@ -193,7 +210,7 @@ window.wansoNative = (() => {
     tags.append(element('span','rich-smart','✨ 智能推荐'),element('span','','💰 预算内'),element('span','',store.tags[0]));
     const stats=element('dl','ios-restaurant-stats');
     const cheapest=bestOffer(store,request);
-    for(const [name,value] of [['餐品',money(cheapest[1].price)],['配送',money(cheapest[1].fee)],['距离',store.distance.toFixed(1)+'km']]) {
+    for(const [name,value] of [['餐品',money(cheapest[1].price)],['配送',money(cheapest[1].netDeliveryFee)],['距离',store.distance.toFixed(1)+'km']]) {
       const term=element('div');term.append(element('dt','',name),element('dd','',value));stats.append(term);
     }
     info.append(element('strong','ios-restaurant-name',store.name),tags,element('span','ios-sample','✦ '+store.dishZh),stats);
@@ -208,7 +225,8 @@ window.wansoNative = (() => {
     }
     card.append(main,element('small','rich-total-label',`${criteria(request).quantity}份餐品 · 含配送及示例优惠`),offers);
     const reason=element('div','ios-card-reason rich-card-reason');
-    reason.append(element('span','','✨'),element('p','',store.reason+` 当前示例中，${cheapest[1].name} 合计 ${money(cheapest[1].total)}，比另一平台省 ${money(Math.abs(offerFor(store,'grab',request).total-offerFor(store,'shopee',request).total))}。`));
+    const comparison=comparisonFor(store,request);
+    reason.append(element('span','','✨'),element('p','',store.reason+`\n\n💰 ${cheapest[1].name} 到手 ${money(cheapest[1].total)}。`+(comparison.saving?`${comparison.differences.filter(item=>item.amount).map(item=>item.text).join('；')}，合计省 ${money(comparison.saving)}。`:'两平台本单到手价相同，可结合配送距离和自己的账户权益选择。')+`\n${cheapest[1].couponDiscount?'🎟️ '+cheapest[1].couponTerms:'本单没有额外可用平台券，已按能满足的活动条件计算。'}`));
     shell.append(card,reason);
     return shell;
   }
@@ -251,15 +269,84 @@ window.wansoNative = (() => {
   }
   function replyText(request,stores,round=0) {
     const conditions=criteria(request);
-    const short=location.label || (location.city==='hcm'?'胡志明市':'河内');
-    if(!stores.length) return `🔎 在${short}的演示菜单里，暂时没有同时满足这些条件的店铺。我保留了你的本次要求，先不把超预算或不符合饮食偏好的餐品放进结果。可以把预算提高一点，或告诉我主食是否可以更换。`;
-    const first=stores[0], [key,offer]=bestOffer(first,request);
-    const portions=`${conditions.quantity} 人 / ${conditions.quantity} 份`;
+    const city=location.label || (location.city==='hcm'?'胡志明市':'河内');
+    if(!stores.length) return `🔎 这次先保留你的条件
+在${city}的演示菜单里，没有找到同时满足预算和饮食要求的餐品。结果少的时候，我不会把超预算的店直接混进推荐。
+
+可以继续调整
+告诉我预算是否包含饮品、能否换一种主食，或者是否可以接受稍远一点的店。修改其中一个条件后，我会重新筛选，并继续沿用你已经说明的忌口。`;
+    const first=stores[0],comparison=comparisonFor(first,request),offer=comparison.winner;
     const drinks=['coffee','tea'].includes(first.key);
-    const remarks=drinks?'半糖、少冰，饼干单独包装':'辣椒和香菜另放，酱汁分装';
-    if(round===1) return `💰 这次按“${conditions.quantity} 份餐品＋一次配送费－示例优惠”重新核对，预算仍为 ${money(conditions.budget)}。${first.name} 的${first.dishZh} ${conditions.quantity} 份在 ${offer.name} 合计 ${money(offer.total)}：餐品 ${money(offer.price)}＋配送 ${money(offer.fee)}－优惠 ${money(offer.discount)}。\n\n同店同份量比较，另一平台合计 ${money(offerFor(first,key==='grab'?'shopee':'grab',request).total)}。下方 ${stores.length} 家都能继续打开两边的费用明细，不把菜价最低直接当作到手最便宜。🛵 约 ${first.eta} 分钟为演示预计，实际以平台结算页为准。`;
-    if(round===2) return `🥢 如果现在要定一家，我会先看 ${first.name} 的${first.dishZh}。${first.description}\n\n✨ 选择它的依据是符合本次主食与预算、含配送合计 ${money(offer.total)}，并且可打开菜单检查具体配料。备注可以写“${remarks}”。店家是否接受备注需要确认，有过敏情况要直接问清配方与交叉接触风险。\n\n✅ 想下决定，可以点 ${offer.name} 查看同一份餐品的明细；也保留其余 ${Math.max(stores.length-1,0)} 家作为备选。`;
-    return `🍽️ 我先按${short}、${portions}和 ${money(conditions.budget)} 含配送预算筛选，再对照菜品和两边费用。这里给你 ${stores.length} 家选择，先看具体吃什么，再决定从哪个平台下单。\n\n✨ 优先推荐 ${first.name} 的${first.dishZh}。${first.description} ${offer.name} 示例合计 ${money(offer.total)}，预算还余 ${money(conditions.budget-offer.total)}。\n\n👇 左右滑动可以逐家查看特点和完整理由，也能继续问“含运费哪个更划算”“不吃香菜怎么选”。图片、评分和费用用于产品演示，外卖报价以实际平台为准。`;
+    const remarks=drinks?'半糖、少冰，小食单独包装':[/(?:不吃|不要|不放|不加)辣椒|不辣/.test(request)?'不加辣椒':'辣椒另放',/(?:不吃|不要|不放|不加)香菜/.test(request)?'不加香菜':'香菜另放','酱汁分装'].join('、');
+    const budgetLeft=money(Math.max(0,conditions.budget-offer.total));
+    const joinedTerms=terms=>terms.map(term=>term.replace(/[。；]+$/u,'')).join('；');
+    const appliedText=current=>current.applied.length?'已计入：'+current.applied.map(item=>item.label+'（'+item.terms+'）').join('；')+'。':'本单暂无符合条件的优惠，按餐品原价与配送费结算。';
+    const ruleText=appliedText(offer);
+    const description=[...new Set((first.description+first.reason.replace(/^[^\p{L}\p{N}]+/u,'')).split('。').filter(Boolean))].join('。')+'。';
+    const cause=comparison.differences.filter(item=>item.amount).map(item=>item.text).join('；');
+    const conclusion=comparison.saving?`${offer.name} 比 ${comparison.other.name} 少付 ${money(comparison.saving)}。${cause}，合并后才是这次实际的差价。`:'两平台本次到手价相同。可以继续比较自己的会员权益与平台显示的预计送达时间。';
+    if(round===1) return `💰 按同店、同菜、同份量重新算
+这次比较的是${first.name}的${first.dishZh}，${conditions.quantity} 份，含配送预算 ${money(conditions.budget)}。只计算本单满足门槛的活动，不把“最高可减”直接当作已减金额。
+
+🟢 GrabFood
+${calculationText(offerFor(first,'grab',request))}。
+${appliedText(offerFor(first,'grab',request))}
+
+🟠 ShopeeFood
+${calculationText(offerFor(first,'shopee',request))}。
+${appliedText(offerFor(first,'shopee',request))}
+
+🔍 为什么最后是这个价格
+${conclusion}本单选 ${offer.name} 后，预算还剩 ${budgetLeft}，可留作加配，而不是为了凑券继续增加不需要的餐品。
+
+🎟️ 券怎么用
+门槛按店铺折扣后的餐品金额判断；同类平台券取最优惠的一张，不重复叠加。配送减免单独核算，最多减到运费为零。${offer.unavailable.length?'本次没用上的活动：'+joinedTerms(offer.unavailable)+'。':'这份订单已计入符合条件的活动。'}
+
+下方保留 ${stores.length} 家备选。换成两份或提高预算时，券门槛和最便宜的平台都可能变化，可以继续让我重算。`;
+    if(round===2) {
+      const runner=stores[1];
+      return `🥢 如果现在定一家
+我会先考虑${first.name}的${first.dishZh}。${first.description}与这次的主食要求、${conditions.quantity} 份和预算一起核对后，它仍在候选范围内。
+
+✨ 具体怎么点
+先选${first.dishZh}，备注“${remarks}”。${drinks?'这是一份饮品与轻食搭配，适合短暂休息；如果想把它当午餐，最好再说明饭量，我会改成更完整的餐品组合。':'建议先尝原味再加调料；如果想增加蔬菜，可以先查看菜单中的加配价格，再一起重算到手金额。'}
+
+💸 从哪个平台下单
+${calculationText(offer)}。${conclusion}${offer.couponDiscount?'本单已使用 '+offer.couponName+'，条件是 '+offer.couponTerms+'。':''}
+
+🔄 如果更在意另一种体验
+${runner?`${runner.name}的${runner.dishZh}也是备选：${runner.description}对应最低到手价 ${money(bestOffer(runner,request)[1].total)}。`:'可以继续告诉我想要更近、更多蔬菜，还是换一种主食，我再调整候选。'}
+
+✅ 下单前再确认两件事
+核对平台里的送餐位置与结算价；确认店家是否接受备注。有食物过敏或严格忌口时，需要直接核实配料，不能只依据推荐标签决定。`;
+    }
+    const alternatives=stores.slice(1,3).map((store,index)=>`${index+1}. ${store.name} · ${store.dishZh}：${store.description}最低到手 ${money(bestOffer(store,request)[1].total)}，示例距离 ${store.distance.toFixed(1)} km。`).join('\n');
+    return `🍽️ 先把这顿饭的要求对齐
+按${city}、${conditions.quantity} 份、含配送 ${money(conditions.budget)} 筛选，保留 ${stores.length} 家可以继续比较的店。${conditions.notes?'你提到的口味或忌口会继续保留在后续对话里。':'可以继续补充不吃什么、主食偏好和饭量，我会沿用这轮预算再选。'}
+
+🎯 优先看这道菜
+${first.name} · ${first.dishZh}。${description}
+
+💡 也给你两种备选
+${alternatives||'目前仅这家同时满足所有条件，可以放宽一个条件后再比较。'}
+
+💰 到手价怎么来的
+${calculationText(offer)}。${conclusion}
+${ruleText}
+
+👇 接下来怎么选
+左右滑动看每家店的推荐理由，点店铺可查看菜单、券规则和评论示例；也可以直接问“换成两个人，券能减多少”或“想吃蔬菜多一点的”。演示预算、门槛和份数会一起重新计算。`;
+  }
+  function answerContent(text) {
+    const message=element('div','ios-assistant-message');
+    for(const block of text.split('\n\n')) {
+      const paragraph=element('section','rich-answer-section');
+      const [heading,...body]=block.split('\n');
+      if(body.length) paragraph.append(element('strong','rich-answer-heading',heading),element('p','',body.join('\n')));
+      else paragraph.append(element('p','',heading));
+      message.append(paragraph);
+    }
+    return message;
   }
   function mountChat(layer,route,open,onCarousel) {
     const scroller=element('section','phone-scroll ios-chat rich-chat');
@@ -278,7 +365,7 @@ window.wansoNative = (() => {
         const avatar=element('span','ios-avatar','✦');avatar.setAttribute('aria-hidden','true');
         const content=element('div','ios-chat-answer');
         const text=replyText(joined,stores,round);
-        content.append(element('p','ios-assistant-message',text));
+        content.append(answerContent(text));
         if(stores.length) {
           const rail=element('div','ios-carousel rich-chat-rail');rail.tabIndex=0;
           rail.setAttribute('aria-label',`${stores.length} 家推荐餐厅，左右滑动比较`);
@@ -333,7 +420,7 @@ window.wansoNative = (() => {
     location={...location,...value};featuredOffset=0;
     for(const rail of featuredRails) {if(rail.isConnected)paintFeatured(rail);else featuredRails.delete(rail);}
   }
-  return {load,appendMenu,mountChat,homeRestaurants,refreshFeatured,mountProgress,selectedStores,catalogForLocation,offerFor,
+  return {load,appendMenu,mountChat,homeRestaurants,refreshFeatured,mountProgress,selectedStores,catalogForLocation,offerFor,comparisonFor,calculationText,
     setQuery:text=>{query=String(text).trim()||query;activeRequest=query;},getQuery:()=>query,setLocation,getLocation:()=>({...location}),
     resetChat:()=>{},restaurants:()=>archive};
 })();

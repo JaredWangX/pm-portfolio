@@ -28,30 +28,66 @@ window.wansoCatalog = (() => {
     bun:['Bún Gà Bình Yên','Bún Nhà Mộc','Bún Gà Hương Sớm','Bún Phố Nhỏ','Bún Gà An']
   };
   const mealNotes=['配菜另装，吃的时候可以自己决定加多少。','示例菜单可选酱料另放，适合偏好清淡口味的人。','单人份包含主食和配菜，不需要另外拼配一餐。','喜欢原味可以在备注中少盐、少酱，店家是否接受需确认。','餐盒与配料分开包装，方便带回工位再吃。'];
-  const drinkNotes=['甜度与冰量可备注，小点心独立包装。','可以先选半糖，避免把咖啡本身的风味盖住。','一杯饮品配一份小食，适合短暂休息时慢慢吃。','喜欢清爽口味可选少糖少冰，不额外添加配料。','两人同店点单可以合并配送，记得分别写清口味。'];
+  const drinkNotes={
+    coffee:['炼乳可以减半，黄油面包独立包装。','喜欢咖啡香更明显可以少加炼乳，冷热都可备注。','咖啡配黄油小面包，适合短暂休息时慢慢吃。','不想太甜可选少炼乳；它仍然含乳制品和咖啡因。','两人同店点单可以合并配送，记得分别写清冰量与甜度。'],
+    tea:['柠檬茶的糖量与冰量可备注，燕麦饼干独立包装。','可以先选半糖，保留茶香与柠檬的清酸口感。','一杯柠檬茶配一份燕麦饼干，适合下午短暂休息。','喜欢清爽口味可选少糖少冰，不额外添加小料。','两人同店点单可以合并配送，分别备注茶饮甜度和冰量。']
+  };
+  const secondNames={
+    pho:['Phở Gà Lá Chanh','Phở Gà Tre Xanh','Bếp Phở Hoa','Phở Gà Thảo','Phở Hương Sáng'],
+    mixed:['Phở Trộn Sen','Phở Trộn Bếp Nhỏ','Phở Trộn An Bình','Phở Mộc Lan','Phở Trộn Hạ'],
+    rice:['Cơm Gà Lúa','Bếp Cơm Thảo','Cơm Gà Đồi','Cơm Hương Lúa','Cơm Gà Mùa'],
+    banh:['Bánh Mì Lá','Bánh Mì Trúc','Bánh Mì Sen','Bánh Mì Bình An','Bánh Mì Mộc'],
+    veggie:['Bếp Chay Sen','Cơm Chay Mùa','Vườn Chay An','Bếp Rau Mộc','Chay Hương Xanh'],
+    coffee:['Hạt Coffee','Hiên Coffee','Ban Mai Coffee','Thảo Coffee','Phố Mây Coffee'],
+    tea:['Trà Sen Nhỏ','Trà Hạ','Trà Hiên Nhà','Trà Bình An','Trà Mộc Lan'],
+    bun:['Bún Gà Tre','Bún Gà Sen','Bún Gà Lá','Bún Mộc Hương','Bún Gà Thảo']
+  };
+  // Thresholds are illustrative rules, independent of the current basket quantity.
+  const merchant=(rateBps,minSpend,cap)=>({rateBps,minSpend,cap});
+  const fixed=(id,name,minSpend,amount)=>({id,name,type:'fixed',minSpend,amount});
+  const rate=(id,name,minSpend,rateBps,cap)=>({id,name,type:'rate',minSpend,rateBps,cap});
+  function promotion(index,platform) {
+    if(index%11===10)return {}; // Some merchants have no available offer on either platform.
+    const tier=(index*7+Math.floor(index/8)*3+(platform==='shopee'?5:0))%8;
+    const bundles=[
+      {merchant:merchant(1000,40000,12000),coupons:[fixed('lunch8','午餐满减券',50000,8000),rate('group15','多人餐折扣券',75000,1500,18000)],delivery:{minSpend:60000,amount:12000}},
+      {coupons:[fixed('meal6','单人餐券',35000,6000),fixed('group16','同店合点券',100000,16000)],delivery:{minSpend:70000,amount:null}},
+      {merchant:merchant(1200,0,16000),coupons:[fixed('save10','餐品满减券',70000,10000)]},
+      {coupons:[rate('save12','轻食折扣券',30000,1200,10000)],delivery:{minSpend:35000,amount:null}},
+      {merchant:merchant(500,50000,10000),coupons:[fixed('meal5','日常餐券',45000,5000)],delivery:{minSpend:90000,amount:10000}},
+      {coupons:[rate('meal15','餐品折扣券',40000,1500,15000),fixed('group20','多人餐满减券',120000,20000)],delivery:{minSpend:50000,amount:null}},
+      {merchant:merchant(1500,60000,20000),coupons:[fixed('group12','合点满减券',80000,12000)],delivery:{minSpend:100000,amount:12000}},
+      {coupons:[fixed('high15','高门槛餐券',100000,15000)]}
+    ];
+    return bundles[tier];
+  }
   const stores=[];
-  for (const [city,district,branch] of locations) {
+  // A second, distinct set of branches expands each city to 80 without changing old IDs.
+  for(let edition=0;edition<2;edition++) for (const [city,district,branch] of locations) {
     for (const dish of dishes) {
       const index=stores.length;
       const variation=Math.floor(index/dishes.length)%5;
-      const detail=(['coffee','tea'].includes(dish.key)?drinkNotes:mealNotes)[variation];
+      const detail=(drinkNotes[dish.key]||mealNotes)[variation];
       const description=dish.description+' '+detail;
-      const price=dish.price+(index%3)*2000;
+      const price=dish.price+(index%3)*2000+edition*((index%4)-1)*1000;
       const grabFee=8000+(index%4)*2000;
       const shopeeFee=10000+(index%3)*2000;
-      const grabDiscount=index%3===0?5000:0;
-      const shopeeDiscount=index%2===0?6000:3000;
-      const grab={name:'GrabFood',price,fee:grabFee,discount:grabDiscount,total:price+grabFee-grabDiscount};
-      const shopee={name:'ShopeeFood',price:price+2000,fee:shopeeFee,discount:shopeeDiscount,total:price+2000+shopeeFee-shopeeDiscount};
-      stores.push({
-        ...dish,id:'demo-'+(index+1),name:shopNames[dish.key][variation]+' · '+branch,city,district,description,reason:dish.reason+' '+detail,
+      const grab={name:'GrabFood',price,fee:grabFee,promotion:promotion(index,'grab')};
+      const shopee={name:'ShopeeFood',price:price+2000,fee:shopeeFee,promotion:promotion(index,'shopee')};
+      const store={
+        ...dish,id:'demo-'+(index+1),name:(edition?secondNames:shopNames)[dish.key][variation]+' · '+branch,city,district,description,reason:dish.reason+' '+detail,
         image:'../../assets/wanso/'+dish.image,
-        rating:4.3+(index%5)/10,reviewCount:180+index*37,distance:0.7+(index%7)*0.3,eta:20+(index%4)*5,
+        rating:Number((4.1+(index%9)/10).toFixed(1)),reviewCount:96+(index*137)%4200,distance:Number((0.5+(index%11)*0.3).toFixed(1)),eta:18+(index%7)*3,
         vegetarian:Boolean(dish.vegetarian),spicy:false,platforms:{grab,shopee},sample:true,
         menu:[{name:dish.dish+' · '+dish.dishZh,price,description},
           {name:'Trà chanh · 青柠茶',price:15000,description:'可选择少糖，不添加额外配料。'},
           {name:'Rau thêm · 加份蔬菜',price:12000,description:'搭配本餐的小份时蔬。'}]
-      });
+      };
+      for(const key of ['grab','shopee']) {
+        const offer=window.wansoOffers.calculate(store,key,1);
+        Object.assign(store.platforms[key],{discount:offer.discount,total:offer.total,netDeliveryFee:offer.netDeliveryFee});
+      }
+      stores.push(store);
     }
   }
   return stores;
