@@ -5,14 +5,20 @@ body[data-capture=ios] .phone-nav {
   position:absolute;inset:auto 5% 2.5%;height:64px;z-index:3;
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;padding:4px;
   border:1px solid #ffffffc7;border-radius:36px;background:#eff6fff2;
-  box-shadow:0 6px 24px #173a631c,inset 0 1px 1px #fff;
+  box-shadow:0 6px 24px #173a631c,inset 0 1px 1px #fff;touch-action:none;user-select:none;
 }
-.phone-nav button {display:grid;align-content:center;justify-items:center;min-width:0;min-height:44px;gap:3px;padding:5px 0;border:0;border-radius:30px;background:transparent;color:#172b3a;font-family:inherit;font-size:11px;line-height:1.2;font-weight:550;transition:background-color .16s ease,color .16s ease,transform .16s ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+.phone-nav::before {content:"";position:absolute;left:4px;top:4px;bottom:4px;width:calc((100% - 14px)/4);border-radius:30px;background:#516c8a14;box-shadow:inset 0 1px 1px #ffffffa6;transform:translateX(calc(var(--nav-position,0)*(100% + 2px)));transition:transform .24s cubic-bezier(.22,.8,.25,1);pointer-events:none;}
+.phone-nav.is-dragging {cursor:grabbing;}
+.phone-nav.is-dragging::before {transition:none;background:#d7e7f378;box-shadow:inset 0 1px 1px #fff,0 2px 8px #264a6b12;}
+.phone-nav button {position:relative;display:grid;align-content:center;justify-items:center;min-width:0;min-height:44px;gap:3px;padding:5px 0;border:0;border-radius:30px;background:transparent;color:#172b3a;font-family:inherit;font-size:11px;line-height:1.2;font-weight:550;transition:color .16s ease;cursor:grab;-webkit-tap-highlight-color:transparent;}
 .phone-nav button svg {width:24px;height:24px;}
-.phone-nav button[aria-current=page] {color:#1b5bb8;background:#516c8a14;box-shadow:inset 0 1px 1px #ffffff80;}
+.phone-nav button[aria-current=page] {color:#1b5bb8;}
 .phone-nav button[aria-current=page] svg {color:#3b82f6;}
 .phone-nav button span {font-size:11px;line-height:1.3;white-space:nowrap;}
-.phone-nav button:active {transform:scale(.95);background:#516c8a20;}
+.phone-nav.is-dragging button {color:#172b3a;cursor:grabbing;}
+.phone-nav.is-dragging button svg {color:inherit;}
+.phone-nav.is-dragging button[data-preview] {color:#1b5bb8;}
+.phone-nav.is-dragging button[data-preview] svg {color:#3b82f6;}
 .phone-nav button:focus-visible {outline:2px solid #3b82f6;outline-offset:1px;}
 /* Let the list show through the material; keep its final action above the bar. */
 body[data-capture=ios] .page-layer:has(>.phone-nav)>.ios-data-page {height:auto;bottom:2.5%;padding-bottom:84px;scroll-padding-bottom:84px;}
@@ -22,7 +28,7 @@ body[data-capture=ios] .page-layer:has(>.phone-nav)>.ios-chat {bottom:calc(2.5% 
 @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
   body[data-capture=ios] .phone-nav {background:linear-gradient(135deg,#ffffffb8,#edf6ff9c);-webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5);}
 }
-@media(prefers-reduced-motion:reduce) {.phone-nav button{transition:none;}.phone-nav button:active{transform:none;}}
+@media(prefers-reduced-motion:reduce) {.phone-nav button,.phone-nav::before{transition:none;}}
 @media(prefers-reduced-transparency:reduce) {body[data-capture=ios] .phone-nav{background:#eff6ff;-webkit-backdrop-filter:none;backdrop-filter:none;}}
 body[data-capture=ios] .hotspot.phone-back {display:grid;place-items:center;color:#18364e;background:#f1f6fbd9;border:1px solid #ffffffb3;box-shadow:0 2px 8px #183a5910;border-radius:50%;z-index:4;}
 .hotspot.phone-back svg {width:25px;height:25px;}

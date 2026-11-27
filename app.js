@@ -39,9 +39,9 @@ document.querySelector('[data-launch]')?.addEventListener('click', event => {
 });
 function openPhone(trigger, frameId = '') {
   const frame = document.createElement('iframe');
-  frame.src = new URL('prototypes/wanso/?embed=1&expanded=1&v=native-scroll', document.querySelector('.identity').href).href;
+  frame.src = new URL('prototypes/wanso/?embed=1&device=1&expanded=1&v=wanso-swipe1', document.querySelector('.identity').href).href;
   if (/^[a-z0-9-]{1,40}$/.test(frameId)) frame.src += '#' + frameId;
-  frame.title = 'Wanso iOS 操作流程';
+  frame.title = 'Wanso 越南语手机原型';
   frame.referrerPolicy = 'no-referrer';
   frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
   const focusTarget = overlay.contains(trigger) ? opener : trigger;

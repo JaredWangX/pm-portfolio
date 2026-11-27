@@ -25,7 +25,7 @@ const cached = new Map();
 const screenHistory = [];
 const phoneTabs = new Set(['home', 'explore', 'saved', 'profile']);
 const tabViews = new Map();
-let phoneTab = 'home', chatNodes;
+let phoneTab = 'home', chatNodes, phoneNav;
 const steps = () => flows[flow]?.steps || [];
 const stepIndex = () => guided ? steps().findIndex(s => s.id === frames[current]?.id) : -1;
 const activeStep = () => steps()[stepIndex()];
@@ -36,7 +36,7 @@ function fit() {
   const height = stageHeight(f);
   const inset = device ? 0 : phone ? 4 : 20;
   // Keep the captured phone legible; preserve its original chrome and hotspot proportions.
-  const scale = zoomed ? nativeWidth / f.width : Math.min((viewport.clientWidth - inset) / f.width, phone ? Infinity : (viewport.clientHeight - inset) / height, nativeWidth / f.width);
+  const scale = zoomed ? nativeWidth / f.width : Math.min((viewport.clientWidth - inset) / f.width, phone && !expanded ? Infinity : (viewport.clientHeight - inset) / height, nativeWidth / f.width);
   screen.style.width = Math.max(1, f.width * scale) + 'px';
   screen.style.height = Math.max(1, height * scale) + 'px';
   if (phone && !device) viewport.style.minHeight = Math.max(1, height * scale + inset) + 'px';
@@ -143,12 +143,88 @@ function phoneIcon(name){
   const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[name]);svg.append(path);return svg;
 }
 function renderPhoneNav(){
-  const nav=document.createElement('nav');nav.className='phone-nav';nav.setAttribute('aria-label','Điều hướng chính');
-  for(const [id,label] of [['home','Trang chủ'],['explore','Khám phá'],['saved','Đã lưu'],['profile','Cá nhân']]){
-    const b=makeButton('',()=>selectFrame(id,false,false,'tab'));b.setAttribute('aria-label',label);b.dataset.target=id;
-    if(id===phoneTab)b.setAttribute('aria-current','page');
-    const text=document.createElement('span');text.textContent=label;b.append(phoneIcon(id),text);nav.append(b);
-  }activeLayer.append(nav);
+  if(!phoneNav){
+    const nav=document.createElement('nav');nav.className='phone-nav';nav.setAttribute('aria-label','Điều hướng chính');
+    nav.setAttribute('aria-description','Kéo sang trái hoặc phải để chuyển trang.');
+    for(const [id,label] of [['home','Trang chủ'],['explore','Khám phá'],['saved','Đã lưu'],['profile','Cá nhân']]){
+      const b=makeButton('',()=>selectFrame(id,false,false,'tab'));b.setAttribute('aria-label',label);b.dataset.target=id;
+      const text=document.createElement('span');text.textContent=label;b.append(phoneIcon(id),text);nav.append(b);
+    }
+    bindPhoneNavDrag(nav);
+    phoneNav=nav;
+  }
+  const buttons=[...phoneNav.querySelectorAll('button')];
+  buttons.forEach(b=>{
+    if(b.dataset.target===phoneTab)b.setAttribute('aria-current','page');
+    else b.removeAttribute('aria-current');
+    b.removeAttribute('data-preview');
+  });
+  phoneNav.style.setProperty('--nav-position',buttons.findIndex(b=>b.dataset.target===phoneTab));
+  activeLayer.append(phoneNav);
+}
+
+function bindPhoneNavDrag(nav){
+  const buttons=[...nav.querySelectorAll('button')];
+  let drag=null,suppressClick=false;
+  const activeIndex=()=>buttons.findIndex(b=>b.dataset.target===phoneTab);
+  function reset(){
+    drag=null;nav.classList.remove('is-dragging');
+    nav.style.setProperty('--nav-position',activeIndex());
+    buttons.forEach(b=>b.removeAttribute('data-preview'));
+  }
+  nav.addEventListener('pointerdown',event=>{
+    if(!event.isPrimary||event.button!==0||loading)return;
+    setPlaying(false);
+    const button=event.target.closest('button');
+    const first=buttons[0].getBoundingClientRect(),second=buttons[1].getBoundingClientRect();
+    drag={id:event.pointerId,x:event.clientX,y:event.clientY,rect:nav.getBoundingClientRect(),
+      start:button?buttons.indexOf(button):activeIndex(),step:second.left-first.left,moved:false};
+    nav.setPointerCapture(event.pointerId);
+  });
+  nav.addEventListener('pointermove',event=>{
+    if(drag?.id!==event.pointerId)return;
+    const dx=event.clientX-drag.x,dy=event.clientY-drag.y;
+    if(!drag.moved&&Math.abs(dx)<6)return;
+    if(!drag.moved&&Math.abs(dy)>Math.abs(dx))return;
+    drag.moved=true;
+    drag.position=Math.max(0,Math.min(buttons.length-1,drag.start+dx/drag.step));
+    nav.classList.add('is-dragging');
+    nav.style.setProperty('--nav-position',drag.position);
+    buttons.forEach((b,i)=>b.toggleAttribute('data-preview',i===Math.round(drag.position)));
+  });
+  nav.addEventListener('pointerup',event=>{
+    if(drag?.id!==event.pointerId)return;
+    const gesture=drag;
+    const inside=event.clientY>=gesture.rect.top-28&&event.clientY<=gesture.rect.bottom+28;
+    reset();
+    if(nav.hasPointerCapture(event.pointerId))nav.releasePointerCapture(event.pointerId);
+    if(gesture.moved){
+      suppressClick=true;
+      setTimeout(()=>{suppressClick=false;},0);
+      if(inside){
+        const index=Math.round(gesture.position);
+        nav.style.setProperty('--nav-position',index);
+        selectFrame(buttons[index].dataset.target,false,false,'tab');
+      }
+    }else if(inside&&Math.hypot(event.clientX-gesture.x,event.clientY-gesture.y)<8){
+      // Pointer capture retargets the click to the nav; keep simple taps accessible too.
+      selectFrame(buttons[gesture.start].dataset.target,false,false,'tab');
+    }
+  });
+  nav.addEventListener('pointercancel',reset);
+  nav.addEventListener('lostpointercapture',()=>{if(drag)reset();});
+  nav.addEventListener('click',event=>{
+    if(suppressClick&&event.detail>0){event.preventDefault();event.stopImmediatePropagation();}
+  },true);
+  nav.addEventListener('keydown',event=>{
+    const index=buttons.indexOf(event.target.closest('button'));
+    if(index<0||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+    event.preventDefault();event.stopPropagation();
+    const next=event.key==='Home'?0:event.key==='End'?buttons.length-1:
+      (index+(event.key==='ArrowRight'?1:-1)+buttons.length)%buttons.length;
+    buttons[next].focus({preventScroll:true});
+    selectFrame(buttons[next].dataset.target,false,false,'tab');
+  });
 }
 
 function renderFrame(buildHotspots = true) {
@@ -258,6 +334,7 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
       restore = oldView;
     }
     const restoreFocus = activeLayer.contains(document.activeElement) && document.activeElement.matches(':focus-visible');
+    const focusedTab = phoneNav?.contains(document.activeElement) ? document.activeElement.dataset.target : null;
     current = index;
     activeLayer = document.createElement('div');
     activeLayer.className = 'page-layer';
@@ -367,7 +444,10 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
         rail.scrollLeft = restore ? (restore.rails?.[index] || 0) * width : index===0 && frame.chat==='second' ? rail.scrollWidth : 0;
       });
     }
-    if (restoreFocus) screen.focus({preventScroll: true});
+    if (restoreFocus) {
+      const target = focusedTab && frame.phoneNav ? phoneNav.querySelector(`[data-target="${focusedTab}"]`) : screen;
+      target.focus({preventScroll: true});
+    }
     if (returnToViewer && !embed && matchMedia('(max-width:760px)').matches) {
       const viewer = $('.viewer');
       const {top} = viewer.getBoundingClientRect();
@@ -454,6 +534,7 @@ $('.zoom-toggle').addEventListener('click',event=>{
 let swipeStart, ignoreClick = false;
 screen.addEventListener('pointerdown', event => {
   ignoreClick = false;
+  if(event.target.closest('.phone-nav'))return;
   if (screen.hasAttribute('data-store-open')) return;
   if (!event.isPrimary || event.button !== 0 || (event.pointerType === 'mouse' && !capturedPhone)) return;
   const rail = event.target.closest('.ios-carousel');
