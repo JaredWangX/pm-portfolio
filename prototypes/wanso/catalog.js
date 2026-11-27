@@ -46,10 +46,7 @@ window.wansoCatalog = (() => {
   const merchant=(rateBps,minSpend,cap)=>({rateBps,minSpend,cap});
   const fixed=(id,name,minSpend,amount)=>({id,name,type:'fixed',minSpend,amount});
   const rate=(id,name,minSpend,rateBps,cap)=>({id,name,type:'rate',minSpend,rateBps,cap});
-  function promotion(index,platform) {
-    if(index%11===10)return {}; // Some merchants have no available offer on either platform.
-    const tier=(index*7+Math.floor(index/8)*3+(platform==='shopee'?5:0))%8;
-    const bundles=[
+  const promotionBundles=[
       {merchant:merchant(1000,40000,12000),coupons:[fixed('lunch8','午餐满减券',50000,8000),rate('group15','多人餐折扣券',75000,1500,18000)],delivery:{minSpend:60000,amount:12000}},
       {coupons:[fixed('meal6','单人餐券',35000,6000),fixed('group16','同店合点券',100000,16000)],delivery:{minSpend:70000,amount:null}},
       {merchant:merchant(1200,0,16000),coupons:[fixed('save10','餐品满减券',70000,10000)]},
@@ -58,37 +55,45 @@ window.wansoCatalog = (() => {
       {coupons:[rate('meal15','餐品折扣券',40000,1500,15000),fixed('group20','多人餐满减券',120000,20000)],delivery:{minSpend:50000,amount:null}},
       {merchant:merchant(1500,60000,20000),coupons:[fixed('group12','合点满减券',80000,12000)],delivery:{minSpend:100000,amount:12000}},
       {coupons:[fixed('high15','高门槛餐券',100000,15000)]}
-    ];
-    return bundles[tier];
+  ];
+  function promotion(index,platform) {
+    if(index%11===10)return {}; // Some merchants have no available offer on either platform.
+    const tier=(index*7+Math.floor(index/8)*3+(platform==='shopee'?5:0))%8;
+    return promotionBundles[tier];
   }
   const stores=[];
-  // A second, distinct set of branches expands each city to 80 without changing old IDs.
-  for(let edition=0;edition<2;edition++) for (const [city,district,branch] of locations) {
+  // Seeded branches keep old IDs stable; the catalogue is illustrative, not live platform coverage.
+  const cityStores={hanoi:[],hcm:[]}, stats={};
+  for(let edition=0;edition<312;edition++) for (const [city,district,branch] of locations) {
     for (const dish of dishes) {
       const index=stores.length;
       const variation=Math.floor(index/dishes.length)%5;
       const detail=(drinkNotes[dish.key]||mealNotes)[variation];
       const description=dish.description+' '+detail;
-      const price=dish.price+(index%3)*2000+edition*((index%4)-1)*1000;
+      const price=dish.price+(index%3)*2000+(edition<2?edition*((index%4)-1):((edition*7+index*3)%15)-7)*1000;
       const grabFee=8000+(index%4)*2000;
       const shopeeFee=10000+(index%3)*2000;
       const grab={name:'GrabFood',price,fee:grabFee,promotion:promotion(index,'grab')};
       const shopee={name:'ShopeeFood',price:price+2000,fee:shopeeFee,promotion:promotion(index,'shopee')};
       const store={
-        ...dish,id:'demo-'+(index+1),name:(edition?secondNames:shopNames)[dish.key][variation]+' · '+branch,city,district,description,reason:dish.reason+' '+detail,
+        ...dish,id:'demo-'+(index+1),name:(edition%2?secondNames:shopNames)[dish.key][variation]+' · '+branch+(edition<2?'':' '+String(Math.floor(edition/2)+1).padStart(3,'0')+'店'),city,district,description,reason:dish.reason+' '+detail,
         image:'../../assets/wanso/'+dish.image,
-        rating:Number((4.1+(index%9)/10).toFixed(1)),reviewCount:96+(index*137)%4200,distance:Number((0.5+(index%11)*0.3).toFixed(1)),eta:18+(index%7)*3,
-        vegetarian:Boolean(dish.vegetarian),spicy:false,platforms:{grab,shopee},sample:true,
-        menu:[{name:dish.dish+' · '+dish.dishZh,price,description},
-          {name:'Trà chanh · 青柠茶',price:15000,description:'可选择少糖，不添加额外配料。'},
-          {name:'Rau thêm · 加份蔬菜',price:12000,description:'搭配本餐的小份时蔬。'}]
+        rating:Number((4.1+(index%9)/10).toFixed(1)),reviewCount:96+(index*137)%4200,distance:Number((0.5+(index%(edition<2?11:27))*0.3).toFixed(1)),eta:18+(index%(edition<2?7:13))*3,
+        vegetarian:Boolean(dish.vegetarian),spicy:false,platforms:{grab,shopee},sample:true
       };
       for(const key of ['grab','shopee']) {
-        const offer=window.wansoOffers.calculate(store,key,1);
+        const offer=window.wansoOffers.summary(store,key,1);
         Object.assign(store.platforms[key],{discount:offer.discount,total:offer.total,netDeliveryFee:offer.netDeliveryFee});
       }
-      stores.push(store);
+      stores.push(store);cityStores[city].push(store);
     }
   }
+  for(const [city,list] of Object.entries(cityStores)) stats[city]={
+    stores:list.length,
+    hasDiscount:list.filter(store=>Object.values(store.platforms).some(offer=>offer.discount>0)).length,
+    freeDelivery:list.filter(store=>Object.values(store.platforms).some(offer=>offer.netDeliveryFee===0)).length
+  };
+  window.wansoCatalogByCity=cityStores;
+  window.wansoCatalogStats=stats;
   return stores;
 })();

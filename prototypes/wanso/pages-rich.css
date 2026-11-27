@@ -40,7 +40,7 @@
 .ios-insight-counter {flex:none;color:#9bb3ce;font-size:calc(10 * var(--ios));white-space:nowrap;}
 .ios-explore-platforms {display:flex;flex-wrap:wrap;align-items:center;gap:calc(6 * var(--ios));margin-top:calc(6 * var(--ios));}
 .ios-explore-platforms>span {display:inline-block;border-radius:calc(8 * var(--ios));padding:calc(3 * var(--ios)) calc(7 * var(--ios));font-size:calc(10 * var(--ios));font-weight:600;line-height:1.4;}
-.ios-platform-grab {background:#e1f4e9;color:#008440;}.ios-platform-shopee {background:#fff0eb;color:#cf4227;}
+.ios-platform-grab {background:#e1f4e9;color:#006e35;}.ios-platform-shopee {background:#fff0eb;color:#b7351e;}
 .ios-explore-picks {align-items:stretch;scroll-snap-type:x proximity;}
 .ios-explore-store {scroll-snap-align:start;}
 .ios-explore-store .ios-explore-details {min-height:calc(101 * var(--ios));align-content:start;}

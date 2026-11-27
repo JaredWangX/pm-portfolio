@@ -48,6 +48,7 @@ window.wansoStore = (() => {
     const offers=Object.fromEntries(Object.keys(store.platforms).map(key=>[key,window.wansoNative.offerFor(store,key,request)]));
     const entries=Object.entries(offers),winner=entries.reduce((a,b)=>a[1].total<=b[1].total?a:b);
     const quantity=winner[1].quantity;
+    const result=window.wansoNative.comparisonFor(store,request);
     const hero=el('div','native-store-hero');
     const image=el('img');image.src=store.image;image.alt=store.imageAlt||store.dishZh+' · 菜品示意';image.width=402;image.height=240;image.draggable=false;image.decoding='async';
     const toolbar=el('div','native-store-toolbar');
@@ -72,7 +73,8 @@ window.wansoStore = (() => {
     const summaryOffer=el('div','native-store-summary-offer');
     const summaryOfferLabel=el('div');summaryOfferLabel.append(el('span','',`${quantity} 份${store.dishZh}`),el('small','',winner[1].name+' · 含配送'));
     summaryOffer.append(summaryOfferLabel,el('strong','',money(winner[1].total)));
-    summaryText.append(el('h2','','AI 推荐理由'),el('p','',store.reason),summaryOffer);summary.append(spark,summaryText);body.append(summary);
+    const priceLink=button('native-store-price-link','查看本单比价',()=>scroll.scrollTo({top:overview.getBoundingClientRect().top-scroll.getBoundingClientRect().top+scroll.scrollTop,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));priceLink.textContent=result.saving?'为什么 '+result.winner.name+' 能省 '+money(result.saving)+'？ →':'查看两平台完整费用 →';
+    summaryText.append(el('h2','','AI 推荐理由'),el('p','',store.reason),summaryOffer,priceLink);summary.append(spark,summaryText);body.append(summary);
     const translate=el('div','native-store-translate');
     const choose=button('native-store-choose-language','选择菜单翻译语言',showLanguagePicker);
     const label=el('span'),languageValue=el('small');label.append(el('strong','','选择语言'),languageValue);choose.append(label,icon('chevron'));
@@ -83,10 +85,29 @@ window.wansoStore = (() => {
       renderMenu();apply.querySelector('span').textContent='已翻译';
     });apply.dataset.action='translate';apply.append(el('b','','文A'),el('span','','翻译'));
     translate.append(choose,apply);body.append(translate);
+    const overview=el('section','native-store-price-overview');
+    overview.append(el('p','native-store-order-context',`${quantity} 份${store.dishZh} · 同店同规格 · 含配送`));
+    const overviewHeading=el('div','native-store-price-heading');
+    overviewHeading.append(el('h2','',result.saving?`${result.winner.name} 更实惠`:'两平台本单同价'),el('strong','',result.saving?'省 '+money(result.saving):money(result.winner.total)));
+    overview.append(overviewHeading);
+    const strongest=result.differences.filter(item=>item.amount>0).sort((a,b)=>b.amount-a.amount)[0];
+    const advantage={
+      '餐品标价':`${result.winner.name} 餐品标价 ${money(result.winner.price)}，比 ${result.other.name} 低 ${money(strongest?.amount||0)}`,
+      '店铺折扣':`${result.winner.name} 店铺折扣减 ${money(result.winner.merchantDiscount)}，比 ${result.other.name} 多减 ${money(strongest?.amount||0)}`,
+      '优惠券':`${result.winner.name} 用「${result.winner.couponName}」减 ${money(result.winner.couponDiscount)}，比 ${result.other.name} 多减 ${money(strongest?.amount||0)}`,
+      '配送费':`${result.winner.name} ${result.winner.netDeliveryFee?'优惠后配送费 '+money(result.winner.netDeliveryFee):'本单免配送'}，${result.other.name} 配送仍需 ${money(result.other.netDeliveryFee)}`
+    };
+    overview.append(el('p','native-store-price-reason',result.saving>0&&strongest?advantage[strongest.label]+'。其余折扣一起算完，本单最终少付 '+money(result.saving)+'。':'两平台含配送的实付金额相同。可以按常用平台选择，优惠明细仍可逐项核对。'));
+    const totals=el('div','native-store-quote-pair');
+    for(const [key,offer] of entries) {
+      const total=el('div');total.dataset.platform=key;total.classList.toggle('is-lowest',offer.total===result.winner.total);
+      total.append(el('span','',offer.name+' 实付'),el('strong','',money(offer.total)));totals.append(total);
+    }
+    overview.append(totals);body.append(overview);
     const platforms=el('section','native-store-platforms');platforms.setAttribute('aria-label','双平台配送与价格');
     const offerRules=el('div','native-store-rules-list');
     for(const [key,offer] of entries) {
-      const card=el('article','native-store-platform');card.dataset.platform=key;
+      const card=el('article','native-store-platform');card.dataset.platform=key;card.classList.toggle('is-lowest',result.saving>0&&key===result.winnerKey);
       const header=el('div','native-store-platform-heading'),mark=el('span','native-store-platform-mark',key==='grab'?'GF':'SF');
       const platformRating=el('p','native-store-platform-rating');platformRating.append(el('span','',`★ ${(store.platforms[key].rating||store.rating).toFixed(1)}`),el('span','',`${store.platforms[key].reviewCount||store.reviewCount} 条评价`));
       header.append(mark,el('h2','',offer.name),platformRating);
@@ -108,23 +129,29 @@ window.wansoStore = (() => {
       const total=el('div','native-store-platform-total');total.append(el('span','',`${quantity} 份 · 含配送`),el('strong','',money(offer.total)));
       const order=button('native-store-order','立即下单 · '+offer.name,()=>onAction?.('catalogOrder',{id:store.id,platform:key,request}));order.append(el('span','','立即下单'),icon('arrow'));
       const footer=el('div','native-store-platform-footer');footer.append(total,order);
-      card.append(header,detail,footer);platforms.append(card);
+      const coupon=el('div','native-store-applied-coupon');coupon.dataset.platform=key;
+      coupon.append(el('strong','',offer.name+' · '+(offer.couponDiscount?'已用 '+offer.couponName:'未使用平台券')),el('span','',offer.couponDiscount?offer.couponTerms:offer.couponTerms+'，未计入任何未达门槛的券。'));
+      card.append(header,detail,footer);platforms.append(card);offerRules.insertBefore(coupon,rules);
     }
-    body.append(platforms,offerRules);
+    body.append(platforms);
     const compare=el('section','native-store-compare');
-    compare.append(el('h2','native-store-section-heading','为什么更划算'));
+    compare.append(el('h2','native-store-section-heading','差价是这样算出来的'));
     const comparison=el('div','native-store-comparison-card');
-    const result=window.wansoNative.comparisonFor(store,request);
     const verdict=el('div','native-store-verdict');
-    verdict.append(el('small','','✦ 同菜同份量 · 本单比价'),
+    verdict.append(el('small','','同店同份量 · 已计入符合门槛的优惠'),
       el('strong','',result.saving?`${result.winner.name} 本单省 ${money(result.saving)}`:'两平台本单到手价相同'),
       el('span','',`${quantity} 份${store.dishZh}，含配送 ${money(result.winner.total)}`));comparison.append(verdict);
     const breakdown=el('div','native-store-saving-breakdown');
+    const start=el('p','native-store-price-start');start.append(el('span','',result.other.name+' 实付作为起点'),el('strong','',money(result.other.total)));breakdown.append(start);
     for(const difference of result.differences) {
       const row=el('p');row.dataset.effect=difference.amount>0?'saving':difference.amount<0?'extra':'same';
-      row.append(el('span','native-store-difference-mark',difference.amount>0?'↓':difference.amount<0?'↑':'＝'),el('span','',difference.text));breakdown.append(row);
+      const label={餐品标价:'餐品价格差',店铺折扣:'店铺折扣差',优惠券:'平台券差额',配送费:'配送实付差'}[difference.label];
+      row.append(el('span','',label),el('strong','',(difference.amount>0?'−':difference.amount<0?'+':'')+money(Math.abs(difference.amount))));breakdown.append(row);
     }
-    comparison.append(breakdown,el('p','native-store-comparison-note',`${result.winner.name} 相比 ${result.other.name}：四项差额合计 ${money(result.saving)}。改变份数后，券门槛与最省平台可能改变。`));
+    const end=el('p','native-store-price-end');end.append(el('span','',result.winner.name+' 最终实付'),el('strong','',money(result.winner.total)));breakdown.append(end);
+    comparison.append(breakdown,el('p','native-store-comparison-note',`从 ${result.other.name} 换到 ${result.winner.name}，减号代表少花的钱，加号代表多花的钱。四项合并，最终${result.saving?'省 '+money(result.saving):'同价'}。`));
+    const couponHeading=el('h3','native-store-coupon-heading','本单用了什么优惠');
+    comparison.append(couponHeading,offerRules);
     const menuPrices=el('details','native-store-menu-comparison');
     menuPrices.append(el('summary','',`查看 ${store.menu.length} 道菜的标价对比`));
     const legend=el('p','native-store-comparison-note','左侧 GrabFood · 右侧 ShopeeFood；以下为单份餐品标价，尚未计算优惠及配送。');menuPrices.append(legend);
@@ -178,7 +205,7 @@ window.wansoStore = (() => {
       }
     }
     function refreshSaved() {const saved=Boolean(state.group?.[store.id]);heart.setAttribute('aria-pressed',String(saved));heart.setAttribute('aria-label',saved?'取消收藏餐厅':'收藏餐厅');}
-    function refreshLanguage() {languageValue.textContent=languages.find(item=>item[0]===selectedLanguage)[2];}
+    function refreshLanguage() {languageValue.textContent=languages.find(item=>item[0]===selectedLanguage)[2];apply.querySelector('span').textContent=appliedLanguage!=='original'&&appliedLanguage===selectedLanguage?'已翻译':'翻译';}
     function closeLanguagePicker() {languageSheet?.remove();languageSheet=null;scroll.inert=false;previousFocus?.focus({preventScroll:true});}
     function showLanguagePicker() {
       if(languageSheet)return;
@@ -187,7 +214,7 @@ window.wansoStore = (() => {
       const dialog=el('section','native-store-language-sheet');dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label','翻译菜单语言');
       const heading=el('header');heading.append(el('h2','','翻译为'));const close=button('native-store-language-close','关闭语言选择',closeLanguagePicker);close.append(icon('close'));heading.append(close);dialog.append(heading);
       for(const [code,glyph,label] of languages) {
-        const choice=button('native-store-language-choice',label,()=>{selectedLanguage=code;state.menuLanguage??={};state.menuLanguage[store.id]=legacyLanguages.indexOf(code);if(code==='original'){appliedLanguage='original';state.translated??={};state.translated[store.id]=0;renderMenu();}refreshLanguage();apply.querySelector('span').textContent='翻译';closeLanguagePicker();});
+        const choice=button('native-store-language-choice',label,()=>{selectedLanguage=code;state.menuLanguage??={};state.menuLanguage[store.id]=legacyLanguages.indexOf(code);if(code==='original'){appliedLanguage='original';state.translated??={};state.translated[store.id]=0;renderMenu();}refreshLanguage();closeLanguagePicker();});
         choice.dataset.language=code;choice.setAttribute('aria-pressed',String(selectedLanguage===code));choice.append(el('span','native-store-language-glyph',glyph),el('strong','',label),el('span','native-store-language-check',selectedLanguage===code?'✓':''));dialog.append(choice);
       }
       languageSheet.append(dialog);root.append(languageSheet);close.focus({preventScroll:true});

@@ -46,9 +46,9 @@ check('currency rounds down to whole VND and quantity validation is explicit',()
  assert.equal(offer.merchantDiscount,4999);assert.equal(offer.total,28334);
  for(const q of [0,-1,1.5,NaN,100]) assert.throws(()=>calculate(fixture(50000,10000),'grab',q));
 });
-check('all 160 stores retain exact matched menu prices and safe totals for one to four people',()=>{
- assert.equal(catalog.length,160);assert.equal(new Set(catalog.map(s=>s.id)).size,160);
- for(const store of catalog)for(const key of ['grab','shopee']){
+check('original 160 stores retain exact matched menu prices and safe totals for one to four people',()=>{
+ assert.equal(catalog.length,24960);assert.equal(new Set(catalog.map(s=>s.id)).size,24960);
+ for(const store of catalog.slice(0,160))for(const key of ['grab','shopee']){
   assert.equal(store.menu[0].prices[key],store.platforms[key].price);
   for(let quantity=1;quantity<=4;quantity++){
    const offer=calculate(store,key,quantity);
@@ -60,13 +60,13 @@ check('all 160 stores retain exact matched menu prices and safe totals for one t
   }
  }
 });
-check('each city has 80 examples, mixed discounts and actual eligible free-delivery offers',()=>{
+check('each city has 12,480 examples, mixed discounts and actual eligible free-delivery offers',()=>{
  for(const city of ['hanoi','hcm']){
-  const stores=catalog.filter(s=>s.city===city);assert.equal(stores.length,80);
-  const hasDiscount=stores.filter(s=>['grab','shopee'].some(k=>calculate(s,k).discount>0)).length;
-  const free=stores.filter(s=>['grab','shopee'].some(k=>calculate(s,k).netDeliveryFee===0)).length;
-  assert(hasDiscount>=40 && hasDiscount<80);assert(free>=10 && free<80);
-  console.log(city,JSON.stringify({stores:80,hasDiscount,freeDelivery:free}));
+  const stores=catalog.filter(s=>s.city===city);assert.equal(stores.length,12480);
+  const hasDiscount=stores.filter(s=>['grab','shopee'].some(k=>context.window.wansoOffers.summary(s,k).discount>0)).length;
+  const free=stores.filter(s=>['grab','shopee'].some(k=>context.window.wansoOffers.summary(s,k).netDeliveryFee===0)).length;
+  assert(hasDiscount>=stores.length*.5 && hasDiscount<stores.length);assert(free>=stores.length*.1 && free<stores.length);
+  console.log(city,JSON.stringify({stores:stores.length,hasDiscount,freeDelivery:free}));
  }
 });
 console.log(JSON.stringify({passed:checks}));

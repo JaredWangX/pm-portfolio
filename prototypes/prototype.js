@@ -188,7 +188,7 @@ function renderFrame(buildHotspots = true) {
   }
 }
 async function show(id, manual = true, returnToViewer = false, runSearch = false, navigation = 'reset') {
-  window.wansoControls?.dismissStore();
+  window.wansoControls?.dismissAll();
   const tab = navigation === 'tab' ? id : null;
   if (tab === phoneTab) return;
   const recalled = tabViews.get(tab);
@@ -207,7 +207,8 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
     const previousFrame = frames[current];
     if (current === index && !tab) {
       renderFrame(false);
-      if (runSearch) {
+      if(frame.unifiedStore)mountUnifiedStore(frame);
+      if (runSearch || (capturedPhone&&['generating','writing'].includes(frame.id))) {
         if (frame.id === 'generating') chatNodes = undefined;
         queueSearchStep(frame, request);
       }
@@ -242,7 +243,7 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
     activeLayer = document.createElement('div');
     activeLayer.className = 'page-layer';
     const storeOrigin = frame.store && frames.find(entry => entry.id === screenHistory.at(-1)?.id);
-    const pushedStore = storeOrigin && (storeOrigin.chat || storeOrigin.id === 'saved');
+    const pushedStore = !frame.unifiedStore && storeOrigin && (storeOrigin.chat || storeOrigin.id === 'saved');
     activeLayer.classList.toggle('ios-store-push', Boolean(pushedStore));
     image.className = 'original-screen';
     image.draggable = false;
@@ -332,6 +333,7 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
     document.querySelectorAll('.viewer-footer button, .viewer-tools button, .phone-shortcuts button, .continue')
       .forEach(b=>b.disabled=false);
     renderFrame();
+    if(frame.unifiedStore)mountUnifiedStore(frame);
     const scroll = activeLayer.querySelector('.phone-scroll');
     if (scroll) {
       const width = screen.clientWidth;
@@ -349,7 +351,7 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
 
     elapsed = 0;
     $('.play-progress span').style.transform = 'scaleX(0)';
-    if (runSearch) {
+    if (runSearch || (capturedPhone&&['generating','writing'].includes(frame.id))) {
       if (frame.id === 'generating') chatNodes = undefined;
       queueSearchStep(frame, request);
     }
@@ -371,6 +373,11 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
       schedule();
     }
   }
+}
+function mountUnifiedStore(frame) {
+  openPhoneAction({action:'catalogStore',value:{id:frame.store,framed:true,
+    section:frame.id==='compare'?'.native-store-platforms':frame.id.startsWith('summary')?'.native-store-summary':'',
+    languagePicker:frame.id.startsWith('translate')}});
 }
 function queueSearchStep(frame, request) {
   if (capturedPhone && ['generating', 'writing'].includes(frame.id)) {
@@ -583,6 +590,10 @@ async function loadManifest() {
     const data = await response.json();
     if (capturedPhone) await window.wansoNative.load(controller.signal);
     frames = data.frames;
+    if(capturedPhone)for(const frame of frames){
+      if(frame.id.startsWith('translate-'))frame.store=frame.id.endsWith('second')?'quyen':'moc';
+      if(frame.store){frame.unifiedStore=true;frame.src=frames.find(item=>item.id==='home').src;delete frame.scroll;delete frame.metrics;frame.hotspots=[];}
+    }
     flows = data.flows;
     if (!frames.length || !flows.length) throw Error('empty');
     $('.flow-selector').replaceChildren(...flows.map((f, i) => makeButton(f.title, () => {

@@ -134,7 +134,8 @@
     const template = menus[store.key];
     if (!template) continue;
     const offset = store.platforms.grab.price - template[0][5];
-    store.menu = template.map((row, index) => {
+    Object.defineProperty(store,'menu',{configurable:true,enumerable:true,get() {
+      const menu = template.map((row, index) => {
       const categoryKey = row[6];
       const name = index === 0 ? store.dish : row[0];
       const translations = {...words(row.slice(0, 5)), vi: name};
@@ -147,12 +148,15 @@
       return {
         id: store.id + '-menu-' + (index + 1), name, translations,
         category: categories[categoryKey].vi,
-        categoryTranslations: {...categories[categoryKey]},
+        categoryTranslations: categories[categoryKey],
         prices: {grab, shopee}, price: grab,
         description: translatedDescriptions.zh, descriptions: translatedDescriptions,
         sample: true
       };
     });
+      Object.defineProperty(store,'menu',{value:menu,writable:true,configurable:true,enumerable:true});
+      return menu;
+    }});
     const city = store.city === 'hanoi' ? '河内' : '胡志明市';
     store.address = store.district + ' · ' + city + '（演示位置）';
     store.hours = ['coffee', 'tea'].includes(store.key) ? '07:00–22:00（演示营业时间）' : '06:00–22:00（演示营业时间）';

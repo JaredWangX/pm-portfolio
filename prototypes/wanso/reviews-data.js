@@ -64,8 +64,9 @@ window.wansoReviews = (() => {
     ]
   };
   function forStore(value) {
-    const archive=typeof value==='string'&&archivedExamples[value];
-    if(archive)return archive.map(([dishName,dish,text],index)=>({id:value+'-review-'+index,name:people[index*3][0],initial:people[index*3][1],rating:index===1?5:4,platform:value==='moc'&&index===1?'shopee':'grab',platformLabel:value==='moc'&&index===1?'ShopeeFood':'GrabFood',dish: dish+' · '+dishName,text,tags:[],sample:true}));
+    const archiveId=typeof value==='string'?value:value?.id;
+    const archive=archivedExamples[archiveId];
+    if(archive)return archive.map(([dishName,dish,text],index)=>({id:archiveId+'-review-'+index,name:people[index*3][0],initial:people[index*3][1],rating:index===1?5:4,platform:archiveId==='moc'&&index===1?'shopee':'grab',platformLabel:archiveId==='moc'&&index===1?'ShopeeFood':'GrabFood',dish: dish+' · '+dishName,text,tags:[],sample:true}));
     const store = typeof value === 'string'
       ? window.wansoCatalog?.find(item => item.id === value)
       : value;

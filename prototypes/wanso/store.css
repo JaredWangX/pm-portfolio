@@ -173,3 +173,41 @@
 .native-store-image-credit {display:inline-block;margin-top:8px;color:#3c6b9e;font-size:12px;text-underline-offset:3px;}
 .image-credits-link {font-size:12px;line-height:1.6;}
 .image-credits-link a {color:#3c6b9e;text-underline-offset:3px;}
+
+/* Keep the decision above the ledger; all price differences have an explicit starting total. */
+.native-store-price-overview {margin-top:24px;padding:18px;border:1px solid #bfd6f1;border-radius:16px;background:linear-gradient(135deg,#fafdff,#e9f2ff);}
+.native-store-order-context {margin:0 0 12px;font-size:12px;line-height:1.7;color:#506c8b;}
+.native-store-price-heading {display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.native-store-price-heading h2 {margin:0;color:#204974;font-size:17px;line-height:1.45;font-weight:700;}
+.native-store-price-heading>strong {flex:none;color:#2367b7;font-size:16px;line-height:1.5;white-space:nowrap;}
+.native-store-price-reason {margin:12px 0 16px;font-size:13px;line-height:1.85;color:#345673;text-wrap:pretty;}
+.native-store-quote-pair {display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid #c9dcf2;padding-top:16px;}
+.native-store-quote-pair>div {display:grid;gap:7px;}
+.native-store-quote-pair>div+div {border-left:1px solid #c9dcf2;padding-left:16px;}
+.native-store-quote-pair span {font-size:11px;color:#526c84;white-space:nowrap;}
+.native-store-quote-pair strong {font-size:20px;letter-spacing:-.02em;color:#304e68;font-variant-numeric:tabular-nums;}
+.native-store-quote-pair .is-lowest strong {color:#2367b7;}
+.native-store-platform.is-lowest {border-color:#75a5d9;box-shadow:0 0 0 1px #75a5d950;}
+.native-store-saving-breakdown p {display:flex;justify-content:space-between;gap:16px;padding:0 4px;font-variant-numeric:tabular-nums;}
+.native-store-saving-breakdown strong {flex:none;font-size:14px;white-space:nowrap;font-weight:650;}
+.native-store-saving-breakdown [data-effect=saving]>strong {color:#147849;}
+.native-store-saving-breakdown [data-effect=extra]>strong {color:#965b38;}
+.native-store-saving-breakdown .native-store-price-start {padding-bottom:13px;border-bottom:1px solid #e2ebf5;font-size:12px;}
+.native-store-saving-breakdown .native-store-price-end {margin-top:2px;padding-top:14px;border-top:1px solid #cbdff2;color:#245d9b;font-weight:650;}
+.native-store-price-end strong {font-size:20px;}
+.native-store-coupon-heading {margin:22px 0 10px;font-size:14px;font-weight:650;color:#264f76;}
+.native-store-rules-list {gap:0;margin-top:0;}
+.native-store-applied-coupon {display:grid;gap:7px;padding-top:16px;}
+.native-store-applied-coupon:first-child {padding-top:0;}
+.native-store-applied-coupon strong {font-size:12px;line-height:1.7;color:#2b5279;}
+.native-store-applied-coupon span {font-size:12px;line-height:1.8;color:#526b80;}
+.native-store-rules-list .native-store-offer-rules {border:0;background:transparent;border-radius:0;padding:10px 0 16px;border-bottom:1px solid #e2ebf5;}
+@container store-detail (max-width:320px) {
+ .native-store-price-overview {padding:14px;}
+ .native-store-price-heading {display:grid;gap:8px;}
+ .native-store-quote-pair {gap:8px;}
+ .native-store-quote-pair>div+div {padding-left:8px;}
+ .native-store-quote-pair strong {font-size:18px;}
+}
+
+.native-store-price-link {grid-column:1/-1;display:block;width:100%;margin-top:12px;padding:10px 0 0;border:0;background:transparent;color:#2368b5;text-align:left;font-size:12px;line-height:1.7;font-weight:600;min-height:40px;}

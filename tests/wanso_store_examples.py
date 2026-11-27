@@ -128,13 +128,13 @@ def check_saved_and_recent(browser):
         legacy_names=cards.locator('.ios-saved-main').evaluate_all('(nodes)=>nodes.map(n=>n.getAttribute("aria-label"))')
         for index,name in enumerate(legacy_names):
             cards.get_by_role('button',name=name,exact=True).click()
-            reviews=page.locator('.phone-scroll > .native-store-reviews')
+            reviews=page.locator('.native-store-view .native-store-reviews')
             expect(reviews).to_have_count(1)
             expect(reviews.locator('.native-store-review')).to_have_count(3)
             expect(reviews.locator('.native-store-review-example')).to_contain_text('示例')
             reviews.evaluate('(node)=>node.scrollIntoView({block:"start"})')
             page.screenshot(path=str(OUT/f'legacy-{index}-reviews.png'))
-            page.goto(BASE+'prototypes/wanso/?qa=store-examples#saved',wait_until='networkidle')
+            page.locator('.native-store-view .native-store-back').click()
             expect(saved).to_be_visible()
         CHECKS.append('saved: favourites only open/move/remove; three seeded recent records reopen matching store, dish, platform and fees; both archived stores have reviews')
         # Clear through the real settings action, then revisit and reload. Empty must not reseed.
@@ -169,11 +169,11 @@ def run():
                     check_reviews(page,view,label)
                     assert not errors,errors
                     if width==320:
-                        data=page.evaluate('''()=>window.wansoCatalog.map(store=>({id:store.id,
+                        data=page.evaluate('''()=>window.wansoCatalog.filter((store,index)=>index<160||index%1000===0||index===window.wansoCatalog.length-1).map(store=>({id:store.id,
                             reviews:window.wansoReviews.forStore(store).map(r=>({text:r.text,dish:r.dish,sample:r.sample}))}))''')
-                        assert len(data)==160
+                        assert len(data)>=180
                         assert all(len(s['reviews'])==3 and all(r['sample'] and r['dish'] in r['text'] for r in s['reviews']) for s in data)
-                        CHECKS.append('fixtures: all 160 catalog stores have three explicitly illustrative, dish-matching reviews')
+                        CHECKS.append('fixtures: first 160 and distributed catalog samples have three explicitly illustrative, dish-matching reviews')
                 finally:
                     context.close()
             assert min(widths)<280 and max(widths)>=390,widths

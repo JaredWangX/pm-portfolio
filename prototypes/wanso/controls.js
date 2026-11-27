@@ -19,6 +19,45 @@ window.wansoControls = (() => {
       ]
     }
   };
+
+  const archiveStores=new Map();
+  function storeFor(id) {
+    const catalog=window.wansoCatalog.find(item=>item.id===id);
+    if(catalog)return catalog;
+    if(archiveStores.has(id))return archiveStores.get(id);
+    const source=window.wansoNative.restaurants()?.[id];
+    if(!source)return null;
+    const known=stores[id];
+    const menu=source.menu.flatMap(group=>group.items.map(([name,price,description])=>({
+      name,price,description:description||'',category:group.title,
+      translations:Object.fromEntries(['vi','en','zh','ja','ko'].map((language,index)=>{
+        const translation=known.menu.find(item=>item[0]===name);
+        return [language,translation?.[[0,1,2,3,4][index]]||name];
+      }))
+    })));
+    const first=menu.findIndex(item=>item.name===source.dish);
+    if(first>0)menu.unshift(...menu.splice(first,1));
+    // Historical menus have incomplete delivery quotes; missing quotes are explicit example values.
+    const platforms=id==='moc'?{
+      grab:{name:'GrabFood',price:68000,fee:40000},
+      shopee:{name:'ShopeeFood',price:73000,fee:12000}
+    }:{
+      grab:{name:'GrabFood',price:59000,fee:24000,promotion:{delivery:{minSpend:0,amount:12000}}},
+      shopee:{name:'ShopeeFood',price:61000,fee:10000}
+    };
+    const store={id,name:source.name,key:'pho',city:'hanoi',district:id==='moc'?'栋多区':'还剑区',
+      image:'../../assets/wanso/native/'+source.photo,imageAlt:'历史餐厅餐品配图',
+      dish:source.dish,dishZh:known.menu.find(item=>item[0]===source.dish)?.[2]||source.dish,
+      rating:source.rating,reviewCount:source.review_count,distance:source.distance,category:'越南菜 · 汤河粉',
+      tags:['鸡肉','热汤','菜单样本'],address:id==='moc'?'Thái Thịnh · Đống Đa · Hà Nội':'Hoàn Kiếm · Hà Nội',
+      description:'鸡肉与汤河粉搭配，菜单保留历史档案中收录的菜品。',
+      reason:'🍜 鸡肉汤河粉适合想吃热食的一餐，可以按口味备注香草、辣椒另放。下方保留原菜单供比较。档案未完整收录的跨平台费用已补充为演示报价，用于说明同菜同份量的计算方法。',
+      menu,platforms,sample:true};
+    if(menu[0])menu[0].prices={grab:platforms.grab.price,shopee:platforms.shopee.price};
+    for(const key of Object.keys(platforms))Object.assign(platforms[key],window.wansoOffers.calculate(store,key,1));
+    archiveStores.set(id,store);return store;
+  }
+
   const orders = {
     'moc-shopee': {store: 'moc', platform: 'ShopeeFood', price: 73000, fee: null, color: 'shopee'},
     'moc-grab': {store: 'moc', platform: 'GrabFood', price: 68000, fee: 40000, color: 'grab'},
@@ -81,7 +120,7 @@ window.wansoControls = (() => {
   const content = el('div', 'sheet-content');
   sheet.append(header, content);
   document.body.append(sheet);
-  let activeScreen, activeFrame, activeLayer, anchor, navigate, storeSession, locationRequest=0;
+  let activeScreen, activeFrame, activeLayer, anchor, navigate, storeSession, locationRequest=0, suppressClose=false;
   const controls = new WeakMap();
 
   function placeSheet() {
@@ -108,6 +147,8 @@ window.wansoControls = (() => {
       event.clientY < box.top || event.clientY > box.bottom) sheet.close();
   });
   sheet.addEventListener('close', () => {
+    if(suppressClose){suppressClose=false;return;}
+    if(sheet.open)return;
     locationRequest++;
     if (window.frameElement) parent.removeEventListener('scroll', placeSheet);
     sheet.classList.remove('native-city-sheet','native-collection-sheet','native-avatar-sheet','native-taste-sheet');
@@ -128,7 +169,7 @@ window.wansoControls = (() => {
   }
 
   function go(id, search = false, mode = 'forward') {
-    sheet.close();
+    dismissAll();
     navigate(id, search, mode);
   }
 
@@ -200,42 +241,11 @@ window.wansoControls = (() => {
   }
 
   function openOrder(id) {
-    const order = orders[id];
-    const store = stores[order.store];
-    recordRecentOrder(id);
-    const top = el('div', 'order-store');
-    const photo = el('img');
-    photo.src = '../../assets/wanso/native/' + store.image;
-    photo.alt = '';
-    photo.width = 64;
-    photo.height = 64;
-    const name = el('div');
-    const platform = el('span', 'order-platform', order.platform);
-    platform.dataset.platform = order.color;
-    name.append(platform, el('strong', null, store.name));
-    top.append(photo, name);
-    const fee = order.fee === null ? '以平台结算为准' : currency(order.fee);
-    const lines = [
-      ['餐品', store.menu[0][0] + ' · 1 份'],
-      ['菜品标价', currency(order.price)],
-      ['配送费', order.oldFee ? currency(order.oldFee) + ' → ' + fee : fee]
-    ];
-    if (order.fee !== null) lines.push(['档案小计', currency(order.price + order.fee)]);
-    const menu = button('查看菜单', () => showMenu(order.store, id), 'sheet-button primary');
-    show('下单预览', top, details(lines),
-      note('河内历史菜单样本。平台实时价格、优惠和送达时间会随地址及下单时段变化。'),
-      actions(backButton(), menu));
+    const order=orders[id];
+    if(order)catalogOrder({id:order.store,platform:order.color});
   }
 
-  function showMenu(id, fromOrder) {
-    const store = stores[id];
-    const menu = el('div', 'sheet-archive-menu');
-    window.wansoNative.appendMenu(menu, id, state.translated[id]);
-    const more = button('查看店铺详情', () => go(store.frame), 'sheet-button primary');
-    const back = fromOrder ? button('返回下单预览', () => openOrder(fromOrder)) : backButton();
-    show('菜单 · ' + menuLanguages[state.translated[id]], paragraph(store.name),
-      activeFrame.store ? actions(back) : actions(back, more), menu);
-  }
+  function showMenu(id) { catalogStore({id,section:'.native-store-menu'}); }
 
   function menuLanguage(value) {
     const id = activeFrame.id.endsWith('second') ? 'quyen' : 'moc';
@@ -313,29 +323,43 @@ window.wansoControls = (() => {
     const previous=storeSession;storeSession=null;
     if (sheet.open) sheet.close();
     previous.controller.destroy();
-    for (const [node,inert] of previous.underlay) node.inert=inert;
+    for (const [node,inert,visibility,clipPath] of previous.underlay) {node.inert=inert;node.style.visibility=visibility;node.style.clipPath=clipPath;}
     activeScreen?.removeAttribute('data-store-open');
     previous.anchor?.focus({preventScroll:true});
     if (activeFrame?.id==='saved' && activeLayer?.isConnected) paint(activeLayer,activeFrame);
   }
+  function dismissAll() {
+    locationRequest++;
+    if(sheet.open){suppressClose=true;sheet.close();}
+    if(window.frameElement)parent.removeEventListener('scroll',placeSheet);
+    sheet.classList.remove('native-city-sheet','native-collection-sheet','native-avatar-sheet','native-taste-sheet');
+    dismissStore();
+  }
   function catalogStore(value) {
-    const {id,request=''}=typeof value==='string'?{id:value}:value;
-    const store=window.wansoCatalog.find(item=>item.id===id);
+    const {id,request='',framed=false,section='',languagePicker=false}=typeof value==='string'?{id:value}:value;
+    const store=storeFor(id);
     if (!store) return;
-    if (storeSession?.id===id) {if(sheet.open)sheet.close();return;}
+    if (storeSession?.id===id && storeSession.request===request) {
+      if(sheet.open)sheet.close();
+      if(section){const target=storeSession.controller.element.querySelector(section);if(target)target.scrollIntoView({block:'start'});}
+      if(languagePicker&&!storeSession.controller.element.querySelector('.native-store-language-overlay'))storeSession.controller.element.querySelector('.native-store-choose-language').click();
+      return;
+    }
     dismissStore();
     if(sheet.open)sheet.close();
-    const underlay=[...activeLayer.children].map(node=>[node,node.inert]);
-    underlay.forEach(([node])=>{node.inert=true;});
+    const underlay=[...activeLayer.children].map(node=>[node,node.inert,node.style.visibility,node.style.clipPath]);
+    underlay.forEach(([node])=>{node.inert=true;if(node.classList.contains('original-screen'))node.style.clipPath='inset(0 0 92.9% 0)';else node.style.visibility='hidden';});
     const origin=document.activeElement;
-    const controller=window.wansoStore.mount(activeLayer,store,{request,state,onClose:dismissStore,
+    const controller=window.wansoStore.mount(activeLayer,store,{request,state,onClose:()=>{dismissStore();if(framed)navigate('recommend',false,'back');},
       onAction:(action,payload)=>{anchor=document.activeElement;actionHandlers[action](payload);}});
     storeSession={id,request,controller,underlay,anchor:origin};
     activeScreen.setAttribute('data-store-open','true');
     controller.element.querySelector('.native-store-back').focus({preventScroll:true});
+    if(section){const target=controller.element.querySelector(section),scroll=controller.element.querySelector('.native-store-scroll');if(target)scroll.scrollTop=target.offsetTop;}
+    if(languagePicker)controller.element.querySelector('.native-store-choose-language').click();
     controller.element.addEventListener('keydown',event=>{
       if(sheet.open||controller.element.querySelector('.native-store-language-overlay'))return;
-      if(event.key==='Escape'){event.preventDefault();event.stopPropagation();dismissStore();}
+      if(event.key==='Escape'){event.preventDefault();event.stopPropagation();controller.element.querySelector('.native-store-back').click();}
       if(event.key==='Tab'){
         const targets=[...controller.element.querySelectorAll('button,[tabindex="0"]')].filter(node=>!node.disabled);
         if(event.shiftKey&&document.activeElement===targets[0]){event.preventDefault();targets.at(-1).focus();}
@@ -353,7 +377,7 @@ window.wansoControls = (() => {
     sheet.classList.add('native-collection-sheet');
   }
   function catalogShare({id}) {
-    const store=window.wansoCatalog.find(item=>item.id===id);
+    const store=storeFor(id);
     const text=store.name+'\n'+store.dishZh+'\n'+store.description;
     const copy=button('复制餐厅信息',async()=>{
       try{await navigator.clipboard.writeText(text);copy.textContent='已复制';}
@@ -362,9 +386,10 @@ window.wansoControls = (() => {
     show('分享餐厅',el('p','sheet-copy',text),actions(backButton('取消'),copy));
   }
   function catalogOrder(value) {
+    if(typeof value==='string'&&orders[value])return openOrder(value);
     const parts=typeof value==='string'?value.split('|'):[];
     const {id,platform,request=''}=typeof value==='string'?{id:parts[0],platform:parts[1],request:decodeURIComponent(parts[2]||'')}:value;
-    const store=window.wansoCatalog.find(item=>item.id===id);
+    const store=storeFor(id);
     if (!store?.platforms[platform]) return;
     const offer=window.wansoNative.offerFor(store,platform,request);
     const saved=id+'|'+platform+'|'+encodeURIComponent(request);
@@ -392,12 +417,12 @@ window.wansoControls = (() => {
         sheet.close();
         return;
       }
-      const entries = Object.entries({...stores,...Object.fromEntries(window.wansoCatalog.map(store=>[store.id,store]))}).filter(([key]) => state.group[key] && (name === '全部收藏' || state.group[key] === name));
-      show(name, ...entries.map(([key, store]) => row(store.name, store.rating, () => store.id ? catalogStore(store.id) : go(store.frame))),
+      const entries=Object.keys(state.group).filter(key=>state.group[key]&&(name==='全部收藏'||state.group[key]===name)).map(key=>[key,storeFor(key)]).filter(([,store])=>store);
+      show(name, ...entries.map(([key, store]) => row(store.name, String(store.rating), () => catalogStore(key))),
         ...(entries.length ? [] : [paragraph('这个收藏夹还没有餐厅。可以从店铺详情收藏，或在收藏页移动已有餐厅。')]),
         actions(backButton('完成'), button('查看收藏夹', () => collections(), 'sheet-button primary')));
     };
-    show(heading, paragraph(id ? (stores[id]||window.wansoCatalog.find(store=>store.id===id)).name : '按收藏夹整理已保存的餐厅，之后可直接查看菜单。'),
+    show(heading, paragraph(id ? storeFor(id).name : '按收藏夹整理已保存的餐厅，之后可直接查看菜单。'),
       ...state.collections.map(name => row(name, id ? '' : (name === '全部收藏' ? savedCount() : Object.values(state.group).filter(g => g === name).length) + ' 家餐厅',
         () => select(name), id && state.group[id] === name)), actions(backButton(), button('新建收藏夹', () => field(
         '新建收藏夹', '给收藏夹起一个容易找到的名字，例如「工作日午餐」。', '', value => {
@@ -407,15 +432,9 @@ window.wansoControls = (() => {
   }
 
   function recentOrderData(id) {
-    if (orders[id]) {
-      const order=orders[id],store=stores[order.store];
-      return {id,storeId:order.store,name:store.name,image:'../../assets/wanso/native/'+store.image,
-        dish:store.menu[0][0],platform:order.color,platformName:order.platform,quantity:1,
-        price:order.price,fee:order.fee,discount:0,total:order.fee===null?null:order.price+order.fee,
-        detailAction:'legacyStore',detailValue:store.frame,orderAction:'order'};
-    }
+    if(orders[id]){const order=orders[id];return {...recentOrderData(order.store+'|'+order.color+'|'),id};}
     const [storeId,platform,encoded='']=id.split('|');
-    const store=window.wansoCatalog.find(item=>item.id===storeId);
+    const store=storeFor(storeId);
     if(!store?.platforms[platform])return null;
     let request;try{request=decodeURIComponent(encoded);}catch{return null;}
     const offer=window.wansoNative.offerFor(store,platform,request);
@@ -427,7 +446,7 @@ window.wansoControls = (() => {
     const examples=['demo-1|grab|','demo-3|shopee|','demo-6|grab|'];
     try {
       const raw=sessionStorage.getItem('wanso-recent-orders-v1');
-      if(raw!==null){const parsed=JSON.parse(raw);if(Array.isArray(parsed))return parsed.filter(id=>typeof id==='string'&&recentOrderData(id)).slice(0,50);}
+      if(raw!==null){const parsed=JSON.parse(raw);if(Array.isArray(parsed))return parsed.filter(id=>typeof id==='string'&&(orders[id]||/^demo-\d+\|(grab|shopee)\|/.test(id))).slice(0,50);}
       sessionStorage.setItem('wanso-recent-orders-v1',JSON.stringify(examples));
     } catch { /* Storage can be unavailable in an embedded preview. */ }
     return examples;
@@ -589,12 +608,12 @@ window.wansoControls = (() => {
     actions(backButton(), ...(state.group[id] ? [button('取消收藏', () => actionHandlers.removeSaved(id))] : []))),
     collections: () => collections(),
     moveSaved: collections,
-    removeSaved: id => confirmation('移除收藏', '从收藏中移除 ' + (stores[id]||window.wansoCatalog.find(store=>store.id===id)).name + '？', '确认移除', () => {
+    removeSaved: id => confirmation('移除收藏', '从收藏中移除 ' + storeFor(id).name + '？', '确认移除', () => {
       delete state.group[id];
       sheet.close();
     }),
     recentOrders,
-    legacyStore: frame=>go(frame),
+    legacyStore: frame=>catalogStore(frame.includes('second')?'quyen':'moc'),
     historySearch,
     historyClear: () => clearHistory(false),
     activityClear: () => clearHistory(true),
@@ -679,9 +698,9 @@ window.wansoControls = (() => {
     }
     if (frame.id === 'saved' && savedCount() < 2) {
       const current = el('div', 'native-list-state saved-state');
-      const entries = Object.entries({...stores,...Object.fromEntries(window.wansoCatalog.map(store=>[store.id,store]))}).filter(([key]) => state.group[key]);
+      const entries=Object.keys(state.group).filter(key=>state.group[key]).map(key=>[key,storeFor(key)]).filter(([,store])=>store);
       current.append(el('strong', null, '全部收藏 · ' + entries.length + ' 家'));
-      for (const [, store] of entries) current.append(row(store.name, store.rating, () => navigate(store.frame)));
+      for (const [id,store] of entries)current.append(row(store.name,String(store.rating),()=>catalogStore(id)));
       if (!entries.length) current.append(paragraph('喜欢的餐厅会保存到这里。'));
       current.append(button('浏览收藏夹', () => {
         activeFrame = frame;
@@ -694,6 +713,8 @@ window.wansoControls = (() => {
 
   return {
     viewState: () => state,
+    storeFor,
+    dismissAll,
     recentOrderData,
     register,
     paint,

@@ -61,7 +61,12 @@ window.wansoNative = (() => {
   let featuredOffset = 0;
   const featuredRails = new Set();
   const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const catalogForLocation = () => window.wansoCatalog.filter(store => store.city === location.city);
+  const cityCatalogs=new Map();
+  const catalogForLocation=()=>{
+    if(window.wansoCatalogByCity?.[location.city])return window.wansoCatalogByCity[location.city];
+    if(!cityCatalogs.has(location.city))cityCatalogs.set(location.city,window.wansoCatalog.filter(store=>store.city===location.city));
+    return cityCatalogs.get(location.city);
+  };
   let activeRequest=query;
   function criteria(text) {
     const values={一:1,二:2,两:2,三:3,四:4,五:5,六:6,七:7,八:8,九:9,十:10};
@@ -128,24 +133,36 @@ window.wansoNative = (() => {
   }
   function selectedStores({limit=5,query:request=query}={}) {
     const conditions=criteria(request);
+    const totals=new Map();
     const candidates=catalogForLocation().filter(store=>{
-      if(bestOffer(store,request)[1].total>conditions.budget) return false;
       if(conditions.vegetarian&&!store.vegetarian) return false;
       if(conditions.fullMeal&&['coffee','tea'].includes(store.key)) return false;
       if(conditions.chicken&&!['pho','mixed','rice','banh','bun'].includes(store.key)) return false;
       if(conditions.noChicken&&['pho','mixed','rice','banh','bun'].includes(store.key)) return false;
       if(conditions.excluded.some(name=>categoryKeys[name]?.includes(store.key))) return false;
-      return !conditions.categories.length || conditions.categories.some(name=>categoryKeys[name]?.includes(store.key));
+      if(conditions.categories.length&&!conditions.categories.some(name=>categoryKeys[name]?.includes(store.key)))return false;
+      const total=Math.min(...Object.keys(store.platforms).map(key=>conditions.quantity===1?store.platforms[key].total:window.wansoOffers.summary(store,key,conditions.quantity).total));
+      if(total>conditions.budget)return false;
+      totals.set(store.id,total);return true;
     });
-    return candidates.sort((a,b)=> {
+    candidates.sort((a,b)=> {
       const vegScore=Number(conditions.vegetables&&['rice','veggie'].includes(b.key))-Number(conditions.vegetables&&['rice','veggie'].includes(a.key));
       if(vegScore)return vegScore;
-      if(conditions.cheap)return bestOffer(a,request)[1].total-bestOffer(b,request)[1].total || a.distance-b.distance;
+      if(conditions.cheap)return totals.get(a.id)-totals.get(b.id) || a.distance-b.distance;
       const local=Number(b.district===location.district)-Number(a.district===location.district);
       if(local) return local;
       if(conditions.close) return a.eta-b.eta || a.distance-b.distance;
-      return bestOffer(a,request)[1].total-bestOffer(b,request)[1].total || b.rating-a.rating;
-    }).slice(0,limit);
+      return totals.get(a.id)-totals.get(b.id) || b.rating-a.rating;
+    });
+    const selected=[],images=new Set(),brands=new Set();
+    // Choose varied branches within the matching ranked set, not five copies of one cuisine photo.
+    for(const distinctBrand of [true,false])for(const store of candidates) {
+      const brand=store.name.split(' · ')[0];
+      if(images.has(store.image)||(distinctBrand&&brands.has(brand)))continue;
+      selected.push(store);images.add(store.image);brands.add(brand);
+      if(selected.length>=limit)return selected;
+    }
+    return selected;
   }
   function picture(store,className='') {
     const image=element('img',className);
@@ -399,7 +416,7 @@ ${ruleText}
     scroller.append(element('p','rich-thread-label','示例对话 · 选餐、费用核对、确认偏好'));
     appendRound(query,0);
     const beverage=criteria(query).categories.some(name=>['coffee','tea'].includes(name));
-    const followups=['把配送费也算进去，哪个平台更划算？',beverage?'想要少糖少冰，帮我缩小到最合适的一家。':'辣椒和香菜分开放，帮我缩小到最合适的一家。'];
+    const followups=['把配送费也算进去，哪个平台更划算？',beverage?'想要少糖少冰，帮我缩小到最合适的一家。':'继续保留前面的忌口，帮我缩小到最合适的一家。'];
     followups.forEach((prompt,index)=>{requests.push(prompt);appendRound(prompt,index+1);});
     const composer=element('form','ios-composer');
     input=element('input');input.type='text';input.placeholder='继续调整预算、口味或菜品…';

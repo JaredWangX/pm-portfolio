@@ -965,11 +965,16 @@ window.wansoImageInfo = {
     "credit": "../../assets/wanso/catalog/credits.html"
   }
 };
+// Larger simulated branches reuse the same cuisine-matched scene pool, never claim unique merchant photos.
 for (const store of window.wansoCatalog || []) {
-  if (window.wansoImages[store.id]) {
-    store.image = window.wansoImages[store.id];
-    store.imageAlt = window.wansoImageInfo[store.id].alt;
-    store.imageKind = window.wansoImageInfo[store.id].kind;
-    store.imageCredit = window.wansoImageInfo[store.id].credit;
+  const seed=Number(store.id.replace('demo-',''));
+  const imageId=window.wansoImages[store.id]?store.id:'demo-'+(((seed-1)%160)+1);
+  const info=window.wansoImageInfo[imageId];
+  if (info) {
+    store.image=window.wansoImages[imageId];
+    store.imageAlt=info.alt;
+    store.imageKind=info.kind;
+    store.imageCredit=info.credit;
+    store.imageAssetId=imageId;
   }
 }

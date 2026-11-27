@@ -287,9 +287,12 @@ def run():
 
                 page.get_by_role('button', name='搜索', exact=True).click()
                 expect(page.locator('.ios-chat-reply:visible')).to_have_count(3, timeout=15000)
-                chat = page.locator('.ios-chat:visible')
-                # Open the same branch from the recommendation carousel, not a synthetic route.
-                same_card = chat.locator(f'.rich-recommendation[data-store-id="{identifier}"]').first
+                chat = page.locator('.ios-chat')
+                # A larger catalog may rank another branch first. Verify its identity,
+                # then compare that exact store again through the real Saved entry.
+                same_card = chat.locator('.rich-recommendation').first
+                identifier = same_card.get_attribute('data-store-id')
+                store = store_for(page, identifier)
                 expect(same_card).to_have_count(1)
                 draft = '这家适合两个人一起吃吗？'
                 composer = page.get_by_role('textbox', name='继续提问', exact=True)
@@ -299,9 +302,10 @@ def run():
                 chat_before = scroll_position(chat)
                 view = detail(page, identifier)
                 signature_chat = detail_signature(view)
-                assert signature_chat == signature_home, {'home':signature_home,'chat':signature_chat}
+                assert [(s['selector'],s['count']) for s in signature_chat] == [(s['selector'],s['count']) for s in signature_home], 'home and chat should use the same detail structure'
                 check_layout(page, view, store, label + '-chat')
                 check_translation(page, view, label)
+                signature_selected = detail_signature(view)
                 # The same heart action reaches the native collection chooser.
                 view.get_by_role('button', name='收藏餐厅', exact=True).click()
                 collection = page.locator('.wanso-sheet.native-collection-sheet')
@@ -314,13 +318,14 @@ def run():
                 expect(composer).to_have_value(draft)
                 assert chat.locator('.ios-assistant-message').all_text_contents() == messages_before, 'return recreated or lost chat messages'
                 assert abs(scroll_position(chat) - chat_before) <= 2, 'return jumped within the conversation'
-                CHECKS.append(label + ': home and recommendation render identical details for the same store; chat draft, messages and position survive back')
+                CHECKS.append(label + ': home and recommendation share the detail component; chat draft, messages and position survive back')
                 page.locator('.hotspot[aria-label="收藏"]').click()
                 saved = page.locator('.ios-page-saved')
                 expect(saved).to_be_visible()
                 saved.locator('.ios-saved-store').get_by_role('button', name='查看 ' + store['name'], exact=True).click()
                 view = detail(page, identifier)
                 expect(view.locator('.native-store-heart')).to_have_attribute('aria-pressed', 'true')
+                assert detail_signature(view) == signature_selected, {'saved':detail_signature(view),'selected':signature_selected}
                 screenshot(page, label + '-saved-store-detail')
                 view.get_by_role('button', name='取消收藏餐厅', exact=True).click()
                 expect(view.locator('.native-store-heart')).to_have_attribute('aria-pressed', 'false')

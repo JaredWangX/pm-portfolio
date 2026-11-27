@@ -147,12 +147,12 @@ window.wansoPages = (() => {
     nextInsight(false);
     const body=el('div','ios-page-content');const stats=el('section','ios-explore-stats');
     const statsHeader=el('div','ios-stats-heading');
-    statsHeader.append(el('strong','','🟢 🟠 双平台'),el('span','','当前城市 · 按单份餐计算'));
+    statsHeader.append(el('strong','','🟢 🟠 双平台'),el('span','','当前城市 · 演示店铺库'));
     const catalog=window.wansoNative.catalogForLocation();const values=el('dl','ios-stat-values');
-    const quotes=catalog.map(store=>Object.keys(store.platforms).map(key=>window.wansoOffers.calculate(store,key,1)));
+    const quotes=catalog.map(store=>Object.values(store.platforms));
     const promoCount=quotes.filter(offers=>offers.some(p=>p.discount>0)).length;
     const freeCount=quotes.filter(offers=>offers.some(p=>p.netDeliveryFee===0)).length;
-    for(const [value,text] of [[catalog.length,'示例店铺'],[promoCount,'本单有优惠'],[freeCount,'本单免配送']]){
+    for(const [value,text] of [[catalog.length,'示例店铺'],[promoCount,'单份享优惠'],[freeCount,'单份免配送']]){
       const pair=el('div');pair.append(el('dd','',number(value)),el('dt','',text));values.append(pair);
     }
     stats.append(statsHeader,values);const picksHeading=heading('');
@@ -163,7 +163,7 @@ window.wansoPages = (() => {
       picks.replaceChildren();
       for(const store of window.wansoNative.selectedStores({limit:5,query})){
       const card=btn('',()=>open('catalogStore',store.id),'ios-explore-store','查看 '+store.name);
-      const image=el('div','ios-explore-cover');image.append(photo(store.image),el('strong','ios-photo-name',store.name));
+      const image=el('div','ios-explore-cover');image.append(photo(store.image),el('strong','ios-photo-name',store.name.split(' · ')[0]));
       const details=el('div','ios-explore-details');const price=Math.min(store.platforms.grab.total,store.platforms.shopee.total);
       details.append(el('strong','',`★ ${store.rating.toFixed(1)} · ${store.district} · ${store.distance.toFixed(1)} km`),el('span','',store.dishZh+' · 到手 '+money(price)+' 起'));
       const brands=el('div','ios-explore-platforms');
@@ -210,8 +210,7 @@ window.wansoPages = (() => {
   function saved(root, data, state, route, open) {
     const header=el('div','ios-page-heading');
     header.append(el('h1','','♥ 已收藏'),btn('◷ 历史',()=>route('history'),'ios-page-link','会话历史'));
-    data={...data,...Object.fromEntries(window.wansoCatalog.map(store=>[store.id,{...store,photo:store.image,review_count:store.reviewCount,dish:store.dishZh,sample:store.platforms.grab.price,platform:'GrabFood'}]))};
-    const ids=Object.keys(data).filter(id=>state.group[id]);
+    const ids=Object.keys(state.group).filter(id=>state.group[id]&&window.wansoControls.storeFor(id));
     const intro=el('div','ios-saved-intro');
     intro.append(el('strong','',`已收藏 ${ids.length} 家 · 万象精选`),el('span','','把喜欢的餐厅留在手边，按收藏夹整理。'));
     const recentHeading=el('div','ios-group-heading');recentHeading.append(el('strong','','最近订单'),btn('查看全部 →',()=>open('recentOrders'),'ios-page-link','查看全部最近订单'));
@@ -224,13 +223,13 @@ window.wansoPages = (() => {
     const collection=btn(`❤️ 全部收藏 · ${ids.length} 家`,()=>open('collections'),'ios-collection-title','查看全部收藏');
     root.append(header,intro,recentHeading,recentNote,recent,group,collection);
     for (const id of ids.reverse()) {
-      const store=data[id];
+      const store=window.wansoControls.storeFor(id);
       const card=el('article','ios-saved-store');
-      const main=btn('',()=>store.id?open('catalogStore',id):route(storeRoute(id)),'ios-saved-main','查看 '+store.name);
+      const main=btn('',()=>open('catalogStore',id),'ios-saved-main','查看 '+store.name);
       const copy=el('span');
-      copy.append(el('strong','',store.name),el('span','',`★ ${store.rating.toFixed(1)} · ${number(store.review_count)} 条评价`),
-        el('small','',`${store.dish}  ${money(store.sample)}`));
-      main.append(photo(store.id?store.image:asset('native/'+store.photo)),copy);
+      copy.append(el('strong','',store.name),el('span','',`★ ${store.rating.toFixed(1)} · ${number(store.reviewCount)} 条评价`),
+        el('small','',`${store.dishZh}  ${money(store.platforms.grab.price)}`));
+      main.append(photo(store.image),copy);
       const actions=el('div','ios-saved-actions');
       actions.append(btn('',()=>open('moveSaved',id),'ios-saved-icon','移动 '+store.name+' 到收藏夹'),
         btn('',()=>open('removeSaved',id),'ios-saved-icon','移除 '+store.name+' 收藏'));

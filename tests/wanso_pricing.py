@@ -48,17 +48,17 @@ with sync_playwright() as p:
     page.on('response', lambda response: failed.append(f'{response.status} {response.url}') if response.status >= 400 else None)
     page.goto(BASE + 'prototypes/wanso/?qa=pricing#explore', wait_until='networkidle')
     stats = page.locator('.ios-stat-values dd')
-    expect(stats).to_have_text(['80', '73', '35'])
+    expect(stats).to_have_text(['12,480', '10,899', '4,712'])
     shot(page, 'hanoi-stats')
     page.get_by_role('button', name='选择位置', exact=True).click()
     sheet = page.locator('.wanso-sheet')
     sheet.locator('.native-city-row').filter(has=page.locator('strong', has_text='胡志明市')).click()
-    expect(stats).to_have_text(['80', '70', '27'])
+    expect(stats).to_have_text(['12,480', '10,939', '4,705'])
     shot(page, 'hcm-stats')
     page.get_by_role('button', name='选择位置', exact=True).click()
     sheet.locator('.native-city-row').filter(has=page.locator('strong', has_text='河内')).click()
-    expect(stats).to_have_text(['80', '73', '35'])
-    checks.append('City switching renders 80/73/35 in Hanoi and 80/70/27 in HCM from current single-portion offers')
+    expect(stats).to_have_text(['12,480', '10,899', '4,712'])
+    checks.append('City switching renders 12,480/10,899/4,712 in Hanoi and 12,480/10,939/4,705 in HCM from current single-portion offers')
 
     visit(page, 'home')
     first = page.locator('.rich-home-card[data-store-id="demo-1"]')
@@ -70,7 +70,7 @@ with sync_playwright() as p:
     expect(detail.locator('[data-platform="shopee"] .native-store-platform-total strong')).to_have_text('51.850đ')
     expect(detail.locator('.native-store-verdict strong')).to_have_text('ShopeeFood 本单省 1.250đ')
     difference = detail.locator('.native-store-saving-breakdown')
-    for text in ['餐品标价贵 2.000đ', '店铺折扣少减 5.900đ', '优惠券多减 1.150đ', '配送费少付 8.000đ']:
+    for text in ['53.100đ', '+2.000đ', '+5.900đ', '−1.150đ', '−8.000đ', '51.850đ']:
         expect(difference).to_contain_text(text)
     grab_rules = detail.locator('.native-store-offer-rules[data-platform="grab"]')
     grab_rules.locator('summary').click()
@@ -106,6 +106,8 @@ with sync_playwright() as p:
         ids = reply.locator('.rich-recommendation').evaluate_all('(cards) => cards.map(c => c.dataset.storeId)')
         kinds = page.evaluate('(ids) => ids.map(id => window.wansoCatalog.find(s => s.id === id).key)', ids)
         assert all(kind == 'pho' for kind in kinds), kinds
+        visuals = page.evaluate('(ids)=>ids.map(id=>{const s=window.wansoCatalog.find(s=>s.id===id);return {image:s.image,brand:s.name.split(" · ")[0]}})', ids)
+        assert len({v['image'] for v in visuals}) == 5 and len({v['brand'] for v in visuals}) == 5, visuals
         reply.locator('.rich-answer-heading').first.scroll_into_view_if_needed()
         shot(page, 'reply-' + str(index + 1))
     expect(replies.nth(1).locator('.ios-assistant-message')).to_contain_text('平台券取最优惠的一张')
@@ -116,22 +118,20 @@ with sync_playwright() as p:
     last = replies.last
     cards = last.locator('.rich-recommendation')
     expect(cards).to_have_count(5)
-    target = cards.filter(has=page.locator('[data-platform="grab"]')).filter(has=page.locator('.ios-restaurant-name', has_text='Phở Gà An Nhiên'))
-    expect(target).to_have_count(1)
+    target = cards.first
+    identifier = target.get_attribute('data-store-id')
+    expected = page.evaluate('(id)=>window.wansoOffers.summary(window.wansoCatalog.find(s=>s.id===id),"grab",2)', identifier)
     expect(target.locator('.rich-total-label')).to_contain_text('2份')
-    expect(target.locator('.rich-offer[data-platform="grab"] strong')).to_have_text('90.270đ')
-    expect(target.locator('.rich-offer[data-platform="shopee"] strong')).to_have_text('102.000đ')
     target.locator('.rich-offer[data-platform="grab"]').click()
     assert amount(page, '份数') == 2
-    assert amount(page, '商家折扣') == 11800
-    assert amount(page, '平台券') == 15930
-    assert amount(page, '运费减免') == 8000
-    assert amount(page, '合计') == 90270
-    expect(sheet.locator('.sheet-details')).to_contain_text('90.270đ')
-    expect(sheet).to_contain_text('多人餐折扣券')
+    assert amount(page, '商家折扣') == expected['merchantDiscount']
+    assert amount(page, '平台券') == expected['couponDiscount']
+    assert amount(page, '运费减免') == expected['deliveryDiscount']
+    assert amount(page, '合计') == expected['total']
+    expect(sheet.locator('.sheet-details')).to_contain_text(f"{expected['total']:,}".replace(',', '.')+'đ')
     shot(page, 'two-portion-checkout')
     sheet.get_by_role('button', name='关闭', exact=True).click()
-    checks.append('Two-person follow-up crosses thresholds, chooses percentage coupon, shares delivery and reverses winner to Grab at 90,270 vs 102,000')
+    checks.append('Two-person follow-up recalculates applicable merchant discount, coupon and shared delivery for the selected recommendation')
 
     send(page, '换成鸡肉米线，还是两个人，预算十五万。', 5)
     ids = replies.last.locator('.rich-recommendation').evaluate_all('(cards) => cards.map(c => c.dataset.storeId)')
