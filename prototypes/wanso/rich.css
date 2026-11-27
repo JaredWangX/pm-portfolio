@@ -73,3 +73,44 @@
 .rich-answer-heading {display:block;color:#214f7d;font-size:14px;font-weight:650;line-height:1.6;margin-bottom:8px;}
 .rich-answer-section>p {margin:0!important;white-space:pre-line;line-height:1.8;}
 .rich-card-reason p {white-space:pre-line;line-height:1.75;}
+
+/* Vietnamese labels need content-sized cards, not the old single-line Chinese slots. */
+.rich-home-rail {align-items:stretch;}
+.rich-home-card {flex-basis:max(216px,calc(228 * var(--ios)));width:max(216px,calc(228 * var(--ios)));height:auto;min-height:400px;}
+.rich-home-card .rich-pick-cover {height:max(118px,calc(122 * var(--ios)));}
+.rich-home-card .ios-home-store-info {gap:8px;padding:14px;}
+.rich-home-card .ios-home-store-info>strong {overflow:visible;text-overflow:clip;white-space:normal;min-height:2.8em;font-size:14px;line-height:1.4;overflow-wrap:break-word;}
+.rich-category {white-space:normal;font-size:12px;line-height:1.5;}
+.rich-tags>span {white-space:normal;font-size:12px;line-height:1.4;overflow-wrap:break-word;}
+.rich-home-card .rich-tags {gap:6px;}
+.rich-home-card .rich-tags>span {width:auto;}
+.rich-pick-stats {white-space:normal;font-size:12px;line-height:1.6;}
+.rich-home-card .rich-delivery {white-space:normal;overflow:visible;text-overflow:clip;font-size:12px;line-height:1.6;}
+.rich-home-platforms {font-size:12px;line-height:1.5;padding-top:10px;}
+.rich-recommendation {flex-basis:min(260px,100%);}
+.rich-restaurant {height:auto;min-height:460px;}
+.rich-restaurant .ios-restaurant-name {display:block;height:auto;min-height:2.8em;overflow:visible;-webkit-line-clamp:unset;font-size:14px;line-height:1.4;overflow-wrap:break-word;}
+.rich-restaurant .ios-restaurant-info {gap:10px;padding:14px;width:100%;min-width:0;}
+.rich-restaurant .rich-tags {gap:6px;}
+.rich-restaurant .ios-sample {font-size:13px;line-height:1.5;}
+.rich-restaurant .ios-restaurant-stats {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-top:10px;}
+.rich-restaurant .ios-restaurant-stats>div:last-child {grid-column:1/-1;}
+.rich-restaurant .ios-restaurant-stats dt {font-size:12px;line-height:1.5;}
+.rich-restaurant .ios-restaurant-stats dd {font-size:13px;line-height:1.5;white-space:nowrap;}
+.rich-total-label {font-size:12px;line-height:1.6;padding:4px 14px 8px;}
+.rich-offers {padding:0 10px 10px;gap:8px;}
+.rich-offer {min-height:44px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:5px 7px;padding:8px;font-size:12px;}
+.rich-offer>strong {grid-column:2;grid-row:2;margin-left:0;font-size:13px;}
+.rich-offer>b {grid-column:3;grid-row:1/3;}
+.rich-card-reason {padding:12px;font-size:13px;line-height:1.75;}
+.rich-carousel-count {font-size:12px;line-height:1.5;margin:10px 0 14px;}
+.rich-thread-label {font-size:12px;line-height:1.5;}
+.rich-chat-header {top:7.1%;height:64px;left:56px;padding-right:14px;}
+.rich-chat-header strong {font-size:14px;line-height:1.4;white-space:normal;overflow:visible;text-overflow:clip;}
+.rich-chat-header small {font-size:11px;line-height:1.5;overflow-wrap:break-word;}
+.rich-chat {top:calc(7.1% + 64px);}
+.rich-processing-screen {top:calc(7.1% + 64px);overflow-y:auto;overscroll-behavior:contain;}
+.rich-processing-query {font-size:13px;line-height:1.65;overflow-wrap:anywhere;}
+.rich-step-list strong {font-size:13px;line-height:1.45;}
+.rich-step-list small {font-size:12px;line-height:1.5;}
+.rich-step-list li {padding-block:8px;}

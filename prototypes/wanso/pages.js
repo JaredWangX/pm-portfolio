@@ -279,11 +279,13 @@ window.wansoPages = (() => {
     const render={home,explore,saved,profile}[id];
     scroll.refreshContent=()=>{
       const top=scroll.scrollTop;
+      const rails=[...scroll.querySelectorAll('.ios-carousel, .ios-recent-order-rail')].map(rail=>rail.scrollLeft);
       scroll.replaceChildren();
       const data=window.wansoNative.restaurants();
       const state=window.wansoControls.viewState();
       render(scroll,data,state,route,open);
       scroll.scrollTop=top;
+      scroll.querySelectorAll('.ios-carousel, .ios-recent-order-rail').forEach((rail,index)=>{rail.scrollLeft=rails[index]||0;});
     };
     scroll.refreshContent();layer.append(scroll);return scroll;
   }

@@ -1,6 +1,7 @@
 body[data-capture="ios"] .screen { --ios: calc(100cqw / 402); }
 .phone-scroll { overscroll-behavior: contain; }
-.phone-scroll:not(.ios-chat, .ios-home-scroll) { touch-action: pan-y; }
+.phone-scroll:not(.ios-chat, .ios-home-scroll, .ios-data-page) { touch-action: pan-y; }
+.ios-data-page { touch-action: auto; }
 .phone-scroll .scroll-content img { -webkit-user-drag: none; }
 
 .ios-chat {

@@ -334,7 +334,7 @@ window.wansoControls = (() => {
     if (!store) return;
     if (storeSession?.id===id && storeSession.request===request) {
       if(sheet.open)sheet.close();
-      if(section){const target=storeSession.controller.element.querySelector(section);if(target)target.scrollIntoView({block:'start'});}
+      if(section)storeSession.controller.scrollToSection(section);
       if(languagePicker&&!storeSession.controller.element.querySelector('.native-store-language-overlay'))storeSession.controller.element.querySelector('.native-store-choose-language').click();
       return;
     }
@@ -348,7 +348,7 @@ window.wansoControls = (() => {
     storeSession={id,request,controller,underlay,anchor:origin};
     activeScreen.setAttribute('data-store-open','true');
     controller.element.querySelector('.native-store-back').focus({preventScroll:true});
-    if(section){const target=controller.element.querySelector(section),scroll=controller.element.querySelector('.native-store-scroll');if(target)scroll.scrollTop=target.offsetTop;}
+    if(section)controller.scrollToSection(section);
     if(languagePicker)controller.element.querySelector('.native-store-choose-language').click();
     controller.element.addEventListener('keydown',event=>{
       if(sheet.open||controller.element.querySelector('.native-store-language-overlay'))return;

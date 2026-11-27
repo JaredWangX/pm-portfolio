@@ -1,5 +1,5 @@
 /* Native proportions from MerchantDetailView.swift, independent of the entry screen. */
-.native-store-view {position:absolute;inset:7.1% 0 0;z-index:30;overflow:hidden;border-radius:calc(32 * var(--ios)) calc(32 * var(--ios)) 0 0;background:#eff7ff;color:#13273e;isolation:isolate;container:store-detail / inline-size;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;}
+.native-store-view {position:absolute;inset:7.1% 0 0;z-index:30;overflow:hidden;border-radius:calc(32 * var(--ios)) calc(32 * var(--ios)) 0 0;background:#eff7ff;color:#13273e;isolation:isolate;container:store-detail / inline-size;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;}
 .native-store-view button {font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .native-store-view button:focus-visible {outline:2px solid #2e79d4;outline-offset:2px;}
 .native-store-scroll {height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;touch-action:auto;scroll-padding-top:76px;}
@@ -27,8 +27,8 @@
 .native-store-rating {display:flex;align-items:center;gap:calc(6 * var(--ios));font-size:max(12px,calc(12 * var(--ios)));color:#526b80;}
 .native-store-rating strong {font-size:max(13px,calc(13 * var(--ios)));color:#20354c;}
 .native-store-star {color:#e6a30a;font-size:max(17px,calc(17 * var(--ios)));}
-.native-store-tags {display:flex;gap:6px;margin-top:14px;overflow:auto;scrollbar-width:none;white-space:nowrap;}
-.native-store-tags span {flex:none;border-radius:20px;background:#dcecff;color:#266bb3;font-size:max(11px,calc(10 * var(--ios)));font-weight:600;padding:calc(3 * var(--ios)) calc(8 * var(--ios));}
+.native-store-tags {display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;}
+.native-store-tags span {flex:0 1 auto;min-width:0;overflow-wrap:break-word;line-height:1.5;border-radius:20px;background:#dcecff;color:#266bb3;font-size:max(11px,calc(10 * var(--ios)));font-weight:600;padding:calc(3 * var(--ios)) calc(8 * var(--ios));}
 .native-store-address {display:flex;align-items:flex-start;gap:6px;font-size:13px;line-height:1.6;color:#526b80;margin-top:14px;}
 .native-store-address svg {flex:none;width:calc(14 * var(--ios));height:calc(14 * var(--ios));margin-top:calc(2 * var(--ios));color:#8ba1b9;}
 .native-store-body {padding:0 max(16px,calc(20 * var(--ios))) 32px;}
@@ -37,8 +37,8 @@
 .native-store-summary>div {display:contents;}
 .native-store-summary h2 {margin:0;font-size:13px;letter-spacing:.02em;font-weight:650;color:#296ab4;}
 .native-store-summary p {grid-column:1/-1;margin:0;font-size:14px;line-height:1.8;color:#29435b;text-wrap:pretty;}
-.native-store-summary-offer {grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:14px;border-top:1px solid #e7eef6;}
-.native-store-summary-offer>div {min-width:0;display:grid;gap:5px;}
+.native-store-summary-offer {grid-column:1/-1;display:flex;align-items:flex-start;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-top:14px;border-top:1px solid #e7eef6;}
+.native-store-summary-offer>div {flex:1 1 180px;min-width:0;display:grid;gap:5px;}
 .native-store-summary-offer span {font-size:12px;line-height:1.5;color:#3e5871;}
 .native-store-summary-offer small {font-size:11px;color:#526b80;}
 .native-store-summary-offer>strong {flex:none;font-size:16px;font-weight:650;color:#276aaa;font-variant-numeric:tabular-nums;}
@@ -52,24 +52,26 @@
 .native-store-apply-translation {position:relative;justify-content:center;min-width:calc(130 * var(--ios));color:#266bb3;font-size:max(13px,calc(14 * var(--ios)));font-weight:600;}
 .native-store-apply-translation:before {content:'';position:absolute;left:0;top:calc(12 * var(--ios));bottom:calc(12 * var(--ios));width:1px;background:#e4edf7;}
 .native-store-apply-translation b {font-size:max(17px,calc(17 * var(--ios)));}
-.native-store-platforms {display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:24px;}
+.native-store-platforms {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;row-gap:0;margin-top:24px;}
 .native-store-platform {--platform:#008746;--platform-soft:#ecf9f1;display:flex;flex-direction:column;min-width:0;overflow:hidden;border:1px solid #ccebdc;border-radius:14px;background:#fff;}
 .native-store-platform[data-platform=shopee] {--platform:#c93a20;--platform-soft:#fff0eb;border-color:#f2d9d2;}
-.native-store-platform-heading {display:grid;grid-template-columns:28px minmax(0,1fr);align-items:center;gap:10px;padding:16px;border-bottom:1px solid #e6edf5;}
+.native-store-platform-heading {display:grid;grid-template-columns:28px minmax(0,1fr);align-items:center;gap:8px;padding:14px 12px;border-bottom:1px solid #e6edf5;}
 .native-store-platform-mark {display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--platform);color:#fff;font-weight:700;font-size:11px;}
 
-.native-store-platform-heading h2 {margin:0;color:var(--platform);font-size:14px;font-weight:650;white-space:nowrap;}
-.native-store-platform-rating {grid-column:1/-1;display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px;margin:0;font-size:12px;line-height:1.5;color:#526b80;}
-.native-store-platform-rating span {white-space:nowrap;}
-.native-store-platform-body {display:grid;gap:12px;padding:16px;flex:1;}
-.native-store-delivery,.native-store-promo {display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:8px;font-size:13px;line-height:1.5;margin:0;color:#526b80;}
-.native-store-delivery strong,.native-store-promo strong {font-size:13px;font-weight:550;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.native-store-platform-heading h2 {grid-column:1/-1;grid-row:2;margin:0;color:var(--platform);font-size:15px;line-height:1.4;font-weight:650;white-space:nowrap;}
+.native-store-platform-rating {display:contents;margin:0;font-size:12px;line-height:1.5;color:#526b80;}
+.native-store-platform-rating span:first-child {grid-column:2;grid-row:1;justify-self:end;white-space:nowrap;}
+.native-store-platform-rating span:last-child {grid-column:1/-1;grid-row:3;overflow-wrap:anywhere;}
+.native-store-platform-body {display:grid;grid-template-rows:repeat(5,1fr);padding:0;flex:1;}
+.native-store-delivery,.native-store-promo {display:grid;grid-template-columns:minmax(0,1fr);align-content:center;gap:3px;padding:8px 12px;margin:0;border-bottom:1px solid #edf2f7;font-size:13px;line-height:1.4;color:#526b80;}
+.native-store-delivery>span,.native-store-promo>span {min-width:0;overflow-wrap:break-word;}
+.native-store-delivery strong,.native-store-promo strong {font-size:15px;line-height:1.4;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums;}
 .native-store-promo {color:var(--platform);}
-.native-store-platform-footer {display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px;padding:16px;border-top:1px solid #e7eef6;background:var(--platform-soft);}
+.native-store-platform-footer {display:grid;grid-template-columns:minmax(0,1fr);align-content:start;gap:14px;padding:16px 12px;border-top:1px solid #e7eef6;background:var(--platform-soft);}
 .native-store-platform-total {min-width:0;display:grid;gap:7px;color:#526b80;}
 .native-store-platform-total>span {font-size:12px;line-height:1.5;}
 .native-store-platform-total>strong {font-size:20px;line-height:1.2;font-weight:650;color:#1d3b54;white-space:nowrap;font-variant-numeric:tabular-nums;}
-.native-store-order {display:flex;align-items:center;justify-content:center;gap:6px;min-width:94px;min-height:44px;padding:10px 12px;border:0;border-radius:10px;background:var(--platform);color:#fff;font-size:12px;font-weight:650;}
+.native-store-order {width:100%;display:flex;align-items:center;justify-content:center;gap:6px;min-width:94px;min-height:44px;padding:10px 12px;border:0;border-radius:10px;background:var(--platform);color:#fff;font-size:12px;font-weight:650;}
 .native-store-order svg {width:calc(12 * var(--ios));height:calc(12 * var(--ios));}
 .native-store-section-heading {margin:28px 0 14px;font-size:17px;font-weight:650;color:#182f47;}
 .native-store-comparison-card {padding:14px;border:1px solid #dce7f3;border-radius:16px;background:#fff;}
@@ -78,8 +80,8 @@
 .native-store-verdict strong {font-size:max(16px,calc(16 * var(--ios)));line-height:1.4;}
 .native-store-verdict>span {font-size:max(12px,calc(11 * var(--ios)));line-height:1.45;color:#fffe;}
 .native-store-compare-row {padding:18px 0;border-bottom:1px solid #e7eef6;}
-.native-store-compare-name {display:flex;align-items:flex-start;gap:calc(8 * var(--ios));}
-.native-store-compare-name strong {flex:1;min-width:0;font-size:max(13px,calc(13 * var(--ios)));line-height:1.45;color:#203a54;}
+.native-store-compare-name {display:flex;align-items:flex-start;flex-wrap:wrap;gap:8px;}
+.native-store-compare-name strong {flex:1 1 100%;min-width:0;font-size:max(13px,calc(13 * var(--ios)));line-height:1.45;color:#203a54;}
 .native-store-compare-name>span {flex:none;padding:calc(3 * var(--ios)) calc(8 * var(--ios));border-radius:20px;background:#e9f8f0;color:#007b3f;font-size:max(11px,calc(10 * var(--ios)));font-weight:700;white-space:nowrap;}
 .native-store-price-pair {display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
 .native-store-price-pair span {display:flex;align-items:center;gap:calc(6 * var(--ios));font-size:max(13px,calc(13 * var(--ios)));color:#526b80;}
@@ -118,27 +120,25 @@
 .native-store-comparison-note,.native-store-demo-note {font-size:max(13px,calc(12 * var(--ios)));}
 .native-store-platform[data-platform=grab] .native-store-promo {color:#176341;}
 
-/* The portfolio embeds the phone at different widths, independent of browser width. */
-@container store-detail (min-width:360px) {
-  .native-store-platforms {grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
-  .native-store-platform-footer {grid-template-columns:minmax(0,1fr);gap:14px;}
-  .native-store-order {width:100%;}
+/* Share track heights across both platforms, including wrapped review counts. */
+@supports (grid-template-rows:subgrid) {
+  .native-store-platform {display:grid;grid-row:span 7;grid-template-rows:subgrid;}
+  .native-store-platform-body {display:contents;}
 }
-@container store-detail (max-width:285px) {
-  .native-store-platform-heading,.native-store-platform-body,.native-store-platform-footer {padding:14px;}
-  .native-store-platform-footer {gap:8px;}
-  .native-store-platform-total>strong {font-size:18px;}
-  .native-store-order {min-width:84px;padding-inline:8px;}
-  .native-store-apply-translation {min-width:0;flex:0 0 40%;padding-inline:8px;}
-}
-@container store-detail (max-width:250px) {
-  .native-store-platform-footer {grid-template-columns:minmax(0,1fr);gap:12px;}
-  .native-store-order {width:100%;}
+@container store-detail (max-width:350px) {
+  .native-store-platforms {column-gap:10px;}
+  .native-store-platform-heading {padding:12px 10px;}
+  .native-store-platform-heading h2 {font-size:14px;}
+  .native-store-delivery,.native-store-promo {padding:8px 10px;}
+  .native-store-platform-footer {padding:14px 10px;}
+  .native-store-platform-total>strong {font-size:19px;}
+  .native-store-order {min-width:0;padding-inline:8px;}
+  .native-store-apply-translation {min-width:0;flex:0 0 40%;padding-inline:10px;}
 }
 
 .native-store-reviews-heading {display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 14px;}
 .native-store-reviews-heading h2 {margin:0;}
-.native-store-review-example {flex:none;text-decoration:none;padding:4px 8px;border-radius:6px;background:#e1ecf8;color:#4b6580;font-size:11px;line-height:1.5;}
+.native-store-review-example {flex:0 1 auto;text-decoration:none;padding:4px 8px;border-radius:6px;background:#e1ecf8;color:#4b6580;font-size:11px;line-height:1.5;}
 .native-store-review {padding:16px;border:1px solid #dce7f3;border-radius:14px;background:#fff;}
 .native-store-review+.native-store-review {margin-top:12px;}
 .native-store-review-author {display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;align-items:center;}
@@ -153,7 +153,7 @@
 .phone-scroll>.native-store-reviews {margin:0 max(16px,calc(20 * var(--ios))) 28px;}
 
 /* The same settlement rows line up across platforms; eligibility stays one click away. */
-.native-store-platform-body {display:flex;flex-direction:column;gap:12px;}
+
 .native-store-offer-rules {margin-top:auto;padding-top:4px;font-size:12px;color:#526b80;}
 .native-store-offer-rules summary,.native-store-menu-comparison summary {cursor:pointer;color:#2b6199;font-size:12px;font-weight:600;line-height:1.6;}
 .native-store-offer-rules p {margin:12px 0 0;line-height:1.8;overflow-wrap:anywhere;}
@@ -165,15 +165,6 @@
 [data-effect=extra] .native-store-difference-mark {background:#fff1e9;color:#a05b35;}
 .native-store-menu-comparison {margin-top:18px;padding-top:16px;border-top:1px solid #e4edf6;}
 .native-store-menu-comparison summary {font-size:13px;}
-@container store-detail (min-width:360px) {
-  .native-store-platform-heading {gap:8px;padding:14px 12px;grid-template-columns:24px minmax(0,1fr);}
-  .native-store-platform-mark {width:24px;height:24px;font-size:10px;border-radius:7px;}
-  .native-store-platform-heading h2 {font-size:13px;}
-  .native-store-platform-body {padding:16px 12px;}
-  .native-store-platform-footer {padding:16px 12px;}
-  .native-store-delivery,.native-store-promo {gap:4px;font-size:12px;}
-  .native-store-delivery strong,.native-store-promo strong {font-size:12px;}
-}
 
 .native-store-rules-list {display:grid;gap:10px;margin-top:14px;}
 .native-store-rules-list .native-store-offer-rules {margin:0;padding:14px 16px;border:1px solid #dce7f3;border-radius:12px;background:#ffffffb5;font-size:13px;}
@@ -185,14 +176,14 @@
 /* Keep the decision above the ledger; all price differences have an explicit starting total. */
 .native-store-price-overview {margin-top:24px;padding:18px;border:1px solid #bfd6f1;border-radius:16px;background:linear-gradient(135deg,#fafdff,#e9f2ff);}
 .native-store-order-context {margin:0 0 12px;font-size:12px;line-height:1.7;color:#506c8b;}
-.native-store-price-heading {display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.native-store-price-heading {display:grid;gap:8px;}
 .native-store-price-heading h2 {margin:0;color:#204974;font-size:17px;line-height:1.45;font-weight:700;}
-.native-store-price-heading>strong {flex:none;color:#2367b7;font-size:16px;line-height:1.5;white-space:nowrap;}
+.native-store-price-heading>strong {color:#2367b7;font-size:16px;line-height:1.5;overflow-wrap:anywhere;}
 .native-store-price-reason {margin:12px 0 16px;font-size:13px;line-height:1.85;color:#345673;text-wrap:pretty;}
 .native-store-quote-pair {display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid #c9dcf2;padding-top:16px;}
-.native-store-quote-pair>div {display:grid;gap:7px;}
+.native-store-quote-pair>div {min-width:0;display:grid;grid-template-rows:auto 1fr;align-items:start;gap:7px;}
 .native-store-quote-pair>div+div {border-left:1px solid #c9dcf2;padding-left:16px;}
-.native-store-quote-pair span {font-size:11px;color:#526c84;white-space:nowrap;}
+.native-store-quote-pair span {font-size:12px;line-height:1.6;color:#526c84;overflow-wrap:break-word;}
 .native-store-quote-pair strong {font-size:20px;letter-spacing:-.02em;color:#304e68;font-variant-numeric:tabular-nums;}
 .native-store-quote-pair .is-lowest strong {color:#2367b7;}
 .native-store-platform.is-lowest {border-color:#75a5d9;box-shadow:0 0 0 1px #75a5d950;}

@@ -30,8 +30,8 @@
 }
 .sheet-header h2 { font-size: 17px; line-height: 1.4; margin: 0; }
 .sheet-close {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   flex: none;
   border-radius: 50%;
   border: 1px solid #d5e3f5;
@@ -89,8 +89,8 @@ button.sheet-row:hover, .sheet-row[aria-pressed="true"] { background: #e7f0ff; b
 }
 .sheet-details > div { display: flex; justify-content: space-between; gap: 9px; padding: 6px 0; }
 .sheet-details > div + div { border-top: 1px solid #edf2f9; }
-.sheet-details dt { flex: none; color: #496380; }
-.sheet-details dd { margin: 0; text-align: right; font-weight: 650; }
+.sheet-details dt { flex: 1; min-width: 0; color: #496380; }
+.sheet-details dd { flex: 1; min-width: 0; overflow-wrap: anywhere; margin: 0; text-align: right; font-weight: 650; }
 .sheet-form { display: grid; gap: 10px; }
 .sheet-field { display: grid; gap: 5px; font-weight: 600; }
 .sheet-field input, .sheet-field textarea {
@@ -221,3 +221,8 @@ button.sheet-row:hover, .sheet-row[aria-pressed="true"] { background: #e7f0ff; b
 .native-taste-preview {display:flex;gap:8px;flex-wrap:wrap;}
 .native-taste-preview button {border:1px solid #c7daf3;border-radius:18px;background:#eaf3ff;color:#29649e;padding:5px 10px;font-size:13px;}
 .ios-profile-avatar img {display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit;}
+
+.sheet-row strong,.sheet-row span,.order-store strong {min-width:0;overflow-wrap:anywhere;}
+.sheet-row {min-width:0;}
+.sheet-details>div {align-items:baseline;}
+.sheet-note {font-size:13px;}

@@ -85,3 +85,55 @@
 .ios-page-saved .ios-group-heading strong {font-size:14px;line-height:1.5;}
 .ios-page-saved .ios-page-link {font-size:12px!important;min-height:32px;}
 .ios-page-saved .ios-saved-main span span,.ios-page-saved .ios-saved-main small {font-size:12px;line-height:1.5;}
+
+/* Keep longer Vietnamese text readable inside the phone at every viewport. */
+.ios-page-home .ios-home-carousel {height:auto;}
+.ios-home-location>span:nth-child(2) {white-space:normal;overflow:visible;text-overflow:clip;line-height:1.5;overflow-wrap:break-word;}
+.ios-home-location {font-size:13px!important;}
+.ios-home-top button {min-height:44px;}
+.ios-home-search-tools {align-items:stretch;}
+.ios-home-compare {min-width:0;font-size:12px!important;line-height:1.5;}
+.ios-home-compare>i {flex:none;}
+.ios-home-search-submit {flex:none;min-height:44px;font-size:13px!important;}
+.ios-home-refresh {min-height:44px;font-size:12px!important;white-space:nowrap;}
+.ios-recent-query {white-space:normal;overflow:visible;text-overflow:clip;font-size:13px;line-height:1.6;}
+.ios-home-recent {align-items:flex-start;}
+.ios-home-headline p,.ios-home-tip span,.ios-home-tip strong,.ios-home-suggestions .ios-section-title p {font-size:13px;line-height:1.6;}
+.ios-photo-copy {right:20px;}
+.ios-explore-location {font-size:13px!important;line-height:1.5;}
+.ios-explore-insight>span:nth-child(2) {min-width:0;}
+.ios-explore-insight strong,.ios-explore-insight span span {font-size:13px;line-height:1.6;}
+.ios-stats-heading {gap:12px;flex-wrap:wrap;}
+.ios-stats-heading strong {font-size:13px;}
+.ios-stats-heading>span,.ios-stat-values dt {font-size:12px;line-height:1.5;}
+.ios-stat-values>div {min-width:0;padding-inline:6px;}
+.ios-explore-store {display:flex;flex-direction:column;flex-basis:80%;max-width:280px;}
+.ios-explore-cover {width:100%;flex:none;min-height:140px;}
+.ios-photo-name {font-size:15px;line-height:1.4;overflow-wrap:break-word;}
+.ios-explore-store .ios-explore-details {flex:1;align-content:start;gap:7px;padding:14px;width:100%;}
+.ios-explore-details,.ios-explore-details strong {font-size:13px;line-height:1.5;}
+.ios-explore-platforms {margin-top:auto;gap:6px;}
+.ios-explore-platforms>span {font-size:11px;line-height:1.5;}
+.ios-scenario-copy {gap:8px;padding:55px 16px 18px;}
+.ios-scenario-copy span,.ios-scenario-copy b,.ios-section-title p,.ios-page-cta span,.ios-page-cta b {font-size:13px;line-height:1.6;}
+.ios-profile-setting>span:nth-child(2) {min-width:0;}
+.ios-setting-icon {flex:none;}
+.ios-profile-setting {gap:12px;}
+.ios-profile-setting strong {font-size:15px;line-height:1.5;}
+.ios-profile-setting small,.ios-taste-card>p,.ios-taste-tags>span {font-size:13px;line-height:1.6;}
+.ios-profile-name {font-size:16px!important;line-height:1.5;overflow-wrap:anywhere;}
+.ios-profile-counts {gap:8px;}
+.ios-profile-count {min-width:0;align-content:start;gap:4px;}
+.ios-profile-count>span {font-size:11px;line-height:1.5;}
+.ios-page-heading {align-items:flex-start;}
+.ios-page-saved .ios-page-link {min-height:44px;}
+.ios-order-record {display:flex;flex-direction:column;}
+.ios-order-record-main strong {display:block;-webkit-line-clamp:unset;overflow:visible;line-height:1.5;}
+.ios-order-record-dish {display:block;-webkit-line-clamp:unset;overflow:visible;font-size:13px;line-height:1.6;}
+.ios-order-record-total {margin-top:auto;}
+.ios-order-record-costs>div {gap:8px;}
+.ios-order-record-costs dt {min-width:0;}
+.ios-order-record-costs dd {flex:none;}
+.ios-order-record-reopen,.ios-page-saved .ios-saved-icon {min-height:44px;}
+
+.ios-home-clear {width:44px;height:44px;min-width:44px;line-height:1;}

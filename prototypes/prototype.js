@@ -123,8 +123,8 @@ function selectFrame(id, returnToViewer = false, runSearch = false, navigation =
 function currentPhoneView() {
   const width = screen.clientWidth || 1;
   const scroll = activeLayer.querySelector('.phone-scroll');
-  const carousel = activeLayer.querySelector('.ios-carousel');
-  return {id: frames[current]?.id, scroll: scroll?.scrollTop / width || 0, slide: carousel?.scrollLeft / width || 0};
+  const rails = [...activeLayer.querySelectorAll('.ios-carousel, .ios-recent-order-rail')].map(rail=>rail.scrollLeft / width);
+  return {id: frames[current]?.id, scroll: scroll?.scrollTop / width || 0, rails};
 }
 function goBack(fallback) {
   const target = screenHistory.at(-1)?.id || fallback;
@@ -362,8 +362,9 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
       const width = screen.clientWidth;
       const initialOffset = frame.scroll?.startAt ? frame.scroll.startAt * width / 402 : 0;
       scroll.scrollTop = restore ? restore.scroll * width : initialOffset;
-      const rail = activeLayer.querySelector('.ios-carousel');
-      if (rail) rail.scrollLeft = restore ? restore.slide * width : frame.chat === 'second' ? rail.scrollWidth : 0;
+      activeLayer.querySelectorAll('.ios-carousel, .ios-recent-order-rail').forEach((rail,index)=>{
+        rail.scrollLeft = restore ? (restore.rails?.[index] || 0) * width : index===0 && frame.chat==='second' ? rail.scrollWidth : 0;
+      });
     }
     if (restoreFocus) screen.focus({preventScroll: true});
     if (returnToViewer && !embed && matchMedia('(max-width:760px)').matches) {

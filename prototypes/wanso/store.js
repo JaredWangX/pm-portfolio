@@ -53,7 +53,7 @@ window.wansoStore = (() => {
     const image=window.wansoMedia.image(store.image,{detail:true,eager:true,alt:store.imageAlt||store.dishZh,width:402,height:240});
     const toolbar=el('nav','native-store-toolbar');toolbar.setAttribute('aria-label','Thao tác với quán');
     const navTitle=el('div','native-store-nav-title');navTitle.setAttribute('aria-hidden','true');
-    const navStatus=el('small');navTitle.append(el('strong','',store.name),navStatus);
+    const navStatus=el('small');navTitle.append(el('strong','','Chi tiết quán'),navStatus);
     const back=button('native-store-circle native-store-back','Quay lại',()=>onClose?.());back.append(icon('back'));
     const share=button('native-store-circle','Chia sẻ quán',()=>onAction?.('catalogShare',{id:store.id}));share.append(icon('share'));
     const heart=button('native-store-circle native-store-heart','Lưu quán',()=>{
@@ -76,19 +76,23 @@ window.wansoStore = (() => {
       open.dataset.state=current.state;openLabel.textContent=current.label;
       open.title=current.detail+' · Theo giờ Việt Nam; kiểm tra tình trạng nhận đơn trên nền tảng';
       hoursText.textContent=current.schedule?'Giờ mở cửa '+current.schedule+' · Giờ Việt Nam':current.detail;
-      navStatus.textContent=current.label+' · '+current.detail;navStatus.dataset.state=current.state;
+      navStatus.textContent=current.label;navStatus.dataset.state=current.state;
     }
     refreshHours();const hoursTimer=setInterval(refreshHours,60000);
     const onVisibility=()=>{if(!document.hidden)refreshHours();};document.addEventListener('visibilitychange',onVisibility);
     function updateToolbar() {root.classList.toggle('is-scrolled',scroll.scrollTop>hero.offsetHeight-toolbar.offsetHeight);}
     scroll.addEventListener('scroll',updateToolbar,{passive:true});
+    function scrollToSection(selector,behavior='instant') {
+      const target=root.querySelector(selector);
+      if(target)scroll.scrollTo({top:scroll.scrollTop+target.getBoundingClientRect().top-scroll.getBoundingClientRect().top-toolbar.offsetHeight-12,behavior});
+    }
     const body=el('div','native-store-body');scroll.append(body);
     const summary=el('section','native-store-summary');
     const spark=el('span','native-store-spark','✦'),summaryText=el('div');
     const summaryOffer=el('div','native-store-summary-offer');
     const summaryOfferLabel=el('div');summaryOfferLabel.append(el('span','',`${quantity} phần ${store.dishZh}`),el('small','',winner[1].name+' · Đã gồm giao hàng'));
     summaryOffer.append(summaryOfferLabel,el('strong','',money(winner[1].total)));
-    const priceLink=button('native-store-price-link','Xem so sánh giá',()=>scroll.scrollTo({top:overview.getBoundingClientRect().top-scroll.getBoundingClientRect().top+scroll.scrollTop-toolbar.offsetHeight-12,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));priceLink.textContent=result.saving?'Vì sao '+result.winner.name+' tiết kiệm '+money(result.saving)+'? →':'Xem đầy đủ chi phí hai nền tảng →';
+    const priceLink=button('native-store-price-link','Xem so sánh giá',()=>scrollToSection('.native-store-price-overview',matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'));priceLink.textContent=result.saving?'Vì sao '+result.winner.name+' tiết kiệm '+money(result.saving)+'? →':'Xem đầy đủ chi phí hai nền tảng →';
     summaryText.append(el('h2','','Vì sao AI gợi ý quán này'),el('p','',store.reason),summaryOffer,priceLink);summary.append(spark,summaryText);body.append(summary);
     const translate=el('div','native-store-translate');
     const choose=button('native-store-choose-language','Chọn ngôn ngữ thực đơn',showLanguagePicker);
@@ -263,7 +267,7 @@ window.wansoStore = (() => {
       if(start.claimed&&((start.edge&&dx>60&&Math.abs(dy)<35)||(start.pull&&scroll.scrollTop<=1&&dy>90&&Math.abs(dx)<40)))onClose?.();
     },{passive:true});
     root.addEventListener('touchcancel',()=>{gesture=null;},{passive:true});
-    return {element:root,refreshSaved,destroy:()=>{gesture=null;clearInterval(hoursTimer);document.removeEventListener('visibilitychange',onVisibility);languageSheet?.remove();root.remove();}};
+    return {element:root,refreshSaved,scrollToSection,destroy:()=>{gesture=null;clearInterval(hoursTimer);document.removeEventListener('visibilitychange',onVisibility);languageSheet?.remove();root.remove();}};
   }
   return {mount,appendReviews};
 })();

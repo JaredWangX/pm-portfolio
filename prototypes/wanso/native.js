@@ -397,7 +397,7 @@ Vuốt ngang để xem lý do gợi ý từng quán; mở quán để xem thực
   function mountChat(layer,route,open,onCarousel) {
     const scroller=element('section','phone-scroll ios-chat rich-chat');
     const header=element('div','rich-chat-header');
-    header.append(element('strong','',query),element('small','',location.label+' · '+new Intl.DateTimeFormat('vi-VN',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date())));
+    header.append(element('strong','','Trò chuyện chọn món'),element('small','',location.label+' · '+new Intl.DateTimeFormat('vi-VN',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date())));
     layer.append(header);
     scroller.tabIndex=0;scroller.setAttribute('aria-label','Cuộc trò chuyện chọn món, cuộn để xem');
     const requests=[query];
@@ -449,7 +449,7 @@ Vuốt ngang để xem lý do gợi ý từng quán; mở quán để xem thực
     const followups=['Tính cả phí giao hàng thì nền tảng nào tiết kiệm hơn?',beverage?'Mình muốn ít đường, ít đá. Chọn giúp mình một quán phù hợp nhất.':'Giữ các yêu cầu ăn uống ở trên và chọn giúp mình một quán phù hợp nhất.'];
     followups.forEach((prompt,index)=>{requests.push(prompt);appendRound(prompt,index+1);});
     const composer=element('form','ios-composer');
-    input=element('input');input.type='text';input.placeholder='Điều chỉnh ngân sách, khẩu vị hoặc món…';
+    input=element('input');input.type='text';input.placeholder='Nhắn thêm yêu cầu…';
     input.setAttribute('aria-label','Hỏi tiếp');input.maxLength=300;
     send=element('button','ios-send','➤');send.type='submit';send.disabled=true;send.setAttribute('aria-label','Gửi câu hỏi');
     input.addEventListener('input',()=>{send.disabled=busy||!input.value.trim();});
