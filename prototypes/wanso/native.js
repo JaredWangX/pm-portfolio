@@ -67,6 +67,37 @@ window.wansoNative = (() => {
     if(!cityCatalogs.has(location.city))cityCatalogs.set(location.city,window.wansoCatalog.filter(store=>store.city===location.city));
     return cityCatalogs.get(location.city);
   };
+  const selectionCache=new Map();
+  const imageLastSeen=new Map();
+  let selectionSequence=0;
+  function variedStores(candidates,{limit=5,key,preferredIds=[]}={}) {
+    const cacheKey=location.city+':'+location.district+':'+key;
+    if(key&&selectionCache.has(cacheKey))return selectionCache.get(cacheKey);
+    const selected=[],images=new Set(),brands=new Set();
+    const add=store=>{
+      if(selected.length>=limit||images.has(store.image))return false;
+      selected.push(store);images.add(store.image);brands.add(store.name.split(' · ')[0]);return true;
+    };
+    // A price/quantity follow-up keeps its eligible restaurant identities; opening a
+    // different page prefers pictures not shown elsewhere in this browser visit.
+    const preferred=new Set(preferredIds);
+    for(const store of candidates)if(preferred.has(store.id))add(store);
+    selection: for(const photo of [true,false])for(const unseen of [true,false])for(const distinctBrand of [true,false]) {
+      if(selected.length>=limit)break selection;
+      const pool=unseen?candidates:[...candidates].sort((a,b)=>(imageLastSeen.get(a.image)||0)-(imageLastSeen.get(b.image)||0));
+      for(const store of pool) {
+        if((store.imageKind==='photo')!==photo||(!imageLastSeen.has(store.image))!==unseen)continue;
+        if(distinctBrand&&brands.has(store.name.split(' · ')[0]))continue;
+        add(store);
+        if(selected.length>=limit)break;
+      }
+      if(selected.length>=limit)break;
+    }
+    const sequence=++selectionSequence;
+    for(const store of selected)imageLastSeen.set(store.image,sequence);
+    if(key)selectionCache.set(cacheKey,selected);
+    return selected;
+  }
   let activeRequest=query;
   function criteria(text) {
     const values={一:1,二:2,两:2,三:3,四:4,五:5,六:6,七:7,八:8,九:9,十:10};
@@ -131,7 +162,7 @@ window.wansoNative = (() => {
   function calculationText(offer) {
     return [`餐品 ${money(offer.price)}`,...(offer.merchantDiscount?[`− 店铺折扣 ${money(offer.merchantDiscount)}`]:[]),...(offer.couponDiscount?[`− 优惠券 ${money(offer.couponDiscount)}`]:[]),`＋ 配送 ${money(offer.originalFee)}`,...(offer.deliveryDiscount?[`− 运费减免 ${money(offer.deliveryDiscount)}`]:[]),`＝ ${money(offer.total)}`].join(' ');
   }
-  function selectedStores({limit=5,query:request=query}={}) {
+  function selectedStores({limit=5,query:request=query,surface='search',preferredIds=[]}={}) {
     const conditions=criteria(request);
     const totals=new Map();
     const candidates=catalogForLocation().filter(store=>{
@@ -154,16 +185,9 @@ window.wansoNative = (() => {
       if(conditions.close) return a.eta-b.eta || a.distance-b.distance;
       return totals.get(a.id)-totals.get(b.id) || b.rating-a.rating;
     });
-    const selected=[],images=new Set(),brands=new Set();
-    // Choose varied branches within the matching ranked set, not five copies of one cuisine photo.
-    for(const distinctBrand of [true,false])for(const store of candidates) {
-      const brand=store.name.split(' · ')[0];
-      if(images.has(store.image)||(distinctBrand&&brands.has(brand)))continue;
-      selected.push(store);images.add(store.image);brands.add(brand);
-      if(selected.length>=limit)return selected;
-    }
-    return selected;
+    return variedStores(candidates,{limit,key:surface+':'+request+':'+limit,preferredIds:(conditions.cheap||conditions.close)&&!preferredIds.length?candidates.slice(0,1).map(store=>store.id):preferredIds});
   }
+
   function picture(store,className='') {
     const image=element('img',className);
     image.src=store.image; image.alt=store.imageAlt||store.dishZh+' · 餐品配图'; image.draggable=false;
@@ -195,7 +219,8 @@ window.wansoNative = (() => {
   }
   function paintFeatured(rail) {
     const list=catalogForLocation();
-    const picked=Array.from({length:Math.min(5,list.length)},(_,i)=>list[(featuredOffset+i)%list.length]);
+    const candidates=[...list.slice(featuredOffset),...list.slice(0,featuredOffset)];
+    const picked=variedStores(candidates,{key:'home:'+featuredOffset,limit:5});
     rail.replaceChildren(...picked.map(store=>homeCard(store,rail.openStore,rail.routeStore)));
     rail.scrollLeft=0;
     rail.dataset.batch=String(Math.floor(featuredOffset/5)+1);
@@ -373,11 +398,12 @@ ${ruleText}
     scroller.tabIndex=0;scroller.setAttribute('aria-label','选餐对话，上下滚动查看');
     const requests=[query];
     const reveal=node=>scroller.scrollTo({top:scroller.scrollTop+node.getBoundingClientRect().top-scroller.getBoundingClientRect().top,behavior:reducedMotion()?'instant':'smooth'});
-    let busy=false;
+    let busy=false,previousStores=[];
     const appendRound=(prompt,round,animate=false)=>{
       scroller.append(element('p','ios-user-message',prompt));
       const appendAnswer=()=>{
-        const joined=requests.join('。');activeRequest=joined;const stores=selectedStores({query:joined});
+        const joined=requests.join('。');activeRequest=joined;const stores=selectedStores({query:joined,surface:'chat',preferredIds:/换五家|再推荐|其他店|换一批/.test(prompt)?[]:previousStores.map(store=>store.id)});
+        previousStores=stores;
         const reply=element('div','ios-chat-reply');
         const avatar=element('span','ios-avatar','✦');avatar.setAttribute('aria-hidden','true');
         const content=element('div','ios-chat-answer');

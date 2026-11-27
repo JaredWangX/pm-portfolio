@@ -51,29 +51,44 @@ window.wansoStore = (() => {
     const result=window.wansoNative.comparisonFor(store,request);
     const hero=el('div','native-store-hero');
     const image=el('img');image.src=store.image;image.alt=store.imageAlt||store.dishZh+' · 菜品示意';image.width=402;image.height=240;image.draggable=false;image.decoding='async';
-    const toolbar=el('div','native-store-toolbar');
+    const toolbar=el('nav','native-store-toolbar');toolbar.setAttribute('aria-label','餐厅操作');
+    const navTitle=el('div','native-store-nav-title');navTitle.setAttribute('aria-hidden','true');
+    const navStatus=el('small');navTitle.append(el('strong','',store.name),navStatus);
     const back=button('native-store-circle native-store-back','返回上一页',()=>onClose?.());back.append(icon('back'));
     const share=button('native-store-circle','分享餐厅',()=>onAction?.('catalogShare',{id:store.id}));share.append(icon('share'));
     const heart=button('native-store-circle native-store-heart','收藏餐厅',()=>{
       if(state.group?.[store.id]) {delete state.group[store.id];refreshSaved();}
       else onAction?.('catalogSave',{id:store.id});
     });heart.append(icon('heart'));
-    const right=el('div');right.append(share,heart);toolbar.append(back,right);
-    const open=el('span','native-store-open','可查看菜单');open.prepend(el('i'));
-    hero.append(image,toolbar,open);scroll.append(hero);
+    const right=el('div','native-store-toolbar-actions');right.append(share,heart);toolbar.append(back,navTitle,right);
+    root.prepend(toolbar);
+    const open=el('span','native-store-open');const openLabel=el('span');open.append(el('i'),openLabel);
+    hero.append(image,open);scroll.append(hero);
     const info=el('section','native-store-info');
     const title=el('h1','',store.name);
     const rating=el('div','native-store-rating');rating.append(el('span','native-store-star','★'),el('strong','',store.rating.toFixed(1)),el('span','',`(${new Intl.NumberFormat('en-US').format(store.reviewCount)})`),el('span','','·'),icon('walk'),el('span','',`${store.distance.toFixed(1)} km`));
     const tags=el('div','native-store-tags');for(const tag of [store.category.split(' · ')[0],...store.tags].slice(0,8))tags.append(el('span','',tag));
     const address=el('div','native-store-address');address.append(icon('pin'),el('span','',store.address||`${store.district} · ${store.city==='hcm'?'胡志明市':'河内'}`));
-    info.append(title,rating,tags,address);scroll.append(info);
+    const hours=el('div','native-store-hours');const hoursText=el('span');hours.append(el('span','','◷'),hoursText);
+    info.append(title,rating,tags,address,hours);scroll.append(info);
+    function refreshHours() {
+      const current=window.wansoHours.status(store);
+      open.dataset.state=current.state;openLabel.textContent=current.label;
+      open.title=current.detail+' · 按越南当地营业时间判断，实际接单状态以平台为准';
+      hoursText.textContent=current.schedule?'营业时间 '+current.schedule+' · 越南时间':current.detail;
+      navStatus.textContent=current.label+' · '+current.detail;navStatus.dataset.state=current.state;
+    }
+    refreshHours();const hoursTimer=setInterval(refreshHours,60000);
+    const onVisibility=()=>{if(!document.hidden)refreshHours();};document.addEventListener('visibilitychange',onVisibility);
+    function updateToolbar() {root.classList.toggle('is-scrolled',scroll.scrollTop>hero.offsetHeight-toolbar.offsetHeight);}
+    scroll.addEventListener('scroll',updateToolbar,{passive:true});
     const body=el('div','native-store-body');scroll.append(body);
     const summary=el('section','native-store-summary');
     const spark=el('span','native-store-spark','✦'),summaryText=el('div');
     const summaryOffer=el('div','native-store-summary-offer');
     const summaryOfferLabel=el('div');summaryOfferLabel.append(el('span','',`${quantity} 份${store.dishZh}`),el('small','',winner[1].name+' · 含配送'));
     summaryOffer.append(summaryOfferLabel,el('strong','',money(winner[1].total)));
-    const priceLink=button('native-store-price-link','查看本单比价',()=>scroll.scrollTo({top:overview.getBoundingClientRect().top-scroll.getBoundingClientRect().top+scroll.scrollTop,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));priceLink.textContent=result.saving?'为什么 '+result.winner.name+' 能省 '+money(result.saving)+'？ →':'查看两平台完整费用 →';
+    const priceLink=button('native-store-price-link','查看本单比价',()=>scroll.scrollTo({top:overview.getBoundingClientRect().top-scroll.getBoundingClientRect().top+scroll.scrollTop-toolbar.offsetHeight-12,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));priceLink.textContent=result.saving?'为什么 '+result.winner.name+' 能省 '+money(result.saving)+'？ →':'查看两平台完整费用 →';
     summaryText.append(el('h2','','AI 推荐理由'),el('p','',store.reason),summaryOffer,priceLink);summary.append(spark,summaryText);body.append(summary);
     const translate=el('div','native-store-translate');
     const choose=button('native-store-choose-language','选择菜单翻译语言',showLanguagePicker);
@@ -207,10 +222,10 @@ window.wansoStore = (() => {
     }
     function refreshSaved() {const saved=Boolean(state.group?.[store.id]);heart.setAttribute('aria-pressed',String(saved));heart.setAttribute('aria-label',saved?'取消收藏餐厅':'收藏餐厅');}
     function refreshLanguage() {languageValue.textContent=languages.find(item=>item[0]===selectedLanguage)[2];apply.querySelector('span').textContent=appliedLanguage!=='original'&&appliedLanguage===selectedLanguage?'已翻译':'翻译';}
-    function closeLanguagePicker() {languageSheet?.remove();languageSheet=null;scroll.inert=false;previousFocus?.focus({preventScroll:true});}
+    function closeLanguagePicker() {languageSheet?.remove();languageSheet=null;scroll.inert=false;toolbar.inert=false;previousFocus?.focus({preventScroll:true});}
     function showLanguagePicker() {
       if(languageSheet)return;
-      previousFocus=document.activeElement;scroll.inert=true;
+      previousFocus=document.activeElement;scroll.inert=true;toolbar.inert=true;
       languageSheet=el('div','native-store-language-overlay');
       const dialog=el('section','native-store-language-sheet');dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label','翻译菜单语言');
       const heading=el('header');heading.append(el('h2','','翻译为'));const close=button('native-store-language-close','关闭语言选择',closeLanguagePicker);close.append(icon('close'));heading.append(close);dialog.append(heading);
@@ -248,7 +263,7 @@ window.wansoStore = (() => {
       if(start.claimed&&((start.edge&&dx>60&&Math.abs(dy)<35)||(start.pull&&scroll.scrollTop<=1&&dy>90&&Math.abs(dx)<40)))onClose?.();
     },{passive:true});
     root.addEventListener('touchcancel',()=>{gesture=null;},{passive:true});
-    return {element:root,refreshSaved,destroy:()=>{gesture=null;languageSheet?.remove();root.remove();}};
+    return {element:root,refreshSaved,destroy:()=>{gesture=null;clearInterval(hoursTimer);document.removeEventListener('visibilitychange',onVisibility);languageSheet?.remove();root.remove();}};
   }
   return {mount,appendReviews};
 })();

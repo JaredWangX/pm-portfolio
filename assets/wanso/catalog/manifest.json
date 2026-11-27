@@ -1901,22 +1901,124 @@
       "stores": [
         "demo-8"
       ]
+    },
+    {
+      "category": "mixed",
+      "file": "mixed-extra-03.webp",
+      "title": "File:Chicken bo Bun in a Paris restaurant .jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Chicken_bo_Bun_in_a_Paris_restaurant_.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Chicken_bo_Bun_in_a_Paris_restaurant_.jpg/960px-Chicken_bo_Bun_in_a_Paris_restaurant_.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Exilexi",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "width": 640,
+      "height": 480,
+      "bytes": 48506,
+      "sha256": "84e06d77186f4d534305560a02cf3041cc1ed7ea0d488cb26b072297a5e64451",
+      "description": "chicken bo bun at noon in a Parisian restaurant",
+      "stores": [
+        "demo-18"
+      ],
+      "sourceWidth": null,
+      "sourceHeight": null
+    },
+    {
+      "category": "mixed",
+      "file": "mixed-extra-02.webp",
+      "title": "File:Bún with Lemongrass Chicken.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:B%C3%BAn_with_Lemongrass_Chicken.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/B%C3%BAn_with_Lemongrass_Chicken.jpg/960px-B%C3%BAn_with_Lemongrass_Chicken.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Steve Dunham",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "width": 640,
+      "height": 427,
+      "bytes": 39226,
+      "sha256": "ec76eb7c638927c3e2b582133781b6052ce8835e17e02ebeba787c59646c98cf",
+      "description": "Bún with Lemongrass Chicken",
+      "stores": [
+        "demo-26"
+      ],
+      "sourceWidth": null,
+      "sourceHeight": null
+    },
+    {
+      "category": "mixed",
+      "file": "mixed-extra-04.webp",
+      "title": "File:Bun tron, Le Cambodge, 2 Rue Leriche, 75015 Paris, France 001.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Bun_tron,_Le_Cambodge,_2_Rue_Leriche,_75015_Paris,_France_001.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/Bun_tron%2C_Le_Cambodge%2C_2_Rue_Leriche%2C_75015_Paris%2C_France_001.jpg/960px-Bun_tron%2C_Le_Cambodge%2C_2_Rue_Leriche%2C_75015_Paris%2C_France_001.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Guilhem Vellut from Paris, France",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "width": 640,
+      "height": 427,
+      "bytes": 59662,
+      "sha256": "9b19c0bf3e78761be2bdb456ccd494bb503bbd66576205058555b56e9aee3201",
+      "description": "Bo Bun with curry chicken @ Le Cambodge @ Paris 15",
+      "stores": [
+        "demo-34"
+      ],
+      "sourceWidth": null,
+      "sourceHeight": null
+    },
+    {
+      "category": "pho",
+      "file": "pho-extra-06.webp",
+      "title": "File:Mary's free range chicken pho (27872024952).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Mary%27s_free_range_chicken_pho_(27872024952).jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Mary%27s_free_range_chicken_pho_%2827872024952%29.jpg/960px-Mary%27s_free_range_chicken_pho_%2827872024952%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "T.Tseng",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "width": 640,
+      "height": 480,
+      "bytes": 39382,
+      "sha256": "9198c3ac396632ed8e522e7a459fd7a44bf0272d47d4558d6a89680e5d015774",
+      "description": "Phorage, West L.A.",
+      "stores": [
+        "demo-145"
+      ],
+      "sourceWidth": null,
+      "sourceHeight": null
+    },
+    {
+      "category": "bun",
+      "file": "bun-extra-01.webp",
+      "title": "File:Miến gà.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Mi%E1%BA%BFn_g%C3%A0.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Mi%E1%BA%BFn_g%C3%A0.jpg/500px-Mi%E1%BA%BFn_g%C3%A0.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "artist": "Thang Nguyen from Nottingham, United Kingdom",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "width": 500,
+      "height": 373,
+      "bytes": 51550,
+      "sha256": "504632628563adfa65fba945bc643120ac1aa8372dea075c4da53b366e760b67",
+      "description": "Cellophane noodles with chicken.",
+      "stores": [
+        "demo-16"
+      ],
+      "sourceWidth": null,
+      "sourceHeight": null
     }
   ],
   "illustrations": [
     {
       "file": "illustration-016.svg",
       "category": "bun",
-      "store": "demo-16",
+      "store": null,
       "license": "CC0-1.0",
-      "creator": "Portfolio project — original SVG illustration"
+      "creator": "Portfolio project — original SVG illustration",
+      "inUse": false
     },
     {
       "file": "illustration-018.svg",
       "category": "mixed",
-      "store": "demo-18",
+      "store": null,
       "license": "CC0-1.0",
-      "creator": "Portfolio project — original SVG illustration"
+      "creator": "Portfolio project — original SVG illustration",
+      "inUse": false
     },
     {
       "file": "illustration-024.svg",
@@ -1928,9 +2030,10 @@
     {
       "file": "illustration-026.svg",
       "category": "mixed",
-      "store": "demo-26",
+      "store": null,
       "license": "CC0-1.0",
-      "creator": "Portfolio project — original SVG illustration"
+      "creator": "Portfolio project — original SVG illustration",
+      "inUse": false
     },
     {
       "file": "illustration-032.svg",
@@ -1942,9 +2045,10 @@
     {
       "file": "illustration-034.svg",
       "category": "mixed",
-      "store": "demo-34",
+      "store": null,
       "license": "CC0-1.0",
-      "creator": "Portfolio project — original SVG illustration"
+      "creator": "Portfolio project — original SVG illustration",
+      "inUse": false
     },
     {
       "file": "illustration-040.svg",
@@ -2229,9 +2333,10 @@
     {
       "file": "illustration-145.svg",
       "category": "pho",
-      "store": "demo-145",
+      "store": null,
       "license": "CC0-1.0",
-      "creator": "Portfolio project — original SVG illustration"
+      "creator": "Portfolio project — original SVG illustration",
+      "inUse": false
     },
     {
       "file": "illustration-146.svg",

@@ -17,9 +17,9 @@ window.wansoImages = {
   "demo-13": "../../assets/wanso/catalog/veggie-02.webp",
   "demo-14": "../../assets/wanso/catalog/coffee-06.webp",
   "demo-15": "../../assets/wanso/catalog/tea-20.webp",
-  "demo-16": "../../assets/wanso/catalog/illustration-016.svg",
+  "demo-16": "../../assets/wanso/catalog/bun-extra-01.webp",
   "demo-17": "../../assets/wanso/catalog/pho-02.webp",
-  "demo-18": "../../assets/wanso/catalog/illustration-018.svg",
+  "demo-18": "../../assets/wanso/catalog/mixed-extra-03.webp",
   "demo-19": "../../assets/wanso/catalog/rice-12.webp",
   "demo-20": "../../assets/wanso/catalog/banh-10.webp",
   "demo-21": "../../assets/wanso/catalog/veggie-05.webp",
@@ -27,7 +27,7 @@ window.wansoImages = {
   "demo-23": "../../assets/wanso/catalog/tea-18.webp",
   "demo-24": "../../assets/wanso/catalog/illustration-024.svg",
   "demo-25": "../../assets/wanso/catalog/pho-13.webp",
-  "demo-26": "../../assets/wanso/catalog/illustration-026.svg",
+  "demo-26": "../../assets/wanso/catalog/mixed-extra-02.webp",
   "demo-27": "../../assets/wanso/catalog/rice-14.webp",
   "demo-28": "../../assets/wanso/catalog/banh-03.webp",
   "demo-29": "../../assets/wanso/catalog/veggie-15.webp",
@@ -35,7 +35,7 @@ window.wansoImages = {
   "demo-31": "../../assets/wanso/catalog/tea-07.webp",
   "demo-32": "../../assets/wanso/catalog/illustration-032.svg",
   "demo-33": "../../assets/wanso/catalog/pho-05.webp",
-  "demo-34": "../../assets/wanso/catalog/illustration-034.svg",
+  "demo-34": "../../assets/wanso/catalog/mixed-extra-04.webp",
   "demo-35": "../../assets/wanso/catalog/rice-07.webp",
   "demo-36": "../../assets/wanso/catalog/banh-04.webp",
   "demo-37": "../../assets/wanso/catalog/veggie-08.webp",
@@ -146,7 +146,7 @@ window.wansoImages = {
   "demo-142": "../../assets/wanso/catalog/illustration-142.svg",
   "demo-143": "../../assets/wanso/catalog/tea-19.webp",
   "demo-144": "../../assets/wanso/catalog/illustration-144.svg",
-  "demo-145": "../../assets/wanso/catalog/illustration-145.svg",
+  "demo-145": "../../assets/wanso/catalog/pho-extra-06.webp",
   "demo-146": "../../assets/wanso/catalog/illustration-146.svg",
   "demo-147": "../../assets/wanso/catalog/rice-19.webp",
   "demo-148": "../../assets/wanso/catalog/illustration-148.svg",
@@ -240,8 +240,8 @@ window.wansoImageInfo = {
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-16": {
-    "kind": "illustration",
-    "alt": "鸡肉米线餐饮场景插画",
+    "kind": "photo",
+    "alt": "鸡肉汤粉餐饮场景配图",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-17": {
@@ -250,8 +250,8 @@ window.wansoImageInfo = {
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-18": {
-    "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "kind": "photo",
+    "alt": "鸡肉拌粉餐饮场景配图",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-19": {
@@ -290,8 +290,8 @@ window.wansoImageInfo = {
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-26": {
-    "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "kind": "photo",
+    "alt": "鸡肉拌粉餐饮场景配图",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-27": {
@@ -330,8 +330,8 @@ window.wansoImageInfo = {
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-34": {
-    "kind": "illustration",
-    "alt": "鸡肉拌粉餐饮场景插画",
+    "kind": "photo",
+    "alt": "鸡肉拌粉餐饮场景配图",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-35": {
@@ -885,8 +885,8 @@ window.wansoImageInfo = {
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-145": {
-    "kind": "illustration",
-    "alt": "鸡肉河粉餐饮场景插画",
+    "kind": "photo",
+    "alt": "鸡肉河粉餐饮场景配图",
     "credit": "../../assets/wanso/catalog/credits.html"
   },
   "demo-146": {

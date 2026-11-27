@@ -161,7 +161,7 @@ window.wansoPages = (() => {
     function paintMealPicks(bucket) {
       const query={morning:'早餐预算八万',noon:'鸡肉饭预算八万',afternoon:'咖啡或下午茶预算八万',night:'热汤预算八万'}[bucket];
       picks.replaceChildren();
-      for(const store of window.wansoNative.selectedStores({limit:5,query})){
+      for(const store of window.wansoNative.selectedStores({limit:5,query,surface:'explore:'+bucket})){
       const card=btn('',()=>open('catalogStore',store.id),'ios-explore-store','查看 '+store.name);
       const image=el('div','ios-explore-cover');image.append(photo(store.image),el('strong','ios-photo-name',store.name.split(' · ')[0]));
       const details=el('div','ios-explore-details');const price=Math.min(store.platforms.grab.total,store.platforms.shopee.total);
