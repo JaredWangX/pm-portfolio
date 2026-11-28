@@ -43,10 +43,10 @@ window.wansoMotion = (() => {
       const rect = child.getBoundingClientRect();
       return rect.width && rect.height && rect.bottom > bounds.top && rect.top < bounds.bottom;
     }).slice(0, 4);
-    const x = direction === 'back' || direction === 'tab-back' ? -14 : direction === 'forward' || direction === 'tab-forward' ? 14 : 0;
-    targets.forEach((target, index) => {
+    const x = direction === 'back' || direction === 'tab-back' ? -8 : direction === 'forward' || direction === 'tab-forward' ? 8 : 0;
+    targets.forEach(target => {
       pageTargets.add(target);
-      run(target, {x, y: x ? 0 : 7, opacity: .84}, {x: 0, y: 0, opacity: 1, duration: .26, delay: index * .018});
+      run(target, {x, y: x ? 0 : 5, opacity: .94}, {x: 0, y: 0, opacity: 1, duration: .22});
     });
   }
   function sheet(surface) {

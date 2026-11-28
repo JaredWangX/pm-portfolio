@@ -438,7 +438,7 @@ window.wansoControls = (() => {
   function restaurantSummary(id) {
     const store=storeFor(id), summary=el('div','collection-restaurant');
     summary.append(window.wansoMedia.image(store.image,{eager:true,alt:store.imageAlt||store.name}));
-    const copy=el('div');copy.append(el('strong','',store.name),el('span','',store.dishZh||store.dish),el('small','',store.address||store.district));
+    const copy=el('div');copy.append(el('strong','',store.name.split(' - ')[0]),el('span','',store.dishZh||store.dish),el('small','',store.address||store.district));
     summary.append(copy);return summary;
   }
   function folderChoice(name,onClick,selected) {

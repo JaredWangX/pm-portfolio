@@ -38,7 +38,7 @@ window.wansoShare = (() => {
     const hours = window.wansoHours.status(store);
     const statusText = hours.state === 'open' ? say('营业中','Đang mở cửa') : hours.state === 'closed' ? say('休息中','Đã đóng cửa') : say('营业时间待确认','Cần xác nhận giờ mở cửa');
     const schedule = hours.schedule ? `${hours.schedule} · ${say('越南时间','Giờ Việt Nam')}` : say('可在平台确认营业时间','Kiểm tra giờ mở cửa trên nền tảng');
-    const name = local(store.name), link = linkFor(store, request);
+    const name = local(store.name.split(' - ')[0]), link = linkFor(store, request);
     const portion = say(`${quantity} 份 · ${dish}`,`${quantity} phần · ${dish}`);
     const verdict = result.saving > 0
       ? say(`${result.winner.name} 少付 ${money(result.saving)}`,`${result.winner.name} tiết kiệm ${money(result.saving)}`)
@@ -54,16 +54,17 @@ window.wansoShare = (() => {
     };
 
     const preview = el('article','wanso-share-preview');
-    const photo = el('div','wanso-share-photo');photo.append(window.wansoMedia.image(store.image,{eager:true,alt:local(store.imageAlt || dish)}));
+    const photo = el('div','wanso-share-photo');photo.append(window.wansoMedia.image(store.image,{eager:true,detail:true,alt:local(store.imageAlt || dish)}));
     const identity = el('div','wanso-share-identity');
     const status = el('span','wanso-share-open',statusText); status.dataset.state = hours.state;
-    identity.append(status,el('h3','',name),el('p','wanso-share-address',address));
+    photo.append(status);
+    identity.append(el('h3','',name),el('p','wanso-share-address',address));
     preview.append(photo,identity);
     const details = el('div','wanso-share-details');
-    details.append(el('strong','',portion),el('span','',schedule));preview.append(details);root.append(preview);
+    details.append(el('strong','',portion));identity.append(details);root.append(preview);
 
     const pricing = el('section','wanso-share-pricing');pricing.setAttribute('aria-label',say('同份量两平台费用','So sánh hai nền tảng cùng khẩu phần'));
-    pricing.append(el('h3','',say('一起看看哪边更实惠','Cùng xem nền tảng nào tiết kiệm hơn')),el('p','wanso-share-basis',say('同店、同菜、同份量 · 已计入配送和可用优惠','Cùng quán, cùng món, cùng số phần · Đã tính giao hàng và ưu đãi đủ điều kiện')));
+    pricing.append(el('h3','',say('同一份好味道，比较到手价','Cùng một món, so sánh tổng tiền')),el('p','wanso-share-basis',say('已计入可用优惠和配送费','Đã tính ưu đãi đủ điều kiện và phí giao hàng')));
     const totals = el('div','wanso-share-totals');
     for (const [key,offer] of offers) {
       const cell = el('div','wanso-share-total');cell.dataset.platform = key;
@@ -72,21 +73,21 @@ window.wansoShare = (() => {
     }
     pricing.append(totals,el('p','wanso-share-verdict',verdict));
     const explanation = el('p','wanso-share-explanation',say(`对比 ${result.other.name}，${result.winner.name}：`,`So với ${result.other.name}, ${result.winner.name}: `) + result.differences.map(difference).join(say('；','; ')) + say('。','.'));
-    pricing.append(explanation);
-    const ledger = el('details','wanso-share-ledger');ledger.append(el('summary','',say('展开优惠与计算明细','Xem ưu đãi và cách tính')));
+    const ledger = el('details','wanso-share-ledger');ledger.append(el('summary','',say('看看优惠怎么算','Xem cách tính ưu đãi')),explanation);
     for (const [,offer] of offers) {
       const item = el('div','wanso-share-ledger-item');item.append(el('strong','',offer.name),el('p','',equation(offer)));
       if (offer.couponDiscount) item.append(el('p','',say('已用优惠券：','Mã đã áp dụng: ') + local(offer.couponName) + ' · ' + local(offer.couponTerms)));
       else item.append(el('p','',say('本单未计入不满足条件的优惠券。','Không tính mã chưa đủ điều kiện cho đơn này.')));
       ledger.append(item);
     }
+    ledger.append(el('p','wanso-share-schedule',schedule));
     ledger.append(el('p','wanso-share-rule',say('每个平台仅使用一张符合门槛的最优优惠券；可与店铺优惠、配送减免叠加。','Mỗi nền tảng chọn một mã có lợi nhất và đủ điều kiện; có thể cộng với ưu đãi của quán và giao hàng.')));pricing.append(ledger);root.append(pricing);
 
-    const draft = el('label','wanso-share-draft');draft.append(el('span','',say('推荐给朋友的话','Lời nhắn cho bạn')));
+    const draft = el('label','wanso-share-draft');draft.append(el('span','wanso-share-draft-title',say('一起去吃这家？','Cùng ăn quán này nhé?')),el('small','wanso-share-edit-hint',say('改写你的推荐语','Chỉnh lời nhắn của bạn')));
     const message = el('textarea','wanso-share-message');message.rows = 3;message.maxLength = 600;
-    message.value = say(`这家可以一起看看，招牌是${dish}。按 ${quantity} 份计算，${verdict}，我们可以对照菜单再选。`,`Mình thấy quán này đáng xem, món nổi bật là ${dish}. Với ${quantity} phần, ${verdict}. Cùng xem thực đơn rồi chọn nhé.`);
-    draft.append(message);root.append(draft);
-    root.append(el('p','wanso-share-privacy',say('链接只保留这家店、菜品和份量；不会包含你的定位或原始对话。','Liên kết chỉ giữ quán, món và số phần; không kèm vị trí của bạn hay nội dung trò chuyện.')));
+    message.value = say(`想和你试试这家的${dish}。我按 ${quantity} 份比较了两边，${verdict}，配送费和可用优惠都算进去了。你看看怎么样？`,`Mình muốn rủ bạn thử ${dish} ở quán này. Mình đã so giá ${quantity} phần: ${verdict}, có tính giao hàng và ưu đãi đủ điều kiện rồi. Bạn thấy sao?`);
+    draft.append(message);root.insertBefore(draft,pricing);
+    ledger.append(el('p','wanso-share-privacy',say('链接只保留这家店、菜品和份量；不会包含你的定位或原始对话。','Liên kết chỉ giữ quán, món và số phần; không kèm vị trí của bạn hay nội dung trò chuyện.')));
 
     const feedback = el('p','wanso-share-feedback');feedback.setAttribute('role','status');feedback.setAttribute('aria-live','polite');feedback.setAttribute('aria-atomic','true');
     const fallback = el('div','wanso-share-fallback');fallback.hidden = true;
@@ -96,7 +97,7 @@ window.wansoShare = (() => {
     const setFeedback = (text, kind = '') => {feedback.textContent = text;feedback.dataset.kind = kind;};
     const fullText = (includeLink = true) => [
       message.value.trim(),name,`${statusText} · ${schedule}`,address,
-      say('招牌菜：','Món nổi bật: ') + portion,
+      say('这次想吃：','Món muốn thử: ') + portion,
       ...offers.flatMap(([,offer]) => [`${offer.name}: ${equation(offer)}`,...(offer.couponDiscount ? [say('已用优惠券：','Mã đã áp dụng: ') + local(offer.couponName) + ' · ' + local(offer.couponTerms)] : [])]),verdict,
       explanation.textContent,
       say('优惠券按当前条件核算，实际支付前请在平台确认。','Ưu đãi được tính theo điều kiện hiện tại; vui lòng xác nhận trên nền tảng trước khi thanh toán.'),
@@ -137,6 +138,7 @@ window.wansoShare = (() => {
         } finally {button.disabled = false;button.removeAttribute('aria-busy');}
       });system.classList.add('is-primary');actions.prepend(system);
     }
+    if (!actions.querySelector('[data-action=share]')) actions.querySelector('[data-action=copy]').classList.add('is-primary');
     root.append(actions,feedback,fallback);
     const select = el('button','wanso-share-select',say('全选内容','Chọn toàn bộ'));select.type = 'button';select.addEventListener('click',() => {manual.focus();manual.select();});fallback.append(select);
     if (onClose) {const done = el('button','wanso-share-done',say('完成','Xong'));done.type = 'button';done.addEventListener('click',onClose);root.append(done);}
