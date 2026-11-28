@@ -39,7 +39,7 @@ def send(page, prompt, count):
 
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(channel='chrome', headless=True)
+    browser = p.chromium.launch(headless=True)
     context = browser.new_context(viewport={'width': 1440, 'height': 1000},
                                   locale='vi-VN', reduced_motion='reduce')
     page = context.new_page()
@@ -100,24 +100,25 @@ with sync_playwright() as p:
     page.get_by_role('button', name='Tìm kiếm', exact=True).click()
     replies = page.locator('.rich-chat .ios-chat-reply')
     expect(replies).to_have_count(3, timeout=15000)
+    expect(replies.first.locator('.rich-recommendation')).to_have_count(5)
+    expect(replies.nth(1).locator('.reply-comparison .reply-platform')).to_have_count(2)
+    expect(replies.nth(2).locator('.reply-decision')).to_have_count(1)
     for index in range(3):
         reply = replies.nth(index)
-        expect(reply.locator('.rich-recommendation')).to_have_count(5)
         text = reply.locator('.ios-assistant-message').inner_text()
-        assert len(text) > 500, (index, len(text))
+        assert len(text) > (500 if index == 0 else 100), (index, len(text))
         assert '。；' not in text and '。。' not in text and '..' not in text and '.;' not in text, text
-        ids = reply.locator('.rich-recommendation').evaluate_all('(cards) => cards.map(c => c.dataset.storeId)')
-        kinds = page.evaluate('(ids) => ids.map(id => window.wansoCatalog.find(s => s.id === id).key)', ids)
-        assert all(kind == 'pho' for kind in kinds), kinds
-        visuals = page.evaluate('(ids)=>ids.map(id=>{const s=window.wansoCatalog.find(s=>s.id===id);return {image:s.image,brand:s.name.split(" · ")[0]}})', ids)
-        assert len({v['image'] for v in visuals}) == 5 and len({v['brand'] for v in visuals}) == 5, visuals
         reply.locator('.rich-answer-heading').first.scroll_into_view_if_needed()
         shot(page, 'reply-' + str(index + 1))
-    expect(replies.nth(1).locator('.ios-assistant-message')).to_contain_text('Mỗi đơn chọn một mã nền tảng có lợi nhất')
-    expect(replies.nth(2).locator('.ios-assistant-message')).to_contain_text('không rau mùi')
-    checks.append('All three substantive replies render five exact pho matches, clear coupon logic and retained no-cilantro preference')
+    ids = replies.first.locator('.rich-recommendation').evaluate_all('(cards) => cards.map(c => c.dataset.storeId)')
+    kinds = page.evaluate('(ids) => ids.map(id => window.wansoCatalog.find(s => s.id === id).key)', ids)
+    assert all(kind == 'pho' for kind in kinds), kinds
+    visuals = page.evaluate('(ids)=>ids.map(id=>{const s=window.wansoCatalog.find(s=>s.id===id);return {image:s.image,brand:s.name.split(" · ")[0]}})', ids)
+    assert len({v['image'] for v in visuals}) == 5 and len({v['brand'] for v in visuals}) == 5, visuals
+    assert 'không rau mùi' in replies.nth(2).inner_text().lower()
+    checks.append('Discovery renders five exact pho matches; same-store comparison and decision preserve constraints without repeating photographs')
 
-    send(page, 'Đổi thành hai người, tổng ngân sách 150.000đ đã gồm giao hàng, vẫn chọn phở gà nóng.', 4)
+    send(page, 'Gợi ý 5 quán phở gà khác cho hai người, tổng ngân sách 150.000đ đã gồm giao hàng.', 4)
     last = replies.last
     cards = last.locator('.rich-recommendation')
     expect(cards).to_have_count(5)

@@ -30,7 +30,7 @@ def hash_photo(src):
 def photo_meta(page,src):
     return page.evaluate('(src)=>{const s=window.wansoCatalog.find(s=>s.image===src);return {id:s.id,kind:s.imageKind,key:s.key,scene:s.imageScene||s.image};}',src)
 with sync_playwright() as p:
-    browser=p.chromium.launch(channel='chrome',headless=True)
+    browser=p.chromium.launch(headless=True)
     for width in [1440,390]:
         context=browser.new_context(viewport={'width':width,'height':1000 if width==1440 else 844},reduced_motion='reduce')
         page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
@@ -40,7 +40,9 @@ with sync_playwright() as p:
         page.evaluate("location.hash='explore'");expect(page.locator('.ios-explore-picks')).to_be_visible()
         explore=photos(page.locator('.ios-explore-store img'));assert len(explore)==5
         explore_loaded=loaded_photos(page.locator('.ios-explore-store img'))
-        page.evaluate("location.hash='recommend'");expect(page.locator('.rich-chat-rail')).to_have_count(3)
+        page.evaluate("location.hash='recommend'");expect(page.locator('.rich-chat-rail')).to_have_count(1)
+        expect(page.locator('.reply-comparison')).to_have_count(1)
+        expect(page.locator('.reply-decision')).to_have_count(1)
         chat=photos(page.locator('.rich-chat-rail').first.locator('img'));assert len(chat)==5
         chat_loaded=loaded_photos(page.locator('.rich-chat-rail').first.locator('img'))
         first15=home+explore+chat
@@ -57,8 +59,9 @@ with sync_playwright() as p:
             montage.save(OUT/'cross-page-15.jpg')
         ids=lambda rail:rail.locator('[data-store-id]').evaluate_all('(nodes)=>nodes.map(n=>n.dataset.storeId)')
         first=ids(page.locator('.rich-chat-rail').first)
-        for rail in [page.locator('.rich-chat-rail').nth(1),page.locator('.rich-chat-rail').nth(2)]:
-            assert set(ids(rail))==set(first),'fee or narrowing follow-up silently replaced the candidate stores'
+        for reply in [page.locator('.reply-comparison'),page.locator('.reply-decision')]:
+            assert reply.get_attribute('data-store-id') in first,'fee or narrowing follow-up silently replaced the candidate stores'
+            expect(reply.locator('img')).to_have_count(0)
         chosen=page.locator('.rich-chat-rail').first.locator('.rich-recommendation').first
         src=chosen.locator('img').get_attribute('data-image-source');identifier=chosen.get_attribute('data-store-id')
         chosen.locator('.ios-restaurant-main').click()
@@ -73,7 +76,7 @@ with sync_playwright() as p:
         assert photos(page.locator('.rich-home-card img'))==home,'home reshuffled without an explicit refresh'
         page.evaluate("location.hash='explore'");expect(page.locator('.ios-explore-store')).to_have_count(5)
         assert photos(page.locator('.ios-explore-store img'))==explore,'explore reshuffled on return'
-        checks.append(f'{width}: 15 unique photographic files across three surfaces; detail/return keep identity; fee follow-ups keep stores')
+        checks.append(f'{width}: 15 unique photographic files across three surfaces; detail/return keep identity; fee follow-ups retain a previous store without repeating photos')
         page.evaluate("location.hash='home'");expect(page.locator('.rich-home-card')).to_have_count(5)
         refreshed=[]
         for i in range(7):

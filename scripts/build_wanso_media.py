@@ -90,29 +90,51 @@ with sync_playwright() as p:
  expect(page.locator('.ios-chat-reply')).to_have_count(3,timeout=15000)
  assert page.locator('.ios-user-message').count()==3
  replies=page.locator('.ios-chat-reply'); chat=page.locator('.ios-chat')
- for reply in replies.all():
-  assert reply.locator('.rich-recommendation').count()==5
-  assert len(reply.locator('.ios-assistant-message').inner_text())>100
-  photos=reply.locator('.rich-recommendation img').evaluate_all('(images)=>images.map(image=>image.dataset.imageSource)')
-  assert len(set(photos))==5,'Each recommendation round needs distinct restaurant photographs'
+ assert replies.evaluate_all('(nodes)=>nodes.map(node=>node.dataset.kind)')==['discover','compare','decision']
+ first=replies.first; comparison=replies.nth(1).locator('.reply-comparison'); decision=replies.nth(2).locator('.reply-decision')
+ assert first.locator('.rich-recommendation').count()==5
+ assert len(first.locator('.ios-assistant-message').inner_text())>100
+ photos=first.locator('.rich-recommendation img').evaluate_all('(images)=>images.map(image=>image.dataset.imageSource)')
+ assert len(set(photos))==5,'Discovery needs distinct restaurant photographs'
+ scenes=first.locator('[data-store-id]').evaluate_all('(nodes)=>nodes.map(node=>window.wansoCatalog.find(store=>store.id===node.dataset.storeId).imageScene)')
+ assert len(set(scenes))==5,'Different angles of the same dish must not masquerade as fresh photos'
+ recommended_id=first.locator('[data-store-id]').first.get_attribute('data-store-id')
+ expect(comparison).to_have_attribute('data-store-id',recommended_id)
+ expect(decision).to_have_attribute('data-store-id',recommended_id)
+ for reply in [replies.nth(1),replies.nth(2)]:
+  assert reply.locator('.rich-chat-rail,img').count()==0,'Follow-up replies must not repeat the discovery photos'
+ assert comparison.locator('.reply-platforms>[data-platform]').count()==2
+ ledger_rows=comparison.locator('.reply-ledger-table tbody tr').all()
+ ledger_amounts=[[int(re.sub(r'\D','',value)) for value in row.locator('td').all_text_contents()] for row in ledger_rows]
+ for index in range(2):
+  values=[row[index] for row in ledger_amounts]
+  assert values[0]-values[1]-values[2]+values[3]-values[4]==values[5],values
+ assert int(decision.locator('.reply-chosen-offer').get_attribute('data-total'))==min(ledger_amounts[-1])
  assert page.locator('.phone-nav [aria-current=page]').get_attribute('data-target')=='home'
  chat.evaluate('(el)=>el.scrollTop=0'); page.wait_for_timeout(250)
  mark('recommend','第一轮：先把清淡、不放香菜和预算对应到具体菜品，解释为什么推荐。'); capture('recommend'); hold(7)
- first=replies.first; sections=first.locator('.rich-answer-section')
+ sections=first.locator('.rich-answer-section')
  scroll_to(chat,sections.nth(1)); hold(7)
  mark('candidates','逐家比较五个候选：菜品特点、推荐理由、双平台含配送总价。')
  cards=first.locator('.rich-chat-rail'); scroll_to(chat,cards,12)
  primary=cards.locator('.rich-restaurant').first.bounding_box();reading=chat.bounding_box()
  assert primary['y']>=reading['y']-1 and primary['y']+primary['height']<=reading['y']+reading['height']+1,'Primary restaurant card must fit above the composer'
- capture('candidates'); hold(5); rail_pan(cards,255); hold(5); rail_pan(cards,255); hold(5)
- mark('followup','第二轮继续追问费用：保留原来的口味约束，把优惠和配送一起算。')
- scroll_to(chat,page.locator('.ios-user-message').nth(1)); capture('followup'); hold(6)
- scroll_to(chat,replies.nth(1).locator('.rich-answer-section').nth(1)); hold(5)
- mark('confirm','第三轮收敛到一家店，说明主推菜品、口味备注与预算余量。')
- scroll_to(chat,page.locator('.ios-user-message').nth(2)); capture('confirm'); hold(6)
- scroll_to(chat,replies.nth(2).locator('.rich-answer-section').nth(1)); hold(5)
- third=replies.nth(2); scroll_to(chat,third.locator('.rich-chat-rail'),10); third.locator('.ios-restaurant-main').first.click()
+ capture('candidates'); hold(5)
+ for _ in range(4): rail_pan(cards,255); hold(5)
+ mark('followup','第二轮针对同一家店比较两个平台，不重复推荐店铺；先看实付差多少，再看为什么。')
+ scroll_to(chat,page.locator('.ios-user-message').nth(1)); hold(5)
+ scroll_to(chat,comparison); capture('followup'); hold(8)
+ mark('chat-ledger','展开费用与用券明细，核对店铺折扣、平台券和配送优惠如何影响本单总价。')
+ comparison.locator('.reply-ledger-toggle').click(); scroll_to(chat,comparison.locator('.reply-ledger'),12); hold(6)
+ scroll_to(chat,comparison.locator('.reply-coupon-rules'),12); hold(6)
+ comparison.locator('.reply-ledger-toggle').click()
+ mark('confirm','第三轮收敛到一家店，保留选定菜品与含配送实付，直接打开菜单继续确认。')
+ scroll_to(chat,page.locator('.ios-user-message').nth(2)); hold(5)
+ scroll_to(chat,decision); capture('confirm'); hold(8)
+ decision.locator('.reply-primary').click()
  view=page.locator('.native-store-view'); expect(view).to_be_visible(); store_scroll=view.locator('.native-store-scroll')
+ expect(view).to_have_attribute('data-store-id',recommended_id)
+ page.wait_for_timeout(850);store_scroll.evaluate('(el)=>el.scrollTo({top:0,behavior:"smooth"})');page.wait_for_timeout(850)
  assert '营业' in view.locator('.native-store-open').inner_text()
  pricing=[]
  for card in view.locator('.native-store-platform').all():
@@ -185,9 +207,9 @@ with sync_playwright() as p:
  mark('end','下次选餐，从收藏和记录继续。'); hold(2)
  assert not errors,errors
  duration=time.monotonic()-start
- timeline={'language':'zh','duration':round(duration,3),'marks':marks,'pricing':price_proof,'errors':errors,'size':[804,1748],'verified':'Actual 402×874 logical viewport, DPR2 with compositor scale2; fixed 12:15 Asia/Ho_Chi_Minh UI clock.'}
+ timeline={'language':'zh','duration':round(duration,3),'marks':marks,'reply_kinds':['discover','compare','decision'],'pricing':price_proof,'errors':errors,'size':[804,1748],'verified':'Actual 402×874 logical viewport, DPR2 with compositor scale2; fixed 12:15 Asia/Ho_Chi_Minh UI clock.'}
  (WORK/('recording.json' if record else 'preflight.json')).write_text(json.dumps(timeline,ensure_ascii=False,indent=2))
- if not record: print('PREFLIGHT PASS: Chinese UI, 5 dual-platform cards, 3×5 recommendations, price arithmetic, coupons, menu, real collection creation/counts, sharing fees, nav and returns.',flush=True)
+ if not record: print('PREFLIGHT PASS: Chinese UI, 5 distinct discovery photos, one same-store platform comparison, one decision, price arithmetic, coupons, menu, real collection creation/counts, sharing fees, nav and returns.',flush=True)
  context.close(); browser.close()
  if record:
   raw=Path(video.path()); ffmpeg=os.getenv('FFMPEG')

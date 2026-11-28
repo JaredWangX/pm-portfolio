@@ -72,12 +72,13 @@ window.wansoNative = (() => {
   const imageLastSeen=new Map();
   const photoScene=store=>store.imageScene||store.image;
   let selectionSequence=0;
-  function variedStores(candidates,{limit=5,key,preferredIds=[]}={}) {
-    const cacheKey=location.city+':'+location.district+':'+key;
+  function variedStores(candidates,{limit=5,key,preferredIds=[],excludedScenes=[]}={}) {
+    const excluded=new Set(excludedScenes);
+    const cacheKey=location.city+':'+location.district+':'+key+':'+[...excluded].sort().join('|');
     if(key&&selectionCache.has(cacheKey))return selectionCache.get(cacheKey);
     const selected=[],images=new Set(),brands=new Set();
     const add=store=>{
-      if(selected.length>=limit||images.has(photoScene(store)))return false;
+      if(selected.length>=limit||images.has(photoScene(store))||excluded.has(photoScene(store)))return false;
       selected.push(store);images.add(photoScene(store));brands.add(store.name.split(' · ')[0]);return true;
     };
     // A price/quantity follow-up keeps its eligible restaurant identities; opening a
@@ -170,16 +171,19 @@ window.wansoNative = (() => {
   function calculationText(offer) {
     return [`Tiền món ${money(offer.price)}`,...(offer.merchantDiscount?[`− giảm từ quán ${money(offer.merchantDiscount)}`]:[]),...(offer.couponDiscount?[`− mã ưu đãi ${money(offer.couponDiscount)}`]:[]),`＋ giao hàng ${money(offer.originalFee)}`,...(offer.deliveryDiscount?[`− giảm phí giao ${money(offer.deliveryDiscount)}`]:[]),`＝ ${money(offer.total)}`].join(' ');
   }
-  function selectedStores({limit=5,query:request=query,surface='search',preferredIds=[]}={}) {
+  function foodMatches(store,conditions) {
+    if(conditions.vegetarian&&!store.vegetarian)return false;
+    if(conditions.fullMeal&&['coffee','tea'].includes(store.key))return false;
+    if(conditions.chicken&&!['pho','mixed','rice','banh','bun'].includes(store.key))return false;
+    if(conditions.noChicken&&['pho','mixed','rice','banh','bun'].includes(store.key))return false;
+    if(conditions.excluded.some(name=>categoryKeys[name]?.includes(store.key)))return false;
+    return !conditions.categories.length||conditions.categories.some(name=>categoryKeys[name]?.includes(store.key));
+  }
+  function matchingStores(request) {
     const conditions=criteria(request);
     const totals=new Map();
     const candidates=catalogForLocation().filter(store=>{
-      if(conditions.vegetarian&&!store.vegetarian) return false;
-      if(conditions.fullMeal&&['coffee','tea'].includes(store.key)) return false;
-      if(conditions.chicken&&!['pho','mixed','rice','banh','bun'].includes(store.key)) return false;
-      if(conditions.noChicken&&['pho','mixed','rice','banh','bun'].includes(store.key)) return false;
-      if(conditions.excluded.some(name=>categoryKeys[name]?.includes(store.key))) return false;
-      if(conditions.categories.length&&!conditions.categories.some(name=>categoryKeys[name]?.includes(store.key)))return false;
+      if(!foodMatches(store,conditions))return false;
       const total=Math.min(...Object.keys(store.platforms).map(key=>conditions.quantity===1?store.platforms[key].total:window.wansoOffers.summary(store,key,conditions.quantity).total));
       if(total>conditions.budget)return false;
       totals.set(store.id,total);return true;
@@ -193,7 +197,11 @@ window.wansoNative = (() => {
       if(conditions.close) return a.eta-b.eta || a.distance-b.distance;
       return totals.get(a.id)-totals.get(b.id) || b.rating-a.rating;
     });
-    return variedStores(candidates,{limit,key:surface+':'+request+':'+limit,preferredIds:(conditions.cheap||conditions.close)&&!preferredIds.length?candidates.slice(0,1).map(store=>store.id):preferredIds});
+    return {candidates,conditions};
+  }
+  function selectedStores({limit=5,query:request=query,surface='search',preferredIds=[],excludedScenes=[]}={}) {
+    const {candidates,conditions}=matchingStores(request);
+    return variedStores(candidates,{limit,key:surface+':'+request+':'+limit,excludedScenes,preferredIds:(conditions.cheap||conditions.close)&&!preferredIds.length?candidates.slice(0,1).map(store=>store.id):preferredIds});
   }
 
   function picture(store,className='') {
@@ -320,58 +328,19 @@ ${cheapest[1].couponDiscount?'🎟️ '+t(cheapest[1].couponTerms):'本单没有
     scroller.tabIndex=0;scroller.setAttribute('aria-label',t('Các bước tìm món phù hợp'));layer.append(scroller);
     return stepPanel(scroller,done);
   }
-  function replyTextZh(request,stores,round=0) {
-    const c=criteria(request),normalized=normalizeQuery(request),city=t(location.label||'Hà Nội');
+  function replyTextZh(request,stores) {
+    const c=criteria(request),city=t(location.label||'Hà Nội');
     if(!stores.length)return `🔎 先保留你在意的条件
 在${city}还没有找到同时符合预算、份数与口味要求的餐品。我没有把超预算的店混进推荐，也没有擅自放宽忌口。
 
 可以怎样继续？
 告诉我是否接受换一种主食、稍远一点的店，或把预算提高一些。之前提到的过敏和忌口会继续保留，我们一次只调整你愿意放宽的条件。`;
     const first=stores[0],result=comparisonFor(first,request),offer=result.winner;
-    const dish=t(first.dishZh),drinks=['coffee','tea'].includes(first.key);
-    const remarks=drinks?'少糖、少冰，小食单独包装':[
-      /不辣|(?:不吃|不要|不放|不加)辣椒|khong (?:an |them |cho )?ot|khong cay/.test(normalized)?'不加辣椒':'辣椒另放',
-      /(?:不吃|不要|不放|不加)香菜|khong (?:an |them |cho )?(?:rau mui|ngo ri)/.test(normalized)?'不放香菜':'香草另放','酱汁另放'].join('，');
+    const dish=t(first.dishZh);
     const equation=current=>`餐品 ${money(current.price)}${current.merchantDiscount?' − 店铺折扣 '+money(current.merchantDiscount):''}${current.couponDiscount?' − 平台券 '+money(current.couponDiscount):''} ＋ 配送 ${money(current.originalFee)}${current.deliveryDiscount?' − 配送优惠 '+money(current.deliveryDiscount):''} ＝ ${money(current.total)}`;
     const terms=current=>current.applied.length?current.applied.map(item=>`${t(item.label)}：${t(item.terms)}`).join('；')+'。':'本单没有满足门槛的优惠，按餐品金额加配送费计算。';
     const direction=result.differences.filter(item=>item.amount).map(item=>t(item.text)).join('；');
     const conclusion=result.saving?`${offer.name} 比 ${result.other.name} 少付 ${money(result.saving)}。${direction}；把四项差额合在一起，才是这单真正节省的金额。`:'两平台本单到手价相同，可再比较账号会员权益和预计送达时间。';
-    if(round===1)return `💰 同一家店、同一道菜，先把账算清楚
-这次比较${first.name}的${dish}，共 ${c.quantity} 份，预算 ${money(c.budget)} 包含配送。只扣除本单已满足门槛的优惠，不把“最高可减”直接当成实际优惠。
-
-🟢 GrabFood · 本单费用
-${equation(offerFor(first,'grab',request))}。
-${terms(offerFor(first,'grab',request))}
-
-🟠 ShopeeFood · 本单费用
-${equation(offerFor(first,'shopee',request))}。
-${terms(offerFor(first,'shopee',request))}
-
-🔍 为什么这个平台更便宜？
-${conclusion} 选 ${offer.name} 后，距离预算还余 ${money(Math.max(0,c.budget-offer.total))}。这部分可以留给确实需要的加菜，不必为了凑满减多买一份。
-
-🎟️ 优惠券是怎么计算的？
-先扣店铺折扣，再用折后餐费判断平台券门槛；同一订单只选择一张最划算的平台券。配送优惠单独计算，最多减到实际配送费，不会出现负运费。${offer.unavailable.length?'当前未采用：'+offer.unavailable.map(t).join('；'):'本单符合条件的优惠已计入上面的总价。'}
-
-下面保留 ${stores.length} 家候选，方便继续横向比较。改成两人份或增加配菜后，优惠门槛和最便宜的平台可能变化，我会按新订单重新计算。`;
-    if(round===2) {
-      const other=stores[1];
-      return `🥢 如果现在定一家，我会这样选
-优先考虑${first.name}的${dish}。${t(first.description)} 保留你之前的用餐要求，按 ${c.quantity} 份计算，也能控制在 ${money(c.budget)} 的含配送预算内。
-
-✨ 点什么，怎么备注？
-选择${dish}，备注“${remarks}”。${drinks?'这是一份饮品搭配小食，适合下午休息；如果你需要完整正餐，可以继续说明饭量，我会切换到主食类。':'先尝原味，再决定是否补调味。想多吃一些蔬菜，可以查看同店加配价格，我会把加菜金额、优惠门槛和配送一起重算。'}
-
-💸 去哪个平台更合适？
-${equation(offer)}。
-${conclusion}${offer.couponDiscount?' 本单已选「'+t(offer.couponName)+'」，条件为：'+t(offer.couponTerms)+'。':''}
-
-🔄 再给你一个可替换的选择
-${other?`${other.name}的${t(other.dishZh)}：${t(other.description)} 当前最低到手价 ${money(bestOffer(other,request)[1].total)}。可以打开菜单，比较肉的部位、份量和加配，再决定是否替换。`:'你可以继续提出想要更近、更多蔬菜，或换一种主食，我会重新筛选。'}
-
-✅ 下单前确认这两件事
-核对送餐地址和平台最终支付价；确认店家能否满足备注。若有食物过敏或严格忌口，请直接向店家确认配料与制作方式，不能仅凭推荐标签判断。`;
-    }
     const alternatives=stores.slice(1,3).map((store,index)=>`${index+1}. ${store.name} · ${t(store.dishZh)}
 ${store.tags.slice(0,3).map(t).join(' · ')}。在 ${bestOffer(store,request)[1].name} 到手 ${money(bestOffer(store,request)[1].total)}，预计 ${store.eta} 分钟，距离约 ${store.distance.toFixed(1)} 公里。`).join('\n');
     return `🍽️ 这顿饭的要求，我记住了
@@ -393,9 +362,9 @@ ${terms(offer)}
 左右滑动查看每家店的具体菜品、推荐理由和两平台报价；打开店铺可以核对菜单、优惠条件和用餐建议。也可以继续问“算上配送哪个平台更便宜？”或“改成两个人，优惠怎么变？”，我会把份数、门槛与总价一起重算。`;
   }
 
-  function replyText(request,stores,round=0) {
-    if(window.wansoI18n?.chinese)return replyTextZh(request,stores,round);
-    const conditions=criteria(request),normalized=normalizeQuery(request);
+  function replyText(request,stores) {
+    if(window.wansoI18n?.chinese)return replyTextZh(request,stores);
+    const conditions=criteria(request);
     const city=location.label || (location.city==='hcm'?'TP. Hồ Chí Minh':'Hà Nội');
     if(!stores.length) return `🔎 Mình vẫn giữ các yêu cầu của bạn
 Chưa tìm thấy món tại ${city} đồng thời phù hợp ngân sách và yêu cầu ăn uống. Mình không đưa quán vượt ngân sách vào danh sách chỉ để có thêm kết quả.
@@ -403,50 +372,11 @@ Chưa tìm thấy món tại ${city} đồng thời phù hợp ngân sách và y
 Bạn muốn điều chỉnh điều kiện nào?
 Có thể đổi loại món, tăng ngân sách hoặc xem quán xa hơn một chút. Cho mình biết ngân sách có cần bao gồm đồ uống không; các yêu cầu kiêng và dị ứng bạn đã nói vẫn được giữ cho lần tìm tiếp theo.`;
     const first=stores[0],comparison=comparisonFor(first,request),offer=comparison.winner;
-    const drinks=['coffee','tea'].includes(first.key);
-    const remarks=drinks?'ít đường, ít đá, món ăn nhẹ gói riêng':[/不辣|(?:不吃|不要|不放|不加)辣椒|khong (?:an |them |cho )?ot|khong cay/.test(normalized)?'không ớt':'ớt để riêng',/(?:不吃|不要|不放|不加)香菜|khong (?:an |them |cho )?(?:rau mui|ngo ri)/.test(normalized)?'không rau mùi':'rau thơm để riêng','sốt để riêng'].join(', ');
-    const budgetLeft=money(Math.max(0,conditions.budget-offer.total));
-    const joinedTerms=terms=>terms.map(term=>term.replace(/[.;]+$/u,'')).join('; ');
     const appliedText=current=>current.applied.length?'Đã áp dụng: '+current.applied.map(item=>item.label+' ('+item.terms+')').join('; ')+'.':'Đơn chưa có ưu đãi đủ điều kiện; tổng tiền gồm giá món và phí giao hàng.';
     const ruleText=appliedText(offer);
     const description=first.reason.replace(/^[^\p{L}\p{N}]+/u,'');
     const cause=comparison.differences.filter(item=>item.amount).map(item=>item.text).join('; ');
     const conclusion=comparison.saving?`${offer.name} thấp hơn ${comparison.other.name} ${money(comparison.saving)}. ${cause}; cộng các chênh lệch này mới ra số tiền tiết kiệm cuối cùng.`:'Hai nền tảng có cùng tổng tiền cho đơn này. Bạn có thể so thêm quyền lợi thành viên và thời gian giao dự kiến trên tài khoản của mình.';
-    if(round===1) return `💰 So cùng quán, cùng món và cùng số phần
-Mình tính lại ${first.dishZh} tại ${first.name}, ${conditions.quantity} phần, với ngân sách ${money(conditions.budget)} đã gồm giao hàng. Chỉ ưu đãi đủ điều kiện mới được trừ; mức “giảm tối đa” không tự động trở thành số tiền giảm của đơn.
-
-🟢 GrabFood
-${calculationText(offerFor(first,'grab',request))}.
-${appliedText(offerFor(first,'grab',request))}
-
-🟠 ShopeeFood
-${calculationText(offerFor(first,'shopee',request))}.
-${appliedText(offerFor(first,'shopee',request))}
-
-🔍 Vì sao tổng tiền khác nhau?
-${conclusion} Chọn ${offer.name} còn dư ${budgetLeft} so với ngân sách. Bạn có thể giữ khoản này cho món thêm cần thiết, thay vì mua thêm chỉ để đủ mức dùng mã.
-
-🎟️ Điều kiện dùng mã
-Mức tối thiểu tính trên tiền món sau giảm của quán. Mỗi đơn chọn một mã nền tảng có lợi nhất; ưu đãi giao hàng tính riêng và không vượt phí giao thực tế. ${offer.unavailable.length?'Ưu đãi chưa dùng: '+joinedTerms(offer.unavailable)+'.':'Tổng tiền đã bao gồm các ưu đãi mà đơn đủ điều kiện.'}
-
-Mình giữ ${stores.length} quán ở dưới để bạn tiếp tục so sánh. Nếu đổi thành hai phần hoặc thêm món, điều kiện dùng mã và nền tảng rẻ nhất có thể thay đổi; mình sẽ tính lại theo đơn mới.`;
-    if(round===2) {
-      const runner=stores[1];
-      return `🥢 Nếu chọn một quán ngay bây giờ
-Mình nghiêng về ${first.dishZh} tại ${first.name}. ${first.description} Món vẫn đáp ứng yêu cầu hiện tại, số lượng ${conditions.quantity} phần và mức ngân sách bạn đặt ra.
-
-✨ Nên đặt thế nào?
-Chọn ${first.dishZh}, ghi chú “${remarks}”. ${drinks?'Đây là đồ uống đi cùng món nhẹ, hợp cho giờ nghỉ. Nếu bạn cần một bữa trưa đầy đủ, hãy nói thêm về khẩu phần để mình chuyển sang nhóm món chính.':'Bạn có thể nếm trước rồi thêm gia vị. Muốn thêm rau, hãy kiểm tra giá món thêm trong thực đơn để mình tính lại tổng tiền cùng đơn.'}
-
-💸 Nên dùng nền tảng nào?
-${calculationText(offer)}. ${conclusion} ${offer.couponDiscount?'Đơn đã dùng '+offer.couponName+'. '+offer.couponTerms+'.':''}
-
-🔄 Một lựa chọn khác để cân nhắc
-${runner?`${runner.dishZh} tại ${runner.name}: ${runner.description} Tổng thấp nhất là ${money(bestOffer(runner,request)[1].total)}. Bạn có thể mở thực đơn để so khẩu phần và món thêm trước khi quyết định.`:'Bạn có thể nói muốn quán gần hơn, thêm rau hoặc đổi món chính để mình tìm phương án khác.'}
-
-✅ Hai việc nên kiểm tra trước khi đặt
-Kiểm tra lại địa chỉ giao và giá thanh toán trên nền tảng; xác nhận quán có đáp ứng ghi chú không. Với dị ứng hoặc yêu cầu ăn uống nghiêm ngặt, hãy hỏi trực tiếp thành phần món và cách chế biến, đừng chỉ dựa vào nhãn gợi ý.`;
-    }
     const alternatives=stores.slice(1,3).map((store,index)=>{
       const alternative=bestOffer(store,request)[1];
       return `${index+1}. ${store.name} · ${store.dishZh}. ${store.tags.slice(0,3).join(' · ')}. Tổng ${money(alternative.total)} trên ${alternative.name}, dự kiến ${store.eta} phút, cách khoảng ${store.distance.toLocaleString(window.wansoI18n?.locale||'vi-VN',{minimumFractionDigits:1})} km.`;
@@ -478,6 +408,54 @@ Vuốt ngang để xem lý do gợi ý từng quán; mở quán để xem thực
     }
     return message;
   }
+  const wantsNewRestaurants=prompt=>/换(?:一批|[五5]家|几家|些店)|再推荐|另外.{0,4}家|其他(?:店|餐厅)|doi.{0,8}quan|(?:goi y|tim).{0,20}khac|quan khac/.test(normalizeQuery(prompt));
+  function replyKind(prompt) {
+    const text=normalizeQuery(prompt);
+    if(wantsNewRestaurants(prompt))return 'discover';
+    if(/(?:哪家|这些|这几家|几家店|所有店).{0,16}(?:便宜|划算|排序|对比|比较)|按.{0,8}(?:价格|总价).{0,5}排|quan nao.{0,16}(?:re|tiet kiem)|xep hang|so sanh cac quan/.test(text))return 'ranking';
+    if(/平台|比价|优惠券|折扣|配送|费用|到手价|多少钱|两份|两人|2份|2人|grab|shopee|nen tang|giao hang|tong tien|chi phi|uu dai|ma giam|hai phan|2 phan/.test(text))return 'compare';
+    if(/(?:[1234一二两三四]|mot|hai|ba|bon)\s*(?:个人|人|份|nguoi\b|phan\b)/.test(text))return 'compare';
+    if(/(?:选|定|决定).{0,8}(?:一家|这家|那家|第|家店)|就这家|最合适|备注|少糖|少冰|不放香菜|chon.{0,20}(?:mot quan|quan nay|quan do)|chot|ghi chu|it duong|it da/.test(text))return 'decision';
+    return 'discover';
+  }
+  function referencedStore(prompt,stores) {
+    const text=normalizeQuery(prompt);
+    const matches=store=>text.includes(normalizeQuery(store.name.split(' · ')[0]))&&
+      (text.includes(normalizeQuery(store.name))||text.includes(normalizeQuery(t(store.name))));
+    const named=stores.find(matches);
+    if(named)return named;
+    const ordinal=text.match(/第\s*([一二三四五12345])\s*家|quan\s*(?:thu\s*)?(mot|hai|ba|bon|nam|[1-5])\b/);
+    if(ordinal) {
+      const numbers={一:1,二:2,三:3,四:4,五:5,mot:1,hai:2,ba:3,bon:4,nam:5};
+      return stores[(numbers[ordinal[1]||ordinal[2]]||Number(ordinal[1]||ordinal[2]))-1];
+    }
+    return catalogForLocation().find(matches);
+  }
+  function contextualText(kind,stores,request) {
+    const zh=window.wansoI18n?.chinese,c=criteria(request),store=stores[0];
+    if(!store)return replyText(request,stores);
+    if(kind==='ranking') {
+      const affordable=stores.filter(store=>bestOffer(store,request)[1].total<=c.budget).length;
+      const budgetNote=affordable===0?(zh?`这几家目前都超过 ${money(c.budget)} 的预算；这里保留原候选供你比较，也可以继续要求重新找预算内的店。`:`Các quán này đều vượt ngân sách ${money(c.budget)}. Mình giữ danh sách để bạn đối chiếu; bạn có thể yêu cầu tìm quán khác trong ngân sách.`):zh?`其中 ${affordable} 家在 ${money(c.budget)} 的预算内。`:`Có ${affordable} quán trong ngân sách ${money(c.budget)}.`;
+      return zh
+        ? `💰 把这 ${stores.length} 家放在一起比较\n每家都按 ${c.quantity} 份计算，先核算两个平台的店铺优惠、平台券和配送费，再按最低到手价排序。${budgetNote}不同店的菜品与份量可能不同，价格最低只是一个参考。`
+        : `💰 So ${stores.length} quán trong cùng danh sách\nTính ${c.quantity} phần mỗi quán, gồm giảm của quán, mã nền tảng và phí giao; xếp theo tổng thấp nhất của hai nền tảng. ${budgetNote} Món và khẩu phần giữa các quán có thể khác nhau, nên giá thấp nhất chỉ là một tiêu chí.`;
+    }
+    const result=comparisonFor(store,request),over=result.winner.total-c.budget;
+    const normalized=normalizeQuery(request),notes=[];
+    if(/(?:不吃|不要|不放|不加)香菜|khong (?:an |them |cho )?(?:rau mui|ngo ri)/.test(normalized))notes.push(zh?'不放香菜':'không rau mùi');
+    if(/不辣|(?:不吃|不要|不放|不加)辣椒|khong (?:an |them |cho )?ot|khong cay/.test(normalized))notes.push(zh?'不加辣椒':'không ớt');
+    const noteText=notes.length?(zh?`口味要求仍保留：${notes.join('、')}。`:`Giữ yêu cầu khẩu vị: ${notes.join(', ')}. `):'';
+    const budget=zh
+      ? over>0?`这单超出预算 ${money(over)}，我保留你指定的店铺如实比较。可以减少份数、调整预算，或再找其他店。`:`含配送后，预算还余 ${money(-over)}。`
+      : over>0?`Đơn này vượt ngân sách ${money(over)}. Mình vẫn so đúng quán bạn chọn; có thể giảm số phần, điều chỉnh ngân sách hoặc tìm quán khác.`:`Sau phí giao, còn dư ${money(-over)} trong ngân sách.`;
+    if(kind==='compare')return zh
+      ? `💰 继续看${store.name}这家店\n同一道${t(store.dishZh)}，共 ${c.quantity} 份，分别计算 GrabFood 和 ShopeeFood。优惠是否达到门槛、封顶减多少、配送是否减免，都按这单重新核算。${noteText}${budget}`
+      : `💰 So tiếp đúng quán ${store.name}\nCùng món ${store.dishZh}, ${c.quantity} phần, đối chiếu GrabFood và ShopeeFood. Tính lại mức dùng mã, giới hạn giảm và ưu đãi giao hàng theo đơn này. ${noteText}${budget}`;
+    return zh
+      ? `🥢 这次收敛到一家，方便你决定\n${store.name}的${t(store.dishZh)}：${t(store.description)} ${budget}下面保留菜品、平台与费用结论，菜单和分享也可以直接打开。`
+      : `🥢 Chốt một quán để dễ quyết định\n${store.dishZh} tại ${store.name}: ${store.description} ${budget}Bên dưới là món, nền tảng và tổng tiền; bạn có thể mở thực đơn hoặc lưu quán ngay.`;
+  }
   function mountChat(layer,route,open,onCarousel) {
     const scroller=element('section','phone-scroll ios-chat rich-chat');
     const header=element('div','rich-chat-header');
@@ -486,18 +464,52 @@ Vuốt ngang để xem lý do gợi ý từng quán; mở quán để xem thực
     scroller.tabIndex=0;scroller.setAttribute('aria-label',t('Cuộc trò chuyện chọn món, cuộn để xem'));
     const requests=[query];
     const reveal=node=>scroller.scrollTo({top:scroller.scrollTop+node.getBoundingClientRect().top-scroller.getBoundingClientRect().top,behavior:reducedMotion()?'instant':'smooth'});
-    let busy=false,previousStores=[];
-    const appendRound=(prompt,round,animate=false)=>{
+    let busy=false,candidateStores=[],focusedStore;
+    const shownScenes=new Set(imageLastSeen.keys());
+    scroller.addEventListener('click',event=>{
+      const id=event.target.closest('[data-store-id]')?.dataset.storeId;
+      if(id)focusedStore=window.wansoCatalog.find(store=>store.id===id)||focusedStore;
+    });
+    const appendRound=(prompt,kind,animate=false)=>{
       scroller.append(element('p','ios-user-message',prompt));
       const appendAnswer=()=>{
-        const joined=requests.join('。');activeRequest=joined;const stores=selectedStores({query:joined,surface:'chat',preferredIds:/换五家|再推荐|其他店|换一批|doi.*quan|goi y.*khac|quan khac/.test(normalizeQuery(prompt))?[]:previousStores.map(store=>store.id)});
-        previousStores=stores;
+        const joined=requests.join('。');activeRequest=joined;
+        const reference=referencedStore(prompt,candidateStores);
+        if(reference&&kind==='discover'&&!wantsNewRestaurants(prompt))kind=/便宜|划算|贵|价格|re\b|gia\b|tiet kiem/.test(normalizeQuery(prompt))?'compare':'decision';
+        const current=criteria(prompt),previous=criteria(requests.slice(0,-1).join('。'));
+        const combined=criteria(joined),conflict=reference&&!foodMatches(reference,combined);
+        candidateStores=candidateStores.filter(store=>foodMatches(store,combined));
+        if(focusedStore&&!foodMatches(focusedStore,combined))focusedStore=undefined;
+        const changedFood=requests.length>1&&!reference&&(current.categories.length&&current.categories.join()!==previous.categories.join()||current.noChicken&&!previous.noChicken);
+        if(changedFood||conflict)kind='discover';
+        let stores,photoLimited=false;
+        if(kind==='discover') {
+          stores=selectedStores({query:joined,surface:'chat',excludedScenes:shownScenes});
+          photoLimited=stores.length<5&&shownScenes.size>0&&matchingStores(joined).candidates.length>stores.length;
+          if(stores.length||!photoLimited){candidateStores=stores;focusedStore=stores[0];}
+          stores.forEach(store=>shownScenes.add(photoScene(store)));
+        } else {
+          if(!candidateStores.length)candidateStores=selectedStores({query:joined,surface:'chat'});
+          focusedStore=reference||focusedStore||candidateStores[0];
+          if(kind==='ranking')candidateStores.sort((a,b)=>bestOffer(a,joined)[1].total-bestOffer(b,joined)[1].total);
+          stores=kind==='ranking'?candidateStores:focusedStore?[focusedStore]:[];
+        }
         const reply=element('div','ios-chat-reply');
+        reply.dataset.kind=kind;
         const avatar=element('span','ios-avatar','✦');avatar.setAttribute('aria-hidden','true');
         const content=element('div','ios-chat-answer');
-        const text=replyText(joined,stores,round);
+        let text=kind==='discover'?replyText(joined,stores):contextualText(kind,stores,joined);
+        if(conflict)text=(window.wansoI18n?.chinese
+          ? `你指定的${t(reference.name)}这道菜不符合刚补充的饮食要求，我先保留忌口条件，不直接替你选它。\n\n`
+          : `Món tại ${reference.name} không đáp ứng yêu cầu ăn uống vừa bổ sung. Mình giữ điều kiện kiêng và chưa chọn món này cho bạn.\n\n`)+text;
+        if(kind==='discover'&&photoLimited) {
+          const remaining=window.wansoI18n?.chinese
+            ? '🔎 不重复展示已看过的图片\n符合当前条件的新照片不足五组，所以这轮只列出尚未出现的餐厅。你可以继续比较之前的候选，或调整菜品与预算再找。'
+            : '🔎 Không lặp lại ảnh đã xem\nChưa đủ năm nhóm ảnh mới phù hợp yêu cầu, nên lượt này chỉ hiển thị quán chưa xuất hiện. Bạn có thể so lại danh sách trước hoặc điều chỉnh món và ngân sách.';
+          text=stores.length?text+'\n\n'+remaining:remaining;
+        }
         content.append(answerContent(text));
-        if(stores.length) {
+        if(stores.length&&kind==='discover') {
           const rail=element('div','ios-carousel rich-chat-rail');rail.tabIndex=0;
           rail.setAttribute('aria-label',t(`${stores.length} quán được gợi ý, vuốt ngang để so sánh`));
           rail.append(...stores.map(store=>restaurantCard(store,route,open,joined)));
@@ -513,9 +525,9 @@ Vuốt ngang để xem lý do gợi ý từng quán; mở quán để xem thực
             });
           },{passive:true});
           content.append(rail,counter);
-        }
+        } else if(stores.length)content.append(window.wansoReplyCards.render({kind,stores,request:joined,open}));
         const actions=element('div','ios-reply-actions');
-        const copy=button('⧉ Sao chép','',async()=>{try{await navigator.clipboard.writeText(text);copy.textContent=t('Đã sao chép');}catch{open('share');}});
+        const copy=button('⧉ Sao chép','',async()=>{try{await navigator.clipboard.writeText(text+'\n'+[...content.querySelectorAll('.reply-comparison,.reply-decision,.reply-ranking')].map(node=>node.innerText).join('\n'));copy.textContent=t('Đã sao chép');}catch{open('share');}});
         const useful=button('👍 Hữu ích','',()=>{useful.setAttribute('aria-pressed',String(useful.getAttribute('aria-pressed')!=='true'));});
         useful.setAttribute('aria-pressed','false');actions.append(copy,useful,button('Góp ý','',()=>open('feedback')));
         content.append(actions);reply.append(avatar,content);scroller.append(reply);
@@ -528,10 +540,14 @@ Vuốt ngang để xem lý do gợi ý từng quán; mở quán để xem thực
     };
     let send,input;
     scroller.append(element('p','rich-thread-label','Chọn món · So giá · Chốt khẩu vị'));
-    appendRound(query,0);
+    const initialKind=replyKind(query);
+    // A first request normally discovers restaurants; explicit named comparisons
+    // can start directly with the two platform quotes.
+    const initialReference=referencedStore(query,[]);
+    appendRound(query,initialReference&&initialKind!=='discover'?initialKind:'discover');
     const beverage=criteria(query).categories.some(name=>['coffee','tea'].includes(name));
     const followups=['Tính cả phí giao hàng thì nền tảng nào tiết kiệm hơn?',beverage?'Mình muốn ít đường, ít đá. Chọn giúp mình một quán phù hợp nhất.':'Giữ các yêu cầu ăn uống ở trên và chọn giúp mình một quán phù hợp nhất.'];
-    followups.map(t).forEach((prompt,index)=>{requests.push(prompt);appendRound(prompt,index+1);});
+    if(!initialReference)followups.map(t).forEach((prompt,index)=>{requests.push(prompt);appendRound(prompt,index?'decision':'compare');});
     const composer=element('form','ios-composer');
     input=element('textarea');input.rows=1;input.enterKeyHint='enter';input.placeholder=t('Nhắn thêm yêu cầu…');
     input.setAttribute('aria-label',t('Hỏi tiếp'));input.maxLength=300;
@@ -545,9 +561,7 @@ Vuốt ngang để xem lý do gợi ý từng quán; mở quán để xem thực
       event.preventDefault();const text=input.value.trim();if(!text||busy)return;
       input.value='';send.disabled=true;resizeComposer();
       requests.push(text);
-      const normalized=normalizeQuery(text);
-      const kind=/配送|便宜|平台|总价|费用|划算|giao hang|tiet kiem|nen tang|tong tien|chi phi|uu dai|ma giam|re hon/.test(normalized)?1:/香菜|辣椒|定一家|决定|备注|少糖|少冰|rau mui|ngo ri|it duong|it da|chon.*mot quan|ghi chu|khau vi/.test(normalized)?2:0;
-      appendRound(text,kind,true);
+      appendRound(text,replyKind(text),true);
     });
     composer.append(input,send);layer.append(scroller,composer);
     requestAnimationFrame(resizeComposer);

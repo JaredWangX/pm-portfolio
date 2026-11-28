@@ -274,11 +274,13 @@ window.wansoPhotoSizes = {
   "order-moc.webp": [640,367],
   "order-quyen.webp": [480,270]
 };
-// Different crops/angles of one meal count as one scene when choosing the next restaurant.
+// Repeated tableware/compositions count as one scene, even across different files.
 window.wansoPhotoScenes = {
   'pho-16.webp':'pho-blue-rim', 'pho-17.webp':'pho-blue-rim',
   'pho-18.webp':'pho-blue-rim', 'pho-19.webp':'pho-blue-rim',
-  'veggie-01.webp':'tofu-rice-white-plate', 'veggie-07.webp':'tofu-rice-white-plate'
+  'pho-20.webp':'pho-blue-rim',
+  'veggie-01.webp':'tofu-rice-white-plate', 'veggie-02.webp':'tofu-rice-white-plate',
+  'veggie-07.webp':'tofu-rice-white-plate'
 };
 window.wansoImageInfo = {
   "demo-1": {
@@ -1082,18 +1084,36 @@ window.wansoImageInfo = {
     "credit": "../../assets/wanso/catalog/credits.html"
   }
 };
-// Larger simulated branches reuse the same cuisine-matched scene pool, never claim unique merchant photos.
-for (const store of window.wansoCatalog || []) {
-  const seed=Number(store.id.replace('demo-',''));
-  const imageId=window.wansoImages[store.id]?store.id:'demo-'+(((seed-1)%160)+1);
-  const info=window.wansoImageInfo[imageId];
-  if (info) {
-    store.image=window.wansoImages[imageId];
-    const filename=store.image.split('/').pop();
-    store.imageScene=window.wansoPhotoScenes[filename]||store.image;
-    store.imageAlt=info.alt;
-    store.imageKind=info.kind;
-    store.imageCredit=info.credit;
-    store.imageAssetId=imageId;
+// Each city uses the complete cuisine-matched pool; the old 160-store modulo
+// accidentally confined half the photos to one city. Seed-store images stay intact.
+{
+  const pools=new Map(),cityPositions=new Map();
+  for (const store of (window.wansoCatalog || []).slice(0,160)) {
+    if (!window.wansoImages[store.id]) continue;
+    const pool=pools.get(store.key)||[];
+    if (!pool.some(id=>window.wansoImages[id]===window.wansoImages[store.id]))pool.push(store.id);
+    pools.set(store.key,pool);
+  }
+  for (const store of window.wansoCatalog || []) {
+    let imageId=store.id;
+    if (!window.wansoImages[imageId]) {
+      const pool=pools.get(store.key);
+      if (!pool?.length) continue;
+      const positionKey=store.city+':'+store.key;
+      const position=cityPositions.get(positionKey)||0;
+      const offset=[...store.city].reduce((sum,letter)=>sum+letter.charCodeAt(0),0);
+      imageId=pool[(position+offset)%pool.length];
+      cityPositions.set(positionKey,position+1);
+    }
+    const info=window.wansoImageInfo[imageId];
+    if (info) {
+      store.image=window.wansoImages[imageId];
+      const filename=store.image.split('/').pop();
+      store.imageScene=window.wansoPhotoScenes[filename]||store.image;
+      store.imageAlt=info.alt;
+      store.imageKind=info.kind;
+      store.imageCredit=info.credit;
+      store.imageAssetId=imageId;
+    }
   }
 }

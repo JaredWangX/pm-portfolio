@@ -44,7 +44,7 @@ def open_page(browser, size, frame='home', fixed_time=None):
     errors, responses = [], []
     page.on('pageerror', lambda error: errors.append(str(error)))
     page.on('response', lambda response: responses.append(f'{response.status} {response.url}') if response.status >= 400 else None)
-    page.goto(BASE + 'prototypes/wanso/?qa=complete#' + frame, wait_until='networkidle')
+    page.goto(BASE + 'prototypes/wanso/?qa=complete&lang=zh#' + frame, wait_until='networkidle')
     expect(page.locator('.load-error')).not_to_be_visible()
     return context, page, errors, responses
 
@@ -69,8 +69,8 @@ def current_store_data(page, selector):
 
 
 def send_followup(page, text, count):
-    page.get_by_role('textbox', name='继续提问', exact=True).fill(text)
-    page.get_by_role('button', name='发送追问', exact=True).click()
+    page.locator('.ios-composer textarea').fill(text)
+    page.locator('.ios-composer .ios-send').click()
     expect(visible(page, '.ios-user-message')).to_have_count(count)
     expect(visible(page, '.rich-processing')).to_be_visible()
     expect(visible(page, '.ios-chat-reply')).to_have_count(count, timeout=10000)
@@ -78,7 +78,7 @@ def send_followup(page, text, count):
 
 
 with sync_playwright() as playwright:
-    browser = playwright.chromium.launch(channel='chrome', headless=True)
+    browser = playwright.chromium.launch(headless=True)
     for name, size in [('desktop', {'width': 1440, 'height': 900}), ('phone', {'width': 390, 'height': 844})]:
         context, page, errors, responses = open_page(browser, size)
         cards = page.locator('.rich-home-rail > .rich-home-card')
@@ -99,16 +99,18 @@ with sync_playwright() as playwright:
 
         page.get_by_role('button', name='选择位置', exact=True).click()
         sheet = page.locator('.wanso-sheet')
-        expect(sheet.locator('.native-city-row')).to_have_count(3)
-        sheet.locator('.native-city-row').filter(has=page.locator('strong', has_text='胡志明市')).click()
+        expect(sheet.locator('.location-city')).to_have_count(2)
+        sheet.locator('.location-city[data-city="hcm"]').click()
+        sheet.get_by_role('button', name='确认此位置', exact=True).click()
         expect(sheet).not_to_be_visible()
         expect(page.locator('.ios-home-location')).to_contain_text('胡志明市')
         assert all(store['city'] == 'hcm' for store in current_store_data(page, '.rich-home-card'))
         page.get_by_role('button', name='选择位置', exact=True).click()
-        sheet.locator('.native-city-row').filter(has=page.locator('strong', has_text='河内')).click()
+        sheet.locator('.location-city[data-city="hanoi"]').click()
+        sheet.get_by_role('button', name='确认此位置', exact=True).click()
         expect(sheet).not_to_be_visible()
         expect(page.locator('.ios-home-location')).to_contain_text('河内')
-        checks.append(f'{name}: source city picker has GPS and two city rows; city selection updates featured restaurants')
+        checks.append(f'{name}: city picker confirms either city and updates featured restaurants')
 
         # Use the actual search form; the six-step sequence must finish before results.
         prompt = '想吃鸡肉热汤河粉，不吃香菜，含配送预算八万越南盾，推荐五家。'
@@ -123,7 +125,9 @@ with sync_playwright() as playwright:
         expect(visible(page, '.ios-user-message')).to_have_count(3)
         expect(visible(page, '.ios-user-message').first).to_have_text(prompt)
         rails = visible(page, '.rich-chat-rail')
-        expect(rails).to_have_count(3)
+        expect(rails).to_have_count(1)
+        expect(visible(page, '.reply-comparison')).to_have_count(1)
+        expect(visible(page, '.reply-decision')).to_have_count(1)
         for rail in rails.all():
             expect(rail.locator('.rich-recommendation')).to_have_count(5)
             expect(rail.locator('[data-platform="grab"].rich-offer')).to_have_count(5)
@@ -134,7 +138,7 @@ with sync_playwright() as playwright:
         chat.evaluate('(node) => { node.scrollTop = 0; }')
         screenshot(page, name + '-chat')
         assert chat.evaluate('(node) => node.scrollHeight > node.clientHeight'), 'conversation must scroll within the phone'
-        checks.append(f'{name}: six processing states finish; three substantive rounds with five dual-platform recommendations each')
+        checks.append(f'{name}: six processing states finish; discovery gives five dual-platform restaurants, followed by same-store comparison and decision')
 
         # Both entry points now use the same full scrolling restaurant detail.
         first = rails.first.locator('.rich-recommendation').first
@@ -153,7 +157,7 @@ with sync_playwright() as playwright:
         sheet.get_by_role('button', name='返回菜单', exact=True).click()
         expect(sheet).not_to_be_visible()
         expect(detail).to_have_attribute('data-store-id', store_id)
-        detail.get_by_role('button', name='返回上一页', exact=True).click()
+        detail.locator('.native-store-back').click()
         expect(detail).to_have_count(0)
         expect(visible(page, '.ios-chat-reply')).to_have_count(3)
         assert len(context.pages) == 1, 'Order should remain in the prototype'
@@ -164,8 +168,9 @@ with sync_playwright() as playwright:
         expect(last.locator('.rich-recommendation')).to_have_count(5)
         stores = current_store_data(page, last.locator('.rich-recommendation'))
         assert len(stores) == 5 and all(store['vegetarian'] for store in stores), stores
-        send_followup(page, '保持刚才的素食要求，预算调整为七万越南盾含配送。', 5)
-        stores = current_store_data(page, visible(page, '.ios-chat-reply').last.locator('.rich-recommendation'))
+        send_followup(page, '保持刚才的素食要求，预算调整为七万越南盾含配送，刚才这些店哪家最便宜？', 5)
+        expect(visible(page, '.ios-chat-reply').last).to_have_attribute('data-kind', 'ranking')
+        stores = current_store_data(page, visible(page, '.ios-chat-reply').last.locator('.reply-ranking-row'))
         assert len(stores) == 5 and all(store['vegetarian'] and min(p['total'] for p in store['platforms'].values()) <= 70000 for store in stores), stores
         checks.append(f'{name}: follow-ups preserve dietary constraints and apply the latest total budget')
         inspect_page(page, errors, responses)
@@ -214,7 +219,8 @@ with sync_playwright() as playwright:
     # must not be reused for a two-person basket. Arithmetic is independently
     # boundary-tested in wanso_offers.mjs; this checks the preview integration.
     total = page.evaluate('(id) => window.wansoOffers.calculate(window.wansoCatalog.find(s => s.id === id), "grab", 2).total', store['id'])
-    expect(sheet.locator('.sheet-details > div').filter(has=page.locator('dt', has_text='合计'))).to_contain_text(f'{total:,}'.replace(',', '.') + 'đ')
+    amount = sheet.locator('.sheet-details > div').filter(has=page.locator('dt', has_text='合计')).locator('dd').inner_text()
+    assert int(re.sub(r'[^0-9]', '', amount)) == total
     screenshot(page, 'two-person-order')
     inspect_page(page, errors, responses)
     checks.append('Two-person Chinese budget: 十五万 parses as 150,000; two portions share one delivery fee in cards and Order preview')

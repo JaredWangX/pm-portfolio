@@ -1,0 +1,96 @@
+/* Follow-up cards use one shared order, not a second discovery carousel. */
+.reply-card {container-type:inline-size;--reply-blue:#286bc0;--reply-ink:#20384f;--reply-muted:#49627b;box-sizing:border-box;width:100%;min-width:0;margin:12px 0 0;border:1px solid #ccdef0;border-radius:18px;padding:16px;background:linear-gradient(145deg,#ffffffed,#f1f7ffed);box-shadow:0 5px 20px #2b629c07;color:var(--reply-ink);font-family:inherit;font-size:13px;line-height:1.55;overflow-wrap:break-word;}
+.reply-card *, .reply-card *::before, .reply-card *::after {box-sizing:border-box;}
+.reply-card svg {width:18px;height:18px;flex:none;}
+.reply-card button {font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.reply-card button:focus-visible,.reply-card summary:focus-visible {outline:3px solid #7eb3f4;outline-offset:3px;}
+.reply-card-heading {margin:0 0 14px;}
+.reply-card-eyebrow {display:block;color:var(--reply-blue);font-size:11px;font-weight:650;line-height:1.5;margin-bottom:6px;}
+.reply-card .reply-store-name {margin:0;color:var(--reply-ink);font-size:16px;line-height:1.5;font-weight:700;letter-spacing:-.015em;}
+.reply-card .reply-dish {margin:5px 0 0;color:var(--reply-muted);font-size:13px;line-height:1.65;}
+.reply-platforms {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.reply-platform {min-width:0;}
+.reply-platforms>.reply-platform {display:flex;flex-direction:column;gap:5px;padding:12px 10px;border:1px solid #dce6ef;border-radius:12px;background:#fff;}
+.reply-platforms>.reply-platform.is-best {border-color:#a9c9ed;background:#eaf3ff;}
+.reply-platform-name {display:block;color:#4c647c;font-size:12px;font-weight:600;line-height:1.5;white-space:nowrap;}
+.reply-platform-name::before {content:'';display:inline-block;width:6px;height:6px;margin-right:5px;border-radius:50%;background:#0b9256;vertical-align:middle;}
+[data-platform=shopee]>.reply-platform-name::before,[data-platform=shopee] .reply-platform-name::before {background:#dc5632;}
+.reply-platform-total {display:block;color:#264c76;font-size:21px;font-weight:750;line-height:1.4;letter-spacing:-.035em;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.reply-platform-note {display:flex;align-items:center;gap:3px;color:var(--reply-muted);font-size:11px;line-height:1.45;min-height:16px;}
+.is-best>.reply-platform-note {color:#2862a1;}
+.reply-platform-note svg {width:13px;height:13px;}
+.reply-price-insight {margin:13px 0 0;padding-left:11px;border-left:2px solid #9bbfe9;}
+.reply-price-insight>strong {display:block;color:#255e9f;font-size:13px;line-height:1.6;font-weight:650;}
+.reply-price-insight>p {margin:5px 0 0!important;font-size:13px;line-height:1.75;color:var(--reply-muted);}
+.reply-ledger {margin:13px 0 0;border-top:1px solid #dce7f2;}
+.reply-ledger-toggle {display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:9px 0;list-style:none;color:#335b85;font-size:12px;font-weight:600;cursor:pointer;}
+.reply-ledger-toggle::-webkit-details-marker {display:none;}
+.reply-ledger-toggle svg {width:15px;height:15px;transition:transform .18s ease;}
+.reply-ledger[open]>.reply-ledger-toggle svg {transform:rotate(90deg);}
+.reply-ledger-body {padding:0 0 4px;min-width:0;}
+.reply-ledger-table {width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px;line-height:1.55;}
+.reply-ledger-table caption {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
+.reply-ledger-table th,.reply-ledger-table td {padding:7px 0;text-align:right;vertical-align:top;font-variant-numeric:tabular-nums;border:0;}
+.reply-ledger-table th:first-child {width:32%;padding-right:6px;text-align:left;font-weight:500;color:var(--reply-muted);}
+.reply-ledger-table thead th {font-weight:600;color:#344e68;border-bottom:1px solid #e0e9f3;font-size:10px;}
+.reply-ledger-table td {white-space:nowrap;}
+.reply-ledger-table td.reply-reduction {color:#266e58;}
+.reply-ledger-table .reply-ledger-total th,.reply-ledger-table .reply-ledger-total td {border-top:1px solid #cbddec;color:#27568c;font-weight:700;}
+.reply-coupon-rules {margin:9px 0 0;padding:10px;border-radius:9px;background:#eaf1f9;}
+.reply-coupon-rules>p {margin:0!important;color:var(--reply-muted);font-size:13px;line-height:1.65;}
+.reply-coupon-rules>p+p {margin-top:8px!important;}
+.reply-coupon-rules strong {display:block;color:#395c7d;font-weight:650;margin-bottom:2px;}
+.reply-coupon-rules .reply-qualification {border-top:1px solid #d5e1ee;padding-top:8px;}
+.reply-card-actions {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:9px 0 0;}
+.reply-card-actions>button {display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:9px 8px;border:1px solid #c6d8ec;border-radius:11px;font-size:12px;font-weight:650;line-height:1.5;text-align:center;transition:background-color .15s ease,transform .15s ease;}
+.reply-card-actions>button>span {min-width:0;}
+.reply-card-actions>.reply-primary {background:#2c71c7;border-color:#2c71c7;color:#fff;box-shadow:0 3px 8px #1e5fb617;}
+.reply-card-actions>.reply-secondary {background:#ffffffb8;color:#37638f;}
+.reply-card-actions>button:active {transform:translateY(1px);}
+.reply-decision-reason {margin:0 0 12px!important;color:#4a647b;font-size:13px;line-height:1.75;}
+.reply-decision-tags {display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;}
+.reply-decision-tags>span {padding:4px 7px;border:1px solid #d8e5f2;border-radius:7px;background:#f8fbff;color:#47709a;font-size:11px;line-height:1.4;}
+.reply-chosen-offer {display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid #d9e6f3;}
+.reply-chosen-label {min-width:0;}
+.reply-chosen-label>small {display:block;color:var(--reply-muted);font-size:11px;line-height:1.5;margin-top:3px;}
+.reply-chosen-offer>.reply-platform-total {font-size:22px;}
+.reply-decision-actions {grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);margin-top:2px;}
+.reply-ranking {padding-bottom:8px;}
+.reply-ranking>.reply-card-heading {margin-bottom:7px;}
+.reply-ranking-list {list-style:none;padding:0;margin:0;}
+.reply-ranking-row {display:grid;grid-template-columns:24px minmax(0,1fr);gap:9px;padding:12px 0;border-top:1px solid #dce7f1;}
+.reply-rank {display:grid;place-items:center;width:23px;height:23px;margin-top:10px;border-radius:8px;background:#e1edfb;color:#356ca9;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;}
+.reply-ranking-row:first-child .reply-rank {background:#2d73c7;color:#fff;}
+.reply-ranking-content {min-width:0;}
+.reply-ranking-detail {display:flex;align-items:center;justify-content:space-between;gap:7px;width:100%;min-height:44px;background:transparent;border:0;padding:0;color:#28425e;font-size:13px;font-weight:650;line-height:1.5;text-align:left;}
+.reply-ranking-detail>span {min-width:0;}
+.reply-ranking-detail>svg {width:15px;height:15px;color:#6087ad;}
+.reply-ranking-dish {margin:1px 0 8px!important;color:var(--reply-muted);font-size:13px;line-height:1.5;}
+.reply-ranking-prices {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.reply-ranking-prices>.reply-platform {padding:7px 8px;border-radius:8px;background:#f0f5fb;border:1px solid #e0e9f3;}
+.reply-ranking-prices>.is-best {background:#e9f2ff;border-color:#bfd5ed;}
+.reply-ranking-prices .reply-platform-name {font-size:10px;}
+.reply-ranking-prices .reply-platform-total {font-size:15px;margin-top:2px;letter-spacing:-.025em;}
+.reply-empty {padding:14px;border:1px solid #d4e3f2;border-radius:12px;color:#58728d;line-height:1.7;}
+@media(hover:hover) {.reply-card-actions>.reply-primary:hover {background:#2467b8;}.reply-card-actions>.reply-secondary:hover {background:#eaf2fd;}.reply-ranking-detail:hover {color:#256ac1;}}
+@media(prefers-reduced-motion:reduce) {.reply-card button,.reply-ledger-toggle svg {transition:none;}}
+
+.reply-taste-note {display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0 0 13px;padding:10px 11px;background:#e9f2ff;border-radius:9px;color:#3d6188;font-size:13px;line-height:1.65;}
+.reply-taste-note>strong {font-size:11px;font-weight:650;color:#2c639f;}
+@container (max-width:250px) {
+  .reply-platforms>.reply-platform {padding:10px 7px;}
+  .reply-platform-total {font-size:18px;}
+  .reply-platform-name {font-size:11px;}
+  .reply-platform-note {font-size:10px;}
+  .reply-chosen-offer>.reply-platform-total {font-size:19px;}
+  .reply-ranking-row {grid-template-columns:20px minmax(0,1fr);gap:6px;}
+  .reply-rank {width:20px;height:22px;}
+  .reply-ranking-prices {gap:6px;}
+  .reply-ranking-prices>.reply-platform {padding:7px 5px;}
+  .reply-ranking-prices .reply-platform-name {font-size:10px;}
+  .reply-ranking-prices .reply-platform-total {font-size:14px;}
+  .reply-card-actions>button {gap:5px;}
+  .reply-ledger-table {font-size:12px;}
+  .reply-ledger-table th:first-child {width:31%;}
+  .reply-ledger-table thead th {font-size:10px;}
+}
