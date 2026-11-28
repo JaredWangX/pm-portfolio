@@ -28,7 +28,7 @@ def hash_photo(src):
     with Image.open((ROOT/'prototypes/wanso'/src).resolve()) as image:
         return sha256(image.convert('RGB').resize((128,128)).tobytes()).hexdigest()
 def photo_meta(page,src):
-    return page.evaluate('(src)=>{const s=window.wansoCatalog.find(s=>s.image===src);return {id:s.id,kind:s.imageKind,key:s.key};}',src)
+    return page.evaluate('(src)=>{const s=window.wansoCatalog.find(s=>s.image===src);return {id:s.id,kind:s.imageKind,key:s.key,scene:s.imageScene||s.image};}',src)
 with sync_playwright() as p:
     browser=p.chromium.launch(channel='chrome',headless=True)
     for width in [1440,390]:
@@ -46,6 +46,7 @@ with sync_playwright() as p:
         first15=home+explore+chat
         assert len(set(map(hash_photo,first15)))==15,'different URLs must not hide duplicate photo files'
         assert all(photo_meta(page,src)['kind']=='photo' for src in first15)
+        assert len({photo_meta(page,src)['scene'] for src in first15})==15,'alternate angles of one meal must not pass as fresh imagery'
         assert len(set(map(hash_photo,home_loaded+explore_loaded+chat_loaded)))==15,'loaded card variants must remain distinct'
         assert all('/thumbs/' in src for src in home_loaded+explore_loaded+chat_loaded)
         if width==1440:
@@ -65,6 +66,7 @@ with sync_playwright() as p:
         expect(page.locator('.native-store-hero>img')).to_have_attribute('data-image-source',src)
         expect(page.locator('.native-store-hero>img')).to_have_attribute('data-media-state','loaded')
         expect(page.locator('.native-store-hero>img')).to_have_attribute('src',src)
+        assert page.locator('.native-store-hero>img').evaluate('(i)=>Math.abs(i.clientWidth/i.clientHeight-i.naturalWidth/i.naturalHeight)<.01'),'detail must show the whole uncropped photograph'
         page.get_by_role('button',name='Quay lại',exact=True).click()
         assert set(ids(page.locator('.rich-chat-rail').first))==set(first)
         page.evaluate("location.hash='home'");expect(page.locator('.ios-home-location')).to_be_visible()

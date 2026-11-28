@@ -22,8 +22,8 @@ body[data-capture=ios] .phone-nav {
 .phone-nav button:focus-visible {outline:2px solid #3b82f6;outline-offset:1px;}
 /* Let the list show through the material; keep its final action above the bar. */
 body[data-capture=ios] .page-layer:has(>.phone-nav)>.ios-data-page {height:auto;bottom:2.5%;padding-bottom:84px;scroll-padding-bottom:84px;}
-body[data-capture=ios] .page-layer:has(>.phone-nav)>.ios-composer {top:auto;bottom:calc(2.5% + 72px);height:58px;}
-body[data-capture=ios] .page-layer:has(>.phone-nav)>.ios-chat {bottom:calc(2.5% + 130px);}
+body[data-capture=ios] .page-layer:has(>.phone-nav)>.ios-composer {top:auto;bottom:calc(2.5% + 72px);height:auto;min-height:58px;align-items:flex-end;}
+body[data-capture=ios] .page-layer:has(>.phone-nav)>.ios-chat {bottom:calc(2.5% + 72px + var(--composer-height,58px));}
 .rich-chat-header {left:0;padding-left:56px;background:#eff6ffdb;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);}
 @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
   body[data-capture=ios] .phone-nav {background:linear-gradient(135deg,#ffffffb8,#edf6ff9c);-webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5);}

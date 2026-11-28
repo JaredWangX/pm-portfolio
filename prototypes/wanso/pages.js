@@ -98,7 +98,7 @@ window.wansoPages = (() => {
     const input=window.wansoControls.createSearchInput(()=>open('runSearch'));
     input.setAttribute('aria-label',t('Nhập yêu cầu món ăn'));input.placeholder=t('Món muốn ăn, ngân sách và món kiêng');
     input.addEventListener('input',()=>window.wansoNative.setQuery(input.value));
-    const clear=btn('×',()=>{state.query='';input.value='';window.wansoNative.setQuery('');input.focus({preventScroll:true});},'ios-home-clear','Xóa yêu cầu món ăn');
+    const clear=btn('×',()=>{state.query='';input.value='';window.wansoNative.setQuery('');window.wansoControls.resizeTextarea(input);input.focus({preventScroll:true});},'ios-home-clear','Xóa yêu cầu món ăn');
     inputRow.append(icon,input,clear);
     const tools=el('div','ios-home-search-tools');
     const compare=btn('',()=>open('toggle','compareAll'),'ios-home-compare','Cài đặt so sánh nền tảng');

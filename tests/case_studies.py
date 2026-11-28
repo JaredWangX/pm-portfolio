@@ -22,7 +22,7 @@ with sync_playwright() as p:
         expect(page.locator('.identity')).to_have_text('王稼瑞')
         assert page.locator('.identity img').evaluate('(i)=>i.complete && i.naturalWidth>0')
     page.goto(BASE, wait_until='load')
-    for width in [1440,1024,768,390,320]:
+    for width in [1440,1024,768,760,600,540,390,320]:
         page.set_viewport_size({'width':width,'height':900})
         page.locator('#cases').scroll_into_view_if_needed()
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
@@ -33,6 +33,13 @@ with sync_playwright() as p:
         image=page.locator('.cover-desktop>img').bounding_box()
         cover=page.locator('.onentra-cover').bounding_box()
         assert image['y']>=cover['y'] and image['y']+image['height']<=cover['y']+cover['height'], (width,image,cover)
+        if width<=760:
+            # A full phone must fit the capped cover at intermediate widths too.
+            cover=page.locator('.wanso-cover').bounding_box()
+            for picture in page.locator('.cover-phones img').all():
+                image=picture.bounding_box()
+                assert image['y']>=cover['y'] and image['y']+image['height']<=cover['y']+cover['height'], (width,image,cover)
+                assert abs(image['width']/image['height']-402/874)<.002
     print('Homepage: aligned project covers, text/actions and complete desktop image passed')
     for product in ['wanso', 'onentra']:
         page.goto(BASE + product + '/', wait_until='load')
@@ -80,7 +87,7 @@ with sync_playwright() as p:
     for chapter in page.locator('[data-film-seek]').all():
         chapter.click()
         moment=float(chapter.get_attribute('data-film-seek'))
-        page.wait_for_function('(t)=>{const v=document.querySelector("video");return !v.paused&&v.currentTime>=t&&v.currentTime<t+3}',arg=moment)
+        page.wait_for_function('(t)=>{const v=document.querySelector("video");return !v.seeking&&!v.paused&&v.readyState>=2&&v.currentTime>=t&&v.currentTime<t+3}',arg=moment)
         expect(chapter).to_have_attribute('aria-current','step')
         video.evaluate('(v)=>v.pause()')
     for width in [1440,1024,768,390,320]:

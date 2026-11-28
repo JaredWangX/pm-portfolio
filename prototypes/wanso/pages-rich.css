@@ -13,9 +13,9 @@
 .ios-home-headline em {font-style:normal;color:#458add;}
 .ios-home-headline p {font-size:calc(13 * var(--ios));line-height:1.5;color:#7c8da1;margin-top:calc(6 * var(--ios));}
 .ios-home-search {margin:calc(18 * var(--ios)) calc(20 * var(--ios)) calc(26 * var(--ios));padding:calc(12 * var(--ios)) calc(14 * var(--ios));border:calc(2 * var(--ios)) solid transparent;border-radius:calc(20 * var(--ios));background:linear-gradient(110deg,#f6fbff,#eef5ff) padding-box,linear-gradient(120deg,#8eb8ee,#b2a0df 45%,#edb28a 78%,#e7dba1) border-box;box-shadow:0 calc(3 * var(--ios)) calc(16 * var(--ios)) #527eb615;}
-.ios-home-search-input {display:flex;align-items:center;gap:calc(8 * var(--ios));min-height:calc(48 * var(--ios));padding-bottom:calc(10 * var(--ios));}
+.ios-home-search-input {display:flex;align-items:flex-start;gap:calc(8 * var(--ios));min-height:calc(48 * var(--ios));padding-bottom:calc(10 * var(--ios));}
 .ios-home-input-icon {display:grid;place-items:center;flex:none;width:calc(32 * var(--ios));height:calc(32 * var(--ios));border-radius:calc(10 * var(--ios));background:#e7effb;color:#568cda;font-size:calc(21 * var(--ios));}
-.ios-page-home .native-home-query {position:static;inset:auto;flex:1;min-width:0;width:100%;height:auto;margin:0;padding:calc(7 * var(--ios)) 0;border:0;border-radius:calc(4 * var(--ios));background:transparent;color:#26415d;font-family:inherit;font-size:calc(13.5 * var(--ios));line-height:1.5;outline:0;box-shadow:none;}
+.ios-page-home .native-home-query {position:static;inset:auto;flex:1;min-width:0;width:100%;height:auto;min-height:calc(54 * var(--ios));max-height:calc(180 * var(--ios));margin:0;padding:calc(7 * var(--ios)) 0;border:0;border-radius:calc(4 * var(--ios));resize:none;overflow-x:hidden;overflow-y:hidden;white-space:pre-wrap;overflow-wrap:anywhere;background:transparent;color:#26415d;font-family:inherit;font-size:calc(13.5 * var(--ios));line-height:1.5;outline:0;box-shadow:none;}
 .ios-page-home .native-home-query::placeholder {color:#8291a6;opacity:1;}
 .ios-home-clear {display:grid;place-items:center;flex:none;width:calc(24 * var(--ios));height:calc(28 * var(--ios));padding:0;background:transparent;color:#708398;font-size:calc(21 * var(--ios))!important;}
 .ios-home-search-tools {display:flex;justify-content:space-between;align-items:center;gap:calc(8 * var(--ios));border-top:1px solid #dbe6f3;padding-top:calc(10 * var(--ios));}
@@ -48,7 +48,7 @@
 .ios-scenario-copy span {line-height:1.65;}
 .ios-data-page button:focus-visible {outline:calc(2 * var(--ios)) solid #3988e8;outline-offset:calc(3 * var(--ios));}
 .ios-page-home .native-home-query:focus-visible {outline:calc(2 * var(--ios)) solid #91b9ea;outline-offset:calc(3 * var(--ios));}
-@media(pointer:coarse){.ios-page-home .native-home-query:focus {font-size:16px;}}
+@media(pointer:coarse){.ios-page-home .native-home-query {font-size:16px;max-height:calc(168px + 14 * var(--ios));}}
 .ios-home-tip span {color:#526b83;}.ios-home-tip b {color:#275e9e;}
 /* Saved restaurants remain separate from platform-entry history. */
 .ios-page-saved .ios-saved-actions {display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:12px;margin-top:14px;}

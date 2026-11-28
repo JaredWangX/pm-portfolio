@@ -70,14 +70,15 @@ window.wansoNative = (() => {
   };
   const selectionCache=new Map();
   const imageLastSeen=new Map();
+  const photoScene=store=>store.imageScene||store.image;
   let selectionSequence=0;
   function variedStores(candidates,{limit=5,key,preferredIds=[]}={}) {
     const cacheKey=location.city+':'+location.district+':'+key;
     if(key&&selectionCache.has(cacheKey))return selectionCache.get(cacheKey);
     const selected=[],images=new Set(),brands=new Set();
     const add=store=>{
-      if(selected.length>=limit||images.has(store.image))return false;
-      selected.push(store);images.add(store.image);brands.add(store.name.split(' · ')[0]);return true;
+      if(selected.length>=limit||images.has(photoScene(store)))return false;
+      selected.push(store);images.add(photoScene(store));brands.add(store.name.split(' · ')[0]);return true;
     };
     // A price/quantity follow-up keeps its eligible restaurant identities; opening a
     // different page prefers pictures not shown elsewhere in this browser visit.
@@ -85,9 +86,9 @@ window.wansoNative = (() => {
     for(const store of candidates)if(preferred.has(store.id))add(store);
     selection: for(const photo of [true,false])for(const unseen of [true,false])for(const distinctBrand of [true,false]) {
       if(selected.length>=limit)break selection;
-      const pool=unseen?candidates:[...candidates].sort((a,b)=>(imageLastSeen.get(a.image)||0)-(imageLastSeen.get(b.image)||0));
+      const pool=unseen?candidates:[...candidates].sort((a,b)=>(imageLastSeen.get(photoScene(a))||0)-(imageLastSeen.get(photoScene(b))||0));
       for(const store of pool) {
-        if((store.imageKind==='photo')!==photo||(!imageLastSeen.has(store.image))!==unseen)continue;
+        if((store.imageKind==='photo')!==photo||(!imageLastSeen.has(photoScene(store)))!==unseen)continue;
         if(distinctBrand&&brands.has(store.name.split(' · ')[0]))continue;
         add(store);
         if(selected.length>=limit)break;
@@ -95,7 +96,7 @@ window.wansoNative = (() => {
       if(selected.length>=limit)break;
     }
     const sequence=++selectionSequence;
-    for(const store of selected)imageLastSeen.set(store.image,sequence);
+    for(const store of selected)imageLastSeen.set(photoScene(store),sequence);
     if(key)selectionCache.set(cacheKey,selected);
     return selected;
   }
@@ -532,19 +533,24 @@ Vuốt ngang để xem lý do gợi ý từng quán; mở quán để xem thực
     const followups=['Tính cả phí giao hàng thì nền tảng nào tiết kiệm hơn?',beverage?'Mình muốn ít đường, ít đá. Chọn giúp mình một quán phù hợp nhất.':'Giữ các yêu cầu ăn uống ở trên và chọn giúp mình một quán phù hợp nhất.'];
     followups.map(t).forEach((prompt,index)=>{requests.push(prompt);appendRound(prompt,index+1);});
     const composer=element('form','ios-composer');
-    input=element('input');input.type='text';input.placeholder=t('Nhắn thêm yêu cầu…');
+    input=element('textarea');input.rows=1;input.enterKeyHint='enter';input.placeholder=t('Nhắn thêm yêu cầu…');
     input.setAttribute('aria-label',t('Hỏi tiếp'));input.maxLength=300;
     send=element('button','ios-send','➤');send.type='submit';send.disabled=true;send.setAttribute('aria-label',t('Gửi câu hỏi'));
-    input.addEventListener('input',()=>{send.disabled=busy||!input.value.trim();});
+    const resizeComposer=()=>window.wansoControls.resizeTextarea(input);
+    input.addEventListener('input',()=>{send.disabled=busy||!input.value.trim();resizeComposer();});
+    input.addEventListener('keydown',event=>{
+      if(event.key==='Enter'&&!event.isComposing&&(event.ctrlKey||event.metaKey)) {event.preventDefault();composer.requestSubmit();}
+    });
     composer.addEventListener('submit',event=>{
       event.preventDefault();const text=input.value.trim();if(!text||busy)return;
-      input.value='';send.disabled=true;
+      input.value='';send.disabled=true;resizeComposer();
       requests.push(text);
       const normalized=normalizeQuery(text);
       const kind=/配送|便宜|平台|总价|费用|划算|giao hang|tiet kiem|nen tang|tong tien|chi phi|uu dai|ma giam|re hon/.test(normalized)?1:/香菜|辣椒|定一家|决定|备注|少糖|少冰|rau mui|ngo ri|it duong|it da|chon.*mot quan|ghi chu|khau vi/.test(normalized)?2:0;
       appendRound(text,kind,true);
     });
     composer.append(input,send);layer.append(scroller,composer);
+    requestAnimationFrame(resizeComposer);
     return scroller;
   }
   function setLocation(value) {

@@ -353,7 +353,8 @@
  .wanso-study .story-intro h3 { margin-bottom:16px; }
  .wanso-study .onboarding-story { padding-inline:13px; }
  .wanso-study .onboarding-gallery { display:grid; grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:100%; gap:18px; padding:2px 3px 13px; overflow-x:auto; scroll-snap-type:x mandatory; scroll-padding-inline:3px; overscroll-behavior-x:contain; scrollbar-width:thin; scrollbar-color:#82afe3 transparent; }
- .wanso-study .onboarding-gallery>div { scroll-snap-align:center; grid-template-rows:auto auto; }
+ .wanso-study .onboarding-gallery>div { scroll-snap-align:center; grid-template-rows:auto auto; justify-items:center; }
+ .wanso-study .onboarding-gallery .study-screen { max-width:calc((100svh - 205px) * 402 / 874); }
  .wanso-study .onboarding-gallery>div>span { font-size:14px; }
  .wanso-study .product-film { padding:20px 12px; }
  .wanso-study .film-phone { width:min(100%,346px,calc((100svh - 215px) * .45995)); padding:3px; }

@@ -4,8 +4,8 @@
 .native-store-view button:focus-visible {outline:2px solid #2e79d4;outline-offset:2px;}
 .native-store-scroll {height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;touch-action:auto;scroll-padding-top:76px;}
 .native-store-scroll::-webkit-scrollbar {display:none;}
-.native-store-hero {position:relative;height:calc(240 * var(--ios));overflow:hidden;}
-.native-store-hero>img {display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;}
+.native-store-hero {position:relative;height:auto;overflow:hidden;}
+.native-store-hero>img {display:block;width:100%;height:auto;pointer-events:none;}
 .native-store-hero:after {content:'';position:absolute;inset:0;background:linear-gradient(#0005 0%,#0001 30%,transparent 55%,#0008 100%);pointer-events:none;}
 .native-store-toolbar {position:absolute;inset:0 0 auto;display:flex;align-items:center;gap:10px;height:66px;padding:10px 14px;box-sizing:border-box;z-index:4;background:linear-gradient(#1223334d,transparent);border-bottom:1px solid transparent;}
 .native-store-toolbar-actions {display:flex;gap:8px;flex:none;}

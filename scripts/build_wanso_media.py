@@ -42,7 +42,14 @@ with sync_playwright() as p:
  def mark(name,caption):
   item={'name':name,'seconds':round(time.monotonic()-start,3),'caption':caption}; marks.append(item); print(json.dumps(item,ensure_ascii=False),flush=True)
  def hold(seconds): page.wait_for_timeout(int((seconds if record else .08)*1000))
+ def photos_ready():
+  page.wait_for_function('''() => [...document.querySelectorAll('.screen img')].every(image => {
+   const r=image.getBoundingClientRect();
+   if(!r.width||!r.height||r.right<=0||r.left>=innerWidth||r.bottom<=0||r.top>=innerHeight)return true;
+   return image.complete&&image.naturalWidth>1&&!image.dataset.mediaPending;
+  })''',timeout=15000)
  def capture(name):
+  photos_ready()
   if not record:
    shot=Image.open(io.BytesIO(page.locator('.screen').screenshot())).convert('RGB'); assert shot.size==(804,1748),shot.size
    shot.save(SHOTS/(name+'.webp'),'WEBP',quality=88,method=6)
@@ -69,11 +76,15 @@ with sync_playwright() as p:
  home=page.locator('.ios-page-home'); rail=page.locator('.rich-home-rail')
  assert rail.locator('.rich-home-card').count()==5
  for card in rail.locator('.rich-home-card').all(): assert card.locator('.rich-home-platforms [data-platform]').count()==2
+ home_photos=rail.locator('.rich-home-card img').evaluate_all('(images)=>images.map(image=>image.dataset.imageSource)')
+ assert len(set(home_photos))==5,'Featured restaurants need five distinct photographs'
  mark('featured','五家精选都保留双平台入口；横向浏览菜品、特点和平台费用。')
  scroll_to(home,rail,28); hold(3); rail_pan(rail,240); hold(3); rail_pan(rail,240); hold(3)
  home.evaluate('(el)=>el.scrollTo({top:0,behavior:"smooth"})'); page.wait_for_timeout(850)
  mark('search','清淡鸡肉河粉、不放香菜，含配送不超过 80,000 越南盾。')
- page.locator('.native-home-query').fill(PROMPT); hold(2); page.locator('.ios-home-search-submit').click()
+ query=page.locator('.native-home-query');query.fill(PROMPT)
+ assert query.evaluate('(el)=>el.tagName==="TEXTAREA"&&el.scrollHeight<=el.clientHeight+1'),'The complete meal request must wrap visibly'
+ hold(2); page.locator('.ios-home-search-submit').click()
  expect(page.locator('.rich-processing')).to_be_visible()
  mark('processing','依次理解需求、筛选菜品、核算费用，再整理推荐依据。')
  expect(page.locator('.ios-chat-reply')).to_have_count(3,timeout=15000)
@@ -82,13 +93,18 @@ with sync_playwright() as p:
  for reply in replies.all():
   assert reply.locator('.rich-recommendation').count()==5
   assert len(reply.locator('.ios-assistant-message').inner_text())>100
+  photos=reply.locator('.rich-recommendation img').evaluate_all('(images)=>images.map(image=>image.dataset.imageSource)')
+  assert len(set(photos))==5,'Each recommendation round needs distinct restaurant photographs'
  assert page.locator('.phone-nav [aria-current=page]').get_attribute('data-target')=='home'
  chat.evaluate('(el)=>el.scrollTop=0'); page.wait_for_timeout(250)
  mark('recommend','第一轮：先把清淡、不放香菜和预算对应到具体菜品，解释为什么推荐。'); capture('recommend'); hold(7)
  first=replies.first; sections=first.locator('.rich-answer-section')
  scroll_to(chat,sections.nth(1)); hold(7)
  mark('candidates','逐家比较五个候选：菜品特点、推荐理由、双平台含配送总价。')
- cards=first.locator('.rich-chat-rail'); scroll_to(chat,cards,12); capture('candidates'); hold(5); rail_pan(cards,255); hold(5); rail_pan(cards,255); hold(5)
+ cards=first.locator('.rich-chat-rail'); scroll_to(chat,cards,12)
+ primary=cards.locator('.rich-restaurant').first.bounding_box();reading=chat.bounding_box()
+ assert primary['y']>=reading['y']-1 and primary['y']+primary['height']<=reading['y']+reading['height']+1,'Primary restaurant card must fit above the composer'
+ capture('candidates'); hold(5); rail_pan(cards,255); hold(5); rail_pan(cards,255); hold(5)
  mark('followup','第二轮继续追问费用：保留原来的口味约束，把优惠和配送一起算。')
  scroll_to(chat,page.locator('.ios-user-message').nth(1)); capture('followup'); hold(6)
  scroll_to(chat,replies.nth(1).locator('.rich-answer-section').nth(1)); hold(5)
@@ -117,7 +133,7 @@ with sync_playwright() as p:
  scroll_to(store_scroll,view.locator('.native-store-coupon-heading'),78)
  rules.first.locator('summary').click(); hold(5)
  scroll_to(store_scroll,rules.nth(1),88); rules.nth(1).locator('summary').click(); hold(5)
- mark('menu','查看完整菜单：招牌鸡肉河粉、其他主食和饮品，核对份量、配料与价格。')
+ mark('menu','查看菜单中的鸡肉河粉与加配选项，核对份量、配料和价格。')
  scroll_to(store_scroll,view.locator('.native-store-menu'),78); capture('menu'); hold(6)
  menu_rows=view.locator('.native-store-menu-row'); assert menu_rows.count()>=3
  scroll_to(store_scroll,menu_rows.nth(2),88); hold(6)

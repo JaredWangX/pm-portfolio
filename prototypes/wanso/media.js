@@ -15,7 +15,11 @@ window.wansoMedia = (() => {
     const source=image.dataset.mediaPending;delete image.dataset.mediaPending;
     observer?.unobserve(image);
     image.fetchPriority=image.dataset.mediaPriority||(firstImages++<2?'high':'auto');
-    image.onload=()=>{if(image.naturalWidth>1){loaded.add(image.getAttribute('src'));image.dataset.mediaState='loaded';}};
+    image.onload=()=>{if(image.naturalWidth>1){
+      loaded.add(image.getAttribute('src'));image.dataset.mediaState='loaded';
+      // The soft edge fill uses the already-decoded thumbnail, not another photo or request.
+      image.parentElement?.style.setProperty('--photo-fill',`url("${image.getAttribute('src')}")`);
+    }};
     let fallback=false;
     image.onerror=()=>{
       if(!fallback&&source!==image.dataset.imageSource){fallback=true;unavailable.add(source);image.src=image.dataset.imageSource;return;}
@@ -36,7 +40,9 @@ window.wansoMedia = (() => {
   }).observe(document.body,{childList:true,subtree:true});
   function image(source,{className='',alt='',detail=false,eager=false,width=220,height=140}={}) {
     const node=document.createElement('img');node.className=className;node.alt=window.wansoI18n?.text(alt)??alt;
-    node.width=width;node.height=height;node.draggable=false;node.decoding='async';
+    const size=window.wansoPhotoSizes?.[source.split('/').pop()];
+    node.width=size?.[0]||width;node.height=size?.[1]||height;node.draggable=false;node.decoding='async';
+    if(size)node.style.aspectRatio=size[0]+'/'+size[1];
     node.dataset.imageSource=source;
     const target=detail?source:cardSource(source);
     node.dataset.mediaPending=target;node.dataset.mediaState='pending';

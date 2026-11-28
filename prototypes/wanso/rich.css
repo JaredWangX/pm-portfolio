@@ -77,7 +77,7 @@
 /* Vietnamese labels need content-sized cards, not the old single-line Chinese slots. */
 .rich-home-rail {align-items:stretch;}
 .rich-home-card {flex-basis:max(216px,calc(228 * var(--ios)));width:max(216px,calc(228 * var(--ios)));height:auto;min-height:400px;}
-.rich-home-card .rich-pick-cover {height:max(118px,calc(122 * var(--ios)));}
+.rich-home-card .rich-pick-cover {height:auto;aspect-ratio:4/3;}
 .rich-home-card .ios-home-store-info {gap:8px;padding:14px;}
 .rich-home-card .ios-home-store-info>strong {overflow:visible;text-overflow:clip;white-space:normal;min-height:2.8em;font-size:14px;line-height:1.4;overflow-wrap:break-word;}
 .rich-category {white-space:normal;font-size:12px;line-height:1.5;}
@@ -89,15 +89,20 @@
 .rich-home-platforms {font-size:12px;line-height:1.5;padding-top:10px;}
 .rich-recommendation {flex-basis:min(260px,100%);}
 .rich-restaurant {height:auto;min-height:460px;}
+.rich-restaurant .ios-restaurant-photo {height:auto;aspect-ratio:4/3;}
+/* Keep the complete bowl/glass in view; the same image softly fills any side margins. */
+.rich-pick-cover,.ios-restaurant-photo,.ios-explore-cover {isolation:isolate;overflow:hidden;background:#edf2f4;}
+.rich-pick-cover:before,.ios-restaurant-photo:before,.ios-explore-cover:before {content:'';position:absolute;inset:-12px;background-image:var(--photo-fill);background-size:cover;background-position:center;filter:blur(12px) saturate(.65);opacity:.42;pointer-events:none;}
+.rich-home-card .rich-pick-cover img,.ios-restaurant-photo img,.ios-explore-cover img {position:relative;display:block;width:100%;height:100%;object-fit:contain;}
 .rich-restaurant .ios-restaurant-name {display:block;height:auto;min-height:2.8em;overflow:visible;-webkit-line-clamp:unset;font-size:14px;line-height:1.4;overflow-wrap:break-word;}
-.rich-restaurant .ios-restaurant-info {gap:10px;padding:14px;width:100%;min-width:0;}
+.rich-restaurant .ios-restaurant-info {gap:8px;padding:11px 12px;width:100%;min-width:0;}
 .rich-restaurant .rich-tags {gap:6px;}
 .rich-restaurant .ios-sample {font-size:13px;line-height:1.5;}
 .rich-restaurant .ios-restaurant-stats {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-top:10px;}
 .rich-restaurant .ios-restaurant-stats>div:last-child {grid-column:1/-1;}
 .rich-restaurant .ios-restaurant-stats dt {font-size:12px;line-height:1.5;}
 .rich-restaurant .ios-restaurant-stats dd {font-size:13px;line-height:1.5;white-space:nowrap;}
-.rich-total-label {font-size:12px;line-height:1.6;padding:4px 14px 8px;color:#526b83;}
+.rich-total-label {font-size:12px;line-height:1.6;padding:3px 12px 6px;color:#526b83;}
 .rich-offers {padding:0 10px 10px;gap:8px;}
 .rich-offer {min-height:44px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:5px 7px;padding:8px;font-size:12px;}
 .rich-offer>strong {grid-column:2;grid-row:2;margin-left:0;font-size:13px;}

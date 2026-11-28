@@ -114,6 +114,25 @@ window.wansoControls = (() => {
     if (value !== undefined) node.textContent = t(value);
     return node;
   };
+  function resizeTextarea(input) {
+    if (!input.isConnected || !input.clientWidth) return;
+    input.style.height = 'auto';
+    const maximum = parseFloat(getComputedStyle(input).maxHeight) || Infinity;
+    input.style.height = Math.min(input.scrollHeight, maximum) + 'px';
+    input.style.overflowY = input.scrollHeight > maximum ? 'auto' : 'hidden';
+    const composer = input.closest('.ios-composer');
+    if (composer) composer.closest('.screen')?.style.setProperty('--composer-height', composer.offsetHeight + 'px');
+  }
+  const textareaScreen = document.querySelector('.screen');
+  let textareaWidth = 0, textareaFrame = 0;
+  new ResizeObserver(([entry]) => {
+    if (entry.contentRect.width === textareaWidth) return;
+    textareaWidth = entry.contentRect.width;
+    cancelAnimationFrame(textareaFrame);
+    textareaFrame = requestAnimationFrame(() => {
+      textareaScreen.querySelectorAll('.native-home-query, .ios-composer textarea').forEach(resizeTextarea);
+    });
+  }).observe(textareaScreen);
 
   const sheet = el('dialog', 'wanso-sheet');
   sheet.setAttribute('aria-labelledby', 'wanso-sheet-title');
@@ -589,6 +608,7 @@ window.wansoControls = (() => {
       const input = activeLayer.querySelector('.native-home-query');
       if (input) {
         input.value = '';
+        resizeTextarea(input);
         input.focus({preventScroll:true});
       }
     },
@@ -644,6 +664,8 @@ window.wansoControls = (() => {
   }
 
   function paint(layer, frame) {
+    // Restored conversation nodes may have been detached while the phone resized.
+    requestAnimationFrame(() => layer.querySelectorAll('.native-home-query, .ios-composer textarea').forEach(resizeTextarea));
     for (const control of layer.querySelectorAll('.hotspot')) {
       const h = controls.get(control);
       if (!h) continue;
@@ -722,17 +744,21 @@ window.wansoControls = (() => {
     register,
     paint,
     menuLanguage: id => state.translated[id],
+    resizeTextarea,
     createSearchInput(submit) {
-      const input = el('input','native-home-query');
+      const input = el('textarea','native-home-query');
+      input.rows = 2;
+      input.enterKeyHint = 'enter';
       input.value = state.query;
       input.placeholder = t('Hôm nay bạn muốn ăn gì?');
       input.maxLength = 160;
-      input.addEventListener('input',() => {state.query = input.value;});
+      input.addEventListener('input',() => {state.query = input.value; resizeTextarea(input);});
       input.addEventListener('keydown',event => {
-        if (event.key !== 'Enter' || event.isComposing) return;
+        if (event.key !== 'Enter' || event.isComposing || !(event.ctrlKey || event.metaKey)) return;
         event.preventDefault();
         submit();
       });
+      requestAnimationFrame(() => resizeTextarea(input));
       return input;
     },
     dismissStore,
