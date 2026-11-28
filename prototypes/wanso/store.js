@@ -2,13 +2,15 @@
 
 // MerchantDetailView.swift: one scroll view, the same detail screen from every entry point.
 window.wansoStore = (() => {
+  const t = value => window.wansoI18n?.text(value) ?? value;
+  const zh=window.wansoI18n?.chinese;
   const el=(tag,className,text)=>{
     const node=document.createElement(tag);
     if(className)node.className=className;
-    if(text!==undefined)node.textContent=text;
+    if(text!==undefined)node.textContent=t(text);
     return node;
   };
-  const money=value=>new Intl.NumberFormat('vi-VN').format(value)+'đ';
+  const money=value=>new Intl.NumberFormat(window.wansoI18n?.locale||'vi-VN').format(value)+'đ';
   const languages=[['original','◎','Bản gốc'],['en','A','Tiếng Anh'],['vi','V','Tiếng Việt'],['zh','ZH','Tiếng Trung'],['ja','JA','Tiếng Nhật'],['ko','KO','Tiếng Hàn']];
   const legacyLanguages=['original','en','vi','zh','ja','ko'];
   const icons={walk:'M13 3a1.5 1.5 0 1 0 .01 0M10 8l3-2 2 5 4 2M13 7l-1 6 4 8M12 13l-5 7M10 8l-3 5',back:'M14 5 7 12l7 7',share:'M12 15V3m-4 4 4-4 4 4M7 11H4v10h16V11h-3',heart:'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z',pin:'M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0ZM9 10a3 3 0 1 0 6 0 3 3 0 0 0-6 0',chevron:'m9 5 7 7-7 7',close:'m6 6 12 12M18 6 6 18',arrow:'M7 17 17 7M7 7h10v10'};
@@ -18,7 +20,7 @@ window.wansoStore = (() => {
     const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',icons[name]);svg.append(path);return svg;
   };
   const button=(className,label,action)=>{
-    const node=el('button',className);node.type='button';node.setAttribute('aria-label',label);node.addEventListener('click',action);return node;
+    const node=el('button',className);node.type='button';node.setAttribute('aria-label',t(label));node.addEventListener('click',action);return node;
   };
   function appendReviews(container,store) {
     const id=typeof store==='string'?store:store.id;
@@ -41,8 +43,8 @@ window.wansoStore = (() => {
     container.append(section);return section;
   }
   function mount(parent,store,{request='',onClose,onAction,state={}}={}) {
-    const root=el('section','native-store-view');root.dataset.storeId=store.id;root.setAttribute('aria-label',store.name+' · Chi tiết quán');
-    const scroll=el('div','native-store-scroll');scroll.tabIndex=0;scroll.setAttribute('aria-label','Chi tiết quán, cuộn để xem thêm');
+    const root=el('section','native-store-view');root.dataset.storeId=store.id;root.setAttribute('aria-label',t(store.name+' · Chi tiết quán'));
+    const scroll=el('div','native-store-scroll');scroll.tabIndex=0;scroll.setAttribute('aria-label',t('Chi tiết quán, cuộn để xem thêm'));
     root.append(scroll);parent.append(root);
     let languageSheet,previousFocus,selectedLanguage=legacyLanguages[state.menuLanguage?.[store.id]]||'original',appliedLanguage=legacyLanguages[state.translated?.[store.id]]||'original';
     const offers=Object.fromEntries(Object.keys(store.platforms).map(key=>[key,window.wansoNative.offerFor(store,key,request)]));
@@ -51,7 +53,7 @@ window.wansoStore = (() => {
     const result=window.wansoNative.comparisonFor(store,request);
     const hero=el('div','native-store-hero');
     const image=window.wansoMedia.image(store.image,{detail:true,eager:true,alt:store.imageAlt||store.dishZh,width:402,height:240});
-    const toolbar=el('nav','native-store-toolbar');toolbar.setAttribute('aria-label','Thao tác với quán');
+    const toolbar=el('nav','native-store-toolbar');toolbar.setAttribute('aria-label',t('Thao tác với quán'));
     const navTitle=el('div','native-store-nav-title');navTitle.setAttribute('aria-hidden','true');
     const navStatus=el('small');navTitle.append(el('strong','','Chi tiết quán'),navStatus);
     const back=button('native-store-circle native-store-back','Quay lại',()=>onClose?.());back.append(icon('back'));
@@ -73,10 +75,10 @@ window.wansoStore = (() => {
     info.append(title,rating,tags,address,hours);scroll.append(info);
     function refreshHours() {
       const current=window.wansoHours.status(store);
-      open.dataset.state=current.state;openLabel.textContent=current.label;
-      open.title=current.detail+' · Theo giờ Việt Nam; kiểm tra tình trạng nhận đơn trên nền tảng';
-      hoursText.textContent=current.schedule?'Giờ mở cửa '+current.schedule+' · Giờ Việt Nam':current.detail;
-      navStatus.textContent=current.label;navStatus.dataset.state=current.state;
+      open.dataset.state=current.state;openLabel.textContent=t(current.label);
+      open.title=t(current.detail)+(zh?' · 按越南当地时间，平台接单状态以下单页面为准':' · Theo giờ Việt Nam; kiểm tra tình trạng nhận đơn trên nền tảng');
+      hoursText.textContent=t(current.schedule?'Giờ mở cửa '+current.schedule+' · Giờ Việt Nam':current.detail);
+      navStatus.textContent=t(current.label);navStatus.dataset.state=current.state;
     }
     refreshHours();const hoursTimer=setInterval(refreshHours,60000);
     const onVisibility=()=>{if(!document.hidden)refreshHours();};document.addEventListener('visibilitychange',onVisibility);
@@ -92,7 +94,7 @@ window.wansoStore = (() => {
     const summaryOffer=el('div','native-store-summary-offer');
     const summaryOfferLabel=el('div');summaryOfferLabel.append(el('span','',`${quantity} phần ${store.dishZh}`),el('small','',winner[1].name+' · Đã gồm giao hàng'));
     summaryOffer.append(summaryOfferLabel,el('strong','',money(winner[1].total)));
-    const priceLink=button('native-store-price-link','Xem so sánh giá',()=>scrollToSection('.native-store-price-overview',matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'));priceLink.textContent=result.saving?'Vì sao '+result.winner.name+' tiết kiệm '+money(result.saving)+'? →':'Xem đầy đủ chi phí hai nền tảng →';
+    const priceLink=button('native-store-price-link','Xem so sánh giá',()=>scrollToSection('.native-store-price-overview',matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'));priceLink.textContent=t(result.saving?'Vì sao '+result.winner.name+' tiết kiệm '+money(result.saving)+'? →':'Xem đầy đủ chi phí hai nền tảng →');
     summaryText.append(el('h2','','Vì sao AI gợi ý quán này'),el('p','',store.reason),summaryOffer,priceLink);summary.append(spark,summaryText);body.append(summary);
     const translate=el('div','native-store-translate');
     const choose=button('native-store-choose-language','Chọn ngôn ngữ thực đơn',showLanguagePicker);
@@ -101,7 +103,7 @@ window.wansoStore = (() => {
       if(selectedLanguage==='original'){showLanguagePicker();return;}
       appliedLanguage=selectedLanguage;
       state.translated??={};state.translated[store.id]=legacyLanguages.indexOf(appliedLanguage);
-      renderMenu();apply.querySelector('span').textContent='Đã dịch';
+      renderMenu();apply.querySelector('span').textContent=t('Đã dịch');
     });apply.dataset.action='translate';apply.append(el('b','','A↔'),el('span','','Dịch'));
     translate.append(choose,apply);body.append(translate);
     const overview=el('section','native-store-price-overview');
@@ -110,20 +112,25 @@ window.wansoStore = (() => {
     overviewHeading.append(el('h2','',result.saving?`${result.winner.name} tiết kiệm hơn`:'Hai nền tảng có cùng tổng tiền'),el('strong','',result.saving?'Tiết kiệm '+money(result.saving):money(result.winner.total)));
     overview.append(overviewHeading);
     const strongest=result.differences.filter(item=>item.amount>0).sort((a,b)=>b.amount-a.amount)[0];
-    const advantage={
+    const advantage=zh?{
+      price:`${result.winner.name} 的餐品原价为 ${money(result.winner.price)}，比 ${result.other.name} 少 ${money(strongest?.amount||0)}`,
+      merchant:`${result.winner.name} 店铺折扣减 ${money(result.winner.merchantDiscount)}，比 ${result.other.name} 多减 ${money(strongest?.amount||0)}`,
+      coupon:`${result.winner.name} 使用「${t(result.winner.couponName)}」减 ${money(result.winner.couponDiscount)}，比 ${result.other.name} 多减 ${money(strongest?.amount||0)}`,
+      delivery:`${result.winner.name} ${result.winner.netDeliveryFee?'优惠后配送费为 '+money(result.winner.netDeliveryFee):'本单免配送费'}，${result.other.name} 配送费为 ${money(result.other.netDeliveryFee)}`
+    }:{
       'price':`${result.winner.name} có giá món ${money(result.winner.price)}, thấp hơn ${result.other.name} ${money(strongest?.amount||0)}`,
       'merchant':`${result.winner.name} giảm từ quán ${money(result.winner.merchantDiscount)}, nhiều hơn ${result.other.name} ${money(strongest?.amount||0)}`,
       'coupon':`${result.winner.name} dùng mã “${result.winner.couponName}” giảm ${money(result.winner.couponDiscount)}, nhiều hơn ${result.other.name} ${money(strongest?.amount||0)}`,
       'delivery':`${result.winner.name} ${result.winner.netDeliveryFee?'có phí giao hàng sau ưu đãi '+money(result.winner.netDeliveryFee):'miễn phí giao hàng cho đơn này'}; phí giao hàng trên ${result.other.name} là ${money(result.other.netDeliveryFee)}`
     };
-    overview.append(el('p','native-store-price-reason',result.saving>0&&strongest?advantage[strongest.key]+'. Sau khi tính toàn bộ ưu đãi, bạn tiết kiệm '+money(result.saving)+'.':'Tổng tiền đã gồm giao hàng bằng nhau. Bạn có thể chọn nền tảng quen dùng và đối chiếu từng ưu đãi bên dưới.'));
+    overview.append(el('p','native-store-price-reason',result.saving>0&&strongest?advantage[strongest.key]+(zh?'。计入全部优惠后，本单合计省 ':'. Sau khi tính toàn bộ ưu đãi, bạn tiết kiệm ')+money(result.saving)+(zh?'。':'.'):'Tổng tiền đã gồm giao hàng bằng nhau. Bạn có thể chọn nền tảng quen dùng và đối chiếu từng ưu đãi bên dưới.'));
     const totals=el('div','native-store-quote-pair');
     for(const [key,offer] of entries) {
       const total=el('div');total.dataset.platform=key;total.classList.toggle('is-lowest',offer.total===result.winner.total);
       total.append(el('span','',offer.name+' · Tổng tiền'),el('strong','',money(offer.total)));totals.append(total);
     }
     overview.append(totals);body.append(overview);
-    const platforms=el('section','native-store-platforms');platforms.setAttribute('aria-label','Giá và phí giao hàng trên hai nền tảng');
+    const platforms=el('section','native-store-platforms');platforms.setAttribute('aria-label',t('Giá và phí giao hàng trên hai nền tảng'));
     const offerRules=el('div','native-store-rules-list');
     for(const [key,offer] of entries) {
       const card=el('article','native-store-platform');card.dataset.platform=key;card.classList.toggle('is-lowest',result.saving>0&&key===result.winnerKey);
@@ -168,7 +175,7 @@ window.wansoStore = (() => {
       row.append(el('span','',label),el('strong','',(difference.amount>0?'−':difference.amount<0?'+':'')+money(Math.abs(difference.amount))));breakdown.append(row);
     }
     const end=el('p','native-store-price-end');end.append(el('span','',result.winner.name+' · Tổng thanh toán'),el('strong','',money(result.winner.total)));breakdown.append(end);
-    comparison.append(breakdown,el('p','native-store-comparison-note',`So với ${result.other.name}, trên ${result.winner.name} dấu trừ là khoản tiết kiệm, dấu cộng là khoản tăng thêm. Cộng bốn khoản, kết quả ${result.saving?'Tiết kiệm '+money(result.saving):'bằng nhau'}.`));
+    comparison.append(breakdown,el('p','native-store-comparison-note',zh?`从 ${result.other.name} 换到 ${result.winner.name}，减号代表少付的钱，加号代表增加的费用。将四项差额合计，最终${result.saving?'省 '+money(result.saving):'到手价相同'}。`:`So với ${result.other.name}, trên ${result.winner.name} dấu trừ là khoản tiết kiệm, dấu cộng là khoản tăng thêm. Cộng bốn khoản, kết quả ${result.saving?'Tiết kiệm '+money(result.saving):'bằng nhau'}.`));
     const couponHeading=el('h3','native-store-coupon-heading','Ưu đãi được áp dụng cho đơn này');
     comparison.append(couponHeading,offerRules);
     const menuPrices=el('details','native-store-menu-comparison');
@@ -187,7 +194,7 @@ window.wansoStore = (() => {
     const menu=el('section','native-store-menu');body.append(menu);renderMenu();
     appendReviews(body,store);
     body.append(el('p','native-store-demo-note','Chi phí được tính theo điều kiện trên trang. Món còn bán, điều kiện mã và số tiền thanh toán cần xác nhận trên nền tảng.'));
-    const dataInfo=button('native-store-image-credit','Thông tin dữ liệu và giá',()=>onAction?.('dataInfo'));dataInfo.textContent='Thông tin dữ liệu và giá';body.append(dataInfo);
+    const dataInfo=button('native-store-image-credit','Thông tin dữ liệu và giá',()=>onAction?.('dataInfo'));dataInfo.textContent=t('Thông tin dữ liệu và giá');body.append(dataInfo);
     const imageCredit=el('a','native-store-image-credit','Nguồn ảnh ↗');imageCredit.href='../../assets/wanso/catalog/credits.html';imageCredit.target='_blank';imageCredit.rel='noopener';body.append(imageCredit);
     refreshSaved();refreshLanguage();
 
@@ -224,14 +231,14 @@ window.wansoStore = (() => {
         group.append(list);menu.append(group);
       }
     }
-    function refreshSaved() {const saved=Boolean(state.group?.[store.id]);heart.setAttribute('aria-pressed',String(saved));heart.setAttribute('aria-label',saved?'Bỏ lưu quán':'Lưu quán');}
-    function refreshLanguage() {languageValue.textContent=languages.find(item=>item[0]===selectedLanguage)[2];apply.querySelector('span').textContent=appliedLanguage!=='original'&&appliedLanguage===selectedLanguage?'Đã dịch':'Dịch';}
+    function refreshSaved() {const saved=Boolean(state.group?.[store.id]);heart.setAttribute('aria-pressed',String(saved));heart.setAttribute('aria-label',t(saved?'Bỏ lưu quán':'Lưu quán'));}
+    function refreshLanguage() {languageValue.textContent=t(languages.find(item=>item[0]===selectedLanguage)[2]);apply.querySelector('span').textContent=t(appliedLanguage!=='original'&&appliedLanguage===selectedLanguage?'Đã dịch':'Dịch');}
     function closeLanguagePicker() {languageSheet?.remove();languageSheet=null;scroll.inert=false;toolbar.inert=false;previousFocus?.focus({preventScroll:true});}
     function showLanguagePicker() {
       if(languageSheet)return;
       previousFocus=document.activeElement;scroll.inert=true;toolbar.inert=true;
       languageSheet=el('div','native-store-language-overlay');
-      const dialog=el('section','native-store-language-sheet');dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label','Ngôn ngữ dịch thực đơn');
+      const dialog=el('section','native-store-language-sheet');dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-label',t('Ngôn ngữ dịch thực đơn'));
       const heading=el('header');heading.append(el('h2','','Dịch sang'));const close=button('native-store-language-close','Đóng chọn ngôn ngữ',closeLanguagePicker);close.append(icon('close'));heading.append(close);dialog.append(heading);
       for(const [code,glyph,label] of languages) {
         const choice=button('native-store-language-choice',label,()=>{selectedLanguage=code;state.menuLanguage??={};state.menuLanguage[store.id]=legacyLanguages.indexOf(code);if(code==='original'){appliedLanguage='original';state.translated??={};state.translated[store.id]=0;renderMenu();}refreshLanguage();closeLanguagePicker();});

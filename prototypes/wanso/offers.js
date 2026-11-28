@@ -2,13 +2,13 @@
 
 // Illustrative, deterministic VND settlement rules. No live platform promotions.
 window.wansoOffers = (() => {
-  const number = new Intl.NumberFormat('vi-VN');
+  const number = new Intl.NumberFormat(window.wansoI18n?.locale||'vi-VN');
   const money = value => number.format(value) + 'đ';
   const integer = (value, field) => {
     if (!Number.isSafeInteger(value) || value < 0) throw new TypeError(field + ' must be a non-negative integer');
     return value;
   };
-  const percentage = rate => (rate / 100).toLocaleString('vi-VN') + '%';
+  const percentage = rate => (rate / 100).toLocaleString(window.wansoI18n?.locale||'vi-VN') + '%';
   const couponRule = coupon => {
     const benefit = coupon.type === 'rate'
       ? 'giảm ' + percentage(coupon.rateBps) + ', tối đa ' + money(coupon.cap)

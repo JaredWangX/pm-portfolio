@@ -1,12 +1,13 @@
 'use strict';
 // Live text replaces rasterized settings while keeping the native navigation and state.
 window.wansoSettings = (() => {
+  const t = value => window.wansoI18n?.text(value) ?? value;
   const titles={settings:'Cài đặt',preferences:'Tùy chọn tìm kiếm',history:'Lịch sử trò chuyện',notifications:'Thông báo',account:'Thông tin cá nhân',theme:'Giao diện',language:'Ngôn ngữ'};
-  const el=(tag,cls,text)=>{const n=document.createElement(tag);n.className=cls||'';if(text!==undefined)n.textContent=text;return n;};
+  const el=(tag,cls,text)=>{const n=document.createElement(tag);n.className=cls||'';if(text!==undefined)n.textContent=t(text);return n;};
   function mount(parent,id,route,open) {
-    const root=el('section','phone-scroll ios-data-page wanso-settings-page'+(id==='history'?' has-tabs':''));root.dataset.settings=id;root.tabIndex=0;root.setAttribute('aria-label',titles[id]);
+    const root=el('section','phone-scroll ios-data-page wanso-settings-page'+(id==='history'?' has-tabs':''));root.dataset.settings=id;root.tabIndex=0;root.setAttribute('aria-label',t(titles[id]));
     const header=el('header','wanso-settings-header');
-    const back=el('button','wanso-settings-back','‹');back.type='button';back.setAttribute('aria-label','Quay lại');back.onclick=()=>route(['theme','language'].includes(id)?'settings':id==='history'?'home':'profile',false,'back');
+    const back=el('button','wanso-settings-back','‹');back.type='button';back.setAttribute('aria-label',t('Quay lại'));back.onclick=()=>route(['theme','language'].includes(id)?'settings':id==='history'?'home':'profile',false,'back');
     header.append(back,el('h1','',titles[id]));const content=el('div','wanso-settings-content');root.append(header,content);parent.append(root);
     function refresh(){
       const state=window.wansoControls.viewState(),display=window.wansoControls.displayValue||String;

@@ -1,7 +1,8 @@
 'use strict';
 
 window.wansoControls = (() => {
-  const query = 'Muốn ăn phở gà thanh đạm, tổng tiền cả giao hàng không quá 80.000đ, gợi ý 5 quán.';
+  const t = value => window.wansoI18n?.text(value) ?? value;
+  const query = t('Muốn ăn phở gà thanh đạm, tổng tiền cả giao hàng không quá 80.000đ, gợi ý 5 quán.');
   const stores = {
     moc: {
       name: 'Phở Gà Hương Vị Mộc - Thái Thịnh', frame: 'store-first', rating: '4,6 · 1.000 đánh giá',
@@ -96,7 +97,7 @@ window.wansoControls = (() => {
     compareAll: ['So sánh các nền tảng', 'Cân nhắc cả GrabFood và ShopeeFood khi tìm quán phù hợp.']
   };
   const original = {
-    name: 'Bạn của Wanso', avatar: '🧑', appLanguage: 'Tiếng Việt', theme: '海洋',
+    name: 'Bạn của Wanso', avatar: '🧑', appLanguage: window.wansoI18n?.chinese ? '中文' : 'Tiếng Việt', theme: '海洋',
     grab: false, shopee: false, budget: '10万以下', mode: '平衡',
     haptics: true, analytics: true, push: true, offers: true, priceDrop: true,
     newPlaces: false, delivery: true, digest: false, quiet: false, compareAll: true,
@@ -106,11 +107,11 @@ window.wansoControls = (() => {
   const state = {...original, location: window.wansoLocation.restore() || {city:'hanoi',label:'Hà Nội · Hoàn Kiếm',district:'Hoàn Kiếm'}, history: true, collections: ['Tất cả'], recent: loadRecentOrders(), tastes: ['Thanh đạm', 'Thịt gà', 'Không rau mùi'],
     group: {moc: 'Tất cả', quyen: 'Tất cả'}, menuLanguage: {moc: 0, quyen: 0}, translated: {moc: 0, quyen: 0}};
   window.wansoNative.setLocation(state.location);
-  const currency = number => number.toLocaleString('vi-VN') + 'đ';
+  const currency = number => number.toLocaleString(window.wansoI18n?.locale||'vi-VN') + 'đ';
   const el = (tag, className, value) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
-    if (value !== undefined) node.textContent = value;
+    if (value !== undefined) node.textContent = t(value);
     return node;
   };
 
@@ -121,7 +122,7 @@ window.wansoControls = (() => {
   title.id = 'wanso-sheet-title';
   const closeButton = el('button', 'sheet-close', '×');
   closeButton.type = 'button';
-  closeButton.setAttribute('aria-label', 'Đóng');
+  closeButton.setAttribute('aria-label', t('Đóng'));
   closeButton.addEventListener('click', () => sheet.close());
   header.append(title, closeButton);
   const content = el('div', 'sheet-content');
@@ -169,7 +170,7 @@ window.wansoControls = (() => {
 
   function show(heading, ...nodes) {
     clearLocation();
-    title.textContent = heading;
+    title.textContent = t(heading);
     content.replaceChildren(...nodes);
     content.scrollTop = 0;
     if (!sheet.open) {
@@ -373,8 +374,8 @@ window.wansoControls = (() => {
     const store=storeFor(id);
     const text=store.name+'\n'+store.dishZh+'\n'+store.description;
     const copy=button('Sao chép thông tin quán',async()=>{
-      try{await navigator.clipboard.writeText(text);copy.textContent='Đã sao chép';}
-      catch{copy.textContent='Nhấn giữ nội dung phía trên để sao chép';}
+      try{await navigator.clipboard.writeText(text);copy.textContent=t('Đã sao chép');}
+      catch{copy.textContent=t('Nhấn giữ nội dung phía trên để sao chép');}
     },'sheet-button primary');
     show('Chia sẻ quán',el('p','sheet-copy',text),actions(backButton('Hủy'),copy));
   }
@@ -491,9 +492,9 @@ window.wansoControls = (() => {
     const copy = button('Sao chép nội dung', async () => {
       try {
         await navigator.clipboard.writeText(label + '\n' + summary);
-        copy.textContent = 'Đã sao chép';
+        copy.textContent = t('Đã sao chép');
       } catch {
-        copy.textContent = 'Nhấn giữ nội dung phía trên để sao chép';
+        copy.textContent = t('Nhấn giữ nội dung phía trên để sao chép');
       }
     }, 'sheet-button primary');
     show('Chia sẻ ' + (store ? 'quán' : 'gợi ý'), paragraph(label), el('p', 'sheet-copy', summary), actions(backButton(), copy));
@@ -547,26 +548,26 @@ window.wansoControls = (() => {
     for(const [emoji,from,to] of presets){
       const choice=button(emoji,()=>{if(state.avatarUrl)URL.revokeObjectURL(state.avatarUrl);state.avatarUrl='';state.avatar=emoji;sheet.close();});
       choice.style.background=`linear-gradient(135deg,${from},${to})`;
-      choice.setAttribute('aria-label','Ảnh đại diện '+emoji);choice.setAttribute('aria-pressed',String(state.avatar===emoji&&!state.avatarUrl));grid.append(choice);
+      choice.setAttribute('aria-label',t('Ảnh đại diện '+emoji));choice.setAttribute('aria-pressed',String(state.avatar===emoji&&!state.avatarUrl));grid.append(choice);
     }
     const input=el('input');input.type='file';input.accept='image/*';input.hidden=true;
     const upload=button('Chọn từ thư viện',()=>input.click());
     input.addEventListener('change',()=>{
       const file=input.files?.[0];if(!file)return;
-      if(!file.type.startsWith('image/')){upload.textContent='Vui lòng chọn tệp hình ảnh';return;}
+      if(!file.type.startsWith('image/')){upload.textContent=t('Vui lòng chọn tệp hình ảnh');return;}
       const url=URL.createObjectURL(file),image=new Image();
       image.onload=()=>{if(state.avatarUrl)URL.revokeObjectURL(state.avatarUrl);state.avatarUrl=url;sheet.close();};
-      image.onerror=()=>{URL.revokeObjectURL(url);upload.textContent='Không thể mở ảnh này. Hãy chọn ảnh khác.';};image.src=url;
+      image.onerror=()=>{URL.revokeObjectURL(url);upload.textContent=t('Không thể mở ảnh này. Hãy chọn ảnh khác.');};image.src=url;
     });
     show('Chọn ảnh đại diện',upload,input,grid);sheet.classList.add('native-avatar-sheet');
   }
   function addTaste() {
     const emojis=['🌶️','🧂','🍯','🍋','💪','🥗','🍜','🍣','🍕','🍛','🌮','🍝','🍗','🥩','🥘','🍦','🧁','☕','🌙','⚡','💰','🔥','🥬','🌿'];
     const grid=el('div','native-taste-grid'),form=el('form','sheet-form');let selected='';
-    const label=el('label','sheet-field','Tên sở thích');const input=el('input');input.maxLength=36;input.required=true;input.placeholder='Ví dụ: Ít dầu, không rau mùi';label.append(input);
+    const label=el('label','sheet-field','Tên sở thích');const input=el('input');input.maxLength=36;input.required=true;input.placeholder=t('Ví dụ: Ít dầu, không rau mùi');label.append(input);
     const submit=el('button','sheet-button primary','Thêm');submit.type='submit';submit.disabled=true;
     const validate=()=>{submit.disabled=!selected||!input.value.trim()||state.tastes.length>=9;};input.addEventListener('input',validate);
-    for(const emoji of emojis){const choice=button(emoji,()=>{selected=emoji;for(const item of grid.children)item.setAttribute('aria-pressed',String(item===choice));validate();});choice.setAttribute('aria-pressed','false');choice.setAttribute('aria-label','Biểu tượng sở thích '+emoji);grid.append(choice);}
+    for(const emoji of emojis){const choice=button(emoji,()=>{selected=emoji;for(const item of grid.children)item.setAttribute('aria-pressed',String(item===choice));validate();});choice.setAttribute('aria-pressed','false');choice.setAttribute('aria-label',t('Biểu tượng sở thích '+emoji));grid.append(choice);}
     form.append(paragraph('Chọn biểu tượng'),grid,label,actions(backButton('Hủy'),submit));
     form.addEventListener('submit',event=>{event.preventDefault();const value=input.value.trim();if(!selected||!value||state.tastes.length>=9)return;if(!state.tastes.includes(value))state.tastes.push(value);state.tasteEmojis??={};state.tasteEmojis[value]=selected;sheet.close();});
     show('Thêm khẩu vị',paragraph('Chọn biểu tượng và ghi sở thích ăn uống của bạn. Lưu tối đa 9 sở thích.'),form);sheet.classList.add('native-taste-sheet');
@@ -650,7 +651,7 @@ window.wansoControls = (() => {
       if (h.action==='budget'||h.action==='mode') {
         control.classList.add('native-choice-chip');control.dataset.choice=h.value;
         control.setAttribute('aria-pressed',String(state[h.action]===h.value));
-        control.textContent=displayValue(h.value);
+        control.textContent=t(displayValue(h.value));
       }
       if (h.action === 'toggle') {
         control.setAttribute('aria-pressed', String(state[h.value]));
@@ -724,7 +725,7 @@ window.wansoControls = (() => {
     createSearchInput(submit) {
       const input = el('input','native-home-query');
       input.value = state.query;
-      input.placeholder = 'Hôm nay bạn muốn ăn gì?';
+      input.placeholder = t('Hôm nay bạn muốn ăn gì?');
       input.maxLength = 160;
       input.addEventListener('input',() => {state.query = input.value;});
       input.addEventListener('keydown',event => {

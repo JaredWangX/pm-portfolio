@@ -318,3 +318,44 @@
 @media(min-width:901px) and (max-width:1100px){.map-resources ul:after{right:-12.5px}.map-resources li:after,.task-node:after,.delivery-node:before{width:12.5px}.delivery-nodes:before{left:-12.5px}}
 @media(max-width:900px){.delivery-nodes{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:16px}}
 @media(max-width:640px){.delivery-nodes{grid-template-columns:1fr}}
+
+/* A phone is a complete screen: enlarge it, and switch to a swipe gallery on narrow layouts. */
+.wanso-study .phone-board .board-images,
+.wanso-study .study-hero .phone-board .board-images { gap:22px; padding:24px 20px; }
+.wanso-study .screen-board.phone-board .study-screen,
+.wanso-study .study-hero .phone-board .study-screen { max-width:280px; aspect-ratio:402/874; border:0; border-radius:26px; }
+.wanso-study .screen-board.phone-board .study-screen img { display:block; width:100%; height:auto; max-width:none; border-radius:0; }
+.wanso-study .onboarding-story { grid-template-columns:1fr; }
+.wanso-study .story-intro { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); column-gap:46px; }
+.wanso-study .story-intro .eyebrow { grid-column:1; margin-bottom:10px; }
+.wanso-study .story-intro h3 { grid-column:1; grid-row:2/4; margin-bottom:0; }
+.wanso-study .story-intro>p:not(.eyebrow) { grid-column:2; grid-row:1/3; max-width:none; }
+.wanso-study .story-intro .textbtn { grid-column:2; justify-self:start; margin-top:10px; }
+.wanso-study .onboarding-gallery { width:100%; max-width:940px; margin-inline:auto; gap:30px; }
+.wanso-study .onboarding-gallery .study-screen { aspect-ratio:402/874; background:transparent; border-radius:26px; }
+.wanso-study .onboarding-gallery .study-screen img { width:100%; height:auto; max-width:none; border-radius:0; }
+.wanso-study .screen-swipe-hint { display:none; }
+.wanso-study .film-phone { width:min(100%,346px,calc((100svh - 215px) * .45995)); padding:4px; border-radius:34px; }
+.wanso-study .film-phone video { border-radius:29px; }
+.wanso-study .film-chapters { gap:2px; margin-block:20px 16px; }
+.wanso-study .film-chapters button { padding-block:10px; }
+@media (max-width:900px) and (min-width:641px) {
+ .wanso-study .phone-board .board-images,
+ .wanso-study .study-hero .phone-board .board-images { grid-template-columns:repeat(2,minmax(0,280px)); }
+}
+@media (max-width:640px) {
+ .wanso-study .phone-board .board-images,
+ .wanso-study .study-hero .phone-board .board-images { display:grid; grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:100%; justify-content:normal; gap:18px; padding:18px 16px 12px; overflow-x:auto; scroll-snap-type:x mandatory; scroll-padding-inline:16px; overscroll-behavior-x:contain; scrollbar-width:thin; scrollbar-color:#82afe3 transparent; }
+ .wanso-study .screen-board.phone-board .study-screen,
+ .wanso-study .study-hero .phone-board .study-screen { width:100%; max-width:calc((100svh - 205px) * .45995); scroll-snap-align:center; border-radius:25px; }
+ .wanso-study .screen-swipe-hint { display:block; margin:0; padding:2px 12px 14px; text-align:center; color:#466a94; font-size:12px; line-height:1.6; }
+ .wanso-study .story-intro { display:block; }
+ .wanso-study .story-intro h3 { margin-bottom:16px; }
+ .wanso-study .onboarding-story { padding-inline:13px; }
+ .wanso-study .onboarding-gallery { display:grid; grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:100%; gap:18px; padding:2px 3px 13px; overflow-x:auto; scroll-snap-type:x mandatory; scroll-padding-inline:3px; overscroll-behavior-x:contain; scrollbar-width:thin; scrollbar-color:#82afe3 transparent; }
+ .wanso-study .onboarding-gallery>div { scroll-snap-align:center; grid-template-rows:auto auto; }
+ .wanso-study .onboarding-gallery>div>span { font-size:14px; }
+ .wanso-study .product-film { padding:20px 12px; }
+ .wanso-study .film-phone { width:min(100%,346px,calc((100svh - 215px) * .45995)); padding:3px; }
+ .wanso-study .film-story { padding-inline:6px; }
+}

@@ -87,7 +87,7 @@ with sync_playwright() as p:
         page.set_viewport_size({'width':width,'height':900})
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
         assert video.evaluate('(v)=>Math.abs(v.clientWidth/v.clientHeight-v.videoWidth/v.videoHeight)<.02')
-    print('Wanso: native video loads, plays and seeks all four chapters; no embedded prototype')
+    print('Wanso: native video loads, plays and seeks all chapters; no embedded prototype')
     page.goto(BASE+'onentra/',wait_until='load')
     expect(page.locator('iframe')).to_have_count(0)
     entry=page.locator('.product-entry-link')

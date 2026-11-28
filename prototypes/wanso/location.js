@@ -2,12 +2,13 @@
 
 // The native apps use city selection plus device location. This view adds map picking.
 window.wansoLocation = (() => {
+  const t = value => window.wansoI18n?.text(value) ?? value;
   const cities = {
     hanoi: {name:'Hà Nội',district:'Hoàn Kiếm',lat:21.0285,lng:105.8542},
     hcm: {name:'TP. Hồ Chí Minh',district:'Quận 1',lat:10.7769,lng:106.7009}
   };
   const storageKey='wanso-location-v1';
-  const el=(tag,cls,text)=>{const n=document.createElement(tag);n.className=cls||'';if(text!==undefined)n.textContent=text;return n;};
+  const el=(tag,cls,text)=>{const n=document.createElement(tag);n.className=cls||'';if(text!==undefined)n.textContent=t(text);return n;};
   const button=(text,fn,cls='location-button')=>{const b=el('button',cls,text);b.type='button';b.onclick=fn;return b;};
   function cityFor(lat,lng) {
     if(!Number.isFinite(lat)||!Number.isFinite(lng))return null;
@@ -38,16 +39,16 @@ window.wansoLocation = (() => {
     let alive=true,map,resize,tileTimer,programmatic=false,gpsRequest=0;
     let selected=valid(current)?{...current}:{city:current.city||'hanoi',...cities[current.city||'hanoi'],label:cities[current.city||'hanoi'].name,mode:'city'};
     const toolbar=el('div','location-toolbar');
-    const cityButtons=el('div','location-cities');cityButtons.setAttribute('aria-label','Chọn thành phố');
-    const gps=button('Vị trí của tôi',locate,'location-gps');gps.setAttribute('aria-label','Dùng vị trí hiện tại');
+    const cityButtons=el('div','location-cities');cityButtons.setAttribute('aria-label',t('Chọn thành phố'));
+    const gps=button('Vị trí của tôi',locate,'location-gps');gps.setAttribute('aria-label',t('Dùng vị trí hiện tại'));
     toolbar.append(cityButtons,gps);
     const form=el('form','location-search');
     const label=el('label','location-search-label','Tìm thành phố hoặc địa điểm');label.htmlFor='location-search-input';
-    const input=el('input');input.id='location-search-input';input.type='search';input.placeholder='Thử Hồ Hoàn Kiếm hoặc Bến Thành';input.autocomplete='off';
+    const input=el('input');input.id='location-search-input';input.type='search';input.placeholder=t('Thử Hồ Hoàn Kiếm hoặc Bến Thành');input.autocomplete='off';
     const searchButton=el('button','location-search-submit','Tìm');searchButton.type='submit';form.append(label,input,searchButton);
-    const results=el('div','location-results');results.hidden=true;results.setAttribute('aria-label','Kết quả tìm địa điểm');
+    const results=el('div','location-results');results.hidden=true;results.setAttribute('aria-label',t('Kết quả tìm địa điểm'));
     const mapWrap=el('div','location-map-wrap');
-    const mapHost=el('div','location-map');mapHost.setAttribute('aria-label','Bản đồ chọn vị trí. Dùng phím mũi tên để di chuyển, Enter để chọn tâm bản đồ.');
+    const mapHost=el('div','location-map');mapHost.setAttribute('aria-label',t('Bản đồ chọn vị trí. Dùng phím mũi tên để di chuyển, Enter để chọn tâm bản đồ.'));
     const loadNote=el('p','location-map-loading','Đang tải bản đồ…');
     const hint=el('p','location-map-hint','Kéo bản đồ hoặc chạm để chọn. Ghim xanh là vị trí đã chọn.');
     mapWrap.append(mapHost,loadNote,hint);
@@ -61,15 +62,15 @@ window.wansoLocation = (() => {
     }
     function showSelection() {
       const supported=valid(selected);
-      selectedName.textContent=selected.label;
-      coordinates.textContent=`${selected.lat.toFixed(5)}, ${selected.lng.toFixed(5)}`;
+      selectedName.textContent=t(selected.label);
+      coordinates.textContent=t(`${selected.lat.toFixed(5)}, ${selected.lng.toFixed(5)}`);
       confirm.disabled=!supported;
       for(const b of cityButtons.children)b.setAttribute('aria-pressed',String(b.dataset.city===selected.city));
-      if(!supported)status.textContent='Vị trí này chưa được hỗ trợ. Vui lòng chọn trong Hà Nội hoặc TP. Hồ Chí Minh.';
+      if(!supported)status.textContent=t('Vị trí này chưa được hỗ trợ. Vui lòng chọn trong Hà Nội hoặc TP. Hồ Chí Minh.');
     }
     function choose(value) {
-      gpsRequest++;gps.disabled=false;gps.textContent='Vị trí của tôi';
-      selected={...value};status.textContent='';results.hidden=true;input.value='';
+      gpsRequest++;gps.disabled=false;gps.textContent=t('Vị trí của tôi');
+      selected={...value};status.textContent=t('');results.hidden=true;input.value='';
       if(map){programmatic=true;map.setView([selected.lat,selected.lng],15,{animate:false});programmatic=false;}
       showSelection();
     }
@@ -77,10 +78,10 @@ window.wansoLocation = (() => {
       if(!map||programmatic)return;
       const point=map.getCenter();
       if(Math.abs(point.lat-selected.lat)<1e-7&&Math.abs(point.lng-selected.lng)<1e-7)return;
-      gpsRequest++;gps.disabled=false;gps.textContent='Vị trí của tôi';
+      gpsRequest++;gps.disabled=false;gps.textContent=t('Vị trí của tôi');
       const city=cityFor(point.lat,point.lng);
       selected={city,district:'',lat:point.lat,lng:point.lng,label:city?cities[city].name+' · Điểm trên bản đồ':'Ngoài khu vực hỗ trợ',mode:'map'};
-      status.textContent='';showSelection();
+      status.textContent=t('');showSelection();
     }
     const normal=text=>String(text).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/đ/g,'d');
     function search() {
@@ -88,7 +89,7 @@ window.wansoLocation = (() => {
       if(!q){results.hidden=true;return;}
       const entries=[...Object.entries(cities).map(([city,value])=>({...value,city,label:value.name,aliases:city==='hanoi'?'Ha Noi Hanoi':'Ho Chi Minh Saigon HCM'})),...(window.wansoLocationPlaces||[])];
       const relevance=p=>normal(p.label||p.name).includes(q)?0:normal(p.aliases||'').includes(q)?1:2;
-      const found=entries.filter(p=>normal([p.label,p.name,p.aliases,p.district,cities[p.city]?.name].join(' ')).includes(q)).sort((a,b)=>relevance(a)-relevance(b)).slice(0,6);
+      const found=entries.filter(p=>normal([p.label,p.name,p.aliases,p.district,cities[p.city]?.name,t(p.label||p.name),t(p.district),t(cities[p.city]?.name)].join(' ')).includes(q)).sort((a,b)=>relevance(a)-relevance(b)).slice(0,6);
       for(const item of found){
         const b=button('',()=>choose({...item,label:item.label||item.name,mode:'place'}),'location-result');
         b.append(el('strong','',item.label||item.name),el('span','',[cities[item.city].name,item.district].filter(Boolean).join(' · ')));results.append(b);
@@ -98,18 +99,18 @@ window.wansoLocation = (() => {
     }
     form.onsubmit=e=>{e.preventDefault();search();};input.oninput=search;
     function locate() {
-      if(!navigator.geolocation){status.textContent='Trình duyệt không hỗ trợ định vị. Vui lòng chọn trên bản đồ.';return;}
-      const request=++gpsRequest;gps.disabled=true;gps.textContent='Đang định vị…';status.textContent='';
+      if(!navigator.geolocation){status.textContent=t('Trình duyệt không hỗ trợ định vị. Vui lòng chọn trên bản đồ.');return;}
+      const request=++gpsRequest;gps.disabled=true;gps.textContent=t('Đang định vị…');status.textContent=t('');
       navigator.geolocation.getCurrentPosition(position=>{
         if(!alive||request!==gpsRequest)return;
-        gps.disabled=false;gps.textContent='Vị trí của tôi';
+        gps.disabled=false;gps.textContent=t('Vị trí của tôi');
         const {latitude:lat,longitude:lng}=position.coords;const city=cityFor(lat,lng);
-        if(!city){status.textContent='Vị trí hiện tại chưa được hỗ trợ. Hãy chọn Hà Nội hoặc TP. Hồ Chí Minh rồi chọn điểm trên bản đồ.';return;}
+        if(!city){status.textContent=t('Vị trí hiện tại chưa được hỗ trợ. Hãy chọn Hà Nội hoặc TP. Hồ Chí Minh rồi chọn điểm trên bản đồ.');return;}
         choose({city,district:'',lat,lng,label:cities[city].name+' · Vị trí hiện tại',mode:'current'});
-        status.textContent='Đã tìm thấy vị trí. Nhấn xác nhận để dùng cho lần chọn món này.';
+        status.textContent=t('Đã tìm thấy vị trí. Nhấn xác nhận để dùng cho lần chọn món này.');
       },error=>{
-        if(!alive||request!==gpsRequest)return;gps.disabled=false;gps.textContent='Vị trí của tôi';
-        status.textContent=error.code===1?'Chưa có quyền truy cập vị trí. Bạn vẫn có thể chọn trên bản đồ.':'Chưa thể xác định vị trí. Hãy chọn trên bản đồ hoặc thử lại sau.';
+        if(!alive||request!==gpsRequest)return;gps.disabled=false;gps.textContent=t('Vị trí của tôi');
+        status.textContent=t(error.code===1?'Chưa có quyền truy cập vị trí. Bạn vẫn có thể chọn trên bản đồ.':'Chưa thể xác định vị trí. Hãy chọn trên bản đồ hoặc thử lại sau.');
       },{timeout:8000,maximumAge:60000});
     }
     showSelection();
@@ -117,21 +118,21 @@ window.wansoLocation = (() => {
       if(!alive)return;
       map=L.map(mapHost,{zoomControl:false,scrollWheelZoom:false,attributionControl:true,fadeAnimation:false,zoomAnimation:false}).setView([selected.lat,selected.lng],15);
       map.attributionControl.setPrefix(false);
-      L.control.zoom({position:'bottomright',zoomInTitle:'Phóng to bản đồ',zoomOutTitle:'Thu nhỏ bản đồ'}).addTo(map);
+      L.control.zoom({position:'bottomright',zoomInTitle:t('Phóng to bản đồ'),zoomOutTitle:t('Thu nhỏ bản đồ')}).addTo(map);
       // Standard browser cache/referrer retained; only visible tiles are requested.
-      const retry=button('Tải lại bản đồ',()=>{retry.hidden=true;status.textContent='';loadNote.hidden=false;loadNote.textContent='Đang tải lại bản đồ…';tiles.redraw();},'location-map-retry');retry.hidden=true;mapWrap.append(retry);
+      const retry=button('Tải lại bản đồ',()=>{retry.hidden=true;status.textContent=t('');loadNote.hidden=false;loadNote.textContent=t('Đang tải lại bản đồ…');tiles.redraw();},'location-map-retry');retry.hidden=true;mapWrap.append(retry);
       const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,minZoom:5,keepBuffer:0,updateWhenIdle:true,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(map);
-      loadNote.textContent='Đang tải bản đồ…';
-      tileTimer=setTimeout(()=>{if(alive&&!loadNote.hidden)loadNote.textContent='Bản đồ đang tải chậm. Bạn có thể tìm địa điểm trước.';},8000);
+      loadNote.textContent=t('Đang tải bản đồ…');
+      tileTimer=setTimeout(()=>{if(alive&&!loadNote.hidden)loadNote.textContent=t('Bản đồ đang tải chậm. Bạn có thể tìm địa điểm trước.');},8000);
       tiles.on('tileload',()=>{if(alive){loadNote.hidden=true;clearTimeout(tileTimer);}});
       const pin=el('span','location-center-pin');pin.setAttribute('aria-hidden','true');mapWrap.append(pin);
-      tiles.on('tileerror',()=>{if(alive){clearTimeout(tileTimer);loadNote.hidden=true;retry.hidden=false;status.textContent='Một phần bản đồ chưa tải xong. Hãy thử lại hoặc tìm địa điểm để tiếp tục.';}});
+      tiles.on('tileerror',()=>{if(alive){clearTimeout(tileTimer);loadNote.hidden=true;retry.hidden=false;status.textContent=t('Một phần bản đồ chưa tải xong. Hãy thử lại hoặc tìm địa điểm để tiếp tục.');}});
       tiles.on('load',()=>{
         if(!alive)return;
-        if(!mapHost.querySelector('.leaflet-tile-loaded'))status.textContent='Bản đồ chưa tải được. Hãy kiểm tra kết nối hoặc thử lại.';
-        else if([...mapHost.querySelectorAll('.leaflet-tile')].every(tile=>tile.classList.contains('leaflet-tile-loaded'))){retry.hidden=true;if(/^(Một phần bản đồ|Bản đồ chưa)/.test(status.textContent))status.textContent='';}
+        if(!mapHost.querySelector('.leaflet-tile-loaded'))status.textContent=t('Bản đồ chưa tải được. Hãy kiểm tra kết nối hoặc thử lại.');
+        else if([...mapHost.querySelectorAll('.leaflet-tile')].every(tile=>tile.classList.contains('leaflet-tile-loaded'))){retry.hidden=true;if([t('Một phần bản đồ chưa tải xong. Hãy thử lại hoặc tìm địa điểm để tiếp tục.'),t('Bản đồ chưa tải được. Hãy kiểm tra kết nối hoặc thử lại.')].includes(status.textContent))status.textContent=t('');}
       });
-      map.on('dragstart',()=>{gpsRequest++;gps.disabled=false;gps.textContent='Vị trí của tôi';});
+      map.on('dragstart',()=>{gpsRequest++;gps.disabled=false;gps.textContent=t('Vị trí của tôi');});
       map.on('moveend',selectCenter);
       map.on('click',event=>map.panTo(event.latlng,{animate:false}));
       mapHost.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();selectCenter();confirm.focus();}});
@@ -140,7 +141,7 @@ window.wansoLocation = (() => {
         programmatic=true;map.invalidateSize({pan:false});map.setView([selected.lat,selected.lng],map.getZoom(),{animate:false});programmatic=false;
       });resize.observe(mapHost);
       programmatic=true;map.invalidateSize({pan:false});programmatic=false;
-    }).catch(()=>{if(alive){loadNote.textContent='Không tải được bản đồ. Bạn vẫn có thể tìm địa điểm hoặc chọn thành phố.';hint.hidden=true;}});
+    }).catch(()=>{if(alive){loadNote.textContent=t('Không tải được bản đồ. Bạn vẫn có thể tìm địa điểm hoặc chọn thành phố.');hint.hidden=true;}});
     return ()=>{alive=false;gpsRequest++;clearTimeout(tileTimer);resize?.disconnect();map?.remove();root.replaceChildren();};
   }
   return {mount,restore,cityFor};

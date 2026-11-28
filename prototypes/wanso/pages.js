@@ -2,15 +2,16 @@
 
 // Layout follows Home / Explore / Saved / Profile in the iOS app.
 window.wansoPages = (() => {
+  const t = value => window.wansoI18n?.text(value) ?? value;
   const el = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
+    if (text !== undefined) node.textContent = t(text);
     return node;
   };
   const btn = (text, fn, className = 'ios-page-button', label = text) => {
     const node = el('button', className, text);
-    node.type = 'button'; node.setAttribute('aria-label', label);
+    node.type = 'button'; node.setAttribute('aria-label', t(label));
     node.addEventListener('click', fn);
     return node;
   };
@@ -34,9 +35,9 @@ window.wansoPages = (() => {
   const storeTitle = id => id === 'moc' ? 'Hương Vị Mộc' : 'Phở Quyên';
   const storeRoute = id => id === 'moc' ? 'store-first' : 'store-second';
   const orderId = id => id === 'moc' ? 'moc-shopee' : 'quyen-grab';
-  const number = value => value.toLocaleString('vi-VN');
-  const decimal = value => value.toLocaleString('vi-VN', {minimumFractionDigits:1, maximumFractionDigits:1});
-  const money = value => value.toLocaleString('vi-VN') + 'đ';
+  const number = value => value.toLocaleString(window.wansoI18n?.locale||'vi-VN');
+  const decimal = value => value.toLocaleString(window.wansoI18n?.locale||'vi-VN', {minimumFractionDigits:1, maximumFractionDigits:1});
+  const money = value => value.toLocaleString(window.wansoI18n?.locale||'vi-VN') + 'đ';
   const heading = (title, description) => {
     const wrap = el('div','ios-section-title');
     wrap.append(el('h2','',title));
@@ -89,13 +90,13 @@ window.wansoPages = (() => {
     const headline=el('div','ios-home-headline');
     headline.append(el('span','ios-home-ai-label','✨ Trợ lý AI'));
     const title=el('h1');
-    title.append(el('span','','Hôm nay'),el('br'),el('em','','muốn ăn'),document.createTextNode(' gì nào?'));
+    title.append(el('span','','Hôm nay'),el('br'),el('em','','muốn ăn'),document.createTextNode(t(' gì nào?')));
     headline.append(title,el('p','','Nói một câu, chọn được bữa ăn phù hợp.'));
     const form=el('form','ios-home-search');
     const inputRow=el('div','ios-home-search-input');
     const icon=el('span','ios-home-input-icon','✦');icon.setAttribute('aria-hidden','true');
     const input=window.wansoControls.createSearchInput(()=>open('runSearch'));
-    input.setAttribute('aria-label','Nhập yêu cầu món ăn');input.placeholder='Món muốn ăn, ngân sách và món kiêng';
+    input.setAttribute('aria-label',t('Nhập yêu cầu món ăn'));input.placeholder=t('Món muốn ăn, ngân sách và món kiêng');
     input.addEventListener('input',()=>window.wansoNative.setQuery(input.value));
     const clear=btn('×',()=>{state.query='';input.value='';window.wansoNative.setQuery('');input.focus({preventScroll:true});},'ios-home-clear','Xóa yêu cầu món ăn');
     inputRow.append(icon,input,clear);
@@ -139,8 +140,8 @@ window.wansoPages = (() => {
     let insightNumber=0;
     function nextInsight(advance=true){
       if(advance)insightNumber=(insightNumber+1)%insights.length;
-      insightTitle.textContent='Mẹo Wanso · '+insights[insightNumber][0];
-      insightText.textContent=insights[insightNumber][1];insightIndex.textContent=(insightNumber+1)+' / '+insights.length;
+      insightTitle.textContent=t('Mẹo Wanso · '+insights[insightNumber][0]);
+      insightText.textContent=t(insights[insightNumber][1]);insightIndex.textContent=t((insightNumber+1)+' / '+insights.length);
     }
     nextInsight(false);
     const body=el('div','ios-page-content');const stats=el('section','ios-explore-stats');
@@ -155,7 +156,7 @@ window.wansoPages = (() => {
     }
     stats.append(statsHeader,values);const picksHeading=heading('');
     const picks=el('div','ios-carousel ios-explore-picks');
-    picks.tabIndex=0;picks.setAttribute('aria-label','Vuốt ngang để xem 5 quán tuyển chọn');
+    picks.tabIndex=0;picks.setAttribute('aria-label',t('Vuốt ngang để xem 5 quán tuyển chọn'));
     function paintMealPicks(bucket) {
       const query={morning:'Bữa sáng dưới 80.000đ',noon:'Cơm gà dưới 80.000đ',afternoon:'Cà phê hoặc trà chiều dưới 80.000đ',night:'Món nước nóng dưới 80.000đ'}[bucket];
       picks.replaceChildren();
@@ -174,8 +175,8 @@ window.wansoPages = (() => {
     root.updateTimeContent=()=>{
       const bucket=timeOfDay();if(bucket===currentBucket)return;
       currentBucket=bucket;root.dataset.timeOfDay=bucket;const meal=meals[bucket];
-      label.textContent=state.location.label+' · '+meal.label+' ⌄';title.textContent=meal.title;
-      picksHeading.querySelector('h2').textContent=meal.picks;
+      label.textContent=t(state.location.label+' · '+meal.label+' ⌄');title.textContent=t(meal.title);
+      picksHeading.querySelector('h2').textContent=t(meal.picks);
       const scrollTop=root.scrollTop;
       paintMealPicks(bucket);stories.replaceChildren();
       for(const [tag,headline,description,prompt,image] of meal.stories){
@@ -212,7 +213,7 @@ window.wansoPages = (() => {
     const intro=el('div','ios-saved-intro');
     intro.append(el('strong','',`Đã lưu ${ids.length} quán · Wanso`),el('span','','Giữ những quán yêu thích và sắp xếp theo bộ sưu tập.'));
     const recentHeading=el('div','ios-group-heading');recentHeading.append(el('strong','','Đơn gần đây'),btn('Xem tất cả →',()=>open('recentOrders'),'ios-page-link','Xem tất cả đơn gần đây'));
-    const recent=el('div','ios-recent-order-rail');recent.setAttribute('aria-label','Đơn gần đây, vuốt ngang để xem');
+    const recent=el('div','ios-recent-order-rail');recent.setAttribute('aria-label',t('Đơn gần đây, vuốt ngang để xem'));
     for(const id of state.recent.slice(0,3)){const record=window.wansoControls.recentOrderData(id);if(record)recent.append(recentOrderCard(record,open));}
     if(!recent.children.length)recent.append(el('p','ios-orders-empty','Chưa có lịch sử. Xem trước đơn tại trang quán để lưu thông tin ở đây.'));
     const recentNote=el('p','ios-order-record-note','Lịch sử xem chi phí · Không tạo đơn thực tế');
@@ -275,7 +276,7 @@ window.wansoPages = (() => {
   function mount(layer, id, route, open) {
     const scroll=el('section','phone-scroll ios-data-page ios-page-'+id);
     scroll.tabIndex=0;scroll.setAttribute('role','region');
-    scroll.setAttribute('aria-label',({home:'Trang chủ',explore:'Khám phá',saved:'Đã lưu',profile:'Hồ sơ'})[id]+', cuộn lên xuống để xem');
+    scroll.setAttribute('aria-label',t(({home:'Trang chủ',explore:'Khám phá',saved:'Đã lưu',profile:'Hồ sơ'})[id]+', cuộn lên xuống để xem'));
     const render={home,explore,saved,profile}[id];
     scroll.refreshContent=()=>{
       const top=scroll.scrollTop;

@@ -1,8 +1,10 @@
 'use strict';
+const t = value => window.wansoI18n?.text(value) ?? value;
 const $ = selector => document.querySelector(selector);
 const embed = new URLSearchParams(location.search).has('embed');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 document.body.classList.toggle('embed', embed);
+if(window.wansoI18n?.chinese){const expand=$('.expand');if(expand)expand.href='./?lang=zh';}
 const screen = $('.screen'), viewport = $('.viewport');
 const phone = document.body.dataset.product === 'wanso';
 const capturedPhone = document.body.dataset.capture === 'ios';
@@ -65,9 +67,9 @@ function canPlay() { return ready && playing && visible && parentVisible && !doc
 function updatePlayback() {
   const play = $('.autoplay');
   play.setAttribute('aria-pressed', String(playing));
-  play.textContent = playing ? 'Ⅱ 暂停' : '▶ 继续播放';
-  if (phone) play.textContent = playing ? 'Ⅱ Tạm dừng' : '▶ Phát';
-  $('.play-status').textContent = capturedPhone ? (playing?'Tự động chuyển trang':'Đã tạm dừng') : (playing ? '自动演示' : '已暂停，可自由查看');
+  play.textContent = t(playing ? 'Ⅱ 暂停' : '▶ 继续播放');
+  if (phone) play.textContent = t(playing ? 'Ⅱ Tạm dừng' : '▶ Phát');
+  $('.play-status').textContent = t(capturedPhone ? (playing?'Tự động chuyển trang':'Đã tạm dừng') : (playing ? '自动演示' : '已暂停，可自由查看'));
   $('.play-progress').classList.toggle('paused', !canPlay());
 }
 function animate(now) {
@@ -87,25 +89,25 @@ function schedule() {
 function setPlaying(value) {playing = value; schedule();}
 function hint(text) {
   clearTimeout(hintTimer);
-  $('.interaction-hint').textContent = text;
+  $('.interaction-hint').textContent = t(text);
   $('.interaction-hint').hidden = false;
   hintTimer = setTimeout(() => {$('.interaction-hint').hidden = true;}, 4200);
 }
 function makeButton(text, fn, className) {
   const b = document.createElement('button');
-  b.type = 'button'; b.textContent = text;
+  b.type = 'button'; b.textContent = t(text);
   if (className) b.className = className;
   b.addEventListener('click', fn);
   return b;
 }
 function renderFlow() {
-  $('.flow-summary').textContent = flows[flow].summary;
+  $('.flow-summary').textContent = t(flows[flow].summary);
   $('.flow-selector').querySelectorAll('button').forEach((b,i) => b.setAttribute('aria-pressed',String(i===flow)));
   $('.flow-steps').replaceChildren(...steps().map((step, i) => {
     const b = makeButton('', () => {guided=true;show(step.id,true,true);}, 'flow-step');
     b.dataset.step = step.id;
-    const number = document.createElement('span'); number.textContent = String(i+1).padStart(2,'0');
-    const label = document.createElement('strong'); label.textContent = step.label;
+    const number = document.createElement('span'); number.textContent = t(String(i+1).padStart(2,'0'));
+    const label = document.createElement('strong'); label.textContent = t(step.label);
     b.append(number, label); return b;
   }));
 }
@@ -144,11 +146,11 @@ function phoneIcon(name){
 }
 function renderPhoneNav(){
   if(!phoneNav){
-    const nav=document.createElement('nav');nav.className='phone-nav';nav.setAttribute('aria-label','Điều hướng chính');
+    const nav=document.createElement('nav');nav.className='phone-nav';nav.setAttribute('aria-label',t('Điều hướng chính'));
     nav.setAttribute('aria-description','Kéo sang trái hoặc phải để chuyển trang.');
     for(const [id,label] of [['home','Trang chủ'],['explore','Khám phá'],['saved','Đã lưu'],['profile','Cá nhân']]){
-      const b=makeButton('',()=>selectFrame(id,false,false,'tab'));b.setAttribute('aria-label',label);b.dataset.target=id;
-      const text=document.createElement('span');text.textContent=label;b.append(phoneIcon(id),text);nav.append(b);
+      const b=makeButton('',()=>selectFrame(id,false,false,'tab'));b.setAttribute('aria-label',t(label));b.dataset.target=id;
+      const text=document.createElement('span');text.textContent=t(label);b.append(phoneIcon(id),text);nav.append(b);
     }
     bindPhoneNavDrag(nav);
     phoneNav=nav;
@@ -230,17 +232,17 @@ function bindPhoneNavDrag(nav){
 function renderFrame(buildHotspots = true) {
   const f = frames[current], position = stepIndex(), step = activeStep();
   screen.toggleAttribute('data-swipeable', Boolean(f.swipeLeft || f.swipeRight));
-  $('.page-title').textContent = f.title;
-  $('.page-counter').textContent = position >= 0 ? `${position+1} / ${steps().length}` : `${current+1} / ${frames.length}`;
-  $('.step-eyebrow').textContent = position >= 0 ? `${flows[flow].title} · ${String(position+1).padStart(2,'0')}` : (capturedPhone?'Tự do khám phá · ':'自由浏览 · ') + f.group;
-  $('.step-caption').textContent = step?.caption || f.note;
-  $('.page-description').textContent = step?.reason || f.note;
+  $('.page-title').textContent = t(f.title);
+  $('.page-counter').textContent = t(position >= 0 ? `${position+1} / ${steps().length}` : `${current+1} / ${frames.length}`);
+  $('.step-eyebrow').textContent = t(position >= 0 ? `${flows[flow].title} · ${String(position+1).padStart(2,'0')}` : (capturedPhone?'Tự do khám phá · ':'自由浏览 · ') + f.group);
+  $('.step-caption').textContent = t(step?.caption || f.note);
+  $('.page-description').textContent = t(step?.reason || f.note);
   $('.source-page')?.replaceChildren(document.createTextNode(
-    capturedPhone ? 'Giao diện iOS · Thực đơn và so sánh chi phí' : '公开工作台截图'
-  ));
+    t(capturedPhone ? 'Giao diện iOS · Thực đơn và so sánh chi phí' : '公开工作台截图'
+  )));
   const liveLink = $('.live-link');
   if (liveLink && !phone && /^#[a-z0-9/-]+$/.test(f.route || '')) liveLink.hash = f.route;
-  $('.continue').textContent = capturedPhone ? (position<0?'Về đầu →':position===steps().length-1?'Xem lại ↺':'Tiếp tục →') : (position < 0 ? '回到流程 →' : position === steps().length-1 ? '重新体验 ↺' : '继续 →');
+  $('.continue').textContent = t(capturedPhone ? (position<0?'Về đầu →':position===steps().length-1?'Xem lại ↺':'Tiếp tục →') : (position < 0 ? '回到流程 →' : position === steps().length-1 ? '重新体验 ↺' : '继续 →'));
   $('.previous').disabled = !(capturedPhone && screenHistory.length) && (position < 0 ? current === 0 : position === 0);
   $('.next').disabled = false;
   for (const b of document.querySelectorAll('[data-screen],[data-step],[data-shortcut]')) {
@@ -263,7 +265,7 @@ function renderFrame(buildHotspots = true) {
     const b = f.id === 'home' && h.action === 'search'
       ? window.wansoControls.createSearchInput(() => openPhoneAction({action:'runSearch'}))
       : makeButton('', select, 'hotspot');
-    b.setAttribute('aria-label',capturedPhone && h.back ? 'Quay lại' : h.label);
+    b.setAttribute('aria-label',t(capturedPhone && h.back ? 'Quay lại' : h.label));
     if(capturedPhone && h.back){b.classList.add('phone-back');b.append(phoneIcon('back'));}
     if(h.target) b.dataset.target = h.target;
     if (h.nav && !h.scroll && h.target === (capturedPhone ? phoneTab : f.id)) b.setAttribute('aria-current', 'page');
@@ -349,7 +351,7 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
       const label = document.createElement('span');
       label.className = 'screen-metric';
       label.dataset.tone = metric.tone || '';
-      label.textContent = metric.text;
+      label.textContent = t(metric.text);
       Object.assign(label.style, {
         left: metric.x + '%', top: metric.y + '%', width: metric.w + '%'
       });
@@ -370,7 +372,7 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
       scroll.className = 'phone-scroll';
       scroll.tabIndex = 0;
       scroll.setAttribute('role', 'region');
-      scroll.setAttribute('aria-label', frame.title + '，上下滚动查看');
+      scroll.setAttribute('aria-label', t(frame.title + '，上下滚动查看'));
       scroll.style.top = (pushedStore ? 0 : frame.scroll.top) + '%';
       scroll.style.height = (pushedStore ? 90.9 : frame.scroll.height) + '%';
       const content = document.createElement('div');
@@ -526,7 +528,7 @@ $('.autoplay').addEventListener('click',()=>{
 $('.zoom-toggle').addEventListener('click',event=>{
   zoomed=!zoomed;
   document.body.classList.toggle('zoomed',zoomed);
-  event.currentTarget.textContent=capturedPhone?(zoomed?'Vừa màn hình':'Phóng to'):(zoomed?'适应':'放大');
+  event.currentTarget.textContent=t(capturedPhone?(zoomed?'Vừa màn hình':'Phóng to'):(zoomed?'适应':'放大'));
   event.currentTarget.setAttribute('aria-pressed',String(zoomed));
   setPlaying(false);fit();
   if (flowDialog?.open) flowDialog.close();
@@ -636,9 +638,9 @@ if (phone) {
   const heading = document.createElement('div');
   heading.className = 'flow-dialog-heading';
   const title = document.createElement('h2');
-  title.id = 'flow-title'; title.textContent = capturedPhone?'Trang và tình huống':'场景与页面';
+  title.id = 'flow-title'; title.textContent = t(capturedPhone?'Trang và tình huống':'场景与页面');
   const close = makeButton('×', () => flowDialog.close(), 'flow-close');
-  close.setAttribute('aria-label', capturedPhone?'Đóng chọn trang':'关闭场景选择');
+  close.setAttribute('aria-label', t(capturedPhone?'Đóng chọn trang':'关闭场景选择'));
   heading.append(title, close);
   const pages = $('.review-side');
   const tools = $('.viewer-tools');
@@ -678,7 +680,7 @@ if (phone) {
     const box = flowDialog.getBoundingClientRect();
     if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) flowDialog.close();
   });
-  $('.expand').textContent = capturedPhone?'Mở rộng ↗':'展开 ↗';
+  $('.expand').textContent = t(capturedPhone?'Mở rộng ↗':'展开 ↗');
   $('.expand').addEventListener('click', event => {
     if (embed && parent !== window) {
       event.preventDefault();setPlaying(false);parent.postMessage({type:'portfolio-open-phone',frame:frames[current]?.id || ''}, location.origin);
@@ -718,7 +720,7 @@ async function loadManifest() {
     catalog.replaceChildren();
     for (const group of new Set(frames.map(f => f.group))) {
       const heading = document.createElement('h2');
-      heading.textContent = group;
+      heading.textContent = t(group);
       catalog.append(heading);
       for (const f of frames.filter(f => f.group === group)) {
         const button = makeButton(f.title, () => {
@@ -729,7 +731,7 @@ async function loadManifest() {
         catalog.append(button);
       }
     }
-    $('.catalog-count').textContent = frames.length + (capturedPhone?' trang':' 页');
+    $('.catalog-count').textContent = t(frames.length + (capturedPhone?' trang':' 页'));
     const requested = location.hash.slice(1);
     const start = frames.some(f => f.id === requested) ? requested : data.default;
     const matching = flows.findIndex(f => f.steps.some(s => s.id === start));
@@ -740,7 +742,7 @@ async function loadManifest() {
     if (phone && !device) {
       const shortcuts = document.createElement('nav');
       shortcuts.className = 'phone-shortcuts';
-      shortcuts.setAttribute('aria-label', capturedPhone?'Lối tắt':'常用场景');
+      shortcuts.setAttribute('aria-label', t(capturedPhone?'Lối tắt':'常用场景'));
       for (const [id, label] of data.shortcuts) {
         const button = makeButton(label, () => selectFrame(id, false, id === 'generating'));
         button.dataset.shortcut = id;

@@ -35,7 +35,7 @@ window.wansoMedia = (() => {
     }
   }).observe(document.body,{childList:true,subtree:true});
   function image(source,{className='',alt='',detail=false,eager=false,width=220,height=140}={}) {
-    const node=document.createElement('img');node.className=className;node.alt=alt;
+    const node=document.createElement('img');node.className=className;node.alt=window.wansoI18n?.text(alt)??alt;
     node.width=width;node.height=height;node.draggable=false;node.decoding='async';
     node.dataset.imageSource=source;
     const target=detail?source:cardSource(source);

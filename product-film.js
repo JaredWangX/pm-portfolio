@@ -12,6 +12,16 @@ document.querySelectorAll('[data-product-film]').forEach(film => {
     video.currentTime = Number(button.dataset.filmSeek);
     try { await video.play(); } catch { video.focus(); }
     selectChapter();
+    const rect = video.getBoundingClientRect();
+    const fixedBottom = Math.max(0, ...[...document.querySelectorAll('body > header, .study-nav')]
+      .map(el => el.getBoundingClientRect().bottom));
+    const visibleHeight = Math.min(rect.bottom, innerHeight) - Math.max(rect.top, fixedBottom);
+    if (visibleHeight < Math.min(rect.height, innerHeight - fixedBottom) * .5) {
+      window.scrollBy({
+        top: rect.top - fixedBottom - 16,
+        behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'
+      });
+    }
   }));
   video.addEventListener('timeupdate', selectChapter);
   selectChapter();
