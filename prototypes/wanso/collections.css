@@ -58,3 +58,76 @@
 @media(hover:hover){.collection-icon:hover{background:#ffffffc9;transform:translateY(-2px);}.collection-choice:hover{background:#f1f6fc;border-radius:18px;}.collection-create:hover{background:#edf5ff;}}
 @container collection (max-width:320px){.native-collection-sheet .sheet-header{padding-inline:15px;}.native-collection-sheet .sheet-content{padding-inline:15px;gap:13px;}.collection-choice,.collection-choice[aria-pressed]{grid-template-columns:40px minmax(0,1fr) 21px;gap:9px;}.collection-symbol{width:40px;height:44px;border-radius:14px;font-size:23px;}.collection-choice-copy{grid-template-columns:1fr;gap:3px;}.collection-choice-copy>span{grid-column:1;}.collection-manager-row .collection-choice{grid-template-columns:40px minmax(0,1fr);}.collection-restaurant{grid-template-columns:72px minmax(0,1fr);gap:12px;}.collection-restaurant img{width:72px;height:72px;}.collection-form{gap:14px;}}
 @media(prefers-reduced-motion:reduce){.collection-icon,.collection-form .sheet-field input,.collection-form .sheet-field textarea{transition:none;}.collection-icon[aria-pressed=true],.collection-icon:hover{transform:none;}}
+/* Large libraries stay inside a search-and-page sheet, rather than growing the page. */
+.collection-browser{display:flex;flex-direction:column;gap:10px;min-height:0;}
+.collection-search{display:flex;align-items:center;min-height:44px;border:1px solid #dce6f1;border-radius:14px;background:#f7faff;flex:none;}
+.collection-search:focus-within{border-color:#8aade0;box-shadow:0 0 0 3px #4e88cf0d;}
+.collection-search-input{min-width:0;width:100%;padding:11px 12px;border:0;border-radius:14px;background:transparent;color:#243f5a;font:inherit;font-size:14px;line-height:1.5;outline:0;}
+.collection-search-input::placeholder{color:#62788d;opacity:1;}
+.collection-search-clear{width:44px;min-height:44px;flex:none;border:0;background:transparent;color:#56738f;font-size:20px;}
+.collection-search-clear:disabled{visibility:hidden;}
+.collection-selected{flex:none;margin:0;font-size:12px;line-height:1.5;color:#396dba;overflow-wrap:anywhere;}
+.collection-selected[hidden]{display:none;}
+.collection-browser-list{display:block;max-height:260px;min-height:90px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#c4d5e8 transparent;padding-right:3px;}
+.collection-browser-list:focus-visible{outline:2px solid #4389d9;outline-offset:2px;}
+.collection-browser-list .collection-choice{min-height:62px;padding-block:9px;grid-template-columns:38px minmax(0,1fr) 22px;gap:10px;}
+.collection-browser-list .collection-symbol{width:36px;height:38px;font-size:22px;border-radius:12px;}
+.collection-browser-list .collection-choice-copy{grid-template-columns:minmax(0,1fr) auto;gap:3px 6px;}
+.collection-browser-list .collection-choice-copy>span{display:none;}
+.collection-browser-list .collection-manager-row .collection-choice{grid-template-columns:38px minmax(0,1fr);}
+.collection-browser-list .collection-choice-copy strong{font-size:14px;line-height:1.45;}
+.collection-browser-list .collection-choice-copy small{font-size:11px;}
+.collection-search-empty{padding:24px 12px;margin:0;color:#5d7388;font-size:14px;line-height:1.7;text-align:center;}
+.collection-pager{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:40px;flex:none;}
+.collection-pager button{width:44px;min-height:44px;border:0;border-radius:12px;background:#edf3fc;color:#376baf;font-size:24px;}
+.collection-pager button:disabled{opacity:.38;}
+.collection-pager button[hidden]{display:none;}
+.collection-page-status{margin-inline:auto;font-size:12px;line-height:1.5;color:#5b728b;font-variant-numeric:tabular-nums;}
+.collection-browser-footer{display:grid;gap:9px;flex:none;}
+.collection-browser-footer .sheet-actions{display:grid;grid-template-columns:1fr 1.6fr;}
+.collection-browser-footer .sheet-actions:has(:only-child){grid-template-columns:1fr;}
+.native-collection-sheet:has(.collection-browser) .sheet-content{gap:12px;}
+.native-collection-sheet:has(.collection-browser) .collection-restaurant{grid-template-columns:52px minmax(0,1fr);padding-bottom:11px;flex:none;}
+.native-collection-sheet:has(.collection-browser) .collection-restaurant img{width:52px;height:52px;border-radius:12px;}
+.native-collection-sheet:has(.collection-browser) .collection-restaurant small{display:none;}
+.native-collection-sheet:has(.collection-browser[data-many=true])[open]{display:flex;flex-direction:column;height:min(710px,90dvh);overflow:hidden;}
+.native-collection-sheet:has(.collection-browser[data-many=true])::before{flex:none;}
+.native-collection-sheet:has(.collection-browser[data-many=true]) .sheet-header{flex:none;}
+.native-collection-sheet:has(.collection-browser[data-many=true]) .sheet-content{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;}
+.native-collection-sheet:has(.collection-browser[data-many=true]) .collection-browser{flex:1;}
+.native-collection-sheet:has(.collection-browser[data-many=true]) .collection-browser-list{flex:1;max-height:none;}
+.native-saved-actions-sheet{background:#fbfdff;}
+.native-saved-actions-sheet .sheet-header{border:0;background:#fbfdff;}
+.native-saved-actions-sheet .sheet-content{padding:8px 19px 19px;gap:4px;}
+.saved-action-menu{display:grid;}
+.saved-action-menu .saved-menu-action{display:grid;grid-template-columns:36px minmax(0,1fr) 18px;align-items:center;gap:12px;width:100%;min-height:76px;padding:12px 0;border:0;border-radius:0;border-bottom:1px solid #e7edf5;background:transparent;color:#2b4c6a;text-align:left;}
+.saved-menu-action>span:nth-child(2){display:grid;gap:5px;min-width:0;}
+.saved-menu-action strong{font-size:15px;font-weight:650;line-height:1.4;}
+.saved-menu-action small{font-size:12px;line-height:1.5;color:#5f7489;overflow-wrap:anywhere;}
+.saved-menu-symbol{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:#edf4fe;color:#3779ca;font-size:23px;}
+.saved-menu-action[data-action=removeSaved]{color:#a94d5b;border-bottom:0;}
+.saved-menu-action[data-action=removeSaved] .saved-menu-symbol{color:#a94d5b;background:#faeff1;}
+.saved-menu-arrow{color:#7690a6;font-size:20px;}
+.saved-menu-action:focus-visible,.collection-pager button:focus-visible,.collection-search-clear:focus-visible{outline:2px solid #4389d9;outline-offset:2px;}
+@media(max-height:600px){
+ .native-collection-sheet:has(.collection-browser[data-many=true])[open]{height:auto;overflow:auto;}
+ .native-collection-sheet:has(.collection-browser[data-many=true]) .sheet-content{overflow:visible;flex:none;}
+ .native-collection-sheet:has(.collection-browser[data-many=true]) .collection-browser-list{max-height:180px;min-height:110px;flex:none;}
+}
+@container collection (max-width:320px){
+ .collection-browser-list .collection-choice,.collection-browser-list .collection-choice[aria-pressed]{grid-template-columns:34px minmax(0,1fr) 20px;gap:8px;}
+ .collection-browser-list .collection-manager-row .collection-choice{grid-template-columns:34px minmax(0,1fr);}
+ .collection-browser-list .collection-choice-copy{grid-template-columns:1fr;}
+ .collection-browser-list .collection-symbol{width:32px;height:36px;}
+ .native-collection-sheet:has(.collection-browser) .sheet-header h2{font-size:19px;}
+ .collection-browser-footer .sheet-actions{grid-template-columns:1fr 1.8fr;}
+}
+
+/* A software keyboard may shrink visualViewport without changing the layout viewport. */
+.native-collection-sheet[data-short-view]:has(.collection-browser[data-many=true])[open]{height:auto;overflow:auto;}
+.native-collection-sheet[data-short-view]:has(.collection-browser[data-many=true]) .sheet-content{overflow:visible;flex:none;}
+.native-collection-sheet[data-short-view]:has(.collection-browser[data-many=true]) .collection-browser-list{max-height:180px;min-height:110px;flex:none;}
+
+.native-collection-sheet:has(.collection-browser) .collection-restaurant.has-saved-remove{grid-template-columns:52px minmax(0,1fr) 44px;gap:10px;}
+.collection-inline-remove{display:grid;place-items:center;width:44px;min-height:44px;padding:0;border:0;border-radius:14px;background:#edf4fe;color:#397ccf;font-size:24px;}
+.collection-inline-remove:focus-visible{outline:2px solid #4389d9;outline-offset:2px;}

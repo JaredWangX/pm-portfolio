@@ -6,7 +6,7 @@ BASE=os.getenv('PORTFOLIO_URL','http://127.0.0.1:8765/').rstrip('/')+'/'
 OUT=Path('work/wanso-collections');OUT.mkdir(exist_ok=True)
 checks=[]
 with sync_playwright() as p:
- browser=p.chromium.launch(channel='chrome',headless=True)
+ browser=p.chromium.launch(headless=True)
  for width,lang in [(390,'zh'),(320,'zh'),(390,'vi')]:
   page=browser.new_page(viewport={'width':width,'height':844},has_touch=True,is_mobile=True,reduced_motion='reduce')
   errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
@@ -29,7 +29,7 @@ with sync_playwright() as p:
   page.locator('.saved-folder[data-folder="Tất cả"]').click()
   card=page.locator('.saved-restaurant').first
   store=card.get_attribute('data-saved-id')
-  card.locator('.saved-card-action').first.click()
+  card.locator('.saved-card-more').click();sheet.locator('[data-action=moveSaved]').click()
   sheet.locator('.collection-choice[data-folder="Lunch friends"]').click()
   sheet.locator('.sheet-button.primary').click()
   expect(sheet).not_to_be_visible()
@@ -48,9 +48,10 @@ with sync_playwright() as p:
   expect(page.locator('.saved-restaurant')).to_have_count(2)
   assert page.evaluate('(id)=>window.wansoControls.viewState().group[id]',store)=='Tất cả'
   card=page.locator(f'.saved-restaurant[data-saved-id="{store}"]')
-  card.locator('.saved-card-action').last.click();sheet.locator('.sheet-actions button').first.click()
+  card.locator('.saved-card-more').click();sheet.locator('[data-action=removeSaved]').click();sheet.locator('.sheet-actions button').first.click()
+  if sheet.is_visible():sheet.locator('.sheet-close').click()
   expect(card).to_be_visible()
-  card.locator('.saved-card-action').last.click();sheet.locator('.sheet-button.danger').click()
+  card.locator('.saved-card-more').click();sheet.locator('[data-action=removeSaved]').click();sheet.locator('.sheet-button.danger').click()
   expect(page.locator('.saved-restaurant')).to_have_count(1)
   page.locator('.saved-undo').click();expect(page.locator('.saved-restaurant')).to_have_count(2)
   page.reload(wait_until='networkidle');expect(page.locator('.saved-restaurant')).to_have_count(2)

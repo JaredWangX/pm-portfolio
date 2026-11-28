@@ -6,7 +6,7 @@ BASE=os.getenv('PORTFOLIO_URL','http://127.0.0.1:8765/').rstrip('/')+'/'
 checks=[]
 OUT=Path(__file__).resolve().parents[1]/'work'/'wanso-navigation';OUT.mkdir(exist_ok=True)
 with sync_playwright() as p:
-    browser=p.chromium.launch(channel='chrome',headless=True)
+    browser=p.chromium.launch(headless=True)
     for width in [390,320]:
         context=browser.new_context(viewport={'width':width,'height':900},has_touch=True,is_mobile=True)
         page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
@@ -53,12 +53,14 @@ with sync_playwright() as p:
         same_position(scroller,'scrollTop',under_top);same_position(rail,'scrollLeft',under_left)
         page.locator('.screen').screenshot(path=str(OUT/f'{width}-returned.png'))
         checks.append(f'{width}: store swipe, fixed back/share, modal close and back preserve reading position')
-        # A rail which is not .ios-carousel must survive leaving/restoring its tab too.
-        nav('saved');saved=page.locator('.ios-page-saved');orders=page.locator('.ios-recent-order-rail')
-        orders.evaluate('(e)=>e.scrollLeft=e.scrollWidth');page.wait_for_timeout(200)
-        recent_left=orders.evaluate('(e)=>e.scrollLeft');saved.evaluate('(e)=>e.scrollTop=140');saved_top=saved.evaluate('(e)=>e.scrollTop')
-        nav('home');nav('saved');same_position(orders,'scrollLeft',recent_left);same_position(saved,'scrollTop',saved_top)
-        checks.append(f'{width}: recent-order carousel and saved-page scroll survive tab switch')
+        # Recent orders open separately; closing their sheet keeps the saved list in place.
+        nav('saved');saved=page.locator('.ios-page-saved')
+        saved.evaluate('(e)=>e.scrollTop=140');saved_top=saved.evaluate('(e)=>e.scrollTop')
+        nav('home');nav('saved');same_position(saved,'scrollTop',saved_top)
+        page.locator('.saved-recent-shortcut').click();expect(page.locator('.ios-order-list .ios-order-record')).to_have_count(3)
+        order_top=saved.evaluate('(e)=>e.scrollTop')
+        page.locator('.sheet-close').click();same_position(saved,'scrollTop',order_top)
+        checks.append(f'{width}: recent-order sheet stays separate and saved-page position survives tab switch')
         nav('profile');profile=page.locator('.ios-page-profile');profile.evaluate('(e)=>e.scrollTop=300');profile_top=profile.evaluate('(e)=>e.scrollTop')
         page.get_by_role('button',name='Cài đặt ứng dụng',exact=True).click();expect(page.locator('[data-settings=settings]')).to_be_visible()
         page.get_by_role('button',name='Giao diện',exact=False).first.click();expect(page.locator('[data-settings=theme]')).to_be_visible()

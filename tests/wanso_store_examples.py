@@ -94,19 +94,24 @@ def check_saved_and_recent(browser):
         cards=saved.locator('.saved-restaurant')
         expect(cards).to_have_count(2)
         expect(cards.locator('.ios-saved-order')).to_have_count(0)
+        sheet=page.locator('.wanso-sheet')
         for card in cards.all():
             assert '下单' not in card.inner_text(), card.inner_text()
-            expect(card.locator('.saved-card-actions button')).to_have_count(3)
-            assert ['移动', '分享', '取消收藏'] == card.locator('.saved-card-actions button').all_text_contents()
-        recent=saved.locator('.ios-recent-order-rail .ios-order-record')
+            expect(card.locator('.saved-card-more')).to_have_count(1)
+            card.locator('.saved-card-more').click()
+            expect(sheet.locator('.saved-card-action')).to_have_count(3)
+            assert set(sheet.locator('.saved-card-action').evaluate_all('(nodes)=>nodes.map(n=>n.dataset.action)'))=={'moveSaved','catalogShare','removeSaved'}
+            sheet.locator('.sheet-close').click()
+        expect(saved.locator('.ios-order-record')).to_have_count(0)
+        saved.locator('.saved-recent-shortcut').click()
+        recent=sheet.locator('.ios-order-list .ios-order-record')
         expect(recent).to_have_count(3)
-        expect(saved.locator('.saved-recent-note')).to_contain_text('与收藏餐厅分开保存')
         identifiers=recent.evaluate_all('(nodes)=>nodes.map(n=>n.dataset.orderId)')
         for identifier in identifiers:
             store_id,platform,_=identifier.split('|',2)
             store=page.evaluate('(id)=>window.wansoCatalog.find(s=>s.id===id)',store_id)
             platform_name='GrabFood' if platform=='grab' else 'ShopeeFood'
-            card=saved.locator(f'.ios-order-record[data-order-id="{identifier}"]')
+            card=sheet.locator(f'.ios-order-record[data-order-id="{identifier}"]')
             expect(card.locator('.ios-order-record-platform')).to_have_text(platform_name)
             expect(card.locator('.ios-order-record-dish')).to_contain_text(display(page, store['dishZh']))
             price=store['platforms'][platform]
@@ -121,8 +126,8 @@ def check_saved_and_recent(browser):
             expect(total).to_contain_text(f'{expected_total:,}' + 'đ')
             sheet.get_by_role('button',name='关闭',exact=True).click()
             expect(sheet).not_to_be_visible()
+            saved.locator('.saved-recent-shortcut').click()
         expect(recent).to_have_count(3)
-        saved.locator('.saved-recent').get_by_role('button',name='查看全部 →',exact=True).click()
         sheet=page.locator('.wanso-sheet')
         expect(sheet.locator('.ios-order-list .ios-order-record')).to_have_count(3)
         page.screenshot(path=str(OUT/'recent-orders.png'))
@@ -146,11 +151,13 @@ def check_saved_and_recent(browser):
         page.get_by_role('button',name='清除活动历史',exact=False).click()
         page.locator('.wanso-sheet').get_by_role('button',name='确认清除',exact=True).click()
         page.goto(BASE+'prototypes/wanso/?lang=zh&qa=store-examples#saved',wait_until='networkidle')
-        expect(saved.locator('.ios-recent-order-rail .ios-order-record')).to_have_count(0)
-        expect(saved.locator('.ios-orders-empty')).to_be_visible()
+        expect(saved.locator('.ios-order-record')).to_have_count(0)
+        saved.locator('.saved-recent-shortcut').click()
+        expect(page.locator('.wanso-sheet')).to_contain_text('暂无记录')
+        page.locator('.sheet-close').click()
         page.reload(wait_until='networkidle')
-        expect(saved.locator('.ios-recent-order-rail .ios-order-record')).to_have_count(0)
-        saved.locator('.saved-recent').get_by_role('button',name='查看全部 →',exact=True).click()
+        expect(saved.locator('.ios-order-record')).to_have_count(0)
+        saved.locator('.saved-recent-shortcut').click()
         expect(page.locator('.wanso-sheet')).to_contain_text('暂无记录')
         CHECKS.append('recent: clearing activity remains empty after navigation and reload instead of restoring demo orders')
         assert not errors,errors
@@ -160,7 +167,7 @@ def check_saved_and_recent(browser):
 
 def run():
     with sync_playwright() as p:
-        browser=p.chromium.launch(channel='chrome',headless=True)
+        browser=p.chromium.launch(headless=True)
         try:
             widths=[]
             for width,height in [(240,850),(280,850),(320,850),(480,1200)]:

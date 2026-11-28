@@ -214,47 +214,46 @@ window.wansoPages = (() => {
     state.savedFolder=current;
     const folderName=name=>name===all?l('Tất cả quán','全部收藏'):t(name);
     const raw=(tag,className,text)=>{const node=el(tag,className);node.textContent=text;return node;};
+    const normalize=value=>String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/đ/g,'d');
     const symbol=name=>{
       const node=document.createElementNS('http://www.w3.org/2000/svg','svg');
       node.setAttribute('viewBox','0 0 24 24');node.setAttribute('aria-hidden','true');
-      const paths={search:'m21 21-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z',share:'M12 15V3m-4 4 4-4 4 4M7 11H4v10h16V11h-3',edit:'m15 4 5 5M4 20l5-1L21 7l-5-5L4 14v6Z'};
+      const paths={search:'m21 21-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z',edit:'m15 4 5 5M4 20l5-1L21 7l-5-5L4 14v6Z',grid:'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',plus:'M12 5v14M5 12h14'};
       const path=document.createElementNS(node.namespaceURI,'path');path.setAttribute('d',paths[name]);node.append(path);return node;
     };
-    const header=el('header','saved-heading');
-    const identity=el('div');identity.append(el('h1','',l('Đã lưu','我的收藏')),el('p','',l('Để dành một bữa ngon cho lần sau.','把喜欢的味道，留给下一次。')));
-    header.append(identity,btn('◷',()=>route('history'),'saved-history',l('Lịch sử trò chuyện','会话历史')));
-    const folderHeading=el('div','saved-section-heading');
-    const folderActions=el('div','saved-collection-actions');
-    folderActions.append(btn(l('Quản lý','管理'),()=>open('collections'),'saved-text-button'));
-    folderHeading.append(el('h2','',l('Bộ sưu tập','收藏夹')),folderActions);
-    const folders=el('div','saved-folders ios-carousel');folders.setAttribute('aria-label',l('Chọn bộ sưu tập','选择收藏夹'));
-    for(const name of names){
-      const detail=state.collectionDetails?.[name]||{},count=name===all?ids.length:ids.filter(id=>state.group[id]===name).length;
-      const item=btn('',()=>{state.savedFolder=name;root.refreshContent();},'saved-folder',folderName(name));
-      item.dataset.folder=name;item.title=folderName(name);item.setAttribute('aria-pressed',String(name===current));
-      const cover=el('span','saved-folder-cover');
-      const coverStore=name===all?null:window.wansoControls.storeFor(ids.find(id=>state.group[id]===name));
-      if(coverStore){const image=photo(coverStore.image,'saved-folder-photo');image.alt='';cover.append(image);}
-      if(name===all){cover.classList.add('is-library');cover.append(glyph('heart'),raw('span','saved-folder-total',String(count).padStart(2,'0')));}
-      else {cover.classList.toggle('is-empty',!coverStore);cover.append(raw('span','saved-folder-emoji',detail.emoji||'📁'));}
-      const caption=el('span','saved-folder-caption');caption.append(raw('strong','',folderName(name)),el('span','saved-folder-count',l(`${count} quán`,`${count} 家餐厅`)));
-      item.append(cover,caption);
-      folders.append(item);
-    }
-    const create=btn(l('＋ Tạo mới','＋ 新建'),()=>open('createCollection'),'saved-folder-create',l('Tạo bộ sưu tập','新建收藏夹'));
-    folderActions.append(create);
+    const header=el('header','saved-heading'),identity=el('div');
+    identity.append(el('h1','',l('Đã lưu','我的收藏')),el('p','',l(`${ids.length} quán · ${names.length-1} bộ sưu tập`,`${ids.length} 家餐厅 · ${names.length-1} 个收藏夹`)));
+    const create=btn('',()=>open('createCollection'),'saved-folder-create',l('Tạo bộ sưu tập','新建收藏夹'));create.append(symbol('plus'));create.title=l('Tạo bộ sưu tập','新建收藏夹');
+    header.append(identity,create);
+    const toolbar=el('div','saved-toolbar');
     const search=el('label','saved-search');search.append(symbol('search'));
     const input=el('input');input.type='search';input.value=state.savedSearch||'';input.autocomplete='off';
-    input.placeholder=l('Tìm quán, món ăn hoặc khu vực','搜索餐厅、菜品或地区');input.setAttribute('aria-label',l('Tìm trong bộ sưu tập đang chọn','搜索当前收藏夹'));
-    search.append(input);
+    input.placeholder=l('Tìm quán, món ăn hoặc khu vực','搜索餐厅、菜品或地区');input.setAttribute('aria-label',l('Tìm trong bộ sưu tập đang chọn','搜索当前收藏夹'));search.append(input);
+    const folderBar=el('div','saved-folder-bar'),folders=el('div','saved-folders ios-carousel');folders.setAttribute('aria-label',l('Chọn bộ sưu tập','选择收藏夹'));
+    const visibleNames=names.slice(0,4);
+    if(!visibleNames.includes(current))visibleNames[visibleNames.length-1]=current;
+    for(const name of visibleNames){
+      const detail=state.collectionDetails?.[name]||{},count=name===all?ids.length:ids.filter(id=>state.group[id]===name).length;
+      const item=btn('',()=>{
+        state.savedFolder=name;state.savedPage=1;state.savedSearch='';window.wansoSaved.persist(state);root.refreshContent();root.scrollTop=0;
+      },'saved-folder',folderName(name));
+      item.dataset.folder=name;item.title=folderName(name);item.setAttribute('aria-pressed',String(name===current));
+      const mark=raw('span','saved-folder-emoji',name===all?'':detail.emoji||'📁');if(name===all)mark.append(glyph('heart'));
+      item.append(mark,raw('strong','',folderName(name)),el('span','saved-folder-count',String(count)));folders.append(item);
+    }
+    const allFolders=btn('',()=>open('collections'),'saved-folders-all',l('Xem và quản lý tất cả bộ sưu tập','查看和管理全部收藏夹'));
+    allFolders.append(symbol('grid'));allFolders.title=l('Tất cả bộ sưu tập','全部收藏夹');folderBar.append(folders,allFolders);toolbar.append(search,folderBar);
     const resultHeader=el('div','saved-result-heading'),resultTitle=el('div');
-    resultTitle.append(raw('h2','',folderName(current)));
+    const title=raw('h2','',folderName(current));title.tabIndex=-1;
+    const resultCount=el('span','saved-result-count');resultTitle.append(title,resultCount);
     const description=state.collectionDetails?.[current]?.description;
-    const descriptionText=current===all?l('So giá cùng một phần ăn, đã gồm giao hàng.','按同一份餐比较，价格已含配送。'):description||l('Những quán bạn muốn giữ lại cùng nhau.','把想一起留住的店，整理在这里。');
-    if(current!==all)resultTitle.append(el('p','saved-folder-description',descriptionText));resultHeader.append(resultTitle);
+    if(description){const detail=el('p','saved-folder-description',description);detail.title=t(description);resultTitle.append(detail);}
+    resultHeader.append(resultTitle);
     if(current!==all){const edit=btn('',()=>open('editCollection',current),'saved-edit-folder',l('Sửa bộ sưu tập','编辑收藏夹'));edit.append(symbol('edit'));resultHeader.append(edit);}
     const list=el('div','saved-restaurants');list.setAttribute('aria-live','polite');
-    const normalize=value=>String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/đ/g,'d');
+    const pagination=el('nav','saved-pagination');pagination.setAttribute('aria-label',l('Trang quán đã lưu','收藏餐厅分页'));
+    const pageSize=8;
+    function jump(page){state.savedPage=page;paintList();root.scrollTop=0;title.focus({preventScroll:true});}
     function paintList(){
       const query=normalize(input.value.trim());
       const filtered=ids.filter(id=>{
@@ -262,59 +261,54 @@ window.wansoPages = (() => {
         const store=window.wansoControls.storeFor(id);
         return !query||normalize([store.name,t(store.name),store.dishZh,t(store.dishZh),store.district,t(store.district),store.category,t(store.category)].join(' ')).includes(query);
       });
-      list.replaceChildren();
-      for(const id of filtered){
-        const store=window.wansoControls.storeFor(id),hours=window.wansoHours.status(store);
+      const pageCount=Math.max(1,Math.ceil(filtered.length/pageSize));
+      const page=Math.min(Math.max(1,Number(state.savedPage)||1),pageCount);state.savedPage=page;
+      resultCount.textContent=l(`${number(filtered.length)} quán · 1 phần, gồm giao hàng`,`${number(filtered.length)} 家 · 单份含配送`);
+      list.replaceChildren();pagination.replaceChildren();pagination.hidden=pageCount<=1;
+      for(const id of filtered.slice((page-1)*pageSize,page*pageSize)){
+        const store=window.wansoControls.storeFor(id);
         const card=el('article','saved-restaurant');card.dataset.savedId=id;
         const main=btn('',()=>open('catalogStore',id),'saved-restaurant-main',l('Xem quán · ','查看餐厅 · ')+t(store.name));
         const image=photo(store.image,'saved-restaurant-photo');image.alt=t(store.dishZh);
         const copy=el('span','saved-restaurant-copy');
-        copy.append(el('strong','saved-restaurant-name',store.name.split(' - ')[0]),el('span','saved-restaurant-dish',store.dishZh));
-        const meta=el('span','saved-restaurant-meta');meta.append(el('span','saved-rating','★ '+decimal(store.rating)),el('span','',l(`${number(store.reviewCount)} đánh giá`,`${number(store.reviewCount)} 条评价`)),el('span','saved-restaurant-location',store.district+' · '+decimal(store.distance)+' km'));
-        copy.append(meta);main.append(image,copy);
-        const status=el('div','saved-restaurant-status');const badge=el('span','saved-open',hours.label);badge.dataset.state=hours.state;
-        status.append(badge,el('span','',l('1 phần · đã gồm giao hàng','1 份餐 · 已含配送')));
+        copy.append(el('strong','saved-restaurant-name',store.name.split(' - ')[0].split(' · ')[0]),el('span','saved-restaurant-dish',store.dishZh));
+        const meta=el('span','saved-restaurant-meta');meta.append(el('span','saved-rating','★ '+decimal(store.rating)),el('span','',store.district+' · '+decimal(store.distance)+' km'));copy.append(meta);
         const offers=Object.keys(store.platforms).map(key=>({key,...window.wansoOffers.summary(store,key,1)}));
-        const ranked=[...offers].sort((a,b)=>a.total-b.total),saving=ranked.length>1?ranked[1].total-ranked[0].total:0;
-        const prices=el('div','saved-prices');prices.setAttribute('aria-label',l('Tổng tiền một phần gồm giao hàng','一份餐含配送总价'));
+        const best=Math.min(...offers.map(offer=>offer.total)),different=offers.some(offer=>offer.total!==best);
+        const prices=el('span','saved-prices');prices.setAttribute('aria-label',l('Tổng tiền một phần gồm giao hàng','一份餐含配送总价'));
         for(const offer of offers){
-          const cell=el('div','saved-price');cell.dataset.platform=offer.key;if(saving&&offer.key===ranked[0].key)cell.dataset.best='true';
-          cell.append(el('span','saved-price-platform',store.platforms[offer.key].name),el('strong','',money(offer.total)));
-          prices.append(cell);
+          const cell=el('span','saved-price');cell.dataset.platform=offer.key;if(different&&offer.total===best)cell.dataset.best='true';
+          cell.append(el('span','saved-price-platform',store.platforms[offer.key].name),el('strong','',money(offer.total)));prices.append(cell);
         }
-        const savings=el('p','saved-price-note',saving?l(`Tiết kiệm ${money(saving)} trên ${store.platforms[ranked[0].key].name}`,`${store.platforms[ranked[0].key].name} 少付 ${money(saving)}`):l('Hai nền tảng có cùng tổng tiền','两个平台含配送总价相同'));
-        const foot=el('div','saved-card-footer');
-        const actions=el('div','saved-card-actions');
-        for(const [action,label,icon] of [['moveSaved',l('Chuyển','移动'),'folder'],['catalogShare',l('Chia sẻ','分享'),'share'],['removeSaved',l('Bỏ lưu','取消收藏'),'trash']]){
-          const actionButton=btn('',()=>open(action,action==='catalogShare'?{id}:id),'saved-card-action',label+' · '+t(store.name));
-          actionButton.dataset.action=action;actionButton.title=label;
-          actionButton.append(icon==='share'?symbol(icon):glyph(action==='removeSaved'?'heart':icon),raw('span','',action==='moveSaved'?folderName(state.group[id]||all):label));actions.append(actionButton);
-        }
-        foot.append(actions);card.append(main,status,prices,savings,foot);list.append(card);
+        main.append(image,copy,prices);
+        const more=btn('···',()=>open('savedActions',id),'saved-card-more',l('Sắp xếp hoặc chia sẻ · ','整理或分享 · ')+t(store.name));
+        more.setAttribute('aria-haspopup','dialog');card.append(main,more);list.append(card);
+      }
+      if(pageCount>1){
+        const previous=btn(l('← Trước','← 上一页'),()=>jump(page-1),'saved-page-button');previous.dataset.page='prev';previous.disabled=page===1;
+        const next=btn(l('Tiếp →','下一页 →'),()=>jump(page+1),'saved-page-button');next.dataset.page='next';next.disabled=page===pageCount;
+        const position=el('span','saved-page-position',`${page} / ${pageCount}`);position.setAttribute('aria-live','polite');
+        pagination.append(previous,position,next);
       }
       if(!filtered.length){
         const empty=el('div','saved-empty');const noMatch=Boolean(query),allEmpty=!ids.length;
         empty.append(el('span','saved-empty-icon',noMatch?'⌕':'♡'),el('h3','',noMatch?l('Chưa tìm thấy quán phù hợp','没有找到匹配的收藏'):allEmpty?l('Giữ lại quán bạn muốn thử','留住下一家想试的店'):l('Bộ sưu tập đang trống','这个收藏夹还是空的')),
-          el('p','',noMatch?l('Thử tên món hoặc khu vực khác trong bộ sưu tập này.','换一个菜名或地区，在当前收藏夹中找找。'):allEmpty?l('Chạm trái tim trên trang quán, rồi sắp xếp vào bộ sưu tập riêng.','在店铺页点亮爱心，再放入自己的收藏夹。'):l('Mở tất cả quán đã lưu và chọn Chuyển để thêm quán vào đây.','打开全部收藏，用“移动”把餐厅放进来。')));
+          el('p','',noMatch?l('Thử tên món hoặc khu vực khác trong bộ sưu tập này.','换一个菜名或地区，在当前收藏夹中找找。'):allEmpty?l('Chạm trái tim trên trang quán, rồi chọn bộ sưu tập.','在店铺页点亮爱心，再放入自己的收藏夹。'):l('Chọn dấu ··· trên một quán đã lưu để chuyển vào đây.','在已收藏的餐厅旁点“···”，就能移动到这里。')));
         empty.append(btn(noMatch?l('Xóa từ khóa','清空搜索'):allEmpty?l('Khám phá quán','去探索餐厅'):l('Xem tất cả quán','查看全部收藏'),()=>{
-          if(noMatch){input.value='';state.savedSearch='';paintList();input.focus();}
-          else if(allEmpty)route('explore',false,'tab');else {state.savedFolder=all;root.refreshContent();}
+          state.savedPage=1;if(noMatch){input.value='';state.savedSearch='';paintList();input.focus();}
+          else if(allEmpty)route('explore',false,'tab');else{state.savedFolder=all;root.refreshContent();root.scrollTop=0;}
         },'saved-empty-action'));list.append(empty);
       }
     }
-    input.addEventListener('input',()=>{state.savedSearch=input.value;paintList();});paintList();
-    const recentSection=el('section','saved-recent');
-    const recentHeading=el('div','saved-section-heading');recentHeading.append(el('h2','',l('Đơn gần đây','最近订单')),btn(l('Xem tất cả →','查看全部 →'),()=>open('recentOrders'),'saved-text-button'));
-    const recent=el('div','ios-recent-order-rail');recent.setAttribute('aria-label',t('Đơn gần đây, vuốt ngang để xem'));
-    for(const id of state.recent.slice(0,3)){const record=window.wansoControls.recentOrderData(id);if(record)recent.append(recentOrderCard(record,open));}
-    if(!recent.children.length)recent.append(el('p','ios-orders-empty','Chưa có lịch sử. Xem trước đơn tại trang quán để lưu thông tin ở đây.'));
-    recentSection.append(recentHeading,el('p','saved-recent-note',l('Lịch sử xem chi phí, tách riêng với quán đã lưu.','费用浏览记录，与收藏餐厅分开保存。')),recent);
-    root.append(header,search,folderHeading,folders,resultHeader,list,recentSection);
+    input.addEventListener('input',()=>{state.savedSearch=input.value;state.savedPage=1;paintList();root.scrollTop=0;});paintList();
+    const recent=btn('',()=>open('recentOrders'),'saved-recent-shortcut',l('Xem đơn gần đây','查看最近订单'));
+    recent.append(el('span','saved-recent-icon','◷'),el('span','',l('Đơn gần đây','最近订单')),el('small','',l(`${state.recent.length} lần xem chi phí`,`${state.recent.length} 条费用记录`)),el('span','','›'));
+    root.append(header,toolbar,resultHeader,list,pagination,recent);
     requestAnimationFrame(()=>{
       if(!folders.isConnected)return;
       const selected=folders.querySelector('[aria-pressed=true]'),rail=folders.getBoundingClientRect(),item=selected.getBoundingClientRect();
-      if(item.left<rail.left+16)folders.scrollLeft+=item.left-rail.left-16;
-      else if(item.right>rail.right-16)folders.scrollLeft+=item.right-rail.right+16;
+      if(item.left<rail.left)folders.scrollLeft+=item.left-rail.left;
+      else if(item.right>rail.right)folders.scrollLeft+=item.right-rail.right;
     });
   }
   function profile(root, data, state, route, open) {
