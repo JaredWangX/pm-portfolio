@@ -207,36 +207,108 @@ window.wansoPages = (() => {
     return card;
   }
   function saved(root, data, state, route, open) {
-    const header=el('div','ios-page-heading');
-    header.append(el('h1','','♥ Đã lưu'),btn('◷ Lịch sử',()=>route('history'),'ios-page-link','Lịch sử trò chuyện'));
-    const ids=Object.keys(state.group).filter(id=>state.group[id]&&window.wansoControls.storeFor(id));
-    const intro=el('div','ios-saved-intro');
-    intro.append(el('strong','',`Đã lưu ${ids.length} quán · Wanso`),el('span','','Giữ những quán yêu thích và sắp xếp theo bộ sưu tập.'));
-    const recentHeading=el('div','ios-group-heading');recentHeading.append(el('strong','','Đơn gần đây'),btn('Xem tất cả →',()=>open('recentOrders'),'ios-page-link','Xem tất cả đơn gần đây'));
+    const l=(vi,zh)=>window.wansoI18n?.chinese?zh:vi;
+    const all='Tất cả', names=[all,...(state.collections||[]).filter(name=>name!==all)];
+    const ids=Object.keys(state.group).filter(id=>state.group[id]&&window.wansoControls.storeFor(id)).reverse();
+    const current=names.includes(state.savedFolder)?state.savedFolder:all;
+    state.savedFolder=current;
+    const folderName=name=>name===all?l('Tất cả quán','全部收藏'):t(name);
+    const raw=(tag,className,text)=>{const node=el(tag,className);node.textContent=text;return node;};
+    const symbol=name=>{
+      const node=document.createElementNS('http://www.w3.org/2000/svg','svg');
+      node.setAttribute('viewBox','0 0 24 24');node.setAttribute('aria-hidden','true');
+      const paths={search:'m21 21-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z',share:'M12 15V3m-4 4 4-4 4 4M7 11H4v10h16V11h-3',edit:'m15 4 5 5M4 20l5-1L21 7l-5-5L4 14v6Z'};
+      const path=document.createElementNS(node.namespaceURI,'path');path.setAttribute('d',paths[name]);node.append(path);return node;
+    };
+    const header=el('header','saved-heading');
+    const identity=el('div');identity.append(el('h1','',l('Đã lưu','我的收藏')),el('p','',l(`${ids.length} quán để bạn chọn lại khi cần`,`${ids.length} 家想再选的店，随时回来看看`)));
+    header.append(identity,btn('◷',()=>route('history'),'saved-history',l('Lịch sử trò chuyện','会话历史')));
+    const folderHeading=el('div','saved-section-heading');
+    const folderActions=el('div','saved-collection-actions');
+    folderActions.append(btn(l('Quản lý','管理'),()=>open('collections'),'saved-text-button'),btn(l('＋ Tạo mới','＋ 新建'),()=>open('createCollection'),'saved-text-button'));
+    folderHeading.append(el('h2','',l('Bộ sưu tập','收藏夹')),folderActions);
+    const folders=el('div','saved-folders ios-carousel');folders.setAttribute('aria-label',l('Chọn bộ sưu tập','选择收藏夹'));
+    for(const name of names){
+      const detail=state.collectionDetails?.[name]||{},count=name===all?ids.length:ids.filter(id=>state.group[id]===name).length;
+      const item=btn('',()=>{state.savedFolder=name;root.refreshContent();},'saved-folder',folderName(name));
+      item.dataset.folder=name;item.setAttribute('aria-pressed',String(name===current));
+      item.append(raw('span','saved-folder-emoji',name===all?'♥':detail.emoji||'📁'),raw('strong','',folderName(name)),el('span','saved-folder-count',l(`${count} quán`,`${count} 家餐厅`)));
+      folders.append(item);
+    }
+    const create=btn('',()=>open('createCollection'),'saved-folder saved-folder-create',l('Tạo bộ sưu tập','新建收藏夹'));
+    create.append(el('span','saved-folder-emoji','＋'),el('strong','',l('Tạo mới','新建收藏夹')),el('span','saved-folder-count',l('Theo cách của bạn','按你的习惯整理')));folders.append(create);
+    const search=el('label','saved-search');search.append(symbol('search'));
+    const input=el('input');input.type='search';input.value=state.savedSearch||'';input.autocomplete='off';
+    input.placeholder=l('Tìm quán, món ăn hoặc khu vực','搜索餐厅、菜品或地区');input.setAttribute('aria-label',l('Tìm trong bộ sưu tập đang chọn','搜索当前收藏夹'));
+    search.append(input);
+    const resultHeader=el('div','saved-result-heading'),resultTitle=el('div');
+    resultTitle.append(raw('h2','',folderName(current)));
+    const description=state.collectionDetails?.[current]?.description;
+    const descriptionText=current===all?l('So giá cùng một phần ăn, đã gồm giao hàng.','按同一份餐比较，价格已含配送。'):description||l('Những quán bạn muốn giữ lại cùng nhau.','把想一起留住的店，整理在这里。');
+    resultTitle.append(el('p','saved-folder-description',descriptionText));resultHeader.append(resultTitle);
+    if(current!==all){const edit=btn('',()=>open('editCollection',current),'saved-edit-folder',l('Sửa bộ sưu tập','编辑收藏夹'));edit.append(symbol('edit'));resultHeader.append(edit);}
+    const list=el('div','saved-restaurants');list.setAttribute('aria-live','polite');
+    const normalize=value=>String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/đ/g,'d');
+    function paintList(){
+      const query=normalize(input.value.trim());
+      const filtered=ids.filter(id=>{
+        if(current!==all&&state.group[id]!==current)return false;
+        const store=window.wansoControls.storeFor(id);
+        return !query||normalize([store.name,t(store.name),store.dishZh,t(store.dishZh),store.district,t(store.district),store.category,t(store.category)].join(' ')).includes(query);
+      });
+      list.replaceChildren();
+      for(const id of filtered){
+        const store=window.wansoControls.storeFor(id),hours=window.wansoHours.status(store);
+        const card=el('article','saved-restaurant');card.dataset.savedId=id;
+        const main=btn('',()=>open('catalogStore',id),'saved-restaurant-main',l('Xem quán · ','查看餐厅 · ')+t(store.name));
+        const image=photo(store.image,'saved-restaurant-photo');image.alt=t(store.dishZh);
+        const copy=el('span','saved-restaurant-copy');
+        copy.append(el('strong','saved-restaurant-name',store.name),el('span','saved-restaurant-dish',store.dishZh));
+        const meta=el('span','saved-restaurant-meta');meta.append(el('span','','★ '+decimal(store.rating)),el('span','',store.district+' · '+decimal(store.distance)+' km'));
+        copy.append(meta);main.append(image,copy);
+        const status=el('div','saved-restaurant-status');const badge=el('span','saved-open',hours.label);badge.dataset.state=hours.state;
+        status.append(badge,el('span','',l(`${number(store.reviewCount)} đánh giá`,`${number(store.reviewCount)} 条评价`)));
+        const offers=Object.keys(store.platforms).map(key=>({key,...window.wansoOffers.summary(store,key,1)}));
+        const ranked=[...offers].sort((a,b)=>a.total-b.total),saving=ranked.length>1?ranked[1].total-ranked[0].total:0;
+        const prices=el('div','saved-prices');prices.setAttribute('aria-label',l('Tổng tiền một phần gồm giao hàng','一份餐含配送总价'));
+        for(const offer of offers){
+          const cell=el('div','saved-price');cell.dataset.platform=offer.key;if(saving&&offer.key===ranked[0].key)cell.dataset.best='true';
+          cell.append(el('span','saved-price-platform',store.platforms[offer.key].name),el('strong','',money(offer.total)));
+          prices.append(cell);
+        }
+        const savings=el('p','saved-price-note',saving?l(`Tiết kiệm ${money(saving)} trên ${store.platforms[ranked[0].key].name}`,`${store.platforms[ranked[0].key].name} 少付 ${money(saving)}`):l('Hai nền tảng có cùng tổng tiền','两个平台含配送总价相同'));
+        const foot=el('div','saved-card-footer');const collection=raw('span','saved-card-folder',folderName(state.group[id]||all));collection.prepend(glyph('folder'));
+        const actions=el('div','saved-card-actions');
+        for(const [action,label,icon] of [['moveSaved',l('Chuyển','移动'),'folder'],['catalogShare',l('Chia sẻ','分享'),'share'],['removeSaved',l('Bỏ lưu','取消收藏'),'trash']]){
+          const actionButton=btn('',()=>open(action,action==='catalogShare'?{id}:id),'saved-card-action',label+' · '+t(store.name));
+          actionButton.dataset.action=action;actionButton.title=label;actionButton.append(icon==='share'?symbol(icon):glyph(icon),el('span','',label));actions.append(actionButton);
+        }
+        foot.append(collection,actions);card.append(main,status,prices,savings,foot);list.append(card);
+      }
+      if(!filtered.length){
+        const empty=el('div','saved-empty');const noMatch=Boolean(query),allEmpty=!ids.length;
+        empty.append(el('span','saved-empty-icon',noMatch?'⌕':'♡'),el('h3','',noMatch?l('Chưa tìm thấy quán phù hợp','没有找到匹配的收藏'):allEmpty?l('Giữ lại quán bạn muốn thử','留住下一家想试的店'):l('Bộ sưu tập đang trống','这个收藏夹还是空的')),
+          el('p','',noMatch?l('Thử tên món hoặc khu vực khác trong bộ sưu tập này.','换一个菜名或地区，在当前收藏夹中找找。'):allEmpty?l('Chạm trái tim trên trang quán, rồi sắp xếp vào bộ sưu tập riêng.','在店铺页点亮爱心，再放入自己的收藏夹。'):l('Mở tất cả quán đã lưu và chọn Chuyển để thêm quán vào đây.','打开全部收藏，用“移动”把餐厅放进来。')));
+        empty.append(btn(noMatch?l('Xóa từ khóa','清空搜索'):allEmpty?l('Khám phá quán','去探索餐厅'):l('Xem tất cả quán','查看全部收藏'),()=>{
+          if(noMatch){input.value='';state.savedSearch='';paintList();input.focus();}
+          else if(allEmpty)route('explore',false,'tab');else {state.savedFolder=all;root.refreshContent();}
+        },'saved-empty-action'));list.append(empty);
+      }
+    }
+    input.addEventListener('input',()=>{state.savedSearch=input.value;paintList();});paintList();
+    const recentSection=el('section','saved-recent');
+    const recentHeading=el('div','saved-section-heading');recentHeading.append(el('h2','',l('Đơn gần đây','最近订单')),btn(l('Xem tất cả →','查看全部 →'),()=>open('recentOrders'),'saved-text-button'));
     const recent=el('div','ios-recent-order-rail');recent.setAttribute('aria-label',t('Đơn gần đây, vuốt ngang để xem'));
     for(const id of state.recent.slice(0,3)){const record=window.wansoControls.recentOrderData(id);if(record)recent.append(recentOrderCard(record,open));}
     if(!recent.children.length)recent.append(el('p','ios-orders-empty','Chưa có lịch sử. Xem trước đơn tại trang quán để lưu thông tin ở đây.'));
-    const recentNote=el('p','ios-order-record-note','Lịch sử xem chi phí · Không tạo đơn thực tế');
-    const group=el('div','ios-group-heading');
-    group.append(el('strong','','Bộ sưu tập của tôi'),btn('＋ Thêm',()=>open('collections'),'ios-page-link','Thêm bộ sưu tập'));
-    const collection=btn(`❤️ Tất cả · ${ids.length} quán`,()=>open('collections'),'ios-collection-title','Xem tất cả quán đã lưu');
-    root.append(header,intro,recentHeading,recentNote,recent,group,collection);
-    for (const id of ids.reverse()) {
-      const store=window.wansoControls.storeFor(id);
-      const card=el('article','ios-saved-store');
-      const main=btn('',()=>open('catalogStore',id),'ios-saved-main','Xem '+store.name);
-      const copy=el('span');
-      copy.append(el('strong','',store.name),el('span','',`★ ${decimal(store.rating)} · ${number(store.reviewCount)} đánh giá`),
-        el('small','',`${store.dishZh}  ${money(store.platforms.grab.price)}`));
-      main.append(photo(store.image),copy);
-      const actions=el('div','ios-saved-actions');
-      actions.append(btn('',()=>open('moveSaved',id),'ios-saved-icon','Chuyển '+store.name+' vào bộ sưu tập'),
-        btn('',()=>open('removeSaved',id),'ios-saved-icon','Bỏ lưu '+store.name));
-      actions.querySelectorAll('.ios-saved-icon').forEach((item,i)=>item.append(glyph(i?'trash':'folder'),el('span','',i?'Bỏ lưu':'Chuyển bộ sưu tập')));
-      card.append(main,actions);root.append(card);
-    }
-    if(!ids.length) root.append(el('p','ios-empty-copy','Quán yêu thích sẽ xuất hiện ở đây. Hãy khám phá các gợi ý gần bạn.'));
-    root.append(btn('✦ Khám phá món mới →',()=>route('explore',false,'tab'),'ios-page-cta','Khám phá món mới'));
+    recentSection.append(recentHeading,el('p','saved-recent-note',l('Lịch sử xem chi phí, tách riêng với quán đã lưu.','费用浏览记录，与收藏餐厅分开保存。')),recent);
+    root.append(header,folderHeading,folders,search,resultHeader,list,recentSection);
+    requestAnimationFrame(()=>{
+      if(!folders.isConnected)return;
+      const selected=folders.querySelector('[aria-pressed=true]'),rail=folders.getBoundingClientRect(),item=selected.getBoundingClientRect();
+      if(item.left<rail.left+16)folders.scrollLeft+=item.left-rail.left-16;
+      else if(item.right>rail.right-16)folders.scrollLeft+=item.right-rail.right+16;
+    });
   }
   function profile(root, data, state, route, open) {
     root.append(el('h1','ios-profile-title','Hồ sơ'));

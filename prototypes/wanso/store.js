@@ -57,10 +57,9 @@ window.wansoStore = (() => {
     const navTitle=el('div','native-store-nav-title');navTitle.setAttribute('aria-hidden','true');
     const navStatus=el('small');navTitle.append(el('strong','','Chi tiết quán'),navStatus);
     const back=button('native-store-circle native-store-back','Quay lại',()=>onClose?.());back.append(icon('back'));
-    const share=button('native-store-circle','Chia sẻ quán',()=>onAction?.('catalogShare',{id:store.id}));share.append(icon('share'));
+    const share=button('native-store-circle','Chia sẻ quán',()=>onAction?.('catalogShare',{id:store.id,request}));share.append(icon('share'));
     const heart=button('native-store-circle native-store-heart','Lưu quán',()=>{
-      if(state.group?.[store.id]) {delete state.group[store.id];refreshSaved();}
-      else onAction?.('catalogSave',{id:store.id});
+      onAction?.('catalogSave',{id:store.id});
     });heart.append(icon('heart'));
     const right=el('div','native-store-toolbar-actions');right.append(share,heart);toolbar.append(back,navTitle,right);
     root.prepend(toolbar);
@@ -231,7 +230,7 @@ window.wansoStore = (() => {
         group.append(list);menu.append(group);
       }
     }
-    function refreshSaved() {const saved=Boolean(state.group?.[store.id]);heart.setAttribute('aria-pressed',String(saved));heart.setAttribute('aria-label',t(saved?'Bỏ lưu quán':'Lưu quán'));}
+    function refreshSaved() {const saved=Boolean(state.group?.[store.id]);heart.setAttribute('aria-pressed',String(saved));heart.setAttribute('aria-label',t(saved?'Quản lý quán đã lưu':'Lưu quán'));}
     function refreshLanguage() {languageValue.textContent=t(languages.find(item=>item[0]===selectedLanguage)[2]);apply.querySelector('span').textContent=t(appliedLanguage!=='original'&&appliedLanguage===selectedLanguage?'Đã dịch':'Dịch');}
     function closeLanguagePicker() {languageSheet?.remove();languageSheet=null;scroll.inert=false;toolbar.inert=false;previousFocus?.focus({preventScroll:true});}
     function showLanguagePicker() {

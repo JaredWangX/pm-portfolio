@@ -1,0 +1,27 @@
+/* Small, finite transitions. Scrolling and the glass navigation remain native. */
+.wanso-motion-active {will-change:transform,opacity;}
+
+/* Without discrete-transition support, native dialog visibility still works;
+   the browser simply closes the dialog immediately instead of animating its exit. */
+.wanso-sheet {
+  opacity:0;
+  transform:translateY(14px) scale(.99);
+  transform-origin:center bottom;
+  transition:opacity .16s ease,transform .22s cubic-bezier(.22,.8,.25,1),display .22s allow-discrete,overlay .22s allow-discrete;
+}
+.wanso-sheet[open] {opacity:1;transform:none;}
+.wanso-sheet:not([open]) {pointer-events:none;}
+.wanso-sheet::backdrop {
+  opacity:0;
+  transition:opacity .18s ease,display .22s allow-discrete,overlay .22s allow-discrete;
+}
+.wanso-sheet[open]::backdrop {opacity:1;}
+.wanso-sheet:not([open])::backdrop {pointer-events:none;}
+@starting-style {
+  .wanso-sheet[open] {opacity:0;transform:translateY(14px) scale(.99);}
+  .wanso-sheet[open]::backdrop {opacity:0;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .wanso-sheet,.wanso-sheet::backdrop {transition:none;transform:none;}
+  .wanso-motion-active {will-change:auto;}
+}

@@ -1,0 +1,36 @@
+/* Collection sheets share the same quiet blue glass as the saved page. */
+.native-collection-sheet{background:linear-gradient(145deg,#f8fbff,#edf5ff);}
+.collection-restaurant{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;align-items:center;padding:12px;background:#ffffffc9;border:1px solid #dae7f5;border-radius:17px;}
+.collection-restaurant img{width:76px;height:76px;object-fit:contain;background:#edf3f8;border-radius:12px;}
+.collection-restaurant>div{display:grid;gap:5px;min-width:0;}
+.collection-restaurant strong{font-size:15px;line-height:1.45;overflow-wrap:anywhere;}
+.collection-restaurant span{font-size:13px;color:#3b6189;}
+.collection-restaurant small{font-size:12px;line-height:1.5;color:#61788f;}
+.collection-options,.collection-manager{display:grid;gap:9px;}
+.collection-choice{display:grid;grid-template-columns:42px minmax(0,1fr) 18px;gap:11px;align-items:center;width:100%;padding:12px;border:1px solid #dce7f5;border-radius:16px;background:#fff;color:#233e5b;text-align:left;font-family:inherit;}
+.collection-choice[aria-pressed=true]{background:#eaf3ff;border-color:#6ea4e8;box-shadow:inset 0 0 0 1px #7eb0ef40;}
+.collection-symbol{display:grid;place-items:center;width:42px;height:46px;border-radius:13px;background:#edf4fe;font-size:23px;}
+.collection-choice-copy{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:4px 8px;}
+.collection-choice-copy strong{font-size:14px;line-height:1.4;overflow-wrap:anywhere;}
+.collection-choice-copy small{color:#6381a1;font-size:12px;white-space:nowrap;}
+.collection-choice-copy>span{grid-column:1/-1;color:#61758b;font-size:12px;line-height:1.5;overflow-wrap:anywhere;}
+.collection-check{color:#3078c9;font-weight:750;font-size:17px;}
+.collection-create{width:100%;padding:12px;min-height:46px;border:1px dashed #a5c3e9;border-radius:14px;background:#f7fbff;color:#286abc;font-weight:650;font-size:14px;}
+.collection-remove{width:100%;padding:11px;min-height:44px;border:0;background:transparent;color:#ab4554;font-size:13px;}
+.collection-manager-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:center;}
+.collection-edit{padding:8px;min-height:44px;background:transparent;border:0;color:#2d6eb6;font-size:13px;}
+.collection-field-title{font-size:13px;font-weight:650;color:#3e5b78;}
+.collection-icons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}
+.collection-icon{width:100%;height:44px;display:grid;place-items:center;border:1px solid #d8e4f2;background:#fff;border-radius:12px;font-size:23px;}
+.collection-icon[aria-pressed=true]{border-color:#5e99e4;background:#e7f1ff;box-shadow:0 0 0 2px #5e99e426;}
+.collection-form .sheet-field{gap:7px;font-size:13px;}
+.collection-form .sheet-field input,.collection-form .sheet-field textarea{border-radius:12px;padding:12px;font-size:16px;}
+.collection-form .sheet-field textarea{min-height:96px;}
+.collection-error{color:#b13c50;font-size:13px;line-height:1.5;margin:0;min-height:0;}
+.collection-error:empty{display:none;}
+.collection-form [aria-invalid=true]{border-color:#b13c50;}
+.collection-form .sheet-actions{display:grid;grid-template-columns:1fr 1fr;}
+.saved-toast{position:absolute;z-index:40;left:16px;right:16px;bottom:calc(2.5% + 86px);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border-radius:16px;background:#173c60f2;color:#fff;box-shadow:0 6px 24px #193d6230;font-size:13px;line-height:1.45;}
+.saved-undo{background:#ffffff1f;border:1px solid #ffffff3b;border-radius:9px;color:#fff;min-height:36px;padding:6px 10px;flex:none;font-size:13px;font-weight:650;}
+.collection-choice:focus-visible,.collection-icon:focus-visible,.collection-edit:focus-visible,.collection-create:focus-visible,.collection-remove:focus-visible,.saved-undo:focus-visible{outline:2px solid #4389d9;outline-offset:2px;}
+@media(max-width:340px){.collection-choice{grid-template-columns:36px minmax(0,1fr) 14px;gap:8px;padding:10px;}.collection-symbol{width:36px;}.collection-choice-copy{grid-template-columns:1fr;}.collection-choice-copy>span{grid-column:1;}.collection-restaurant{grid-template-columns:60px minmax(0,1fr);}.collection-restaurant img{width:60px;height:60px;}}

@@ -216,3 +216,11 @@
 .native-store-hours {display:flex;align-items:center;gap:7px;margin-top:8px;font-size:12px;line-height:1.6;color:#526b80;}
 .native-store-hours>span:first-child {font-size:17px;color:#3978b8;}
 @media(prefers-reduced-motion:no-preference) {.native-store-nav-title {transition:opacity .16s ease;}.native-store-circle {transition:background-color .16s ease;}}
+
+/* Compact portfolio embeds keep both platform labels intact. */
+@container store-detail (max-width:280px) {
+ .native-store-platform-heading {padding-inline:8px;}
+ .native-store-platform-heading h2 {font-size:12px;}
+ .native-store-platform-footer {padding-inline:8px;}
+ .native-store-platform-total>strong {font-size:17px;}
+}

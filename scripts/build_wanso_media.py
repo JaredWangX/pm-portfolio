@@ -43,7 +43,7 @@ with sync_playwright() as p:
   item={'name':name,'seconds':round(time.monotonic()-start,3),'caption':caption}; marks.append(item); print(json.dumps(item,ensure_ascii=False),flush=True)
  def hold(seconds): page.wait_for_timeout(int((seconds if record else .08)*1000))
  def photos_ready():
-  page.wait_for_function('''() => [...document.querySelectorAll('.screen img')].every(image => {
+  page.wait_for_function('''() => [...document.querySelectorAll('.screen img, .wanso-sheet[open] img')].every(image => {
    const r=image.getBoundingClientRect();
    if(!r.width||!r.height||r.right<=0||r.left>=innerWidth||r.bottom<=0||r.top>=innerHeight)return true;
    return image.complete&&image.naturalWidth>1&&!image.dataset.mediaPending;
@@ -139,19 +139,54 @@ with sync_playwright() as p:
  scroll_to(store_scroll,menu_rows.nth(2),88); hold(6)
  mark('reviews','继续阅读口味与搭配建议：清淡程度、加料和适合的用餐情境。')
  scroll_to(store_scroll,view.locator('.native-store-reviews'),78); capture('reviews'); hold(6)
+ # Save the restaurant through the real folder flow, not by altering local state.
+ saved_id=view.get_attribute('data-store-id')
+ mark('save-choose','把喜欢的店收藏起来，按自己的用餐场景整理。')
+ view.locator('.native-store-heart').click(); sheet=page.locator('.wanso-sheet'); hold(4)
+ sheet.locator('.collection-create').click()
+ sheet.locator('[name=collectionName]').fill('清淡工作餐')
+ sheet.locator('[name=collectionDescription]').fill('工作日想吃得清淡一些，留住汤粉、鸡肉和蔬菜搭配。')
+ sheet.locator('#wanso-sheet-title').click()
+ mark('save-create','新建「清淡工作餐」，写下口味和用餐场景。'); capture('collection'); hold(4)
+ sheet.locator('button[type=submit]').click()
+ expect(sheet.locator('.collection-choice[data-folder="清淡工作餐"]')).to_have_attribute('aria-pressed','true'); hold(4)
+ sheet.locator('.sheet-button.primary').click(); expect(sheet).not_to_be_visible()
+ expect(view.locator('.native-store-heart')).to_have_attribute('aria-pressed','true')
  view.locator('.native-store-back').click(); expect(view).to_have_count(0)
- mark('saved','返回对话后，拖动底部导航进入收藏。')
- drag_nav('saved'); mark('saved-view','收藏与最近订单各自整理；订单记录保留平台和费用，收藏留住想再选的店。'); capture('saved'); hold(6)
- saved=page.locator('.ios-data-page'); saved.evaluate('(el)=>el.scrollBy({top:300,behavior:"smooth"})'); page.wait_for_timeout(850); hold(4)
+ mark('saved','回到对话，拖动导航进入收藏。')
+ drag_nav('saved'); saved=page.locator('.ios-page-saved')
+ expect(page.locator('.saved-toast')).not_to_be_visible(timeout=12000)
+ saved.evaluate('(el)=>el.scrollTo({top:0,behavior:"smooth"})');page.wait_for_timeout(850)
+ mark('saved-view','全部收藏汇总餐厅，同份餐的双平台价格一起保留。')
+ expect(saved.locator('.saved-folder[data-folder="Tất cả"]')).to_have_attribute('aria-pressed','true')
+ expect(saved.locator('.saved-restaurant')).to_have_count(3); capture('saved'); hold(4)
+ saved.locator('.saved-folder[data-folder="清淡工作餐"]').click()
+ expect(saved.locator('.saved-restaurant')).to_have_count(1)
+ expect(saved.locator('.saved-folder[data-folder="清淡工作餐"] .saved-folder-count')).to_have_text('1 家餐厅')
+ assert saved.locator('.saved-restaurant').get_attribute('data-saved-id')==saved_id
+ mark('saved-folder','进入「清淡工作餐」，收藏夹数量与餐厅列表一致。'); hold(4)
+ saved.locator('.saved-card-action[data-action=catalogShare]').click()
+ expect(sheet.locator('.wanso-share')).to_be_visible()
+ page.wait_for_timeout(450)
+ mark('share','分享店名、招牌菜和双平台费用，让朋友看懂推荐。'); capture('share'); hold(4)
+ scroll_to(sheet,sheet.locator('.wanso-share-pricing'),78)
+ share_totals=[int(re.sub(r'\D','',text)) for text in sheet.locator('.wanso-share-total strong').all_text_contents()]
+ assert sorted(share_totals)==sorted(item['total'] for item in pricing),share_totals
+ sheet.locator('.wanso-share-ledger summary').click()
+ scroll_to(sheet,sheet.locator('.wanso-share-ledger'),78)
+ mark('share-detail','展开优惠明细，核对餐费、优惠券和配送组成。'); hold(5)
+ sheet.locator('.sheet-close').click()
+ scroll_to(saved,saved.locator('.saved-recent'),12)
+ mark('recent-orders','最近订单单独保留费用记录，与收藏整理分开。'); hold(4)
  mark('profile','口味偏好集中管理，下一次选择继续沿用。'); drag_nav('profile'); capture('profile'); hold(4)
  drag_nav('home'); page.locator('.phone-back').click(); expect(page.locator('.ios-page-home')).to_be_visible()
  page.locator('.ios-home-history').click(); capture('history'); hold(4); page.locator('.wanso-settings-back').click()
- mark('end','回到首页。用餐需求、推荐依据与费用判断，都能从记录中继续查看。'); hold(2)
+ mark('end','下次选餐，从收藏和记录继续。'); hold(2)
  assert not errors,errors
  duration=time.monotonic()-start
  timeline={'language':'zh','duration':round(duration,3),'marks':marks,'pricing':price_proof,'errors':errors,'size':[804,1748],'verified':'Actual 402×874 logical viewport, DPR2 with compositor scale2; fixed 12:15 Asia/Ho_Chi_Minh UI clock.'}
  (WORK/('recording.json' if record else 'preflight.json')).write_text(json.dumps(timeline,ensure_ascii=False,indent=2))
- if not record: print('PREFLIGHT PASS: Chinese UI, 5 dual-platform cards, 3×5 recommendations, complete price arithmetic, both coupon rules, menu, tips, nav and returns.',flush=True)
+ if not record: print('PREFLIGHT PASS: Chinese UI, 5 dual-platform cards, 3×5 recommendations, price arithmetic, coupons, menu, real collection creation/counts, sharing fees, nav and returns.',flush=True)
  context.close(); browser.close()
  if record:
   raw=Path(video.path()); ffmpeg=os.getenv('FFMPEG')

@@ -1,0 +1,78 @@
+"""Collection lifecycle: save, organize, reload, safe deletion and undo."""
+import json,os
+from pathlib import Path
+from playwright.sync_api import sync_playwright,expect
+BASE=os.getenv('PORTFOLIO_URL','http://127.0.0.1:8765/').rstrip('/')+'/'
+OUT=Path('work/wanso-collections');OUT.mkdir(exist_ok=True)
+checks=[]
+with sync_playwright() as p:
+ browser=p.chromium.launch(channel='chrome',headless=True)
+ for width,lang in [(390,'zh'),(320,'zh'),(390,'vi')]:
+  page=browser.new_page(viewport={'width':width,'height':844},has_touch=True,is_mobile=True,reduced_motion='reduce')
+  errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+  page.goto(BASE+'prototypes/wanso/?embed=1&device=1&lang='+lang+'#saved',wait_until='networkidle')
+  expect(page.locator('.saved-restaurant')).to_have_count(2)
+  sheet=page.locator('.wanso-sheet')
+  page.locator('.saved-folder-create').click()
+  sheet.locator('button[type=submit]').click()
+  expect(sheet.locator('[name=collectionName]')).to_have_attribute('aria-invalid','true')
+  sheet.locator('[name=collectionName]').fill('  Lunch friends  ')
+  sheet.locator('[name=collectionDescription]').fill('Our favorite noodle shops for a relaxed lunch.')
+  sheet.locator('.collection-icon').nth(2).click()
+  sheet.locator('button[type=submit]').click()
+  expect(sheet).not_to_be_visible()
+  expect(page.locator('.saved-folder[data-folder="Lunch friends"]')).to_have_attribute('aria-pressed','true')
+  expect(page.locator('.saved-empty')).to_be_visible()
+  page.locator('.saved-folder-create').click();sheet.locator('[name=collectionName]').fill('lunch FRIENDS');sheet.locator('button[type=submit]').click()
+  expect(sheet.locator('.collection-error')).not_to_be_empty()
+  sheet.locator('.sheet-close').click()
+  page.locator('.saved-folder[data-folder="Tất cả"]').click()
+  card=page.locator('.saved-restaurant').first
+  store=card.get_attribute('data-saved-id')
+  card.locator('.saved-card-action').first.click()
+  sheet.locator('.collection-choice[data-folder="Lunch friends"]').click()
+  sheet.locator('.sheet-button.primary').click()
+  expect(sheet).not_to_be_visible()
+  assert page.evaluate('(id)=>window.wansoControls.viewState().group[id]',store)=='Lunch friends'
+  page.locator('.saved-folder[data-folder="Lunch friends"]').click()
+  expect(page.locator('.saved-restaurant')).to_have_count(1)
+  page.locator('.saved-edit-folder').click()
+  sheet.locator('[name=collectionName]').fill('Weekend lunch')
+  sheet.locator('button[type=submit]').click()
+  assert page.evaluate('(id)=>window.wansoControls.viewState().group[id]',store)=='Weekend lunch'
+  page.reload(wait_until='networkidle')
+  page.locator('.saved-folder[data-folder="Weekend lunch"]').click()
+  expect(page.locator('.saved-restaurant')).to_have_count(1)
+  page.locator('.saved-edit-folder').click();sheet.locator('.collection-remove').click()
+  sheet.locator('.sheet-button.danger').click()
+  expect(page.locator('.saved-restaurant')).to_have_count(2)
+  assert page.evaluate('(id)=>window.wansoControls.viewState().group[id]',store)=='Tất cả'
+  card=page.locator(f'.saved-restaurant[data-saved-id="{store}"]')
+  card.locator('.saved-card-action').last.click();sheet.locator('.sheet-actions button').first.click()
+  expect(card).to_be_visible()
+  card.locator('.saved-card-action').last.click();sheet.locator('.sheet-button.danger').click()
+  expect(page.locator('.saved-restaurant')).to_have_count(1)
+  page.locator('.saved-undo').click();expect(page.locator('.saved-restaurant')).to_have_count(2)
+  page.reload(wait_until='networkidle');expect(page.locator('.saved-restaurant')).to_have_count(2)
+  # A new restaurant is saved only after the folder picker is confirmed.
+  page.locator('.phone-nav [data-target=home]').click()
+  page.locator('.rich-home-card').first.click()
+  detail=page.locator('.native-store-view');new_id=detail.get_attribute('data-store-id')
+  detail.locator('.native-store-heart').click()
+  sheet.locator('.collection-create').click();sheet.locator('[name=collectionName]').fill('Later')
+  sheet.locator('button[type=submit]').click()
+  expect(sheet.locator('.collection-choice[data-folder="Later"]')).to_have_attribute('aria-pressed','true')
+  assert not page.evaluate('(id)=>window.wansoControls.viewState().group[id]||null',new_id)
+  sheet.locator('.sheet-button.primary').click()
+  expect(detail.locator('.native-store-heart')).to_have_attribute('aria-pressed','true')
+  detail.locator('.native-store-heart').click();sheet.locator('.sheet-close').click()
+  expect(detail.locator('.native-store-heart')).to_have_attribute('aria-pressed','true')
+  assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
+  page.screenshot(path=str(OUT/f'{width}-{lang}-store.png'))
+  detail.locator('.native-store-back').click();page.locator('.phone-nav [data-target=saved]').click()
+  page.screenshot(path=str(OUT/f'{width}-{lang}-saved.png'))
+  assert not errors,errors
+  checks.append(f'{width}/{lang}: create+validation, move, rename, refresh, delete folder preserves restaurants, unsave cancel+undo, create while saving+confirm')
+  page.close()
+ browser.close()
+print(json.dumps(checks,ensure_ascii=False,indent=2))

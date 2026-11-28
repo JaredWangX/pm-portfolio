@@ -28,6 +28,7 @@ const screenHistory = [];
 const phoneTabs = new Set(['home', 'explore', 'saved', 'profile']);
 const tabViews = new Map();
 let phoneTab = 'home', chatNodes, phoneNav;
+let sharedRestaurantOpened = false;
 const steps = () => flows[flow]?.steps || [];
 const stepIndex = () => guided ? steps().findIndex(s => s.id === frames[current]?.id) : -1;
 const activeStep = () => steps()[stepIndex()];
@@ -320,6 +321,8 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
     }
     const [image, scrollImage] = await decoded(frame);
     if (request !== loadId) return;
+    window.wansoMotion?.cancelPage();
+    const previousTab = phoneTab;
     const oldView = currentPhoneView();
     let restore = navigation === 'back' ? screenHistory.pop() : null;
     if (navigation === 'forward' && current >= 0) {
@@ -445,6 +448,12 @@ async function show(id, manual = true, returnToViewer = false, runSearch = false
       activeLayer.querySelectorAll('.ios-carousel, .ios-recent-order-rail').forEach((rail,index)=>{
         rail.scrollLeft = restore ? (restore.rails?.[index] || 0) * width : index===0 && frame.chat==='second' ? rail.scrollWidth : 0;
       });
+    }
+    if (capturedPhone) {
+      const tabOrder = [...phoneTabs];
+      const direction = tab ? (tabOrder.indexOf(phoneTab) > tabOrder.indexOf(previousTab) ? 'tab-forward' : 'tab-back')
+        : navigation === 'back' ? 'back' : navigation === 'forward' ? 'forward' : 'initial';
+      window.wansoMotion?.enterPage(activeLayer, {direction});
     }
     if (restoreFocus) {
       const target = focusedTab && frame.phoneNav ? phoneNav.querySelector(`[data-target="${focusedTab}"]`) : screen;
@@ -733,7 +742,10 @@ async function loadManifest() {
     }
     $('.catalog-count').textContent = t(frames.length + (capturedPhone?' trang':' 页'));
     const requested = location.hash.slice(1);
-    const start = frames.some(f => f.id === requested) ? requested : data.default;
+    const shareParams = new URLSearchParams(location.search);
+    const sharedRestaurant = capturedPhone ? shareParams.get('restaurant') : null;
+    // A shared restaurant opens over home, giving its Back action a predictable destination.
+    const start = sharedRestaurant ? 'home' : frames.some(f => f.id === requested) ? requested : data.default;
     const matching = flows.findIndex(f => f.steps.some(s => s.id === start));
     if (matching >= 0) flow = matching;
     renderFlow();
@@ -752,6 +764,13 @@ async function loadManifest() {
       $('.viewer').prepend(shortcuts);
     }
     await show(start, false);
+    if (capturedPhone && !failed && !sharedRestaurantOpened) {
+      sharedRestaurantOpened = true;
+      const knownRestaurant = sharedRestaurant && (['moc','quyen'].includes(sharedRestaurant) || window.wansoCatalog?.some(store => store.id === sharedRestaurant));
+      if (knownRestaurant && window.wansoControls.storeFor(sharedRestaurant)) {
+        openPhoneAction({action:'catalogStore',value:{id:sharedRestaurant,request:shareParams.get('meal') || ''}});
+      }
+    }
     // Warm the four native tabs once; switching no longer waits on a long-image decode.
     if (capturedPhone) {
       const warmTabs = async () => {

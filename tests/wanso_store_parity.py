@@ -15,6 +15,7 @@ cards. It does not invoke the detail renderer directly or replace backend data.
 """
 import json
 import os
+import re
 from pathlib import Path
 
 from playwright.sync_api import expect, sync_playwright
@@ -24,6 +25,10 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'work' / 'wanso-store-parity'
 OUT.mkdir(parents=True, exist_ok=True)
 CHECKS = []
+
+
+def display(page, text):
+    return page.evaluate('(text) => window.wansoI18n.text(text)', text)
 
 
 def screenshot(page, name):
@@ -62,9 +67,9 @@ def detail_signature(view):
 
 
 def check_layout(page, view, store, label):
-    expect(view.locator('.native-store-info')).to_contain_text(store['name'])
+    expect(view.locator('.native-store-info')).to_contain_text(display(page, store['name']))
     expect(view.locator('.native-store-info')).to_contain_text(str(store['rating']))
-    expect(view.locator('.native-store-summary')).to_contain_text(store['dishZh'])
+    expect(view.locator('.native-store-summary')).to_contain_text(display(page, store['dishZh']))
     expect(view.locator('.native-store-platform')).to_have_count(2)
     expect(view.locator('.native-store-platform[data-platform="grab"]')).to_contain_text('GrabFood')
     expect(view.locator('.native-store-platform[data-platform="shopee"]')).to_contain_text('ShopeeFood')
@@ -90,7 +95,8 @@ def check_layout(page, view, store, label):
     assert geometry['height'] >= geometry['screenHeight'] * .84, 'detail collapsed into a short dialog'
     assert geometry['scrollHeight'] > geometry['clientHeight'] * 1.25, 'detail/menu content must scroll inside the phone'
     assert geometry['overflowX'] <= 2, geometry
-    assert .48 <= geometry['heroRatio'] <= .68, 'source hero is 240pt high in a roughly402pt viewport'
+    natural_ratio = hero_image.evaluate('(img) => img.naturalHeight / img.naturalWidth')
+    assert abs(geometry['heroRatio'] - natural_ratio) <= .01, 'detail hero must preserve the complete photograph, without cropping or stretching'
     assert geometry['order'] == sorted(geometry['order']), 'source section order changed'
     # These unconditional rules were once accidentally nested in hover:hover.
     # A desktop-sized viewport alone will not reveal that failure on touch phones.
@@ -110,7 +116,7 @@ def check_layout(page, view, store, label):
     # All example dishes and descriptions are present, with corresponding prices.
     menu_text = view.locator('.native-store-menu').inner_text()
     for dish in store['menu']:
-        assert dish['name'].split(' · ')[0] in menu_text, (dish, menu_text)
+        assert display(page, dish['name'].split(' · ')[0]) in menu_text, (dish, menu_text)
     scroll.evaluate('(node) => { node.scrollTop = 0; }')
     return geometry
 
@@ -121,6 +127,7 @@ def check_translation(page, view, label):
     assert buttons.count() >= 2, 'source language selection and translation are separate actions'
     menu = view.locator('.native-store-menu')
     original_text = menu.inner_text()
+    original_names = menu.locator('.native-store-menu-row h4').all_text_contents()
     buttons.first.click()
     picker = page.locator('.native-store-language-sheet:visible')
     expect(picker).to_have_count(1)
@@ -131,11 +138,11 @@ def check_translation(page, view, label):
     page.wait_for_function('''original => document.querySelector('.native-store-menu').innerText !== original''', arg=original_text)
     translated = menu.inner_text()
     assert len(translated.strip()) > 80, 'translation lost the actual menu'
-    assert any(dish in translated for dish in ['Phở','Cơm','Bánh','Trà']), 'bilingual menu must retain the original Vietnamese names'
+    assert original_names and all(name in translated for name in original_names), 'translation must retain every original displayed dish name alongside the translation'
     menu.scroll_into_view_if_needed()
     screenshot(page, label + '-translated-menu')
     view.locator('.native-store-scroll').evaluate('(node) => { node.scrollTop = 0; }')
-    CHECKS.append(label + ': language selection and explicit Translate remain separate; translated menu preserves Vietnamese names')
+    CHECKS.append(label + ': language selection and explicit Translate remain separate; translated menu preserves every original displayed dish name')
 
 
 def check_order(page, view, store, label):
@@ -144,15 +151,15 @@ def check_order(page, view, store, label):
     platform.get_by_role('button').click()
     sheet = page.locator('.wanso-sheet')
     expect(sheet).to_be_visible()
-    expect(sheet).to_contain_text(store['name'])
+    expect(sheet).to_contain_text(display(page, store['name']))
     expect(sheet.locator('h2')).to_have_text('下单预览 · GrabFood')
     expect(sheet).to_contain_text('餐品单价')
     expect(sheet).to_contain_text('配送费')
     total = store['platforms']['grab']['total']
-    expect(sheet.locator('.sheet-details > div').filter(has=page.locator('dt', has_text='合计'))).to_contain_text(f'{total:,}'.replace(',', '.') + 'đ')
+    expect(sheet.locator('.sheet-details > div').filter(has=page.locator('dt', has_text='合计'))).to_contain_text(f'{total:,}' + 'đ')
     sheet.get_by_role('button', name='换到 ShopeeFood', exact=True).click()
     expect(sheet.locator('h2')).to_have_text('下单预览 · ShopeeFood')
-    expect(sheet).to_contain_text(store['name'])
+    expect(sheet).to_contain_text(display(page, store['name']))
     screenshot(page, label + '-same-store-order')
     sheet.get_by_role('button', name='返回菜单', exact=True).click()
     expect(sheet).not_to_be_visible()
@@ -164,7 +171,7 @@ def check_order(page, view, store, label):
 
 
 def check_profile_controls(page, label):
-    page.locator('.hotspot[aria-label="我的"]').click()
+    page.locator('.phone-nav [data-target=profile]').click()
     profile = page.locator('.ios-page-profile')
     expect(profile).to_be_visible()
     profile.get_by_role('button', name='更换头像', exact=True).click()
@@ -190,34 +197,38 @@ def check_profile_controls(page, label):
     expect(sheet).not_to_be_visible()
     expect(profile.locator('.ios-taste-tags')).to_contain_text('🌿 少油')
     profile.get_by_role('button', name='订单偏好', exact=True).click()
-    membership = page.get_by_role('button', name='GrabUnlimited', exact=True)
-    expect(membership).to_have_attribute('aria-pressed', 'false')
+    membership = page.get_by_role('switch', name=re.compile('^GrabUnlimited'))
+    expect(membership).to_have_attribute('aria-checked', 'false')
     membership.click()
-    expect(membership).to_have_attribute('aria-pressed', 'true')
-    marker = membership.locator('.native-membership-check[data-on="true"]')
+    expect(membership).to_have_attribute('aria-checked', 'true')
+    marker = membership.locator('.wanso-settings-switch')
     expect(marker).to_be_visible()
-    marker_style = marker.evaluate('''node => {const s=getComputedStyle(node, '::after'); return {content:s.content,background:s.backgroundColor,width:parseFloat(s.width),opacity:s.opacity};}''')
-    assert marker_style['content'] not in ['none', 'normal'] and marker_style['width'] > 0 and marker_style['background'] != 'rgba(0, 0, 0, 0)' and marker_style['opacity'] != '0', marker_style
+    marker_style = marker.evaluate("node => ({knob:getComputedStyle(node,'::before').transform,background:getComputedStyle(node).backgroundColor})")
+    assert marker_style['knob'] != 'none' and marker_style['background'] != 'rgba(0, 0, 0, 0)', marker_style
     expect(sheet).not_to_be_visible()
-    page.get_by_role('button', name='5万以下', exact=True).click()
-    expect(page.get_by_role('button', name='5万以下', exact=True)).to_have_attribute('aria-pressed', 'true')
-    expect(page.get_by_role('button', name='10万以下', exact=True)).to_have_attribute('aria-pressed', 'false')
-    page.get_by_role('button', name='价格优先', exact=True).click()
-    expect(page.get_by_role('button', name='价格优先', exact=True)).to_have_attribute('aria-pressed', 'true')
+    budget = page.get_by_role('button', name=re.compile('^5 万越南盾以内'))
+    budget.click()
+    expect(budget).to_have_attribute('aria-pressed', 'true')
+    expect(page.get_by_role('button', name=re.compile('^10 万越南盾以内'))).to_have_attribute('aria-pressed', 'false')
+    mode = page.get_by_role('button', name=re.compile('^价格优先'))
+    mode.click();expect(mode).to_have_attribute('aria-pressed', 'true')
     expect(sheet).not_to_be_visible()
     screenshot(page, label + '-preferences')
-    page.get_by_role('button', name='返回我的', exact=True).click()
-    expect(profile.get_by_role('button', name='订单偏好', exact=True)).to_contain_text('5万以下')
+    page.locator('.wanso-settings-back').click()
+    expect(profile.get_by_role('button', name='订单偏好', exact=True)).to_contain_text('5 万越南盾以内')
     profile.get_by_role('button', name='通知', exact=True).click()
-    page.get_by_role('button', name='所有推送', exact=True).click()
-    expect(page.get_by_role('button', name='所有推送', exact=True)).to_have_attribute('aria-pressed', 'false')
-    for name in ['优惠提醒','降价','附近新餐厅','配送状态','每周 AI 摘要']:
-        expect(page.get_by_role('button', name=name, exact=True)).to_be_disabled()
-    expect(page.get_by_role('button', name='开始免打扰', exact=True)).to_be_disabled()
-    page.get_by_role('button', name='勿扰', exact=True).click()
-    expect(page.get_by_role('button', name='开始免打扰', exact=True)).to_be_enabled()
+    master = page.get_by_role('switch', name='接收通知', exact=True)
+    master.click();expect(master).to_have_attribute('aria-checked', 'false')
+    for name in ['优惠活动与平台券','餐品降价','附近新餐厅','配送进展','每周 AI 摘要','勿扰']:
+        expect(page.get_by_role('switch', name=name, exact=True)).to_be_disabled()
+    start = page.get_by_role('button', name=re.compile('^开始时间'))
+    expect(start).to_be_disabled()
+    master.click();expect(master).to_have_attribute('aria-checked', 'true')
+    quiet = page.get_by_role('switch', name='勿扰', exact=True)
+    expect(quiet).to_be_enabled();expect(start).to_be_disabled()
+    quiet.click();expect(quiet).to_have_attribute('aria-checked', 'true');expect(start).to_be_enabled()
     expect(sheet).not_to_be_visible()
-    page.get_by_role('button', name='返回', exact=True).click()
+    page.locator('.wanso-settings-back').click()
     CHECKS.append(label + ': 9 avatar presets and local photo work; 24 taste icons + label save; membership/budget/mode apply directly; notification children follow their master switch')
 
 
@@ -262,7 +273,7 @@ def run():
                 errors, failed_assets = [], []
                 page.on('pageerror', lambda error: errors.append(str(error)))
                 page.on('response', lambda response: failed_assets.append(f'{response.status} {response.url}') if response.status >= 400 else None)
-                page.goto(BASE + 'prototypes/wanso/?qa=store-parity#home', wait_until='networkidle')
+                page.goto(BASE + 'prototypes/wanso/?lang=zh&qa=store-parity#home', wait_until='networkidle')
                 home = page.locator('.ios-page-home')
                 expect(home).to_be_visible()
                 if label == 'phone':
@@ -298,7 +309,7 @@ def run():
                 store = store_for(page, identifier)
                 expect(same_card).to_have_count(1)
                 draft = '这家适合两个人一起吃吗？'
-                composer = page.get_by_role('textbox', name='继续提问', exact=True)
+                composer = page.locator('.ios-composer textarea')
                 composer.fill(draft)
                 messages_before = chat.locator('.ios-assistant-message').all_text_contents()
                 same_card.locator('.ios-restaurant-main').click()
@@ -313,7 +324,9 @@ def run():
                 view.get_by_role('button', name='收藏餐厅', exact=True).click()
                 collection = page.locator('.wanso-sheet.native-collection-sheet')
                 expect(collection).to_be_visible()
-                collection.locator('.native-collection-row').filter(has=page.locator('strong', has_text='全部收藏')).click()
+                collection.locator('.collection-choice[data-folder="Tất cả"]').click()
+                expect(view.locator('.native-store-heart')).to_have_attribute('aria-pressed', 'false')
+                collection.locator('.sheet-button.primary').click()
                 expect(collection).not_to_be_visible()
                 expect(view.locator('.native-store-heart')).to_have_attribute('aria-pressed', 'true')
                 view.locator('.native-store-back').click()
@@ -322,19 +335,25 @@ def run():
                 assert chat.locator('.ios-assistant-message').all_text_contents() == messages_before, 'return recreated or lost chat messages'
                 assert abs(scroll_position(chat) - chat_before) <= 2, 'return jumped within the conversation'
                 CHECKS.append(label + ': home and recommendation share the detail component; chat draft, messages and position survive back')
-                page.locator('.hotspot[aria-label="收藏"]').click()
+                page.locator('.phone-nav [data-target=saved]').click()
                 saved = page.locator('.ios-page-saved')
                 expect(saved).to_be_visible()
-                saved.locator('.ios-saved-store').get_by_role('button', name='查看 ' + store['name'], exact=True).click()
+                saved.locator('.saved-restaurant').get_by_role('button', name='查看餐厅 · ' + page.evaluate('(text)=>window.wansoI18n.text(text)', store['name']), exact=True).click()
                 view = detail(page, identifier)
                 expect(view.locator('.native-store-heart')).to_have_attribute('aria-pressed', 'true')
                 assert detail_signature(view) == signature_selected, {'saved':detail_signature(view),'selected':signature_selected}
                 screenshot(page, label + '-saved-store-detail')
-                view.get_by_role('button', name='取消收藏餐厅', exact=True).click()
+                view.locator('.native-store-heart').click()
+                expect(collection).to_be_visible()
+                expect(view.locator('.native-store-heart')).to_have_attribute('aria-pressed', 'true')
+                collection.locator('.collection-remove').click()
+                expect(view.locator('.native-store-heart')).to_have_attribute('aria-pressed', 'true')
+                collection.locator('.sheet-button.danger').click()
+                expect(collection).not_to_be_visible()
                 expect(view.locator('.native-store-heart')).to_have_attribute('aria-pressed', 'false')
                 view.locator('.native-store-back').click()
                 expect(saved).to_be_visible()
-                expect(saved.locator('.ios-saved-store').get_by_role('button', name='查看 ' + store['name'], exact=True)).to_have_count(0)
+                expect(saved.locator('.saved-restaurant').get_by_role('button', name='查看餐厅 · ' + page.evaluate('(text)=>window.wansoI18n.text(text)', store['name']), exact=True)).to_have_count(0)
                 CHECKS.append(label + ': save through collection picker → saved list → same selected-store detail → unsave removes it without navigation errors')
                 check_profile_controls(page, label)
                 check_location_controls(page, label)

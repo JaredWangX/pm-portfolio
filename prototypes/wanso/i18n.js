@@ -5,6 +5,11 @@ window.wansoI18n = (() => {
   const locale = new URLSearchParams(location.search).get('lang') === 'zh' ? 'zh-CN' : 'vi-VN';
   const chinese = locale === 'zh-CN';
   const dictionary = {
+  "Quản lý quán đã lưu": "管理已收藏餐厅",
+  "Bữa trưa quen thuộc": "日常午餐",
+  "Cuối tuần đổi vị": "周末换个口味",
+  "Những quán dễ chọn cho một bữa trưa ấm bụng.": "留好熟悉的味道，工作日午餐不用反复纠结。",
+  "Để dành những hương vị muốn thử khi rảnh rỗi.": "把想尝试的店存起来，周末慢慢选。",
   "giảm ": "减 ",
   ", tối đa ": "，最高减 ",
   "Tiền món sau giảm của quán từ ": "店铺折扣后餐费满 ",

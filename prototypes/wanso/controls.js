@@ -26,7 +26,8 @@ window.wansoControls = (() => {
     const catalog=window.wansoCatalog.find(item=>item.id===id);
     if(catalog)return catalog;
     if(archiveStores.has(id))return archiveStores.get(id);
-    const source=window.wansoNative.restaurants()?.[id];
+    const historical=window.wansoNative.restaurants();
+    const source=historical&&Object.hasOwn(historical,id)?historical[id]:null;
     if(!source)return null;
     const known=stores[id];
     const menu=source.menu.flatMap(group=>group.items.map(([name,price,description])=>({
@@ -47,7 +48,7 @@ window.wansoControls = (() => {
       shopee:{name:'ShopeeFood',price:61000,fee:10000}
     };
     const store={id,name:source.name,key:'pho',city:'hanoi',district:id==='moc'?'Đống Đa':'Hoàn Kiếm',
-      image:'../../assets/wanso/native/'+source.photo,imageAlt:'Món ăn tại quán',
+      image:'../../assets/wanso/catalog/'+(id==='moc'?'pho-02.webp':'pho-06.webp'),imageAlt:source.dish,
       dish:source.dish,dishZh:source.dish,
       rating:source.rating,reviewCount:source.review_count,distance:source.distance,category:'Món Việt · Phở nước',
       tags:['Thịt gà','Món nước nóng','Thực đơn'],address:id==='moc'?'Thái Thịnh · Đống Đa · Hà Nội':'Hoàn Kiếm · Hà Nội',
@@ -104,8 +105,8 @@ window.wansoControls = (() => {
     start: '22:00', end: '08:00', email: 'demo@wanso.example',
     phone: '', birthday: '', gender: '', address: '', query
   };
-  const state = {...original, location: window.wansoLocation.restore() || {city:'hanoi',label:'Hà Nội · Hoàn Kiếm',district:'Hoàn Kiếm'}, history: true, collections: ['Tất cả'], recent: loadRecentOrders(), tastes: ['Thanh đạm', 'Thịt gà', 'Không rau mùi'],
-    group: {moc: 'Tất cả', quyen: 'Tất cả'}, menuLanguage: {moc: 0, quyen: 0}, translated: {moc: 0, quyen: 0}};
+  const state = {...original, location: window.wansoLocation.restore() || {city:'hanoi',label:'Hà Nội · Hoàn Kiếm',district:'Hoàn Kiếm'}, history: true, ...window.wansoSaved.load(id=>Object.hasOwn(stores,id)||window.wansoCatalog.some(store=>store.id===id)), recent: loadRecentOrders(), tastes: ['Thanh đạm', 'Thịt gà', 'Không rau mùi'],
+    menuLanguage: {moc: 0, quyen: 0}, translated: {moc: 0, quyen: 0}};
   window.wansoNative.setLocation(state.location);
   const currency = number => number.toLocaleString(window.wansoI18n?.locale||'vi-VN') + 'đ';
   const el = (tag, className, value) => {
@@ -184,7 +185,8 @@ window.wansoControls = (() => {
     sheet.classList.remove('native-city-sheet','native-collection-sheet','native-avatar-sheet','native-taste-sheet');
     if (storeSession) storeSession.controller.refreshSaved();
     else if (activeLayer?.isConnected) paint(activeLayer, activeFrame);
-    anchor?.focus({preventScroll: true});
+    if(anchor?.isConnected)anchor.focus({preventScroll:true});
+    else activeLayer?.querySelector('.saved-search input')?.focus({preventScroll:true});
   });
 
   function show(heading, ...nodes) {
@@ -192,6 +194,7 @@ window.wansoControls = (() => {
     title.textContent = t(heading);
     content.replaceChildren(...nodes);
     content.scrollTop = 0;
+    sheet.scrollTop = 0;
     if (!sheet.open) {
       sheet.showModal();
       sheetResize.observe(activeScreen);
@@ -367,6 +370,7 @@ window.wansoControls = (() => {
       onAction:(action,payload)=>{anchor=document.activeElement;actionHandlers[action](payload);}});
     storeSession={id,request,controller,underlay,anchor:origin};
     activeScreen.setAttribute('data-store-open','true');
+    window.wansoMotion?.sheet(controller.element);
     controller.element.querySelector('.native-store-back').focus({preventScroll:true});
     if(section)controller.scrollToSection(section);
     if(languagePicker)controller.element.querySelector('.native-store-choose-language').click();
@@ -380,23 +384,10 @@ window.wansoControls = (() => {
       }
     });
   }
-  function catalogSave({id}) {
-    if(state.group[id]) {delete state.group[id];storeSession?.controller.refreshSaved();return;}
-    show('Lưu vào bộ sưu tập',...state.collections.map((name,index)=>{
-      const choice=button('',()=>{state.group[id]=name;sheet.close();},'native-collection-row');
-      choice.append(el('span','',index?'📁':'❤️'),el('strong','',name),el('span','','›'));
-      return choice;
-    }));
-    sheet.classList.add('native-collection-sheet');
-  }
-  function catalogShare({id}) {
-    const store=storeFor(id);
-    const text=store.name+'\n'+store.dishZh+'\n'+store.description;
-    const copy=button('Sao chép thông tin quán',async()=>{
-      try{await navigator.clipboard.writeText(text);copy.textContent=t('Đã sao chép');}
-      catch{copy.textContent=t('Nhấn giữ nội dung phía trên để sao chép');}
-    },'sheet-button primary');
-    show('Chia sẻ quán',el('p','sheet-copy',text),actions(backButton('Hủy'),copy));
+  function catalogSave({id}) { chooseCollection(id); }
+  function catalogShare({id,request=storeSession?.request||''}) {
+    const store=storeFor(id);if(!store)return;
+    show(ui('Chia sẻ quán','分享餐厅'),...window.wansoShare.content(store,{request,onClose:()=>sheet.close()}));
   }
   function catalogOrder(value) {
     if(typeof value==='string'&&orders[value])return openOrder(value);
@@ -422,26 +413,125 @@ window.wansoControls = (() => {
     return Object.values(state.group).filter(Boolean).length;
   }
 
+  const ui = (vi,zh) => window.wansoI18n.chinese ? zh : vi;
+  const allSaved = window.wansoSaved.all;
+  let toastTimer;
+  function savedNotice(message, undo) {
+    activeScreen?.querySelector('.saved-toast')?.remove();
+    clearTimeout(toastTimer);
+    const toast=el('div','saved-toast');toast.setAttribute('role','status');
+    toast.append(el('span','',message));
+    if(undo)toast.append(button(ui('Hoàn tác','撤销'),()=>{undo();toast.remove();},'saved-undo'));
+    (activeScreen||document.querySelector('.screen')).append(toast);
+    toastTimer=setTimeout(()=>toast.remove(),undo?9000:4500);
+  }
+  function refreshSavedState() {
+    storeSession?.controller.refreshSaved();
+    if(!storeSession&&activeLayer?.isConnected)paint(activeLayer,activeFrame);
+  }
+  function saveSavedState(message,undo) {
+    const persisted=window.wansoSaved.persist(state);
+    refreshSavedState();
+    savedNotice(persisted?message:ui('Đã lưu trong phiên này. Trình duyệt chưa cho phép giữ dữ liệu sau khi đóng.','已在本次浏览中保存；浏览器暂不允许长期保存。'),undo);
+  }
+  const collectionCount = name => Object.values(state.group).filter(folder=>folder&&(name===allSaved||folder===name)).length;
+  function restaurantSummary(id) {
+    const store=storeFor(id), summary=el('div','collection-restaurant');
+    summary.append(window.wansoMedia.image(store.image,{eager:true,alt:store.imageAlt||store.name}));
+    const copy=el('div');copy.append(el('strong','',store.name),el('span','',store.dishZh||store.dish),el('small','',store.address||store.district));
+    summary.append(copy);return summary;
+  }
+  function folderChoice(name,onClick,selected) {
+    const info=state.collectionDetails[name]||{emoji:'❤️',description:ui('Tất cả quán bạn đã lưu, bao gồm các bộ sưu tập.','汇总所有已收藏餐厅，包括各个收藏夹。')};
+    const choice=button('',onClick,'collection-choice');choice.dataset.folder=name;
+    if(selected!==undefined)choice.setAttribute('aria-pressed',String(selected));
+    const copy=el('span','collection-choice-copy');
+    copy.append(el('strong','',name),el('small','',`${collectionCount(name)} ${ui('quán','家餐厅')}`),el('span','',info.description||ui('Những quán dành riêng cho dịp này.','为这个场景留存的餐厅。')));
+    choice.append(el('span','collection-symbol',info.emoji),copy,el('span','collection-check',selected?'✓':'›'));
+    return choice;
+  }
+  function chooseCollection(id, selected=state.group[id]||allSaved) {
+    const store=storeFor(id);if(!store)return;
+    const list=el('div','collection-options');list.setAttribute('aria-label',ui('Chọn bộ sưu tập','选择收藏夹'));
+    const save=button(ui('Lưu vào bộ sưu tập này','保存到此收藏夹'),()=>{
+      const previous=state.group[id];state.group[id]=selected;
+      sheet.close();
+      saveSavedState(ui('Đã lưu vào ','已保存至「')+t(selected)+(window.wansoI18n.chinese?'」':''),()=>{
+        if(previous)state.group[id]=state.collections.includes(previous)?previous:allSaved;else delete state.group[id];
+        window.wansoSaved.persist(state);refreshSavedState();
+      });
+      window.wansoMotion?.feedback(storeSession?.controller.element.querySelector('.native-store-heart'),'saved');
+    },'sheet-button primary');
+    const render=()=>{
+      list.replaceChildren(...state.collections.map(name=>folderChoice(name,()=>{selected=name;render();},name===selected)));
+    };render();
+    const create=button(ui('＋ Tạo bộ sưu tập mới','＋ 新建收藏夹'),()=>collectionForm(null,name=>chooseCollection(id,name),()=>chooseCollection(id,selected)),'collection-create');
+    show(state.group[id]?ui('Sắp xếp quán đã lưu','整理已收藏餐厅'):ui('Lưu quán yêu thích','收藏这家餐厅'),restaurantSummary(id),
+      note(ui('Chọn một bộ sưu tập. Quán luôn xuất hiện trong Tất cả.','选择一个收藏夹，这家店也会保留在「全部收藏」中。')),list,create,
+      actions(backButton(ui('Hủy','取消')),save),
+      ...(state.group[id]?[button(ui('Bỏ lưu quán này','取消收藏这家餐厅'),()=>removeSaved(id,()=>chooseCollection(id,selected)),'collection-remove')]:[]));
+    sheet.classList.add('native-collection-sheet');
+  }
+  function collectionForm(previous, done, cancel) {
+    const info=state.collectionDetails[previous]||{emoji:'🍜',description:''};let emoji=info.emoji;
+    const form=el('form','sheet-form collection-form');
+    const iconLabel=el('span','collection-field-title',ui('Biểu tượng','收藏夹图标'));
+    const palette=el('div','collection-icons');palette.setAttribute('role','group');palette.setAttribute('aria-label',ui('Biểu tượng bộ sưu tập','收藏夹图标'));
+    window.wansoSaved.icons.forEach(symbol=>{
+      const pick=button(symbol,()=>{emoji=symbol;palette.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===pick)));},'collection-icon');
+      pick.setAttribute('aria-pressed',String(symbol===emoji));pick.setAttribute('aria-label',ui('Chọn biểu tượng ','选择图标 ')+symbol);palette.append(pick);
+    });
+    const nameLabel=el('label','sheet-field',ui('Tên bộ sưu tập','收藏夹名称'));const name=el('input');name.name='collectionName';name.maxLength=36;name.value=previous?t(previous):'';
+    name.placeholder=ui('Ví dụ: Bữa trưa đi làm','例如：工作日午餐');name.autocomplete='off';nameLabel.append(name);
+    const descLabel=el('label','sheet-field',ui('Ghi chú · không bắt buộc','说明 · 选填'));const description=el('textarea');description.name='collectionDescription';description.maxLength=160;description.value=t(info.description);
+    description.placeholder=ui('Ghi lại dịp ăn hoặc điều bạn thích ở các quán.','记录适合的场景、口味或你想尝试的菜。');descLabel.append(description);
+    const error=el('p','collection-error');error.setAttribute('role','alert');error.id='collection-error';name.setAttribute('aria-describedby',error.id);
+    const submit=el('button','sheet-button primary',previous?ui('Lưu thay đổi','保存修改'):ui('Tạo bộ sưu tập','创建收藏夹'));submit.type='submit';
+    form.append(iconLabel,palette,nameLabel,descLabel,error,actions(button(ui('Hủy','取消'),()=>{if(cancel)cancel();else sheet.close();}),submit));
+    form.addEventListener('submit',event=>{
+      event.preventDefault();const value=window.wansoSaved.clean(name.value);
+      const failure=window.wansoSaved.validateName(value,state,previous);
+      if(failure){error.textContent=failure==='duplicate'?ui('Tên này đã có. Hãy chọn một tên khác.','已有同名收藏夹，请换一个名称。'):ui('Nhập tên từ 1 đến 36 ký tự.','请输入 1–36 个字符的名称。');name.setAttribute('aria-invalid','true');name.focus();return;}
+      if(previous){state.collections[state.collections.indexOf(previous)]=value;delete state.collectionDetails[previous];for(const id of Object.keys(state.group))if(state.group[id]===previous)state.group[id]=value;if(state.savedFolder===previous)state.savedFolder=value;}
+      else state.collections.push(value);
+      state.collectionDetails[value]={emoji,description:window.wansoSaved.clean(description.value)};
+      window.wansoSaved.persist(state);
+      if(done)done(value);else{state.savedFolder=value;sheet.close();saveSavedState(previous?ui('Đã cập nhật bộ sưu tập','收藏夹已更新'):ui('Đã tạo bộ sưu tập','收藏夹已创建'));}
+    });
+    show(previous?ui('Chỉnh sửa bộ sưu tập','编辑收藏夹'):ui('Tạo bộ sưu tập','新建收藏夹'),form);
+    sheet.classList.add('native-collection-sheet');
+    if(previous)content.append(button(ui('Xóa bộ sưu tập','删除收藏夹'),()=>deleteCollection(previous),'collection-remove'));
+  }
+  function deleteCollection(name) {
+    if(name===allSaved)return;
+    show(ui('Xóa bộ sưu tập?','删除这个收藏夹？'),paragraph(t(name)),
+      paragraph(ui('Chỉ xóa bộ sưu tập. Các quán bên trong vẫn được giữ ở Tất cả, không cần lưu lại.','只删除收藏夹，里面的餐厅仍保留在「全部收藏」，无需重新收藏。')),
+      actions(button(ui('Giữ lại','保留收藏夹'),()=>collectionForm(name)),button(ui('Xóa bộ sưu tập','删除收藏夹'),()=>{
+        state.collections=state.collections.filter(folder=>folder!==name);delete state.collectionDetails[name];
+        for(const id of Object.keys(state.group))if(state.group[id]===name)state.group[id]=allSaved;
+        if(state.savedFolder===name)state.savedFolder=allSaved;
+        sheet.close();saveSavedState(ui('Đã xóa bộ sưu tập, vẫn giữ các quán','收藏夹已删除，餐厅已保留'));
+      },'sheet-button danger')));
+  }
+  function removeSaved(id,cancel) {
+    const store=storeFor(id);if(!store)return;
+    show(ui('Bỏ lưu quán?','取消收藏这家餐厅？'),restaurantSummary(id),paragraph(ui('Quán sẽ được bỏ khỏi bộ sưu tập. Bạn có thể lưu lại bất cứ lúc nào.','餐厅将从收藏夹中移除，以后仍可重新收藏。')),
+      actions(button(ui('Giữ lại','保留收藏'),()=>cancel?cancel():sheet.close()),button(ui('Bỏ lưu','取消收藏'),()=>{
+        const previous=state.group[id];delete state.group[id];sheet.close();
+        saveSavedState(ui('Đã bỏ lưu quán','已取消收藏'),()=>{state.group[id]=state.collections.includes(previous)?previous:allSaved;window.wansoSaved.persist(state);refreshSavedState();});
+      },'sheet-button danger')));
+  }
   function collections(id) {
-    const heading = id ? 'Chuyển vào bộ sưu tập' : 'Bộ sưu tập';
-    const select = name => {
-      if (id) {
-        state.group[id] = name;
-        sheet.close();
-        return;
-      }
-      const entries=Object.keys(state.group).filter(key=>state.group[key]&&(name==='Tất cả'||state.group[key]===name)).map(key=>[key,storeFor(key)]).filter(([,store])=>store);
-      show(name, ...entries.map(([key, store]) => row(store.name, String(store.rating), () => catalogStore(key))),
-        ...(entries.length ? [] : [paragraph('Bộ sưu tập chưa có quán. Lưu quán từ trang chi tiết hoặc chuyển quán đã lưu vào đây.')]),
-        actions(backButton('Xong'), button('Xem bộ sưu tập', () => collections(), 'sheet-button primary')));
-    };
-    show(heading, paragraph(id ? storeFor(id).name : 'Sắp xếp quán đã lưu thành bộ sưu tập để lần sau mở thực đơn nhanh hơn.'),
-      ...state.collections.map(name => row(name, id ? '' : (name === 'Tất cả' ? savedCount() : Object.values(state.group).filter(g => g === name).length) + ' quán',
-        () => select(name), id && state.group[id] === name)), actions(backButton(), button('Tạo bộ sưu tập', () => field(
-        'Tạo bộ sưu tập', 'Đặt tên dễ nhớ, chẳng hạn “Bữa trưa đi làm”.', '', value => {
-          if (!state.collections.includes(value)) state.collections.push(value);
-          collections(id);
-        }, {limit: 36}), 'sheet-button primary')));
+    if(id)return chooseCollection(id);
+    const list=el('div','collection-manager');
+    for(const name of state.collections){
+      const row=el('div','collection-manager-row');row.append(folderChoice(name,()=>{state.savedFolder=name;go('saved',false,'tab');}));
+      if(name!==allSaved)row.append(button(ui('Sửa','编辑'),()=>collectionForm(name),'collection-edit'));
+      list.append(row);
+    }
+    show(ui('Bộ sưu tập của tôi','我的收藏夹'),note(ui('Sắp xếp theo bữa ăn, khẩu vị hoặc dịp hẹn. Bộ sưu tập được giữ trong trình duyệt này.','按用餐场景或口味整理，收藏夹会保存在当前浏览器。')),list,
+      button(ui('＋ Tạo bộ sưu tập','＋ 新建收藏夹'),()=>collectionForm(null),'collection-create'),actions(backButton(ui('Xong','完成'))));
+    sheet.classList.add('native-collection-sheet');
   }
 
   function recentOrderData(id) {
@@ -498,6 +588,7 @@ window.wansoControls = (() => {
       state.history = false;
       if (all) {
         state.group = {};
+        window.wansoSaved.persist(state);
         setRecentOrders([]);
       }
       sheet.close();
@@ -505,6 +596,7 @@ window.wansoControls = (() => {
   }
 
   function share(value) {
+    if(storeFor(value))return catalogShare({id:value});
     const store = stores[value];
     const label = store ? store.name : query;
     const summary = store ? [store.rating, store.address, ...store.menu.map(item => item[0] + ' · ' + item[5])].filter(Boolean).join('\n') : recommendation;
@@ -625,15 +717,12 @@ window.wansoControls = (() => {
     budget: value => {state.budget=value;},
     mode: value => {state.mode=value;},
     share,
-    favorite: id => show('Lưu quán', paragraph(stores[id].name), state.group[id] ?
-      row('Đã lưu', state.group[id], () => collections(id), true) : row('Thêm vào bộ sưu tập', 'Sắp xếp quán theo nhu cầu thường dùng', () => collections(id)),
-    actions(backButton(), ...(state.group[id] ? [button('Bỏ lưu', () => actionHandlers.removeSaved(id))] : []))),
+    favorite: id => chooseCollection(id),
     collections: () => collections(),
-    moveSaved: collections,
-    removeSaved: id => confirmation('Bỏ lưu quán', 'Bỏ lưu ' + storeFor(id).name + '?', 'Xác nhận bỏ lưu', () => {
-      delete state.group[id];
-      sheet.close();
-    }),
+    createCollection: () => collectionForm(null),
+    editCollection: name => name!==allSaved&&collectionForm(name),
+    moveSaved: id => chooseCollection(id),
+    removeSaved,
     recentOrders,
     legacyStore: frame=>catalogStore(frame.includes('second')?'quyen':'moc'),
     historySearch,

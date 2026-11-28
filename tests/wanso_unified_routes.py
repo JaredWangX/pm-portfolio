@@ -12,9 +12,9 @@ with sync_playwright() as p:
         page=context.new_page(); errors=[]
         page.on('pageerror',lambda e:errors.append(str(e)))
         def visit(route):
-            page.goto(BASE+'prototypes/wanso/?qa=unified#'+route,wait_until='networkidle')
+            page.goto(BASE+'prototypes/wanso/?lang=zh&qa=unified#'+route,wait_until='networkidle')
         visit('saved')
-        page.locator('.ios-saved-main').first.click()
+        page.locator('.saved-restaurant-main').first.click()
         detail=page.locator('.native-store-view');expect(detail).to_have_count(1)
         expect(detail).to_have_attribute('data-store-id','quyen')
         signature=detail.locator('.native-store-menu').inner_text()
@@ -30,7 +30,7 @@ with sync_playwright() as p:
         expect(page.locator('.scroll-content')).to_have_count(0)
         detail.locator('.native-store-platform[data-platform="grab"] button').click()
         sheet=page.locator('.wanso-sheet')
-        expect(sheet).to_contain_text('71.000đ')
+        expect(sheet).to_contain_text('71,000đ')
         sheet.get_by_role('button',name='返回菜单',exact=True).click()
         expect(sheet).not_to_be_visible();expect(detail).to_have_count(1)
         detail.locator('.native-store-back').click()
